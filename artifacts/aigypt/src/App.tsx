@@ -9,6 +9,7 @@ import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import MateriPage from "@/pages/materi/index";
 import Admin from "@/pages/admin";
+import Toolbox from "@/pages/toolbox";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/materi/:sesi" component={MateriPage} />
       <Route path="/admin" component={Admin} />
+      <Route path="/toolbox" component={Toolbox} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,0 +1,280 @@
+# Prompt untuk Replit Agent — AIGYPT Halaman "Vibe Coding Toolbox"
+
+Copy-paste prompt di bawah ini ke Replit Agent. Halaman ini adalah tambahan pada website AIGYPT yang sudah dibangun sebelumnya — sebuah resource hub interaktif berisi semua tools, workflow, dan asset untuk vibe coding.
+
+---
+
+## PROMPT
+
+Tambahkan halaman baru bernama **"Vibe Coding Toolbox"** ke website AIGYPT yang sudah ada. Ini adalah resource hub interaktif — sebuah direktori lengkap tools AI, workflow, dan website asset/design yang bisa di-browse, difilter, dan dicari oleh member untuk membantu mereka membangun solusi sendiri.
+
+---
+
+## TECH STACK (sama dengan proyek utama)
+
+- Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- Deploy: Vercel
+- Route halaman: `/toolbox`
+- Proteksi: route ini WAJIB login (gunakan middleware yang sudah ada — tambahkan `/toolbox` ke protected paths)
+
+---
+
+## DESAIN (konsisten dengan AIGYPT — hitam ungu futuristik)
+
+Gunakan palet dan tipografi yang sama dengan proyek utama:
+```css
+--bg-primary: #0A0A0F
+--bg-card: #12121A
+--accent-main: #7C3AED
+--accent-light: #A855F7
+--accent-glow: #C084FC
+--text-primary: #F8FAFC
+--text-secondary: #94A3B8
+--border-subtle: #1E1E2E
+```
+Font: Space Grotesk (heading), Inter (body), JetBrains Mono (label/badge).
+
+Setiap kartu tool punya: hover glow effect, border subtle ungu, dan transisi smooth.
+
+---
+
+## STRUKTUR HALAMAN `/toolbox`
+
+### 1. HERO SECTION
+- Badge: `RESOURCE HUB`
+- Heading: `Vibe Coding Toolbox`
+- Sub: `Semua tools, workflow, dan asset yang lo butuhin untuk bikin solusi sendiri — di satu tempat.`
+- Deskripsi: 2 kalimat menjelaskan bahwa ini adalah kumpulan tools terbaik 2026 untuk vibe coding, dikurasi khusus untuk masisir.
+
+### 2. SEARCH & FILTER BAR
+- Search box: cari tool berdasarkan nama (real-time filter)
+- Filter pills (bisa multi-select): `Semua` · `App Builder` · `AI Assistant` · `Icon` · `Ilustrasi` · `Background` · `UI Components` · `Database` · `Deploy` · `Planning`
+- Filter mengupdate grid secara real-time tanpa reload
+
+### 3. WORKFLOW SECTION (tampil di atas, sebelum grid tools)
+Heading: `Workflow Terbaik: Dari Ide ke Produk`
+
+Tampilkan visual flow horizontal (atau vertical di mobile) dengan 5 tahap:
+```
+Research → Plan → Execute → Review → Ship
+```
+Setiap tahap adalah card kecil dengan judul dan 1 kalimat deskripsi:
+- **Research** — Pahami masalah dan validasi idenya
+- **Plan** — Tulis PRD sederhana + bikin DESIGN.md
+- **Execute** — Bangun bertahap (jangan one-shot!)
+- **Review** — Cek tiap hasil sebelum lanjut
+- **Ship** — Deploy dan iterate dari feedback nyata
+
+Di bawah flow, tampilkan box highlight "7 Aturan Emas Vibe Coding" dalam bentuk list:
+1. Vibe coding bukan one-shot — bangun bertahap
+2. Tulis PRD dulu sebelum prompting
+3. Pakai DESIGN.md biar UI tidak generik
+4. Graduate workflow: prototype di Lovable/Bolt → serius di Cursor/Claude Code
+5. Pilih satu icon library, konsisten (Lucide untuk shadcn)
+6. Slice vertically — bangun fitur end-to-end, bukan layer per layer
+7. Selalu review — 45% kode AI punya kerentanan keamanan
+
+### 4. GRID TOOLS (bagian utama)
+Tampilkan semua tools dalam grid responsive (3 kolom desktop, 2 tablet, 1 mobile). Setiap card berisi:
+- Nama tool (heading)
+- Kategori (badge berwarna)
+- Deskripsi singkat (1-2 kalimat)
+- Tag: gratis/freemium/berbayar
+- Link "Kunjungi →" yang buka di tab baru
+
+**Data lengkap semua tools (masukkan SEMUA ini sebagai data array di kode):**
+
+#### KATEGORI: APP BUILDER (untuk non-coder)
+```
+Lovable | lovable.dev | Ubah prompt jadi MVP full-stack yang polished dengan visual editing dan deploy otomatis. Cocok untuk app React + Supabase. | Freemium
+Bolt | bolt.new | Generate full-stack app dengan cepat dan preview browser instan. Menekankan kecepatan. | Freemium
+Replit | replit.com | Cloud coding di browser dengan AI Agent yang bisa bangun, test, dan deploy app end-to-end. | Freemium
+v0 by Vercel | v0.dev | Generate UI components React/Next.js dengan shadcn/ui. Integrasi Vercel mulus. | Freemium
+Emergent | emergent.sh | Bangun app full-stack lengkap dari natural language, AI bernalar tentang keseluruhan produk. | Freemium
+Google AI Studio | aistudio.google.com | Cara tercepat dari ide ke web app live dan shareable, sering dengan satu prompt. | Gratis
+Softr | softr.io | AI app builder dengan database, workflow, dan permission built-in. Bagus untuk CRM dan dashboard. | Freemium
+```
+
+#### KATEGORI: AI ASSISTANT (untuk yang sudah bisa coding)
+```
+Claude Code | claude.com/claude-code | Terminal AI agent terkuat untuk kerja level repo. Punya skills, MCP, memory, rules. Tampilkan rencana sebelum eksekusi. | Berbayar
+Cursor | cursor.com | Fork VS Code dengan AI mendalam yang paham seluruh codebase. Pilihan utama developer profesional. | Freemium
+Windsurf | windsurf.com | AI-native IDE dengan fitur Cascade yang pertahankan konteks lintas tugas multi-step. | Freemium
+GitHub Copilot | github.com/features/copilot | AI assistant terintegrasi GitHub dan Microsoft. Banyak tier termasuk gratis. | Freemium
+Aider | aider.chat | AI assistant terminal open source dan gratis, didukung Claude/Gemini/GPT. | Gratis
+Cline | github.com/cline/cline | Extension VS Code open source dan gratis (bayar inferensi model saja). | Gratis
+```
+
+#### KATEGORI: ICON
+```
+Lucide | lucide.dev | 1.668 ikon, default icon library shadcn. Style outline bersih. Rekomendasi utama. | Gratis
+Heroicons | heroicons.com | 300+ ikon dari creator Tailwind CSS, 2 style (outline & solid), lisensi MIT. | Gratis
+Phosphor | phosphoricons.com | 1000+ ikon dengan 6 weight, terbaca bagus di ukuran kecil. SVG, Figma, React, Vue. | Gratis
+Tabler Icons | tabler.io/icons | Ribuan ikon outline developer-friendly yang konsisten. | Gratis
+Iconoir | iconoir.com | 1.400+ ikon open-source, support light/dark mode. | Gratis
+Material Symbols | fonts.google.com/icons | Variable font icon dari Google, sangat fleksibel. | Gratis
+Lineicons | lineicons.com | 30.000+ ikon (2.000+ gratis), integrasi Figma/React/Vue/Svelte. | Freemium
+Font Awesome | fontawesome.com | Library ikon klasik sejak 2012, ribuan ikon dalam 3 style. | Freemium
+```
+
+#### KATEGORI: ILUSTRASI
+```
+unDraw | undraw.co | Ribuan ilustrasi konsisten yang bisa diubah warna, gratis tanpa atribusi. | Gratis
+Storyset | storyset.com | Ilustrasi customizable dengan opsi animasi. Gratis dengan atribusi. | Gratis
+Blush | blush.design | Mix-and-match ilustrasi dengan sistem komponen oleh Pablo Stanley. | Freemium
+LottieFiles | lottiefiles.com | Animasi Lottie gratis untuk web dan app. | Freemium
+IconScout | iconscout.com | Sumber terpadu ikon, ilustrasi, 3D asset, dan animasi Lottie. | Freemium
+```
+
+#### KATEGORI: BACKGROUND & GRADIENT
+```
+MagicPattern | magicpattern.design | Mesh gradient generator, export SVG/PNG/JPG, tanpa signup. | Gratis
+GradientsHub | gradientshub.com | Gradient + mesh + text gradient generator + 600 palette dengan CSS siap copy. | Gratis
+Pixelcut | pixelcut.ai | AI gradient generator dari text prompt, watermark-free, high-res. | Freemium
+Grainient | grainient.supply | 1000+ gradient, animated gradient, grainy texture, background AI. | Freemium
+Recraft | recraft.ai | Generate gambar, logo, ikon, vektor + mockup generator + AI image editing. | Freemium
+Mockey AI | mockey.ai | 27.000+ template mockup, 60+ kategori, download tanpa watermark. | Freemium
+```
+
+#### KATEGORI: UI COMPONENTS
+```
+shadcn/ui | ui.shadcn.com | Fondasi component library de facto standard 2026. Bersih, accessible, didukung Vercel. | Gratis
+Aceternity UI | ui.aceternity.com | 200+ komponen efek visual menakjubkan untuk landing page (3D card, glowing beam). | Freemium
+Magic UI | magicui.design | Micro-interaction dan animasi marketing yang polished (animated beam, retro grid). | Gratis
+react-bits | reactbits.dev | Komponen animasi tanpa Framer Motion dependency. Text effects best in class. | Gratis
+21st.dev | 21st.dev | Marketplace block dan komponen shadcn besar untuk AI-assisted development. | Freemium
+```
+
+#### KATEGORI: DESIGN SYSTEM (DESIGN.md)
+```
+DESIGN.md App | designmd.app | 461+ design system siap pakai untuk Claude Code, Cursor, Windsurf, Stitch. | Gratis
+DESIGN.md AI | designmd.ai | Format Google: file markdown tunggal yang dibaca AI untuk UI konsisten. Browse & download. | Gratis
+awesome-design-md | github.com/voltagent/awesome-design-md | Repo file DESIGN.md diekstrak dari website nyata. Bisa request website spesifik. | Gratis
+Banani | banani.co | Buat design system di canvas yang update real-time, editable, referensikan lintas proyek. | Freemium
+Google Stitch | stitch.withgoogle.com | Tool desain AI Google yang pakai DESIGN.md untuk konsistensi UI. | Gratis
+```
+
+#### KATEGORI: DATABASE & BACKEND
+```
+Supabase | supabase.com | Database, auth, dan edge function paling populer untuk vibe coder. Free tier generous. | Freemium
+Firebase | firebase.google.com | Backend Google dengan free tier generous, alternatif solid untuk Supabase. | Freemium
+```
+
+#### KATEGORI: DEPLOY
+```
+Vercel | vercel.com | Deploy Next.js paling mulus, gratis untuk personal project. | Freemium
+Netlify | netlify.com | Deploy static site dan app dengan mudah, free tier bagus. | Freemium
+```
+
+#### KATEGORI: PLANNING & WIREFRAME
+```
+Figma | figma.com | Desain UI dan wireframe, bisa import ke banyak vibe coding tool. | Freemium
+Excalidraw | excalidraw.com | Sketsa cepat hand-drawn style, gratis dan open source. | Gratis
+Whimsical | whimsical.com | Wireframe dan workflow map cepat. | Freemium
+Miro | miro.com | Whiteboard kolaboratif untuk brainstorming dan planning. | Freemium
+Coolors | coolors.co | Generate palette warna dengan cepat. | Freemium
+```
+
+### 5. DESIGN.md SPOTLIGHT SECTION
+Buat section khusus yang menonjol (background sedikit beda, border ungu glow) yang menjelaskan DESIGN.md karena ini konsep penting:
+
+Heading: `Senjata Rahasia: DESIGN.md`
+Konten:
+- Penjelasan singkat: DESIGN.md adalah file markdown tunggal yang dibaca AI agent untuk menghasilkan UI yang konsisten. Diperkenalkan Google Stitch (Maret 2026). Memecahkan masalah "UI generik AI".
+- Box "3 Cara Membuat DESIGN.md":
+  1. Biarkan AI menulisnya — deskripsikan vibe, AI terjemahkan jadi sistem
+  2. Ekstrak dari brand yang ada — kasih URL/logo, AI tarik palette & typography
+  3. Tulis manual — mulai dari warna & typography, tambah aturan saat perlu
+- Box "8 Bagian DESIGN.md": Visual Theme, Color Palette, Typography, Spacing, Components, Motion, Usage Guidelines & Accessibility, Dos & Don'ts
+- CTA: tombol ke designmd.app untuk download template
+
+### 6. STACK REKOMENDASI SECTION
+Heading: `Stack Rekomendasi untuk Masisir`
+
+Tampilkan 3 card stack preset:
+
+**Card 1 — Web App Sederhana (No-Code)**
+```
+Bangun: Lovable / Bolt
+Database: Supabase
+Ikon: Lucide
+Ilustrasi: unDraw
+Background: GradientsHub
+Deploy: Otomatis
+```
+
+**Card 2 — Proyek Serius (Mau Di-iterate)**
+```
+Prototype: Lovable/Bolt
+Lanjut: Replit + AI Agent
+Design: DESIGN.md
+UI: shadcn/ui + Aceternity
+Database: Supabase
+Deploy: Vercel
+```
+
+**Card 3 — Script & Automation**
+```
+Generate kode: Claude
+Jalankan: Replit
+Automation: n8n / Make
+```
+
+### 7. CTA FOOTER
+- Heading: `Udah Tau Tools-nya. Sekarang Bikin.`
+- Sub: `Pilih satu masalah, pilih satu tool, mulai hari ini.`
+- Tombol: kembali ke `/materi/sesi-5` (Vibe Coding) untuk pelajari caranya
+
+---
+
+## IMPLEMENTASI TEKNIS
+
+1. **Data array**: Simpan semua tools sebagai array of objects di file terpisah `lib/toolboxData.ts`:
+```typescript
+export interface Tool {
+  name: string
+  url: string
+  category: 'app-builder' | 'ai-assistant' | 'icon' | 'illustration' | 'background' | 'ui-components' | 'design-system' | 'database' | 'deploy' | 'planning'
+  description: string
+  pricing: 'Gratis' | 'Freemium' | 'Berbayar'
+}
+
+export const tools: Tool[] = [
+  // ... semua tools dari data di atas
+]
+```
+
+2. **Search & Filter**: Gunakan React `useState` untuk query pencarian dan kategori aktif. Filter array secara real-time. Jangan pakai localStorage.
+
+3. **Kategori badge warna**: Beri warna berbeda (variasi ungu/biru/hijau gelap) per kategori agar mudah dibedakan secara visual, tapi tetap dalam tema gelap.
+
+4. **Responsiveness**: Grid 3 kolom (desktop), 2 (tablet), 1 (mobile). Search dan filter harus nyaman dipakai di mobile.
+
+5. **Link eksternal**: Semua link tool buka di tab baru (`target="_blank" rel="noopener noreferrer"`).
+
+6. **Tambahkan link ke navbar**: Update komponen Navbar yang sudah ada — tambahkan link `Toolbox` (hanya tampil untuk user yang sudah login).
+
+7. **Middleware**: Tambahkan `/toolbox` ke array `protectedPaths` di `middleware.ts` yang sudah ada.
+
+8. **SEO**: Metadata halaman — title: "Vibe Coding Toolbox — AIGYPT", description sesuai.
+
+---
+
+## CATATAN PENTING
+
+1. Semua teks dalam Bahasa Indonesia
+2. Konsisten dengan tema visual hitam-ungu AIGYPT yang sudah ada
+3. Jangan gunakan localStorage/sessionStorage
+4. Pastikan `npm run build` berhasil tanpa error
+5. Halaman harus terasa "alive" — search dan filter responsif dan smooth
+6. Data tools harus lengkap — masukkan SEMUA tools yang tercantum di atas, jangan disingkat
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Bangun halaman `/toolbox` lengkap dengan:
+- Hero, search/filter, workflow section, grid tools lengkap, DESIGN.md spotlight, stack rekomendasi, CTA footer
+- File data `lib/toolboxData.ts` berisi semua tools
+- Update Navbar dan middleware
+- Fully responsive, deploy-ready di Vercel

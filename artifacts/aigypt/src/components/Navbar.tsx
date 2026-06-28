@@ -32,6 +32,11 @@ export function Navbar() {
                     Dashboard
                   </span>
                 </Link>
+                <Link href="/toolbox">
+                  <span className={`text-sm font-medium transition-colors cursor-pointer ${location === "/toolbox" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
+                    Toolbox
+                  </span>
+                </Link>
                 {user?.name && (
                   <span className="text-xs text-[#94A3B8] border border-[#1E1E2E] rounded-full px-3 py-1 font-mono">
                     {user.memberType === "kelas" ? `Batch ${user.batchNumber}` : "Mandiri"}
@@ -80,6 +85,9 @@ export function Navbar() {
               <>
                 <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
                   <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Dashboard</span>
+                </Link>
+                <Link href="/toolbox" onClick={() => setMenuOpen(false)}>
+                  <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Toolbox</span>
                 </Link>
                 <button
                   onClick={() => { handleLogout(); setMenuOpen(false); }}
