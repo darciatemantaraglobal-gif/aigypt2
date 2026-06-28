@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "AIGYPT"
+version = "1.0.0"
+id = "artifacts/aigypt"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22064
+
+[services.development]
+run = "pnpm --filter @workspace/aigypt run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/aigypt", "run", "build" ]
+publicDir = "artifacts/aigypt/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22064"
+BASE_PATH = "/"

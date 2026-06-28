@@ -1,0 +1,564 @@
+# Prompt untuk Replit Agent — AIGYPT Full Website System
+
+Copy-paste prompt di bawah ini ke Replit Agent:
+
+---
+
+## PROMPT
+
+Bangun website platform edukasi bernama **AIGYPT** — platform mentoring berbayar untuk mahasiswa Indonesia di Mesir (masisir) yang belajar memanfaatkan AI untuk menyelesaikan masalah nyata mereka.
+
+---
+
+## TECH STACK
+
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS
+- **Database & Auth:** Supabase
+- **Deploy:** Vercel
+- **Bahasa:** TypeScript
+
+Struktur folder:
+```
+aigypt/
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx                    (Landing page)
+│   ├── globals.css
+│   ├── kurikulum/
+│   │   └── page.tsx                (Halaman kurikulum publik)
+│   ├── login/
+│   │   └── page.tsx                (Halaman login member)
+│   ├── dashboard/
+│   │   └── page.tsx                (Dashboard member setelah login)
+│   └── materi/
+│       ├── page.tsx                (Index semua materi)
+│       └── [sesi]/
+│           └── page.tsx            (Halaman materi per sesi)
+├── components/
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   └── (komponen lainnya)
+├── lib/
+│   └── supabase.ts                 (Supabase client)
+├── middleware.ts                   (Proteksi route /dashboard dan /materi)
+├── package.json
+├── tailwind.config.ts
+└── next.config.js
+```
+
+---
+
+## DESAIN SISTEM
+
+**Palet warna:**
+```css
+--bg-primary: #0A0A0F
+--bg-card: #12121A
+--accent-main: #7C3AED
+--accent-light: #A855F7
+--accent-glow: #C084FC
+--text-primary: #F8FAFC
+--text-secondary: #94A3B8
+--border-subtle: #1E1E2E
+```
+
+**Tipografi (Google Fonts via next/font/google):**
+- Display/Heading: `Space Grotesk` — bold, futuristik
+- Body: `Inter` — clean, readable
+- Badge/kode: `JetBrains Mono` — untuk nomor sesi dan label teknis
+
+**Signature visual:**
+- Background: `#0A0A0F` dengan subtle dot grid pattern via CSS
+- Card: background `#12121A`, border `1px solid #1E1E2E`
+- Glow effect pada elemen aktif: `box-shadow: 0 0 20px rgba(124, 58, 237, 0.3)`
+- Hover card: `transform: translateY(-2px)` + glow lebih kuat
+- Button utama: background `#7C3AED`, hover `#6D28D9`, dengan glow
+- Semua animasi: subtle, menggunakan Tailwind transition classes
+
+---
+
+## SISTEM MEMBER & AKSES
+
+### Model bisnis:
+- **Member Mandiri:** Beli kode akses → bisa login → akses semua materi (self-paced)
+- **Member Kelas:** Beli paket kelas → bisa login → akses semua materi + info sesi mentoring live
+
+### Alur sistem:
+```
+User beli (di luar sistem ini) 
+→ Admin generate kode akses via Supabase dashboard
+→ User dapat kode via WhatsApp/email
+→ User buka /login
+→ Input email + kode akses
+→ Sistem validasi kode di database
+→ Jika valid: buat session, redirect ke /dashboard
+→ Akses /materi/* terbuka
+```
+
+### Supabase Schema:
+
+**Tabel: `access_codes`**
+```sql
+CREATE TABLE access_codes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  code VARCHAR(20) UNIQUE NOT NULL,        -- kode unik misal: AIGYPT-A1B2C3
+  type VARCHAR(20) NOT NULL,               -- 'mandiri' atau 'kelas'
+  batch_number INTEGER,                    -- nomor batch (untuk tipe kelas)
+  is_used BOOLEAN DEFAULT FALSE,
+  used_by_email VARCHAR(255),
+  used_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  expires_at TIMESTAMPTZ                   -- opsional: expired date
+);
+```
+
+**Tabel: `members`**
+```sql
+CREATE TABLE members (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255),
+  access_code VARCHAR(20) REFERENCES access_codes(code),
+  member_type VARCHAR(20) NOT NULL,        -- 'mandiri' atau 'kelas'
+  batch_number INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  last_login TIMESTAMPTZ
+);
+```
+
+**Tabel: `materi_progress`**
+```sql
+CREATE TABLE materi_progress (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  member_email VARCHAR(255) REFERENCES members(email),
+  sesi_number INTEGER NOT NULL,           -- 1-6
+  is_completed BOOLEAN DEFAULT FALSE,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(member_email, sesi_number)
+);
+```
+
+### Auth Flow (tanpa Supabase Auth — custom session):
+
+Gunakan **cookies** untuk session management:
+1. User input email + kode akses di `/login`
+2. Server validasi: cek kode di tabel `access_codes` (is_used = false atau used_by_email = email ini)
+3. Jika valid:
+   - Update `access_codes`: set `is_used = true`, `used_by_email = email`, `used_at = now()`
+   - Upsert ke tabel `members`
+   - Set cookie: `aigypt_session` berisi JSON `{email, memberType, batchNumber}` — enkripsi dengan `jose` library
+4. Redirect ke `/dashboard`
+
+Middleware proteksi:
+- Route `/dashboard/*` dan `/materi/*`: cek cookie `aigypt_session`
+- Jika tidak ada atau expired: redirect ke `/login`
+
+---
+
+## HALAMAN-HALAMAN
+
+### 1. Landing Page (`/`)
+
+Hero section:
+- Badge: `BATCH 01 · SEGERA DIBUKA`
+- Heading: `Maksimalkan AI untuk Menghasilkan Solusimu`
+- Sub: `Kelas AI pertama yang dirancang khusus untuk masisir Al-Azhar Kairo`
+- Journey visual: `Masalah Nyata → Mindset AI → Prompt Tepat → Vibe Coding → Solusi / Produk`
+- CTA: `Daftar Sekarang` dan `Lihat Kurikulum`
+
+Persona section — 5 card:
+- 🎓 Akademisi — Nulis makalah Arab, terjemah kitab, riset skripsi
+- 🏛️ Organisator — Proposal, notulensi, publikasi acara, laporan
+- 💼 Bisnisman — Copywriting, riset produk, manajemen toko online
+- 🎬 Konten Kreator — Ide konten, scripting, caption, content calendar
+- 😵 Yang Overwhelmed — Belum tau mulai dari mana — ini tempat yang tepat
+
+6 Sesi preview — card ringkas per sesi dengan nomor, judul, dan deskripsi singkat
+
+What you get section — checklist:
+- Satu solusi/produk nyata buatan sendiri
+- Kemampuan prompt AI seumur hidup
+- Portofolio pertama di bidang AI tools
+- Akses materi website selamanya
+- Komunitas alumni AIGYPT
+
+Pricing section — 2 card:
+- Member Mandiri: akses materi self-paced, harga `Rp ???.000`
+- Member Kelas (recommended): materi + mentoring live 6 sesi, harga `Rp ???.000`
+- Kedua card ada tombol: `Hubungi via WhatsApp` yang link ke `https://wa.me/[NOMOR_WA]`
+
+FAQ accordion — 5 pertanyaan umum
+
+CTA final + Footer
+
+---
+
+### 2. Halaman Kurikulum (`/kurikulum`)
+
+Halaman publik — tidak perlu login.
+
+Tampilkan 6 card sesi secara lengkap, masing-masing berisi:
+- Badge nomor sesi: `SESI 01` (JetBrains Mono)
+- Judul sesi
+- Tujuan sesi (1-2 kalimat)
+- 4 poin materi utama
+- Tags tools (chip/badge kecil): misal `Claude` `ChatGPT` `Gemini`
+- Take-home challenge (collapsible dengan animasi smooth)
+
+Data 6 sesi:
+
+**SESI 01 — "AI Itu Bukan Sulap, Tapi Hampir"**
+Tujuan: Membangun mindset yang benar soal AI — paham cara kerjanya dan siap pakai.
+Materi: Cara kerja AI tanpa jargon teknis · ChatGPT vs Claude vs Gemini · Demo live satu masalah tiga AI · Kenapa prompt menentukan segalanya
+Tools: ChatGPT · Claude · Gemini
+Take-home: Tanya 2 AI berbeda tentang masalah nyata lo minggu ini. Screenshot hasilnya, bawa ke sesi berikutnya.
+
+**SESI 02 — "Ngomong yang Bener, Dapet yang Bener"**
+Tujuan: Bisa membuat prompt yang tajam dan menghasilkan output berkualitas tinggi.
+Materi: Formula RCTFC (Role, Context, Task, Format, Constraint) · Workshop ubah prompt jelek jadi bagus · Prompt chaining untuk tugas kompleks · Bangun prompt library pribadi
+Tools: Claude · ChatGPT
+Take-home: Buat 3 prompt RCTFC untuk 3 masalah berbeda dalam hidup lo sebagai masisir.
+
+**SESI 03 — "AI Jadi Asisten Akademik & Organisasi Lo"**
+Tujuan: Langsung pakai AI untuk tugas akademik dan organisasi sehari-hari.
+Materi: Nulis & review makalah bahasa Arab · Terjemah dan pahami kitab kuning · Summarize jurnal & cari gap penelitian · Proposal, notulensi otomatis, LPJ
+Tools: Claude · NotebookLM · TurboScribe · DeepL
+Take-home: Selesaikan satu tugas akademik atau organisasi nyata minggu ini dengan AI. Catat berapa lama biasanya vs pakai AI.
+
+**SESI 04 — "AI Jadi Mesin Cuan Lo"**
+Tujuan: Pakai AI untuk bisnis dan konten yang menghasilkan.
+Materi: Riset produk & kompetitor dengan AI · Copywriting jualan yang convert · Content calendar & script konten · Repurpose satu konten jadi banyak format
+Tools: Claude · Canva AI · CapCut AI
+Take-home: Buat satu konten atau materi promosi pakai AI dari A sampai Z — ide, teks, visual.
+
+**SESI 05 — "Lo Bisa Bikin Aplikasi Sendiri"**
+Tujuan: Memahami vibe coding dan bisa membuat tools/aplikasi tanpa bisa coding dari nol.
+Materi: Apa itu vibe coding dan kenapa ini game-changer · Web app dengan Lovable/Bolt/v0 · Generate script via Claude → jalankan di Replit · Automation workflow dengan n8n/Make
+Tools: Lovable · Bolt · v0 · Replit · n8n
+Take-home: Tulis masalah spesifik lo + solusi ideal yang lo bayangin. Ini jadi bahan Demo Day.
+
+**SESI 06 — "Ini Solusi Gue"**
+Tujuan: Setiap peserta presentasi solusi nyata yang mereka bangun di depan komunitas.
+Materi: Demo Day — 5-7 menit per peserta · Format: Masalah → Proses AI → Demo hasil · Feedback konstruktif dari sesama peserta · Next steps: kembangkan solusi lebih jauh
+Tools: Semua tools yang sudah dipelajari
+Take-home: Dokumentasi solusi lo = portofolio pertama lo di bidang AI tools.
+
+---
+
+### 3. Halaman Login (`/login`)
+
+Form login sederhana:
+- Heading: `Masuk ke AIGYPT`
+- Sub: `Masukkan email dan kode akses yang kamu terima`
+- Input: Email address
+- Input: Kode akses (uppercase, format AIGYPT-XXXXXX) dengan toggle show/hide
+- Button: `Masuk` dengan loading state
+- Link kecil: `Belum punya akses? Hubungi kami` → link WhatsApp
+
+Validasi:
+- Email format valid
+- Kode tidak boleh kosong
+- Error message yang jelas: "Kode akses tidak valid atau sudah digunakan"
+- Success: redirect ke `/dashboard`
+
+Design: Card centered di tengah halaman, background sama dengan global, glow subtle di card
+
+---
+
+### 4. Dashboard Member (`/dashboard`)
+
+Protected route — wajib login.
+
+Tampilkan:
+- Greeting: `Ahlan, [nama]! 👋`
+- Badge member type: `Member Mandiri` atau `Member Kelas — Batch [X]`
+- Progress tracker: 6 lingkaran sesi, yang sudah selesai berwarna ungu, yang belum abu-abu
+- Card 6 sesi dalam grid — setiap card:
+  - Nomor dan judul sesi
+  - Status: `Belum Dimulai` / `Sedang Dipelajari` / `Selesai`
+  - Tombol: `Mulai Belajar` atau `Lanjutkan` → link ke `/materi/sesi-[N]`
+- Info batch (khusus Member Kelas): jadwal sesi mentoring live berikutnya
+- Tombol logout di navbar
+
+---
+
+### 5. Halaman Materi (`/materi/[sesi]`)
+
+Protected route — wajib login.
+
+Route params: `sesi-1` sampai `sesi-6`
+
+Layout:
+- Sidebar kiri (desktop) / drawer (mobile): navigasi antar sesi dengan status progress
+- Konten utama kanan: materi sesi tersebut
+
+Konten per sesi — tampilkan dalam format yang readable:
+
+**SESI 1:**
+- Tujuan sesi (highlight box berwarna ungu gelap)
+- Materi dalam format: heading per bagian, paragraf, list, code block untuk contoh prompt
+- Contoh prompt dengan styling khusus: background lebih gelap, border kiri ungu, font mono
+- Latihan section dengan background berbeda
+- Take-home challenge (box dengan border ungu dan icon 📦)
+- Tombol: `Tandai Selesai` (update progress di database)
+- Navigasi: `← Sesi Sebelumnya` dan `Sesi Berikutnya →`
+
+Styling khusus untuk elemen materi:
+```
+Contoh prompt: bg-[#0D0D18] border-l-4 border-purple-600 p-4 rounded font-mono text-sm
+Highlight box: bg-purple-950/30 border border-purple-800/50 rounded-lg p-4
+Take-home box: bg-[#0F0F1A] border border-purple-700 rounded-lg p-4
+Latihan box: bg-[#111118] border border-slate-700 rounded-lg p-4
+```
+
+**Konten materi per sesi (isi lengkap):**
+
+Untuk setiap sesi, masukkan konten berikut:
+
+SESI 1 — Bagian utama yang harus ditampilkan:
+1. Jujur Dulu: Lo Pakai AI Buat Apa?
+2. AI Itu Sebenarnya Apa? (termasuk tabel Mitos vs Realita)
+3. Kenalan: ChatGPT vs Claude vs Gemini (tabel perbandingan + panduan cepat)
+4. Demo Live: Satu Masalah, Tiga AI (skenario makalah Al-Azhar)
+5. Kenapa Prompt Itu Segalanya (contoh prompt buruk vs bagus)
+6. AI dan Kehidupan Lo Sebagai Masisir (per persona)
+Latihan 1, 2, 3 + Take-home challenge
+
+SESI 2 — Bagian utama:
+1. Kenapa Prompt Itu Skill, Bukan Keberuntungan
+2. Formula RCTFC — per elemen dengan penjelasan dan contoh
+3. Workshop: Ubah Prompt Jelek Jadi Bagus (4 persona — semua contoh prompt)
+4. Prompt Chaining: Tanya Bertahap untuk Hasil Kompleks
+5. Bangun Prompt Library Pribadi Lo
+Latihan 1, 2, 3 + Take-home challenge
+
+SESI 3 — Bagian utama:
+TRACK A: AI untuk Akademisi
+- A1: Nulis Makalah Bahasa Arab (semua prompt)
+- A2: Terjemah dan Pahami Kitab Kuning (semua prompt)
+- A3: Summarize Jurnal dan Referensi Panjang (semua prompt)
+- A4: Persiapan Ujian dan Halaqah (semua prompt)
+TRACK B: AI untuk Organisasi
+- B1: Proposal Kegiatan (prompt lengkap)
+- B2: Notulensi Otomatis (workflow + prompt)
+- B3: Konten Publikasi Acara (prompt paket)
+- B4: LPJ (prompt lengkap)
+Workflow lengkap + Latihan + Take-home
+
+SESI 4 — Bagian utama:
+TRACK A: AI untuk Bisnisman
+- A1: Riset Produk dan Pasar (semua prompt)
+- A2: Copywriting yang Convert (tabel framework + prompt lengkap)
+- A3: Template Customer Service (prompt 10 situasi)
+- A4: Perencanaan Bisnis Sederhana (prompt business plan mini)
+TRACK B: AI untuk Konten Kreator
+- B1: Ideasi Konten (prompt generate 30 ide)
+- B2: Script Video (prompt + format per detik)
+- B3: Content Calendar Bulanan (prompt + tabel)
+- B4: Repurpose Konten (prompt 5 format)
+Integrasi Creator-Preneur + Latihan + Take-home
+
+SESI 5 — Bagian utama:
+1. Mindset Shift: Lo Bukan Programmer, Lo Problem-Solver
+2. Apa itu Vibe Coding?
+3. Tiga Jalur Vibe Coding (tabel + penjelasan)
+4. Jalur 1: Web App dengan Lovable/Bolt/v0 (cara kerja + 4 contoh prompt)
+5. Jalur 2: Script via Claude → Replit (cara kerja + 3 contoh prompt)
+6. Jalur 3: Workflow Automation n8n/Make (cara kerja + 3 contoh workflow)
+7. Peta Solusi: Masalah Masisir → Solusi (tabel lengkap)
+8. Batas dan Realita Vibe Coding
+Latihan + Pre-work Demo Day
+
+SESI 6 — Bagian utama:
+1. Panduan Demo Day (untuk peserta yang ikut kelas)
+2. Format Presentasi: 3 bagian (Masalah, Proses, Demo & Hasil)
+3. Panduan Feedback WWW + EBI
+4. Output Permanen Peserta
+5. Next Steps setelah Demo Day
+(Khusus Member Mandiri: adaptasi konten sesi 6 menjadi self-reflection guide — bagaimana melakukan demo day sendiri atau bersama teman)
+
+---
+
+### 6. Middleware (`middleware.ts`)
+
+```typescript
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export function middleware(request: NextRequest) {
+  const session = request.cookies.get('aigypt_session')
+  const protectedPaths = ['/dashboard', '/materi']
+  
+  const isProtected = protectedPaths.some(path => 
+    request.nextUrl.pathname.startsWith(path)
+  )
+  
+  if (isProtected && !session) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+  
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/materi/:path*']
+}
+```
+
+---
+
+## ENVIRONMENT VARIABLES
+
+Buat file `.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SESSION_SECRET=random_string_min_32_chars
+NEXT_PUBLIC_WA_NUMBER=628xxxxxxxxxx
+```
+
+---
+
+## API ROUTES
+
+### `POST /api/login`
+Request body: `{ email: string, code: string }`
+
+Logic:
+1. Validasi format email dan kode
+2. Query `access_codes` WHERE `code = input_code`
+3. Jika tidak ada → return 401 "Kode tidak ditemukan"
+4. Jika `is_used = true` AND `used_by_email != input_email` → return 401 "Kode sudah digunakan"
+5. Jika valid:
+   - Update `access_codes`: `is_used=true`, `used_by_email=email`, `used_at=now()`
+   - Upsert `members`: insert atau update `last_login`
+   - Generate JWT cookie dengan `jose`: payload `{email, memberType, batchNumber, exp: 30 days}`
+   - Set cookie `aigypt_session` (httpOnly, secure, sameSite: lax)
+   - Return 200 `{success: true, memberType}`
+
+### `POST /api/logout`
+Clear cookie `aigypt_session`, redirect ke `/`
+
+### `POST /api/progress`
+Request body: `{ sesiNumber: number }`
+Auth: baca dari cookie session
+Logic: Upsert `materi_progress` — set `is_completed=true`, `completed_at=now()`
+Return: 200 `{success: true}`
+
+### `GET /api/progress`
+Auth: baca dari cookie session
+Return: array progress peserta `[{sesiNumber, isCompleted, completedAt}]`
+
+---
+
+## KOMPONEN REUSABLE
+
+**`<Navbar />`**
+- Logo: `AIGYPT` dengan aksen ungu
+- Link: `Kurikulum`, `Login` (jika belum login) atau `Dashboard`, `Logout` (jika sudah login)
+- Mobile: hamburger menu
+
+**`<Footer />`**
+- Logo + tagline
+- Link: Kurikulum, Login, Hubungi Kami
+- Credit: `© 2025 AIGYPT`
+
+**`<SesiCard />`**
+Props: `sesiNumber`, `title`, `description`, `tools`, `isCompleted`, `isLocked`
+Digunakan di: halaman kurikulum dan dashboard
+
+**`<PromptBlock />`**
+Props: `children`
+Styling khusus untuk menampilkan contoh prompt dengan visual yang distinct
+
+**`<TakeHomeBox />`**
+Props: `children`
+Box dengan border ungu untuk take-home challenge
+
+**`<ProgressTracker />`**
+Props: `progress[]`
+6 lingkaran dengan state: completed (ungu solid), current (ungu outline + pulse), locked (abu-abu)
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. **Fully responsive** — mobile-first, semua halaman harus bagus di HP
+2. **Deploy-ready di Vercel** — tidak ada dependency yang butuh runtime khusus
+3. **No TypeScript errors** — semua type harus proper
+4. **Loading states** — semua API call harus punya loading indicator
+5. **Error handling** — semua error harus ditangani dengan pesan yang jelas
+6. **Cookie security** — httpOnly, secure pada production
+7. **Supabase RLS** — aktifkan Row Level Security pada semua tabel
+8. **Tidak ada gambar eksternal** — gunakan emoji atau SVG inline
+9. **Smooth transitions** — page transition dan hover states
+10. **SEO basic** — metadata per halaman (title, description)
+
+---
+
+## SUPABASE RLS POLICIES
+
+```sql
+-- access_codes: hanya service role yang bisa insert/update
+ALTER TABLE access_codes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Service role only" ON access_codes
+  USING (false);
+
+-- members: hanya bisa baca data sendiri via email match
+ALTER TABLE members ENABLE ROW LEVEL SECURITY;
+
+-- materi_progress: hanya bisa baca/tulis data sendiri
+ALTER TABLE materi_progress ENABLE ROW LEVEL SECURITY;
+```
+
+Semua operasi database dari API routes menggunakan `SUPABASE_SERVICE_ROLE_KEY` (server-side only), bukan anon key. Anon key hanya untuk client-side yang tidak perlu akses database langsung.
+
+---
+
+## GENERATE KODE AKSES
+
+Tambahkan utility function di `lib/generateCode.ts`:
+
+```typescript
+export function generateAccessCode(type: 'mandiri' | 'kelas'): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let code = ''
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)]
+  }
+  return `AIGYPT-${code}`
+}
+```
+
+Tambahkan halaman admin sederhana di `/admin/generate` (proteksi dengan basic auth via env variable `ADMIN_PASSWORD`):
+- Form: pilih tipe (mandiri/kelas), input batch number (khusus kelas), input jumlah kode yang mau di-generate
+- Tombol: `Generate Kode`
+- Output: tabel daftar kode yang baru digenerate, bisa di-copy satu per satu atau export ke CSV
+- Kode langsung di-insert ke tabel `access_codes` via Supabase service role
+
+---
+
+## CATATAN PENTING
+
+1. Semua teks dalam **Bahasa Indonesia**
+2. Nomor WhatsApp diambil dari env variable `NEXT_PUBLIC_WA_NUMBER`
+3. Harga di pricing section tampilkan sebagai `Rp ???.000` — placeholder, belum ditentukan
+4. Pastikan semua halaman punya `<title>` yang deskriptif untuk SEO
+5. Gunakan `next/font/google` untuk load font — jangan CDN link biasa
+6. Semua cookie set dari server-side API routes, bukan client-side JavaScript
+7. Untuk production Vercel: semua environment variable harus ditambahkan di Vercel dashboard
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Bangun seluruh sistem di atas secara lengkap dan siap deploy ke Vercel. Pastikan:
+- Semua halaman ter-render dengan benar
+- Sistem login dan proteksi route berjalan
+- Progress tracking tersimpan ke Supabase
+- Konten materi 6 sesi tampil lengkap dan readable
+- Halaman admin generate kode berfungsi
+- `npm run build` berhasil tanpa error
