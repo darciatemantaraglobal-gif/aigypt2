@@ -27,6 +27,11 @@ export function Navbar() {
             </Link>
             {isAuthenticated ? (
               <>
+                <Link href="/kelas">
+                  <span className={`text-sm font-medium transition-colors cursor-pointer ${location === "/kelas" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
+                    Kelas
+                  </span>
+                </Link>
                 <Link href="/dashboard">
                   <span className={`text-sm font-medium transition-colors cursor-pointer ${location === "/dashboard" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
                     Dashboard
@@ -83,6 +88,9 @@ export function Navbar() {
             </Link>
             {isAuthenticated ? (
               <>
+                <Link href="/kelas" onClick={() => setMenuOpen(false)}>
+                  <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Kelas</span>
+                </Link>
                 <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
                   <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Dashboard</span>
                 </Link>

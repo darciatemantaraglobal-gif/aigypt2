@@ -1,0 +1,315 @@
+# Prompt — AIGYPT Halaman Pilih Kelas (Netflix-Style Catalog)
+
+Copy-paste prompt ini ke Replit Agent atau Claude Design. Halaman ini adalah "katalog kelas" AIGYPT — tempat member memilih kelas/jalur pembelajaran yang ingin mereka ikuti, dengan layout ala memilih film di Netflix.
+
+---
+
+## PROMPT
+
+Bangun halaman **katalog kelas** untuk platform AIGYPT — sebuah "pusat pembelajaran" tempat pengguna memilih kelas yang ingin mereka ikuti. Gunakan layout ala **Netflix / streaming platform**: hero featured, baris-baris kelas yang bisa di-scroll horizontal per kategori, dengan cover art yang elegan dan interaksi hover yang memukau.
+
+Konsep: AIGYPT kini punya banyak kelas. Kelas flagship "Maksimalkan AI untuk Menghasilkan Solusimu" sudah tersedia. Kelas lainnya akan menyusul. Halaman ini membuat pengguna merasa sedang menjelajahi koleksi pembelajaran premium — seperti memilih tontonan, tapi untuk bertumbuh.
+
+---
+
+## TECH STACK
+
+- Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- Framer Motion untuk animasi
+- Deploy: Vercel
+- Route: `/kelas` (atau `/belajar`)
+- Proteksi: wajib login (tambahkan ke protected paths di middleware)
+- Semua teks Bahasa Indonesia
+
+---
+
+## DESIGN SYSTEM (konsisten dark luxury AIGYPT)
+
+```css
+--bg-void: #060608
+--bg-deep: #0A0A0F
+--bg-elevated: #101018
+--bg-glass: rgba(20,20,30,0.5)
+--purple-core: #7C3AED
+--purple-bright: #A855F7
+--purple-glow: #C084FC
+--purple-deep: #4C1D95
+--text-primary: #FAFAFA
+--text-secondary: #A1A1AA
+--text-muted: #52525B
+--border-hairline: rgba(255,255,255,0.06)
+--border-glow: rgba(124,58,237,0.3)
+```
+
+Font: Space Grotesk (display), Inter (body), JetBrains Mono (label/badge). Tidak ada emoji — gunakan ikon garis tipis Lucide.
+
+---
+
+## CATATAN PENTING SOAL COVER ART
+
+Karena tidak boleh ada gambar eksternal, setiap "cover" kelas dibuat dari **gradient + pola CSS + ikon + tipografi**. Setiap kelas punya identitas warna gradient sendiri (tetap dalam tema gelap), sehingga koleksi terlihat variatif tapi kohesif. Contoh:
+- Kelas 1: gradient ungu → indigo gelap
+- Kelas 2: gradient ungu → biru gelap
+- Kelas 3: gradient ungu → magenta gelap
+- dst.
+
+Cover = surface gelap dengan gradient halus, mesh/grain texture tipis, ikon besar garis tipis di tengah/sudut, dan judul kelas. Berasa premium seperti poster minimalis.
+
+---
+
+## STRUKTUR HALAMAN
+
+### 1. TOP NAV (ringkas)
+- Logo AIGYPT kiri
+- Kanan: nama member + avatar bulat (inisial), tombol ke dashboard/logout
+- Background transparan yang jadi solid gelap saat di-scroll
+
+### 2. HERO — FEATURED CLASS (Spotlight)
+
+**Layout:** Lebar penuh, tinggi besar (±70vh). Ini "billboard" kelas unggulan. Background gradient gelap dramatis dengan glow ungu, grain halus. Konten rata kiri dengan margin lebar.
+
+Konten untuk kelas flagship:
+```
+Badge (mono): KELAS UNGGULAN · TERSEDIA SEKARANG
+
+Judul besar:
+Maksimalkan AI untuk
+Menghasilkan Solusimu
+
+Meta (mono, dipisah titik):
+6 SESI · 60 MENIT/SESI · SEMUA LEVEL · BAHASA INDONESIA
+
+Deskripsi (2 kalimat, weight ringan):
+Dari sekadar bertanya pada AI, hingga membangun aplikasi nyata
+dengan tanganmu sendiri. Kelas transformatif yang dirancang
+khusus untuk masisir.
+
+Tombol:
+- Primer: [▶ Mulai Belajar]  (filled ungu, glow)
+- Sekunder: [ⓘ Lihat Detail]  (glass button)
+```
+
+Gradient fade di bawah hero agar menyatu mulus ke baris kelas di bawahnya.
+
+### 3. BARIS KELAS (Netflix Rows)
+
+Tampilkan beberapa baris horizontal yang bisa di-scroll, masing-masing dengan judul kategori. Tiap baris berisi cover-cover kelas.
+
+**Baris-baris yang ditampilkan:**
+
+**Baris 1 — "Tersedia Sekarang"**
+Berisi kelas yang sudah bisa diakses.
+
+**Baris 2 — "Segera Hadir"**
+Kelas yang akan datang (cover dengan overlay gelap + badge "Segera Hadir", tidak bisa diklik masuk, tapi bisa di-hover untuk preview + tombol "Beri Tahu Saya").
+
+**Baris 3 — "Pilih Berdasarkan Jalurmu"**
+Pengelompokan berdasarkan persona masisir (Akademisi, Pebisnis, Kreator, dll) — bisa berisi kelas yang sama dengan tag berbeda.
+
+**Mekanik baris (penting):**
+- Scroll horizontal mulus (mouse drag, touch swipe, dan tombol panah ◀▶ yang muncul saat hover di ujung baris)
+- Cover tidak memenuhi layar — terlihat sebagian cover berikutnya agar mengundang scroll
+- Snap halus saat scroll (opsional)
+
+### 4. KARTU KELAS (Cover Card)
+
+Setiap kartu:
+- Ukuran konsisten (misal rasio 3:4 atau 16:10), cover gradient + ikon + judul
+- Badge status di pojok: `TERSEDIA` / `SEGERA HADIR` / `BARU`
+- Badge level kecil: `Pemula` / `Semua Level`
+
+**Interaksi hover (ala Netflix):**
+- Kartu sedikit membesar (scale ~1.05) dan naik (lift) dengan glow ungu
+- Muncul overlay info: judul, jumlah sesi, durasi, 1 kalimat deskripsi
+- Tombol cepat muncul: `▶ Mulai` dan `ⓘ Detail`
+- Transisi mulus (Framer Motion)
+
+**Klik kartu:**
+- Kelas tersedia → masuk ke halaman detail/kurikulum kelas tersebut
+- Kelas "Segera Hadir" → buka modal preview + opsi "Beri Tahu Saya saat dibuka"
+
+### 5. MODAL DETAIL KELAS (saat klik "Detail")
+
+Modal elegan (glassmorphism, backdrop blur gelap) berisi:
+- Cover besar kelas
+- Judul + meta (sesi, durasi, level)
+- Deskripsi lengkap
+- Daftar ringkas apa yang dipelajari (3-5 poin)
+- Tombol: `Mulai Belajar` atau `Segera Hadir` (disabled)
+- Tombol tutup (✕)
+
+---
+
+## DATA KELAS (masukkan sebagai array di `lib/classesData.ts`)
+
+```typescript
+export interface KelasItem {
+  id: string
+  title: string
+  tagline: string
+  description: string
+  sesiCount: number
+  duration: string        // misal "60 menit/sesi"
+  level: 'Pemula' | 'Semua Level' | 'Menengah'
+  status: 'available' | 'coming-soon' | 'new'
+  gradient: string        // tailwind gradient classes untuk cover
+  icon: string            // nama ikon Lucide
+  personas: string[]      // untuk kategorisasi "jalurmu"
+  route?: string          // tujuan saat diklik (jika available)
+  whatYouLearn: string[]  // poin untuk modal detail
+}
+```
+
+**Isi data (Kelas 1 = flagship yang asli, sisanya placeholder "Segera Hadir" yang bisa diedit nanti):**
+
+```
+KELAS 1 (TERSEDIA — flagship):
+id: maksimalkan-ai
+title: "Maksimalkan AI untuk Menghasilkan Solusimu"
+tagline: "Dari bertanya, hingga mencipta."
+description: "Kelas transformatif yang membawamu dari memahami AI hingga membangun solusi nyata dengan tanganmu sendiri. Dirancang khusus untuk masisir semua kalangan."
+sesiCount: 6
+duration: "60 menit/sesi"
+level: "Semua Level"
+status: "available"
+gradient: ungu → indigo gelap
+icon: Sparkles
+personas: ["Akademisi", "Organisator", "Pebisnis", "Kreator", "Pencari"]
+route: "/kurikulum"
+whatYouLearn:
+  - Memahami dan menguasai cara kerja AI
+  - Seni prompting yang menghasilkan output berkualitas
+  - Menerapkan AI untuk akademik, organisasi, bisnis, dan konten
+  - Membangun aplikasi nyata lewat vibe coding
+  - Mempresentasikan karyamu di Demo Day
+
+KELAS 2 (SEGERA HADIR — placeholder):
+id: arabic-mastery-ai
+title: "Bahasa Arab Akademik dengan AI"
+tagline: "Taklukkan makalah dan kitab klasik."
+description: "Kelas mendalam khusus akademik: menulis makalah Arab tingkat tinggi, memahami kitab klasik, dan riset ilmiah — semua dengan bantuan AI yang memahami bahasa Arab."
+sesiCount: 5
+duration: "60 menit/sesi"
+level: "Menengah"
+status: "coming-soon"
+gradient: ungu → biru gelap
+icon: BookOpen
+personas: ["Akademisi"]
+whatYouLearn:
+  - Menulis makalah Arab fusha tingkat akademik
+  - Menerjemah dan menganalisis kitab klasik
+  - Riset dan menemukan celah penelitian
+  - Mempersiapkan ujian dan munaqasyah
+
+KELAS 3 (SEGERA HADIR — placeholder):
+id: cuan-masisir-ai
+title: "Bangun Penghidupan dengan AI"
+tagline: "Ubah keterampilan jadi penghasilan."
+description: "Kelas bisnis praktis: membangun usaha online dari Mesir, copywriting yang menjual, hingga melayani pelanggan dengan kecerdasan buatan."
+sesiCount: 5
+duration: "60 menit/sesi"
+level: "Pemula"
+status: "coming-soon"
+gradient: ungu → magenta gelap
+icon: TrendingUp
+personas: ["Pebisnis"]
+whatYouLearn:
+  - Riset produk dan pasar dengan AI
+  - Copywriting dan strategi konten penjualan
+  - Otomasi layanan pelanggan
+  - Membangun toko digital sederhana
+
+KELAS 4 (SEGERA HADIR — placeholder):
+id: vibe-coding-mastery
+title: "Vibe Coding: Dari Nol ke Aplikasi"
+tagline: "Bangun software tanpa jadi programmer."
+description: "Kelas mendalam membangun aplikasi web, automasi, dan tools nyata hanya dengan mendeskripsikan apa yang kamu mau. Untuk yang ingin serius mencipta."
+sesiCount: 6
+duration: "75 menit/sesi"
+level: "Menengah"
+status: "coming-soon"
+gradient: ungu → cyan gelap
+icon: Code
+personas: ["Kreator", "Pebisnis", "Pencari"]
+whatYouLearn:
+  - Workflow vibe coding dari ide ke produk
+  - Membangun web app dengan Lovable, Bolt, v0
+  - Design system dengan DESIGN.md
+  - Deploy dan iterasi produk nyata
+
+KELAS 5 (SEGERA HADIR — placeholder):
+id: konten-dakwah-ai
+title: "Konten & Dakwah Digital dengan AI"
+tagline: "Sebarkan kebaikan dengan kecerdasan."
+description: "Kelas untuk kreator dan penggerak dakwah: memproduksi konten Islami yang berkualitas, konsisten, dan menjangkau luas dengan bantuan AI."
+sesiCount: 4
+duration: "60 menit/sesi"
+level: "Semua Level"
+status: "coming-soon"
+gradient: ungu → violet gelap
+icon: Megaphone
+personas: ["Kreator", "Organisator"]
+whatYouLearn:
+  - Ideasi konten dakwah yang relevan
+  - Produksi naskah dan visual dengan AI
+  - Strategi konsistensi dan distribusi
+  - Menjaga adab dan akurasi dalam konten
+```
+
+(Catatan untuk pemilik: Kelas 2-5 adalah placeholder yang bisa diedit, ditambah, atau dihapus sesuai rencana pengembangan.)
+
+---
+
+## KATEGORISASI BARIS
+
+- **"Tersedia Sekarang"** → semua kelas `status: available`
+- **"Segera Hadir"** → semua kelas `status: coming-soon`
+- **"Pilih Berdasarkan Jalurmu"** → bisa difilter per persona; tampilkan beberapa kelas yang relevan dengan label persona
+
+Opsional: tambahkan filter pills di atas baris (Semua · Akademisi · Pebisnis · Kreator · dll) yang menyaring kelas yang ditampilkan.
+
+---
+
+## DETAIL ANIMASI & POLISH
+
+1. **Hero**: glow ungu yang "bernapas" halus, grain texture, teks reveal saat load.
+2. **Hover kartu**: scale + lift + glow + overlay info muncul mulus (Framer Motion).
+3. **Scroll baris**: tombol panah ◀▶ fade-in saat hover ujung baris; scroll mulus.
+4. **Top nav**: transparan → solid gelap saat scroll.
+5. **Modal**: backdrop blur + fade, konten slide-up halus.
+6. **Badge status**: "Segera Hadir" dengan shimmer halus; "Baru" dengan dot ungu berkedip lembut.
+7. **Coming soon cover**: overlay gelap + ikon gembok tipis, terasa "terkunci tapi menggoda".
+8. Smooth scroll, hormati `prefers-reduced-motion`.
+
+---
+
+## RESPONSIVE
+
+- **Desktop**: hero besar, baris dengan 4-5 kartu terlihat, hover penuh
+- **Tablet**: 2-3 kartu per baris terlihat
+- **Mobile**:
+  - Hero menyesuaikan (teks lebih ringkas)
+  - Baris tetap scroll horizontal dengan swipe (sangat natural di mobile)
+  - Kartu lebih besar proporsional, info muncul saat tap (bukan hover)
+  - Modal full-screen di mobile
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia
+2. Konsisten dark luxury AIGYPT
+3. Cover dari gradient/CSS/ikon — tidak ada gambar eksternal
+4. Tidak ada localStorage/sessionStorage — gunakan React state
+5. Data kelas di `lib/classesData.ts`
+6. Tambahkan `/kelas` ke protected paths di middleware
+7. Tambahkan link "Kelas" di navbar (untuk user login)
+8. Framer Motion untuk animasi
+9. Fully responsive, `npm run build` sukses
+10. Klik kelas tersedia → navigasi ke route kelas; kelas coming-soon → modal preview
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Halaman katalog kelas ala Netflix yang elegan dan premium: hero featured, baris kelas yang bisa di-scroll horizontal, kartu cover dengan hover interaktif, modal detail, dan badge status. Kelas flagship tersedia dan bisa diakses; kelas lain sebagai placeholder "Segera Hadir" yang bisa diedit. Konsisten dengan tema dark luxury AIGYPT, fully responsive, siap deploy ke Vercel.

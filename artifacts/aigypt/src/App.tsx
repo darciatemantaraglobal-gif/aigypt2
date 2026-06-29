@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Kurikulum from "@/pages/kurikulum";
+import KelasPage from "@/pages/kelas";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import MateriPage from "@/pages/materi/index";
@@ -25,6 +26,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/kurikulum" component={Kurikulum} />
+      <Route path="/kelas" component={KelasPage} />
       <Route path="/login" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/materi/:sesi" component={MateriPage} />
