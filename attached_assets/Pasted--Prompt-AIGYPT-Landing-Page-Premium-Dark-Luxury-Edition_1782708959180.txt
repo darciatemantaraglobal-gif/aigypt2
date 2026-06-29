@@ -1,0 +1,490 @@
+# Prompt — AIGYPT Landing Page Premium (Dark Luxury Edition)
+
+Copy-paste prompt ini ke Claude Design atau Replit Agent. Ini adalah perombakan total landing page AIGYPT menjadi pengalaman dark luxury yang elegan dan eksklusif.
+
+---
+
+## PROMPT
+
+Bangun landing page premium untuk **AIGYPT** dengan estetika **dark luxury** — hitam pekat, aksen ungu, glow halus, banyak ruang napas. Tujuannya: membuat AIGYPT terasa eksklusif, berkelas, dan mahal — bukan kelas online biasa, tapi sebuah program transformatif yang dikurasi.
+
+Referensi rasa: halaman produk Apple, Linear.app, Vercel, dan brand luxury tech. Tenang, percaya diri, premium. Setiap elemen punya ruang. Tidak ada yang berteriak — semuanya berbisik dengan penuh keyakinan.
+
+---
+
+## TECH STACK
+
+- Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- Framer Motion untuk animasi scroll dan reveal
+- Deploy: Vercel
+- Route: `/` (landing page utama)
+- Semua teks Bahasa Indonesia
+
+---
+
+## DESIGN SYSTEM — DARK LUXURY
+
+### Warna
+```css
+--bg-void: #060608          /* hitam pekat — background utama */
+--bg-deep: #0A0A0F          /* hitam sekunder */
+--bg-elevated: #101018      /* card surface */
+--bg-glass: rgba(20,20,30,0.5) /* glassmorphism */
+
+--purple-core: #7C3AED      /* ungu utama */
+--purple-bright: #A855F7    /* ungu terang */
+--purple-glow: #C084FC      /* glow accent */
+--purple-deep: #4C1D95      /* ungu gelap untuk depth */
+
+--text-primary: #FAFAFA     /* putih hampir murni */
+--text-secondary: #A1A1AA   /* abu terang */
+--text-muted: #52525B       /* abu gelap untuk hint */
+
+--border-hairline: rgba(255,255,255,0.06)  /* border sangat halus */
+--border-glow: rgba(124,58,237,0.3)        /* border ungu glow */
+
+--gold-accent: #D4AF37      /* opsional: emas halus untuk sentuhan luxury */
+```
+
+### Tipografi
+- Display besar: **Space Grotesk** atau **Clash Display** (kalau bisa) — untuk headline besar, weight 500-600
+- Body: **Inter** — clean, weight 300-400 untuk kesan ringan dan elegan
+- Mono accent: **JetBrains Mono** — untuk label kecil, angka, badge
+
+Aturan tipografi luxury:
+- Headline BESAR tapi weight tidak terlalu tebal (500-600, bukan 700+)
+- Letter-spacing sedikit negatif pada headline besar (`tracking-tight`)
+- Line-height longgar pada body untuk kesan napas
+- Banyak ukuran teks kecil dengan letter-spacing lebar (`tracking-widest`) untuk label — ini signature luxury
+
+### Prinsip Visual
+1. **Ruang adalah mewah** — whitespace (atau "blackspace") yang berlimpah. Jangan padat.
+2. **Glow halus, bukan neon** — efek cahaya ungu yang lembut di balik elemen kunci, blur tinggi, opacity rendah
+3. **Gradien gelap** — radial gradient ungu sangat halus di sudut-sudut, hampir tidak terlihat
+4. **Border hairline** — garis pemisah setipis mungkin (1px dengan opacity rendah)
+5. **Glassmorphism selektif** — card dengan backdrop-blur dan transparansi untuk kesan kaca premium
+6. **Animasi reveal halus** — elemen muncul perlahan saat scroll (fade + slight rise), tidak pernah tergesa
+7. **Noise texture sangat halus** (opsional) — grain tipis di background untuk kesan filmis
+8. **Tidak ada emoji di landing** — gunakan ikon garis tipis (Lucide) atau tidak sama sekali
+
+---
+
+## STRUKTUR & KONTEN LANDING PAGE
+
+Berikut konten lengkap yang sudah dirombak agar terdengar premium, eksklusif, dan berkelas. Gunakan copy ini persis.
+
+---
+
+### SECTION 1 — HERO
+
+**Layout:** Full viewport height. Terpusat. Background hitam pekat dengan glow ungu radial sangat halus di belakang headline. Mungkin ada partikel atau grid halus yang nyaris tak terlihat.
+
+**Eyebrow (label kecil di atas, mono, tracking lebar):**
+```
+PROGRAM EKSKLUSIF UNTUK MASISIR · BATCH 01
+```
+
+**Headline utama (besar, elegan):**
+```
+Ubah Setiap Masalah
+Menjadi Karya.
+```
+
+**Sub-headline (di bawah, weight ringan, warna sekunder):**
+```
+AIGYPT adalah program transformatif yang mengajarkan masisir
+menguasai kecerdasan buatan — dari sekadar bertanya,
+hingga membangun solusi nyata dengan tangan sendiri.
+```
+
+**CTA ganda:**
+- Tombol primer: `Mulai Perjalanan` (filled ungu dengan glow halus)
+- Tombol sekunder: `Jelajahi Kurikulum` (ghost button, border hairline)
+
+**Di bawah CTA — micro trust signal (mono kecil):**
+```
+6 SESI TERKURASI · MENTORING LANGSUNG · KOMUNITAS EKSKLUSIF
+```
+
+**Scroll indicator** halus di bawah (garis tipis + animasi turun lembut).
+
+---
+
+### SECTION 2 — MANIFESTO (Pembuka Emosional)
+
+**Layout:** Section tenang, banyak ruang. Teks terpusat atau rata kiri dengan margin lebar. Satu kalimat besar yang membekas.
+
+**Label kecil (mono):**
+```
+MENGAPA AIGYPT ADA
+```
+
+**Pernyataan besar (headline editorial):**
+```
+Di Mesir, ribuan masisir menyimpan ide brilian
+yang tak pernah terwujud — bukan karena kurang mampu,
+tapi karena belum punya alatnya.
+```
+
+**Paragraf pendukung (body, warna sekunder, ukuran sedang):**
+```
+Kami percaya setiap masisir — akademisi, organisator, pebisnis,
+maupun kreator — punya potensi untuk menciptakan, bukan sekadar
+mengonsumsi. Kecerdasan buatan telah meruntuhkan tembok antara
+"punya ide" dan "mewujudkan ide". AIGYPT hadir untuk memastikan
+kamu berada di sisi yang tepat dari perubahan ini.
+```
+
+---
+
+### SECTION 3 — UNTUK SIAPA (Persona — Elegan)
+
+**Layout:** Grid card dengan glassmorphism. Setiap card punya ikon garis tipis (Lucide), judul, dan deskripsi singkat. Hover: glow ungu halus muncul di border. Banyak ruang antar card.
+
+**Label:**
+```
+DIRANCANG UNTUK SETIAP JIWA MASISIR
+```
+
+**Headline:**
+```
+Apapun Jalanmu, AIGYPT Memahaminya
+```
+
+**5 Card persona (copy diperhalus):**
+
+**Card 1 — Sang Akademisi**
+```
+Ikon: BookOpen (Lucide)
+Untuk mereka yang bergelut dengan makalah, kitab klasik,
+dan riset. AI menjadi asisten yang memahami bahasa Arab,
+merangkum referensi, dan mempertajam argumen.
+```
+
+**Card 2 — Sang Organisator**
+```
+Ikon: Users
+Untuk penggerak komunitas. Dari proposal hingga laporan,
+dari notulensi hingga publikasi — semua menjadi lebih
+ringan, lebih cepat, lebih rapi.
+```
+
+**Card 3 — Sang Pebisnis**
+```
+Ikon: TrendingUp
+Untuk yang membangun penghidupan. Riset pasar, copywriting
+yang menjual, hingga melayani pelanggan — dikerjakan dengan
+kecerdasan, bukan sekadar kerja keras.
+```
+
+**Card 4 — Sang Kreator**
+```
+Ikon: Sparkles
+Untuk yang bercerita pada dunia. Ide yang tak pernah kering,
+naskah yang mengalir, konten yang berlipat — semua dalam
+hitungan menit, bukan hari.
+```
+
+**Card 5 — Sang Pencari**
+```
+Ikon: Compass
+Untuk yang merasa kewalahan dan belum tahu harus mulai
+dari mana. Justru di sinilah tempat terbaik untuk memulai.
+```
+
+---
+
+### SECTION 4 — PERJALANAN (The Journey — Signature Section)
+
+**Layout:** Ini section paling memukau. Visualisasikan 5 tahap transformasi sebagai perjalanan vertikal atau horizontal yang elegan, dengan garis penghubung bercahaya halus. Setiap tahap reveal saat scroll. Berasa seperti naik tingkat.
+
+**Label:**
+```
+SEBUAH METAMORFOSIS DALAM ENAM MINGGU
+```
+
+**Headline:**
+```
+Dari Bertanya, Hingga Mencipta
+```
+
+**5 Tahap (dengan nomor mono elegan):**
+
+```
+01 — KESADARAN
+Memahami AI bukan sebagai sihir, tapi sebagai alat
+yang tunduk pada mereka yang tahu cara memerintahnya.
+
+02 — PENGUASAAN
+Menguasai seni berdialog dengan AI. Satu keterampilan
+yang akan mengubah segalanya.
+
+03 — PENERAPAN
+Menerapkan AI pada kehidupan nyata — akademik, organisasi,
+setiap tugas yang selama ini menyita waktumu.
+
+04 — PRODUKSI
+Menjadikan AI mesin yang menghasilkan — konten, karya,
+bahkan penghidupan.
+
+05 — PENCIPTAAN
+Membangun solusimu sendiri. Aplikasi nyata, dari masalah
+nyata, dengan tanganmu sendiri — tanpa perlu menjadi programmer.
+```
+
+**Penutup section (kalimat membekas):**
+```
+Di akhir perjalanan, kamu tidak lagi sama.
+```
+
+---
+
+### SECTION 5 — KURIKULUM (Preview Elegan)
+
+**Layout:** Daftar 6 sesi dalam format yang berkelas. Bukan card ramai, tapi baris-baris elegan dengan nomor besar, judul, dan deskripsi singkat. Garis hairline pemisah. Hover: baris menyala halus.
+
+**Label:**
+```
+ENAM SESI YANG DIKURASI DENGAN CERMAT
+```
+
+**Headline:**
+```
+Kurikulum
+```
+
+**6 Sesi (format ringkas elegan):**
+
+```
+SESI 01
+AI Itu Bukan Sulap, Tapi Hampir
+Membangun fondasi mental dan memahami lanskap kecerdasan buatan.
+
+SESI 02
+Seni Berdialog dengan Kecerdasan
+Menguasai prompting — keterampilan inti yang membedakan amatir dan ahli.
+
+SESI 03
+Asisten untuk Ilmu dan Amanah
+Menerapkan AI pada dunia akademik dan organisasi.
+
+SESI 04
+Kecerdasan yang Menghasilkan
+Memanfaatkan AI untuk bisnis dan karya kreatif.
+
+SESI 05
+Tangan yang Mencipta
+Membangun aplikasi dan solusi nyata melalui vibe coding.
+
+SESI 06
+Pembuktian
+Demo Day — mempersembahkan karya yang lahir dari perjalananmu.
+```
+
+**CTA:** `Lihat Kurikulum Lengkap →` (ghost button)
+
+---
+
+### SECTION 6 — APA YANG KAMU BAWA PULANG (Value — Premium)
+
+**Layout:** Grid atau daftar elegan dengan ikon garis tipis. Setiap poin terasa berharga.
+
+**Label:**
+```
+LEBIH DARI SEKADAR KELAS
+```
+
+**Headline:**
+```
+Yang Tinggal Bersamamu, Selamanya
+```
+
+**5 Poin (copy diperhalus):**
+
+```
+— Sebuah Karya Nyata
+Solusi atau aplikasi buatanmu sendiri, lahir dari masalah
+yang kamu pahami betul. Bukan latihan — sesuatu yang nyata.
+
+— Keterampilan yang Tak Lekang
+Kemampuan berdialog dengan AI yang akan relevan
+sepanjang kariermu, di bidang apapun.
+
+— Portofolio Pertama
+Bukti nyata kemampuanmu di era kecerdasan buatan —
+modal berharga untuk masa depan.
+
+— Akses Abadi
+Seluruh materi AIGYPT, dapat kamu akses kapanpun,
+selamanya, melalui keanggotaan eksklusifmu.
+
+— Lingkaran Eksklusif
+Komunitas alumni AIGYPT — tempat para pencipta saling
+menguatkan dan berkolaborasi.
+```
+
+---
+
+### SECTION 7 — KEANGGOTAAN (Pricing — Eksklusif)
+
+**Layout:** Dua tier keanggotaan disajikan sebagai pilihan premium, bukan "paket harga". Card elegan dengan glassmorphism. Tier kedua (Kelas) di-highlight dengan border glow dan badge halus.
+
+**Label:**
+```
+PILIH TINGKAT KEANGGOTAANMU
+```
+
+**Headline:**
+```
+Sebuah Investasi pada Dirimu
+```
+
+**Tier 1 — Keanggotaan Mandiri**
+```
+Untuk jiwa yang belajar dengan caranya sendiri.
+
+— Akses penuh seluruh materi AIGYPT
+— Kode keanggotaan eksklusif
+— Pembaruan materi selamanya
+— Akses ke Vibe Coding Toolbox
+
+[Harga: Rp ???]
+Tombol: Bergabung sebagai Member Mandiri
+```
+
+**Tier 2 — Keanggotaan Kelas (HIGHLIGHTED)**
+```
+Badge: PALING DIMINATI
+
+Untuk yang menginginkan bimbingan penuh.
+
+— Segala yang ada di Keanggotaan Mandiri
+— Enam sesi mentoring langsung
+— Bimbingan personal dari mentor
+— Lingkaran diskusi eksklusif per batch
+— Sertifikat penyelesaian
+— Undangan Demo Day
+
+[Harga: Rp ???]
+Tombol: Bergabung sebagai Member Kelas
+```
+
+**Catatan di bawah (mono kecil, warna muted):**
+```
+KUOTA TERBATAS PER BATCH UNTUK MENJAGA KUALITAS BIMBINGAN
+```
+
+---
+
+### SECTION 8 — PERTANYAAN (FAQ — Minimalis)
+
+**Layout:** Accordion elegan. Garis hairline. Animasi buka-tutup yang halus. Tidak ramai.
+
+**Label:**
+```
+HAL YANG MUNGKIN KAMU TANYAKAN
+```
+
+**Headline:**
+```
+Pertanyaan
+```
+
+**5 FAQ:**
+```
+1. Apakah saya perlu bisa memprogram sebelumnya?
+Tidak sama sekali. AIGYPT dirancang untuk membawamu dari nol.
+Justru keindahannya: kamu akan mencipta tanpa perlu menjadi programmer.
+
+2. Bagaimana bentuk mentoring langsungnya?
+Enam sesi bimbingan intensif bersama mentor, di mana kamu belajar,
+berlatih, dan mendapat umpan balik langsung atas karyamu.
+
+3. Apa perbedaan Member Mandiri dan Member Kelas?
+Member Mandiri belajar dengan kecepatannya sendiri melalui materi.
+Member Kelas mendapat seluruh materi plus bimbingan langsung,
+komunitas, dan sertifikat.
+
+4. Apakah materi tetap bisa diakses setelah selesai?
+Selamanya. Keanggotaanmu tidak memiliki tanggal kedaluwarsa.
+
+5. Berapa peserta dalam satu batch?
+Sengaja kami batasi untuk menjaga kualitas bimbingan.
+Setiap peserta layak mendapat perhatian penuh.
+```
+
+---
+
+### SECTION 9 — CTA PENUTUP (Grand Finale)
+
+**Layout:** Section penuh, dramatis tapi tenang. Background hitam pekat dengan glow ungu besar yang sangat halus di tengah. Satu pernyataan kuat, satu tombol.
+
+**Pernyataan besar:**
+```
+Ide-idemu layak diwujudkan.
+```
+
+**Sub:**
+```
+Batch 01 segera dibuka. Tempat sangat terbatas.
+```
+
+**Tombol:** `Amankan Tempatmu` (filled ungu, glow, ukuran besar)
+
+**Di bawah (mono kecil):**
+```
+PERJALANAN TRANSFORMASI DIMULAI DARI SATU LANGKAH
+```
+
+---
+
+### FOOTER
+
+**Layout:** Minimalis, elegan. Logo AIGYPT, tagline, link penting, dan kredit.
+
+```
+AIGYPT
+Maksimalkan AI untuk Menghasilkan Solusimu
+
+[Link: Kurikulum · Keanggotaan · Toolbox · Masuk]
+
+[Kontak via WhatsApp]
+
+© 2026 AIGYPT · Program untuk Masisir, oleh Masisir
+```
+
+---
+
+## DETAIL ANIMASI & POLISH
+
+1. **Scroll reveal**: Setiap section dan elemen kunci muncul dengan fade + rise halus (Framer Motion `whileInView`), durasi ~600ms, easing lembut. Stagger pada grup elemen.
+2. **Hero glow**: Radial gradient ungu di belakang headline yang "bernapas" perlahan (animasi opacity sangat halus, loop lambat ~6s).
+3. **Hover pada card**: border hairline berubah jadi border-glow ungu, sangat halus.
+4. **Tombol primer**: glow ungu lembut yang sedikit menguat saat hover.
+5. **Garis penghubung di Section Perjalanan**: menyala dari atas ke bawah saat di-scroll (animasi draw).
+6. **Angka mono (01, 02, ...)**: besar, elegan, warna ungu muted.
+7. **Cursor-aware glow** (opsional, desktop): glow ungu sangat halus mengikuti kursor di hero.
+8. **Noise/grain overlay** (opsional): texture grain sangat tipis di seluruh halaman untuk kesan filmis premium.
+9. **Smooth scroll** antar section.
+10. Semua animasi hormati `prefers-reduced-motion`.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Fully responsive — mobile-first, tetap elegan di layar kecil
+2. Deploy-ready di Vercel
+3. No TypeScript errors
+4. Tidak ada gambar eksternal — gunakan CSS, gradient, SVG, dan ikon Lucide
+5. Tidak ada localStorage/sessionStorage
+6. Google Fonts via next/font/google
+7. Performa baik — animasi pakai transform & opacity (GPU-friendly)
+8. Semua teks Bahasa Indonesia
+9. SEO metadata lengkap
+10. `npm run build` sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Landing page premium dark luxury lengkap dengan 9 section + footer, copy yang sudah dirombak, animasi scroll yang elegan, dan estetika eksklusif yang membuat AIGYPT terasa seperti program transformatif berkelas tinggi. Siap deploy ke Vercel.
