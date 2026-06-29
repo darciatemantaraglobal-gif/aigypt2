@@ -121,20 +121,24 @@ function IconCheck() {
 
 const faqs = [
   {
-    q: "Apakah AIGYPT hanya untuk yang sudah bisa coding?",
-    a: "Sama sekali tidak. AIGYPT dirancang untuk semua masisir tanpa syarat teknis apa pun. Yang kamu butuhkan hanya kemauan untuk belajar dan mencoba.",
+    q: "Apakah saya perlu bisa memprogram sebelumnya?",
+    a: "Tidak sama sekali. AIGYPT dirancang untuk membawamu dari nol. Kamu akan mencipta tanpa perlu menjadi programmer.",
   },
   {
-    q: "Bagaimana format pembelajaran di AIGYPT?",
-    a: "Setiap kelas tersusun dari sesi-sesi terstruktur dengan durasi sekitar 60 menit per sesi, dikombinasikan misi praktis yang bisa langsung dikerjakan.",
+    q: "Apa itu format Hybrid?",
+    a: "Ada jadwal mentoring live bersama mentor setiap minggunya. Tapi seluruh materi sudah terbuka sejak hari pertama — kamu bisa belajar kapan saja sesuai waktumu.",
   },
   {
-    q: "Apa yang membedakan AIGYPT dengan kursus AI online lainnya?",
-    a: "Setiap materi, contoh, dan studi kasus dikurasi dengan konteks kehidupan nyata masisir — dari makalah Arab hingga organisasi mahasiswa, dari bisnis perantauan hingga dakwah digital.",
+    q: "Berapa peserta per batch?",
+    a: "Sengaja dibatasi untuk menjaga kualitas bimbingan. Setiap peserta berhak mendapat perhatian yang penuh.",
   },
   {
-    q: "Apakah ada sertifikat setelah menyelesaikan kelas?",
-    a: "Ya, peserta yang menyelesaikan seluruh perjalanan dan mengumpulkan karya akan mendapatkan sertifikat dari AIGYPT.",
+    q: "Apakah materi bisa diakses setelah batch selesai?",
+    a: "Selamanya. Aksesmu tidak memiliki tanggal kedaluwarsa.",
+  },
+  {
+    q: "Apa perbedaan Member Mandiri dan Member Kelas?",
+    a: "Member Mandiri mendapat akses penuh materi untuk belajar mandiri. Member Kelas mendapat semua itu, ditambah mentoring live, komunitas batch, dan sertifikat penyelesaian.",
   },
 ];
 
@@ -219,7 +223,7 @@ export default function Home() {
             className="font-mono text-xs tracking-widest mb-8 inline-flex items-center gap-2"
             style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
           >
-            RUMAH BELAJAR AI UNTUK MASISIR
+            PLATFORM PEMBELAJARAN AI UNTUK MAHASISWA INDONESIA DI MESIR
           </motion.p>
 
           <motion.h1
@@ -232,33 +236,43 @@ export default function Home() {
             <span style={{ color: "#A855F7" }}>Buatan.</span>{" "}
             <span style={{ color: "rgba(250,250,250,0.85)" }}>Ciptakan</span>
             <br />
-            <span style={{ color: "rgba(250,250,250,0.85)" }}>Masa Depanmu.</span>
+            <span style={{ color: "rgba(250,250,250,0.85)" }}>Sesuatu yang Nyata.</span>
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-12"
+            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-8"
             style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            AIGYPT adalah tempat masisir belajar memanfaatkan AI untuk segala aspek kehidupan —
-            dari bangku kuliah Al-Azhar, hingga membangun karya dan penghidupan sendiri.
+            AIGYPT adalah platform yang mengajarkan cara memanfaatkan AI secara mendalam —
+            bukan sekadar menggunakannya, tapi menjadikannya alat untuk menciptakan karya dan solusi nyata.
           </motion.p>
 
+          <motion.div
+            variants={fadeUp}
+            className="inline-flex flex-col items-center gap-1 mb-10 px-5 py-3 rounded-xl"
+            style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)" }}
+          >
+            <span className="font-mono text-xs font-bold tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 · PENDAFTARAN DIBUKA</span>
+            <span className="font-mono text-xs" style={{ color: "#71717A" }}>Kelas dimulai 5 Juli 2026 · Tempat sangat terbatas</span>
+          </motion.div>
+
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4 mb-16">
-            <Link href="/login">
-              <span
-                className="inline-flex items-center gap-2 text-base font-medium text-white cursor-pointer transition-all duration-200"
-                style={{
-                  background: "#7C3AED",
-                  borderRadius: "12px",
-                  padding: "15px 24px",
-                  minHeight: "48px",
-                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
-                }}
-              >
-                Mulai Belajar <IconArrow />
-              </span>
-            </Link>
+            <a
+              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
+              style={{
+                background: "#7C3AED",
+                borderRadius: "12px",
+                padding: "15px 24px",
+                minHeight: "48px",
+                boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+              }}
+            >
+              Daftar Batch 1 Sekarang <IconArrow />
+            </a>
             <Link href="/kurikulum">
               <span
                 className="inline-flex items-center gap-2 text-base font-normal cursor-pointer transition-all duration-200 hover:text-white"
@@ -279,7 +293,7 @@ export default function Home() {
             variants={fadeUp}
             className="inline-flex flex-wrap items-center justify-center gap-6"
           >
-            {["DIKURASI UNTUK MASISIR", "BERBASIS PRAKTIK", "KOMUNITAS PENCIPTA"].map((t) => (
+            {["6 SESI", "60 MENIT/SESI", "HYBRID", "SEMUA LEVEL"].map((t) => (
               <span key={t} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
                 {t}
               </span>
@@ -291,24 +305,27 @@ export default function Home() {
       {/* ══ SECTION 2: VISI / MANIFESTO ══ */}
       <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <Reveal className="max-w-4xl mx-auto px-6 sm:px-10 text-center">
-          <SectionLabel>VISI KAMI</SectionLabel>
+          <SectionLabel>MENGAPA AIGYPT ADA</SectionLabel>
           <motion.h2
             variants={fadeUp}
             className="font-display font-semibold leading-tight mb-10"
             style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.015em" }}
           >
-            Kami percaya setiap masisir ditakdirkan untuk{" "}
-            <span style={{ color: "#A855F7" }}>mencipta</span> — bukan sekadar mengonsumsi.
+            Banyak yang sudah menggunakan AI.
+            <br />
+            <span style={{ color: "#A855F7" }}>Sedikit yang benar-benar menguasainya.</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="text-base leading-[1.9] max-w-2xl mx-auto"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Di tengah ribuan masisir yang menuntut ilmu di negeri para nabi, tersimpan potensi
-            yang luar biasa. Kecerdasan buatan kini menjadi alat yang mampu melipatgandakan
-            potensi itu. AIGYPT hadir untuk memastikan tak satu pun masisir tertinggal dari
-            perubahan zaman — dengan ilmu yang dikurasi khusus untuk dunia mereka.
+            Ada jarak antara memakai AI dan menguasainya. Yang pertama mengikuti apa yang disuguhkan.
+            Yang kedua menentukan apa yang ingin diciptakan.
+            <br /><br />
+            AIGYPT hadir untuk menutup jarak itu — dengan kurikulum yang dirancang dari kebutuhan nyata,
+            bukan teori generik. Tempat belajar yang membuatmu tidak hanya paham AI, tapi mampu membangun
+            sesuatu dengan tanganmu sendiri.
           </motion.p>
         </Reveal>
       </section>
@@ -317,7 +334,7 @@ export default function Home() {
       <section className="py-[48px] sm:py-[80px]">
         <div className="max-w-6xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-16">
-            <SectionLabel>SPEKTRUM PEMBELAJARAN</SectionLabel>
+            <SectionLabel>APA YANG AKAN KAMU PELAJARI</SectionLabel>
             <motion.h2
               variants={fadeUp}
               className="font-display font-semibold"
@@ -333,32 +350,32 @@ export default function Home() {
               {
                 icon: <IconBrain />,
                 title: "Fondasi & Mindset AI",
-                desc: "Memahami cara kerja AI dan mengubah cara berpikir tentangnya.",
+                desc: "Memahami cara kerja AI dengan jernih — tanpa jargon, tanpa mitos. Fondasi yang mengubah cara kamu memandangnya.",
               },
               {
                 icon: <IconMessage />,
                 title: "Seni Prompting",
-                desc: "Berdialog dengan AI untuk hasil yang berkualitas tinggi.",
+                desc: "Keterampilan inti yang membedakan pengguna biasa dan yang mahir. Berdialog dengan AI untuk hasil yang benar-benar berguna.",
               },
               {
                 icon: <IconBook />,
-                title: "AI untuk Akademik",
-                desc: "Makalah Arab, kitab klasik, riset, dan skripsi.",
+                title: "AI untuk Keperluan Akademik",
+                desc: "Menulis lebih baik, memahami referensi lebih cepat, dan memperkuat argumen penelitianmu.",
               },
               {
                 icon: <IconUsers />,
-                title: "AI untuk Organisasi",
-                desc: "Proposal, notulensi, publikasi, dan laporan.",
+                title: "AI untuk Organisasi & Manajemen",
+                desc: "Dari perencanaan acara, dokumentasi, hingga komunikasi — semua lebih terstruktur dan efisien.",
               },
               {
                 icon: <IconTrending />,
                 title: "AI untuk Bisnis & Konten",
-                desc: "Copywriting, riset pasar, dan produksi konten.",
+                desc: "Riset, copywriting, produksi konten, dan strategi — dengan kecepatan dan kualitas yang berbeda.",
               },
               {
                 icon: <IconCode />,
                 title: "Vibe Coding",
-                desc: "Membangun aplikasi nyata tanpa menjadi programmer.",
+                desc: "Membangun aplikasi dan solusi nyata dari masalahmu — tanpa perlu menjadi programmer.",
               },
             ].map((item, i) => (
               <motion.div
@@ -397,30 +414,43 @@ export default function Home() {
       >
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-16">
-            <SectionLabel>MENGAPA AIGYPT BERBEDA</SectionLabel>
+            <SectionLabel>UNTUK SIAPA AIGYPT DIRANCANG</SectionLabel>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display font-semibold"
+              style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)", letterSpacing: "-0.015em" }}
+            >
+              Apapun Kesibukanmu,{" "}
+              <span style={{ color: "#A855F7" }}>AI Bisa Membantumu Lebih</span>
+            </motion.h2>
           </Reveal>
 
           <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-12">
             {[
               {
                 num: "01",
-                title: "Dikurasi untuk Masisir",
-                desc: "Setiap contoh dan studi kasus lahir dari kehidupan nyata mahasiswa Indonesia di Mesir. Bukan teori generik yang bisa dicari sendiri.",
+                title: "Sang Akademisi",
+                desc: "Bergelut dengan tugas, makalah, dan riset. AI menjadi asisten yang membantu kamu berpikir lebih dalam dan bekerja lebih cepat.",
               },
               {
                 num: "02",
-                title: "Berbasis Praktik",
-                desc: "Kamu tidak hanya belajar — kamu mencipta. Setiap pembelajaran berujung pada karya nyata yang bisa langsung dipakai.",
+                title: "Sang Organisator",
+                desc: "Mengelola kepanitiaan, acara, dan publikasi. Dari proposal hingga laporan — semua menjadi lebih ringan dan rapi.",
               },
               {
                 num: "03",
-                title: "Bertumbuh Bersamamu",
-                desc: "Dari pemula hingga pencipta. Materi tersusun bertahap, mengikuti perjalananmu dari fondasi menuju penciptaan.",
+                title: "Sang Pebisnis",
+                desc: "Membangun usaha dengan sumber daya terbatas. AI menjadi mitra yang memperbesar dampakmu tanpa menambah bebanmu.",
               },
               {
                 num: "04",
-                title: "Komunitas Pencipta",
-                desc: "Bergabung dengan masisir lain yang membangun masa depan dengan kecerdasan buatan — saling belajar, saling mendorong.",
+                title: "Sang Kreator",
+                desc: "Memproduksi konten secara konsisten dan berkualitas. Ide tidak pernah kering. Karya terus mengalir.",
+              },
+              {
+                num: "05",
+                title: "Sang Pencari",
+                desc: "Tahu AI penting, tapi belum tahu harus mulai dari mana. Justru di sinilah tempat yang paling tepat untuk memulai.",
               },
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp} className="flex gap-6">
@@ -444,13 +474,13 @@ export default function Home() {
       <section className="py-[48px] sm:py-[80px]">
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-12">
-            <SectionLabel>MULAI DARI SINI</SectionLabel>
+            <SectionLabel>KELAS PERTAMA · TERSEDIA SEKARANG</SectionLabel>
             <motion.h2
               variants={fadeUp}
               className="font-display font-semibold"
               style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
             >
-              Kelas Perdana AIGYPT
+              Maksimalkan AI untuk Menghasilkan Solusimu
             </motion.h2>
           </Reveal>
 
@@ -488,8 +518,8 @@ export default function Home() {
                       <br />
                       Menghasilkan Solusimu
                     </h3>
-                    <p className="text-sm italic" style={{ color: "#71717A" }}>
-                      "Kelas perdana AIGYPT — dari bertanya, hingga mencipta."
+                    <p className="text-sm" style={{ color: "#71717A" }}>
+                      Kelas perdana AIGYPT. Enam minggu perjalanan dari memahami AI hingga membangun solusi nyata atas masalah yang kamu hadapi.
                     </p>
                   </div>
                   <div
@@ -508,35 +538,42 @@ export default function Home() {
                   </div>
                 </div>
 
+                <div className="mb-6 flex flex-wrap gap-3">
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 1 — PENDAFTARAN DIBUKA</span>
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Dimulai: 5 Juli 2026</span>
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Kuota terbatas per batch</span>
+                </div>
+
                 <p className="text-sm leading-[1.9] mb-8 max-w-2xl" style={{ color: "#A1A1AA", fontWeight: 300 }}>
-                  Perjalanan transformatif dari memahami AI hingga membangun solusi nyata dengan tanganmu sendiri.
-                  Enam sesi yang akan mengubah cara kamu bekerja, belajar, dan berkarya.
+                  Format Hybrid: ada jadwal mentoring live, tapi seluruh materi bisa kamu akses kapan saja setelah mendaftar.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-4">
-                  <Link href="/kelas/maksimalkan-ai">
-                    <span
-                      className="inline-flex items-center gap-2 text-base font-medium text-white cursor-pointer transition-all duration-200"
-                      style={{
-                        background: "#7C3AED",
-                        borderRadius: "12px",
-                        padding: "12px 24px",
-                        minHeight: "48px",
-                        boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
-                      }}
-                    >
-                      Lihat Kelas Ini <IconArrow />
-                    </span>
-                  </Link>
+                  <a
+                    href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT — Kelas Maksimalkan AI")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
+                    style={{
+                      background: "#7C3AED",
+                      borderRadius: "12px",
+                      padding: "15px 24px",
+                      minHeight: "48px",
+                      boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                    }}
+                  >
+                    Daftar Batch 1 Sekarang <IconArrow />
+                  </a>
                   <Link href="/kurikulum">
                     <span
                       className="text-sm cursor-pointer transition-colors hover:text-white"
                       style={{ color: "#71717A" }}
                     >
-                      Lihat detail kurikulum →
+                      Lihat Kurikulum Lengkap →
                     </span>
                   </Link>
                 </div>
+                <p className="mt-4 font-mono text-xs" style={{ color: "#52525B", letterSpacing: "0.1em" }}>PENDAFTARAN DITUTUP SAAT KUOTA TERPENUHI</p>
               </div>
             </motion.div>
           </Reveal>
@@ -553,19 +590,19 @@ export default function Home() {
               className="font-display font-semibold mb-4"
               style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
             >
-              Perjalanan Ini Baru Dimulai
+              Ini Baru Permulaan
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-sm" style={{ color: "#52525B" }}>
-              Kelas baru terus dikembangkan bersama kebutuhan masisir.
+            <motion.p variants={fadeUp} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
+              KELAS BARU TERUS DIKEMBANGKAN
             </motion.p>
           </Reveal>
 
           <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { title: "Bahasa Arab Akademik dengan AI", desc: "Taklukkan makalah, muthala'ah, dan kitab klasik dengan bantuan AI." },
-              { title: "Bangun Penghidupan dengan AI", desc: "Ubah keterampilan dan ide menjadi sumber penghasilan nyata." },
-              { title: "Vibe Coding: Dari Nol ke Aplikasi", desc: "Bangun software yang berguna tanpa perlu menjadi programmer." },
-              { title: "Konten & Dakwah Digital dengan AI", desc: "Sebarkan kebaikan dan ilmu dengan kecerdasan sebagai alat." },
+              { title: "Bahasa Arab Akademik dengan AI", desc: "Taklukkan makalah, muthala'ah, dan teks akademik dengan AI sebagai asisten linguistikmu." },
+              { title: "Bangun Penghidupan dengan AI", desc: "Ubah keterampilan dan potensimu menjadi sumber penghasilan yang berkelanjutan." },
+              { title: "Vibe Coding: Dari Nol ke Aplikasi", desc: "Bangun software yang berguna dan nyata tanpa perlu menjadi programmer." },
+              { title: "Konten & Dakwah Digital dengan AI", desc: "Sebarkan kebaikan dan ilmu dengan kecerdasan buatan sebagai alat produksimu." },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -602,7 +639,7 @@ export default function Home() {
       <section id="keanggotaan" className="py-[48px] sm:py-[80px]">
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-14">
-            <SectionLabel>BERGABUNG DENGAN AIGYPT</SectionLabel>
+            <SectionLabel>PILIH CARAMU BERGABUNG</SectionLabel>
             <motion.h2
               variants={fadeUp}
               className="font-display font-semibold mb-4"
@@ -611,7 +648,7 @@ export default function Home() {
               Sebuah Investasi pada Dirimu
             </motion.h2>
             <motion.p variants={fadeUp} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
-              KUOTA TERBATAS PER BATCH UNTUK MENJAGA KUALITAS
+              KUOTA TERBATAS · PENDAFTARAN DITUTUP SAAT PENUH
             </motion.p>
           </Reveal>
 
@@ -620,29 +657,30 @@ export default function Home() {
               {
                 name: "Mandiri",
                 tag: "Fleksibel",
-                desc: "Akses mandiri ke semua materi kelas. Belajar dengan kecepatanmu sendiri.",
+                desc: "Untuk yang ingin belajar dengan kecepatan sendiri.",
                 features: [
-                  "Akses seluruh materi kelas",
-                  "Forum komunitas AIGYPT",
-                  "Update materi berkala",
-                  "Sertifikat penyelesaian",
+                  "Akses penuh seluruh materi 6 sesi",
+                  "Kode keanggotaan eksklusif",
+                  "Pembaruan materi selamanya",
+                  "Akses Vibe Coding Toolbox",
                 ],
-                cta: "Mulai Mandiri",
-                msg: "Halo, saya tertarik dengan Keanggotaan Mandiri AIGYPT",
+                cta: "Daftar sebagai Member Mandiri",
+                msg: "Halo, saya ingin mendaftar sebagai Member Mandiri AIGYPT",
                 highlight: false,
               },
               {
                 name: "Kelas",
-                tag: "Rekomendasi",
-                desc: "Pengalaman belajar penuh dengan sesi langsung, mentor, dan komunitas aktif.",
+                tag: "BATCH 1 · DIBUKA",
+                desc: "Untuk yang ingin bimbingan penuh dan komunitas.",
                 features: [
-                  "Semua fitur Mandiri",
-                  "Sesi live interaktif",
-                  "Mentoring & umpan balik",
-                  "Demo Day & portofolio",
+                  "Semua yang ada di Member Mandiri",
+                  "6 sesi mentoring live (mulai 5 Juli 2026)",
+                  "Bimbingan dan feedback langsung",
+                  "Komunitas eksklusif Batch 1",
+                  "Sertifikat penyelesaian",
                 ],
-                cta: "Daftar Kelas",
-                msg: "Halo, saya tertarik dengan Keanggotaan Kelas AIGYPT",
+                cta: "Daftar Batch 1 Sekarang",
+                msg: "Halo, saya ingin mendaftar Batch 1 AIGYPT — Member Kelas",
                 highlight: true,
               },
             ].map((tier) => (
@@ -736,20 +774,18 @@ export default function Home() {
             className="font-display font-semibold leading-tight mb-6"
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)", letterSpacing: "-0.02em" }}
           >
-            Masa depanmu dimulai
-            <br />
-            <span style={{ color: "#A855F7" }}>dengan satu keputusan.</span>
+            Mulai dari satu keputusan.
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="text-base sm:text-lg mb-12"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Bergabunglah dengan masisir yang memilih untuk mencipta.
+            Batch 1 dimulai 5 Juli 2026. Tempat sangat terbatas.
           </motion.p>
-          <motion.div variants={fadeUp}>
+          <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
             <a
-              href={waUrl("Halo, saya ingin memulai perjalanan bersama AIGYPT")}
+              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
@@ -761,7 +797,16 @@ export default function Home() {
                 boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
               }}
             >
-              Mulai Perjalananmu <IconArrow />
+              Daftar Batch 1 Sekarang <IconArrow />
+            </a>
+            <a
+              href={waUrl("Halo, saya ingin menghubungi AIGYPT")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-xs tracking-widest transition-colors hover:text-white"
+              style={{ color: "#52525B", letterSpacing: "0.15em" }}
+            >
+              ATAU HUBUNGI KAMI VIA WHATSAPP
             </a>
           </motion.div>
         </Reveal>

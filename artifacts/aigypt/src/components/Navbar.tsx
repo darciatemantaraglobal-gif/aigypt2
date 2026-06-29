@@ -1,15 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth, useLogoutAction } from "@/hooks/use-auth";
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [barVisible, setBarVisible] = useState(false);
   const { user, isAuthenticated } = useAuth();
   const { handleLogout, isPending } = useLogoutAction();
   const [location] = useLocation();
 
+  useEffect(() => {
+    if (!sessionStorage.getItem("aigypt-bar-dismissed")) {
+      setBarVisible(true);
+    }
+  }, []);
+
+  function dismissBar() {
+    sessionStorage.setItem("aigypt-bar-dismissed", "1");
+    setBarVisible(false);
+  }
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-[#1E1E2E] bg-[#0A0A0F]/90 backdrop-blur-md">
+    <div className="sticky top-0 z-50">
+      {barVisible && (
+        <div className="relative flex items-center justify-center gap-3 py-2 px-6 text-center" style={{ background: "#7C3AED" }}>
+          <p className="font-mono text-xs tracking-widest text-white" style={{ letterSpacing: "0.15em" }}>
+            PENDAFTARAN BATCH 1 DIBUKA · KELAS DIMULAI 5 JULI 2026 · TEMPAT TERBATAS
+          </p>
+          <button
+            onClick={dismissBar}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+            aria-label="Tutup"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
+    <nav className="border-b border-[#1E1E2E] bg-[#0A0A0F]/90 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between py-4">
           <Link href={isAuthenticated ? "/kelas" : "/"}>
@@ -126,5 +155,6 @@ export function Navbar() {
         )}
       </div>
     </nav>
+    </div>
   );
 }

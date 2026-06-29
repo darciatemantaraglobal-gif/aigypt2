@@ -11,7 +11,7 @@ export function Footer() {
               AI<span className="text-[#A855F7]">GYPT</span>
             </div>
             <p className="text-sm text-[#94A3B8] max-w-xs">
-              Platform mentoring AI pertama untuk masisir Al-Azhar Kairo.
+              Platform Pembelajaran AI
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
@@ -21,6 +21,17 @@ export function Footer() {
                 <Link href="/kurikulum">
                   <span className="text-sm text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Kurikulum</span>
                 </Link>
+                <Link href="/kelas">
+                  <span className="text-sm text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Kelas</span>
+                </Link>
+                <a
+                  href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[#94A3B8] hover:text-white transition-colors"
+                >
+                  Pendaftaran
+                </a>
                 <Link href="/login">
                   <span className="text-sm text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Masuk</span>
                 </Link>
@@ -30,14 +41,14 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="text-sm text-[#94A3B8] hover:text-white transition-colors"
                 >
-                  Hubungi Kami
+                  Kontak via WhatsApp
                 </a>
               </div>
             </div>
           </div>
         </div>
         <div className="mt-10 pt-6 border-t border-[#1E1E2E]">
-          <p className="text-xs text-[#94A3B8]">© 2025 AIGYPT. Semua hak dilindungi.</p>
+          <p className="text-xs text-[#94A3B8]">© 2026 AIGYPT</p>
         </div>
       </div>
     </footer>

@@ -1,0 +1,464 @@
+# Prompt — AIGYPT Landing Page & Kurikulum (Tone Netral, Target Masisir)
+
+Ini revisi copy dari versi sebelumnya. Struktur, desain, tech stack, dan animasi SAMA PERSIS — yang berubah hanya teks/copy-nya. Tone lebih netral dan berkelas, tidak terlalu eksplisit masisir, tapi konteks dan contoh tetap relevan untuk mereka.
+
+PENTING: Implementasikan HANYA perubahan copy di bawah ini. Semua spesifikasi teknis, design system, animasi, dan struktur section dari prompt sebelumnya tetap berlaku.
+
+---
+
+## ATURAN BAHASA (DIPERBARUI)
+
+- Panggilan: **"kamu"** — konsisten di seluruh halaman
+- Tone: tenang, percaya diri, premium — seperti brand teknologi kelas dunia yang berbicara kepada orang yang cerdas
+- Hindari istilah terlalu spesifik: ghurbah, kitab turats, talaqqi, maisyah, jastip, "negeri para nabi"
+- Boleh sebut "Mesir", "Al-Azhar", "perantauan" — tapi maksimal 2-3 kali, hanya saat benar-benar tepat
+- Contoh dan konteks tetap relevan untuk kehidupan masisir, tapi ditulis cukup universal agar siapapun bisa relate
+
+---
+
+# LANDING PAGE (`/`) — COPY BARU
+
+### ANNOUNCEMENT BAR
+```
+PENDAFTARAN BATCH 1 DIBUKA · KELAS DIMULAI 5 JULI 2026 · TEMPAT TERBATAS
+```
+
+---
+
+### SECTION 1 — HERO
+
+```
+Eyebrow:
+PLATFORM PEMBELAJARAN AI UNTUK MAHASISWA INDONESIA DI MESIR
+
+Headline:
+Kuasai Kecerdasan Buatan.
+Ciptakan Sesuatu yang Nyata.
+
+Sub-headline:
+AIGYPT adalah platform yang mengajarkan cara memanfaatkan AI
+secara mendalam — bukan sekadar menggunakannya, tapi
+menjadikannya alat untuk menciptakan karya dan solusi nyata.
+
+Urgency block:
+BATCH 1 · PENDAFTARAN DIBUKA
+Kelas dimulai 5 Juli 2026 · Tempat sangat terbatas
+
+CTA:
+- Primer: Daftar Batch 1 Sekarang
+- Sekunder: Jelajahi Kurikulum
+
+Micro trust:
+6 SESI · 60 MENIT/SESI · HYBRID · SEMUA LEVEL
+```
+
+---
+
+### SECTION 2 — VISI / MANIFESTO
+
+```
+Label: MENGAPA AIGYPT ADA
+
+Pernyataan besar:
+Banyak yang sudah menggunakan AI.
+Sedikit yang benar-benar menguasainya.
+
+Paragraf:
+Ada jarak antara memakai AI dan menguasainya. Yang pertama
+mengikuti apa yang disuguhkan. Yang kedua menentukan apa
+yang ingin diciptakan.
+
+AIGYPT hadir untuk menutup jarak itu — dengan kurikulum yang
+dirancang dari kebutuhan nyata, bukan teori generik. Tempat
+belajar yang membuatmu tidak hanya paham AI, tapi mampu
+membangun sesuatu dengan tanganmu sendiri.
+```
+
+---
+
+### SECTION 3 — UNTUK SIAPA (Persona)
+
+```
+Label: UNTUK SIAPA AIGYPT DIRANCANG
+
+Headline: Apapun Kesibukanmu, AI Bisa Membantumu Lebih
+
+5 card persona:
+
+Sang Akademisi (BookOpen)
+Bergelut dengan tugas, makalah, dan riset. AI menjadi asisten
+yang membantu kamu berpikir lebih dalam dan bekerja lebih cepat.
+
+Sang Organisator (Users)
+Mengelola kepanitiaan, acara, dan publikasi. Dari proposal
+hingga laporan — semua menjadi lebih ringan dan rapi.
+
+Sang Pebisnis (TrendingUp)
+Membangun usaha dengan sumber daya terbatas. AI menjadi mitra
+yang memperbesar dampakmu tanpa menambah bebanmu.
+
+Sang Kreator (Sparkles)
+Memproduksi konten secara konsisten dan berkualitas.
+Ide tidak pernah kering. Karya terus mengalir.
+
+Sang Pencari (Compass)
+Tahu AI penting, tapi belum tahu harus mulai dari mana.
+Justru di sinilah tempat yang paling tepat untuk memulai.
+```
+
+---
+
+### SECTION 4 — SPEKTRUM PEMBELAJARAN
+
+```
+Label: APA YANG AKAN KAMU PELAJARI
+
+Headline: Satu Platform, Tak Terbatas Kemungkinan
+
+6 area pembelajaran:
+
+Fondasi & Mindset AI
+Memahami cara kerja AI dengan jernih — tanpa jargon,
+tanpa mitos. Fondasi yang mengubah cara kamu memandangnya.
+
+Seni Prompting
+Keterampilan inti yang membedakan pengguna biasa dan yang
+mahir. Berdialog dengan AI untuk hasil yang benar-benar berguna.
+
+AI untuk Keperluan Akademik
+Menulis lebih baik, memahami referensi lebih cepat,
+dan memperkuat argumen penelitianmu.
+
+AI untuk Organisasi & Manajemen
+Dari perencanaan acara, dokumentasi, hingga komunikasi —
+semua lebih terstruktur dan efisien.
+
+AI untuk Bisnis & Konten
+Riset, copywriting, produksi konten, dan strategi —
+dengan kecepatan dan kualitas yang berbeda.
+
+Vibe Coding
+Membangun aplikasi dan solusi nyata dari masalahmu —
+tanpa perlu menjadi programmer.
+```
+
+---
+
+### SECTION 5 — KELAS BATCH 1
+
+```
+Label: KELAS PERTAMA · TERSEDIA SEKARANG
+
+Headline: Maksimalkan AI untuk Menghasilkan Solusimu
+
+Sub: Kelas perdana AIGYPT. Enam minggu perjalanan dari memahami
+AI hingga membangun solusi nyata atas masalah yang kamu hadapi.
+
+Detail kelas:
+6 SESI · 60 MENIT/SESI · SEMUA LEVEL
+Format Hybrid: ada jadwal mentoring live, tapi seluruh materi
+bisa kamu akses kapan saja setelah mendaftar.
+
+BATCH 1 — PENDAFTARAN DIBUKA
+Dimulai: 5 Juli 2026
+Kuota: Terbatas per batch
+
+Preview sesi:
+01 · AI Itu Bukan Sulap, Tapi Hampir
+02 · Seni Berdialog dengan Kecerdasan
+03 · Asisten untuk Ilmu dan Amanah
+04 · Kecerdasan yang Menghasilkan
+05 · Tangan yang Mencipta
+06 · Pembuktian
+
+[Lihat Kurikulum Lengkap →]
+
+Catatan: PENDAFTARAN DITUTUP SAAT KUOTA TERPENUHI
+```
+
+---
+
+### SECTION 6 — KELAS MENDATANG
+
+```
+Label: YANG AKAN DATANG
+
+Headline: Ini Baru Permulaan
+
+Kelas mendatang:
+— Bahasa Arab Akademik dengan AI
+— Bangun Penghidupan dengan AI
+— Vibe Coding: Dari Nol ke Aplikasi
+— Konten & Dakwah Digital dengan AI
+
+Catatan: KELAS BARU TERUS DIKEMBANGKAN
+```
+
+---
+
+### SECTION 7 — KEANGGOTAAN
+
+```
+Label: PILIH CARAMU BERGABUNG
+
+Headline: Sebuah Investasi pada Dirimu
+
+TIER 1 — MANDIRI
+Untuk yang ingin belajar dengan kecepatan sendiri.
+— Akses penuh seluruh materi 6 sesi
+— Kode keanggotaan eksklusif
+— Pembaruan materi selamanya
+— Akses Vibe Coding Toolbox
+Harga: Rp ???.000
+Tombol: Daftar sebagai Member Mandiri
+
+TIER 2 — KELAS (RECOMMENDED)
+Badge: BATCH 1 · PENDAFTARAN DIBUKA
+Untuk yang ingin bimbingan penuh dan komunitas.
+— Semua yang ada di Member Mandiri
+— 6 sesi mentoring live (mulai 5 Juli 2026)
+— Bimbingan dan feedback langsung
+— Komunitas eksklusif Batch 1
+— Sertifikat penyelesaian
+Harga: Rp ???.000
+Tombol: Daftar Batch 1 Sekarang
+
+Catatan: KUOTA TERBATAS · PENDAFTARAN DITUTUP SAAT PENUH
+```
+
+---
+
+### SECTION 8 — FAQ
+
+```
+Apakah saya perlu bisa memprogram sebelumnya?
+Tidak sama sekali. AIGYPT dirancang untuk membawamu dari nol.
+Kamu akan mencipta tanpa perlu menjadi programmer.
+
+Apa itu format Hybrid?
+Ada jadwal mentoring live bersama mentor setiap minggunya.
+Tapi seluruh materi sudah terbuka sejak hari pertama —
+kamu bisa belajar kapan saja sesuai waktumu.
+
+Berapa peserta per batch?
+Sengaja dibatasi untuk menjaga kualitas bimbingan.
+Setiap peserta berhak mendapat perhatian yang penuh.
+
+Apakah materi bisa diakses setelah batch selesai?
+Selamanya. Aksesmu tidak memiliki tanggal kedaluwarsa.
+
+Apa perbedaan Member Mandiri dan Member Kelas?
+Member Mandiri mendapat akses penuh materi untuk belajar mandiri.
+Member Kelas mendapat semua itu, ditambah mentoring live,
+komunitas batch, dan sertifikat penyelesaian.
+```
+
+---
+
+### SECTION 9 — CTA PENUTUP
+
+```
+Pernyataan besar:
+Mulai dari satu keputusan.
+
+Sub:
+Batch 1 dimulai 5 Juli 2026. Tempat sangat terbatas.
+
+Tombol: Daftar Batch 1 Sekarang
+Bawah: ATAU HUBUNGI KAMI VIA WHATSAPP
+```
+
+---
+
+### FOOTER
+
+```
+AIGYPT
+Platform Pembelajaran AI
+
+[Kurikulum · Kelas · Pendaftaran · Masuk]
+[Kontak via WhatsApp]
+© 2026 AIGYPT
+```
+
+---
+
+# KURIKULUM (`/kurikulum`) — COPY BARU
+
+### SECTION 1 — HERO
+
+```
+Eyebrow: KURIKULUM AIGYPT · BATCH 1
+
+Headline: Peta Perjalanan Enam Minggu
+
+Sub: Dari fondasi kecerdasan buatan hingga membangun solusi
+nyata — inilah seluruh perjalanan yang menunggumu di Batch 1.
+
+Urgency: BATCH 1 DIMULAI 5 JULI 2026 · PENDAFTARAN MASIH DIBUKA
+[Daftar Sekarang →]
+```
+
+---
+
+### SECTION 2 — FILOSOFI
+
+```
+Label: PRINSIP DI BALIK KURIKULUM
+
+Pernyataan:
+Kami tidak mengajarkan teknologi.
+Kami mengajarkan cara memecahkan masalah.
+
+Paragraf:
+Setiap sesi dibangun di atas sesi sebelumnya — dari memahami,
+menguasai, menerapkan, hingga mencipta. Tujuannya bukan sekadar
+membuatmu bisa memakai AI, tapi mampu membangun solusi nyata
+dari masalah yang kamu pahami betul.
+```
+
+---
+
+### SECTION 3 — ALUR TRANSFORMASI
+
+```
+Label: ALUR TRANSFORMASI
+
+01 · FONDASI       → Memahami lanskap kecerdasan buatan dengan jernih
+02 · KETERAMPILAN  → Menguasai seni berdialog dengan AI
+03 · PENERAPAN     → Menjadikan AI asisten untuk kerja nyata
+04 · PRODUKSI      → Mengubah AI menjadi mesin yang menghasilkan
+05 · PENCIPTAAN    → Membangun solusi nyata dengan tanganmu sendiri
+```
+
+---
+
+### SECTION 4 — ENAM SESI (baris expand)
+
+```
+Label: ENAM SESI YANG DIKURASI DENGAN CERMAT
+
+Headline: Kurikulum
+
+SESI 01 — AI Itu Bukan Sulap, Tapi Hampir
+Esensi: Membangun fondasi mental dan memahami lanskap AI.
+Yang akan kamu kuasai:
+— Memahami cara kerja AI tanpa istilah teknis yang membingungkan
+— Mengenali perbedaan ChatGPT, Claude, dan Gemini — kapan memakai yang mana
+— Menyaksikan langsung: satu masalah, tiga AI, tiga hasil berbeda
+— Menyadari mengapa cara bertanya menentukan segalanya
+Tools: ChatGPT · Claude · Gemini
+Misi minggu ini: Ajukan satu masalah nyata pada dua AI berbeda. Amati perbedaannya.
+
+SESI 02 — Seni Berdialog dengan Kecerdasan
+Esensi: Menguasai prompting — keterampilan yang membedakan amatir dan ahli.
+Yang akan kamu kuasai:
+— Formula menyusun perintah yang tajam dan menghasilkan output berkualitas
+— Mengubah pertanyaan biasa menjadi instruksi yang presisi
+— Teknik bertanya bertahap untuk hasil yang kompleks
+— Membangun koleksi prompt pribadimu yang bisa dipakai berulang
+Tools: Claude · ChatGPT
+Misi minggu ini: Susun tiga perintah presisi untuk tiga kebutuhanmu.
+
+SESI 03 — Asisten untuk Ilmu dan Amanah
+Esensi: Menerapkan AI pada keperluan akademik dan organisasi.
+Yang akan kamu kuasai:
+— Menulis dan menyempurnakan karya ilmiah dengan bantuan AI
+— Memahami referensi kompleks lebih cepat dan lebih mendalam
+— Merangkum sumber panjang dan menemukan celah penelitian
+— Menyusun proposal, notulensi, dan laporan secara efisien
+Tools: Claude · NotebookLM · TurboScribe · DeepL
+Misi minggu ini: Selesaikan satu tugas akademik atau organisasi nyata dengan AI.
+
+SESI 04 — Kecerdasan yang Menghasilkan
+Esensi: Memanfaatkan AI untuk bisnis dan karya kreatif.
+Yang akan kamu kuasai:
+— Meriset produk dan pasar dengan lebih cermat dan cepat
+— Menulis copywriting yang benar-benar menjual
+— Merancang kalender konten dan naskah dalam hitungan menit
+— Mengubah satu konten menjadi banyak format untuk banyak kanal
+Tools: Claude · Canva AI · CapCut AI
+Misi minggu ini: Ciptakan satu konten atau materi promosi dengan AI, dari ide hingga visual.
+
+SESI 05 — Tangan yang Mencipta
+Esensi: Membangun aplikasi dan solusi nyata melalui vibe coding.
+Yang akan kamu kuasai:
+— Memahami vibe coding — membangun software tanpa menjadi programmer
+— Menciptakan aplikasi web dari sekadar deskripsi
+— Menghasilkan skrip otomatis untuk tugas yang berulang
+— Merangkai alur kerja otomatis yang berjalan sendiri
+Tools: Lovable · Bolt · v0 · Replit · n8n
+Misi minggu ini: Rumuskan satu masalah nyata dan solusi yang kamu bayangkan.
+
+SESI 06 — Pembuktian
+Esensi: Demo Day — mempersembahkan karya yang lahir dari perjalananmu.
+Yang akan kamu kuasai:
+— Mempresentasikan solusi: dari masalah, proses, hingga hasil nyata
+— Menerima dan memberi umpan balik yang membangun
+— Mendokumentasikan karyamu sebagai portofolio pertama
+— Merancang langkah selanjutnya untuk mengembangkan solusimu
+Tools: Seluruh tools yang telah kamu kuasai
+Misi minggu ini: Dokumentasikan karyamu — ini menjadi bukti nyata kemampuanmu.
+
+Teaser terkunci setelah sesi ke-6:
+Materi lengkap tersedia setelah mendaftar Batch 1
+Mulai 5 Juli 2026 · Tempat terbatas
+[Daftar Sekarang →]
+```
+
+---
+
+### SECTION 5 — TIMELINE BATCH 1
+
+```
+Label: TIMELINE BATCH 1
+
+Headline: Satu Sesi, Satu Minggu, Satu Lompatan
+
+Minggu 1 · 5 Juli     → Fondasi
+Minggu 2 · 12 Juli    → Keterampilan
+Minggu 3 · 19 Juli    → Penerapan
+Minggu 4 · 26 Juli    → Produksi
+Minggu 5 · 2 Agustus  → Penciptaan
+Minggu 6 · 9 Agustus  → Pembuktian
+
+Catatan: JADWAL MENTORING LIVE DIKONFIRMASI SETELAH PENDAFTARAN
+```
+
+---
+
+### SECTION 6 — KELAS MENDATANG
+
+```
+Label: SETELAH BATCH 1
+
+Headline: Perjalanan Ini Terus Berlanjut
+
+— Bahasa Arab Akademik dengan AI
+— Bangun Penghidupan dengan AI
+— Vibe Coding: Dari Nol ke Aplikasi
+— Konten & Dakwah Digital dengan AI
+```
+
+---
+
+### SECTION 7 — CTA PENUTUP
+
+```
+Pernyataan: Perjalananmu dimulai 5 Juli.
+Sub: Daftarkan dirimu sebelum kuota terpenuhi.
+Tombol: Daftar Batch 1 Sekarang · Hubungi Kami via WhatsApp
+```
+
+---
+
+## CATATAN IMPLEMENTASI
+
+Semua spesifikasi teknis dari prompt sebelumnya tetap berlaku:
+- Countdown timer ke 2026-07-05T00:00:00+03:00
+- Announcement bar (sessionStorage untuk status tutup)
+- Framer Motion untuk animasi
+- Vite + React, env via import.meta.env.VITE_
+- Dark luxury design system
+- Mobile-first responsive
+- npm run build sukses

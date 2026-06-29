@@ -24,35 +24,35 @@ const sessions = [
   {
     num: "02",
     title: "Seni Berdialog dengan Kecerdasan",
-    essence: "Menguasai prompting — keterampilan inti yang membedakan amatir dan ahli.",
+    essence: "Menguasai prompting — keterampilan yang membedakan amatir dan ahli.",
     mastery: [
       "Formula menyusun perintah yang tajam dan menghasilkan output berkualitas",
       "Mengubah pertanyaan biasa menjadi instruksi yang presisi",
       "Teknik bertanya bertahap untuk hasil yang kompleks",
-      "Membangun koleksi prompt pribadi yang bisa dipakai berulang",
+      "Membangun koleksi prompt pribadimu yang bisa dipakai berulang",
     ],
     tools: ["Claude", "ChatGPT"],
-    mission: "Susun tiga perintah presisi untuk tiga kebutuhan berbeda dalam hidupmu.",
+    mission: "Susun tiga perintah presisi untuk tiga kebutuhanmu.",
   },
   {
     num: "03",
     title: "Asisten untuk Ilmu dan Amanah",
-    essence: "Menerapkan AI pada dunia akademik dan organisasi.",
+    essence: "Menerapkan AI pada keperluan akademik dan organisasi.",
     mastery: [
-      "Menulis dan menyempurnakan makalah berbahasa Arab",
-      "Menerjemahkan dan memahami kitab klasik yang rumit",
-      "Merangkum jurnal panjang dan menemukan celah penelitian",
-      "Menyusun proposal, notulensi, dan laporan secara otomatis",
+      "Menulis dan menyempurnakan karya ilmiah dengan bantuan AI",
+      "Memahami referensi kompleks lebih cepat dan lebih mendalam",
+      "Merangkum sumber panjang dan menemukan celah penelitian",
+      "Menyusun proposal, notulensi, dan laporan secara efisien",
     ],
     tools: ["Claude", "NotebookLM", "TurboScribe", "DeepL"],
-    mission: "Selesaikan satu tugas akademik atau organisasi nyata dengan AI. Catat waktu yang kamu hemat.",
+    mission: "Selesaikan satu tugas akademik atau organisasi nyata dengan AI.",
   },
   {
     num: "04",
     title: "Kecerdasan yang Menghasilkan",
     essence: "Memanfaatkan AI untuk bisnis dan karya kreatif.",
     mastery: [
-      "Meriset produk dan pasar dengan cermat",
+      "Meriset produk dan pasar dengan lebih cermat dan cepat",
       "Menulis copywriting yang benar-benar menjual",
       "Merancang kalender konten dan naskah dalam hitungan menit",
       "Mengubah satu konten menjadi banyak format untuk banyak kanal",
@@ -65,13 +65,13 @@ const sessions = [
     title: "Tangan yang Mencipta",
     essence: "Membangun aplikasi dan solusi nyata melalui vibe coding.",
     mastery: [
-      "Memahami vibe coding — membangun tanpa perlu menjadi programmer",
+      "Memahami vibe coding — membangun software tanpa menjadi programmer",
       "Menciptakan aplikasi web dari sekadar deskripsi",
       "Menghasilkan skrip otomatis untuk tugas yang berulang",
       "Merangkai alur kerja otomatis yang berjalan sendiri",
     ],
     tools: ["Lovable", "Bolt", "v0", "Replit", "n8n"],
-    mission: "Rumuskan satu masalah nyata dan solusi yang kamu bayangkan. Inilah benih karyamu.",
+    mission: "Rumuskan satu masalah nyata dan solusi yang kamu bayangkan.",
   },
   {
     num: "06",
@@ -83,25 +83,25 @@ const sessions = [
       "Mendokumentasikan karyamu sebagai portofolio pertama",
       "Merancang langkah selanjutnya untuk mengembangkan solusimu",
     ],
-    tools: ["Seluruh tools yang telah dikuasai"],
-    mission: "Dokumentasikan karyamu. Ini menjadi bukti nyata kemampuanmu.",
+    tools: ["Seluruh tools yang telah kamu kuasai"],
+    mission: "Dokumentasikan karyamu — ini menjadi bukti nyata kemampuanmu.",
   },
 ];
 
 const phases = [
-  { num: "01", label: "FONDASI", desc: "Memahami lanskap kecerdasan buatan" },
+  { num: "01", label: "FONDASI", desc: "Memahami lanskap kecerdasan buatan dengan jernih" },
   { num: "02", label: "KETERAMPILAN", desc: "Menguasai seni berdialog dengan AI" },
-  { num: "03", label: "PENERAPAN", desc: "Menjadikan AI asisten ilmu dan amanah" },
+  { num: "03", label: "PENERAPAN", desc: "Menjadikan AI asisten untuk kerja nyata" },
   { num: "04", label: "PRODUKSI", desc: "Mengubah AI menjadi mesin yang menghasilkan" },
-  { num: "05", label: "PENCIPTAAN", desc: "Membangun solusi nyata dengan tangan sendiri" },
+  { num: "05", label: "PENCIPTAAN", desc: "Membangun solusi nyata dengan tanganmu sendiri" },
 ];
 
 const upcomingClasses = [
   {
     title: "Bahasa Arab Akademik dengan AI",
     tag: "Akademik",
-    desc: "Taklukkan makalah, muthala'ah, dan kitab klasik dengan AI sebagai asisten linguistikmu.",
-    points: ["Penulisan makalah Arab otomatis", "Terjemahan & tafsir kitab klasik", "Riset dan anotasi teks"],
+    desc: "Taklukkan makalah, muthala'ah, dan teks akademik dengan AI sebagai asisten linguistikmu.",
+    points: ["Penulisan makalah Arab otomatis", "Terjemahan & pemahaman referensi kompleks", "Riset dan anotasi teks"],
   },
   {
     title: "Bangun Penghidupan dengan AI",
@@ -119,7 +119,7 @@ const upcomingClasses = [
     title: "Konten & Dakwah Digital dengan AI",
     tag: "Konten",
     desc: "Sebarkan kebaikan dan ilmu dengan kecerdasan buatan sebagai alat produksimu.",
-    points: ["Produksi konten masif & konsisten", "Naskah dakwah yang menyentuh", "Strategi kanal digital"],
+    points: ["Produksi konten masif & konsisten", "Naskah yang menyentuh dan berkualitas", "Strategi kanal digital"],
   },
 ];
 
@@ -423,7 +423,7 @@ export default function Kurikulum() {
         />
 
         <Reveal className="relative max-w-5xl mx-auto px-6 sm:px-10 text-center">
-          <SectionLabel>KURIKULUM AIGYPT</SectionLabel>
+          <SectionLabel>KURIKULUM AIGYPT · BATCH 1</SectionLabel>
           <motion.h1
             variants={fadeUp}
             className="font-display font-semibold leading-tight mb-8"
@@ -431,23 +431,35 @@ export default function Kurikulum() {
           >
             Peta Perjalanan
             <br />
-            <span style={{ color: "#A855F7" }}>Belajarmu</span>
+            <span style={{ color: "#A855F7" }}>Enam Minggu</span>
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-8"
             style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            Dari fondasi hingga penciptaan — inilah seluruh lanskap pembelajaran
-            yang AIGYPT tawarkan untuk masisir.
+            Dari fondasi kecerdasan buatan hingga membangun solusi nyata —
+            inilah seluruh perjalanan yang menunggumu di Batch 1.
           </motion.p>
+          <motion.div variants={fadeUp} className="flex flex-col items-center gap-3">
+            <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 DIMULAI 5 JULI 2026 · PENDAFTARAN MASIH DIBUKA</p>
+            <a
+              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
+              style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 28px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}
+            >
+              Daftar Sekarang →
+            </a>
+          </motion.div>
         </Reveal>
       </section>
 
       {/* ══ SECTION 2: FILOSOFI ══ */}
       <section className="py-20 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <Reveal className="max-w-3xl mx-auto px-6 sm:px-10 text-center">
-          <SectionLabel>PRINSIP KAMI</SectionLabel>
+          <SectionLabel>PRINSIP DI BALIK KURIKULUM</SectionLabel>
           <motion.h2
             variants={fadeUp}
             className="font-display font-semibold leading-tight mb-8"
@@ -462,8 +474,8 @@ export default function Kurikulum() {
             className="text-base leading-[1.9]"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Setiap materi AIGYPT dibangun bertahap — dari memahami, menguasai, menerapkan,
-            hingga mencipta. Tujuan akhirnya bukan sekadar bisa memakai AI, tapi mampu
+            Setiap sesi dibangun di atas sesi sebelumnya — dari memahami, menguasai, menerapkan,
+            hingga mencipta. Tujuannya bukan sekadar membuatmu bisa memakai AI, tapi mampu
             membangun solusi nyata dari masalah yang kamu pahami betul.
           </motion.p>
         </Reveal>
@@ -541,18 +553,17 @@ export default function Kurikulum() {
       <section className="py-16 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-12">
-            <SectionLabel>SEGERA HADIR</SectionLabel>
+            <SectionLabel>SETELAH BATCH 1</SectionLabel>
             <motion.h2
               variants={fadeUp}
               className="font-display font-semibold mb-4"
               style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
             >
-              Lebih Banyak Perjalanan
-              <br />
-              <span style={{ color: "#A855F7" }}>Menanti</span>
+              Perjalanan Ini{" "}
+              <span style={{ color: "#A855F7" }}>Terus Berlanjut</span>
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-sm" style={{ color: "#52525B" }}>
-              Kelas-kelas berikut sedang dikembangkan bersama kebutuhan nyata masisir.
+            <motion.p variants={fadeUp} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
+              KELAS BARU TERUS DIKEMBANGKAN
             </motion.p>
           </Reveal>
 
@@ -610,34 +621,35 @@ export default function Kurikulum() {
             className="font-display font-semibold leading-tight mb-6"
             style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.015em" }}
           >
-            Perjalananmu{" "}
-            <span style={{ color: "#A855F7" }}>menanti.</span>
+            Perjalananmu dimulai{" "}
+            <span style={{ color: "#A855F7" }}>5 Juli.</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="text-base leading-relaxed mb-10"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Pilih keanggotaan dan mulai dari kelas pertama.
+            Daftarkan dirimu sebelum kuota terpenuhi.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
             <a
-              href={waUrl("Halo, saya ingin bergabung dengan AIGYPT")}
+              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white rounded-xl transition-all duration-300"
-              style={{ background: "#7C3AED", boxShadow: "0 0 24px rgba(124,58,237,0.35)" }}
+              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
+              style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 28px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}
             >
-              Lihat Keanggotaan
+              Daftar Batch 1 Sekarang
             </a>
-            <Link href="/login">
-              <span
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium rounded-xl cursor-pointer transition-all duration-300 hover:text-white"
-                style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#A1A1AA" }}
-              >
-                Mulai Belajar
-              </span>
-            </Link>
+            <a
+              href={waUrl("Halo, saya ingin menghubungi AIGYPT")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-base font-normal transition-all duration-200 hover:text-white"
+              style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#A1A1AA", borderRadius: "12px", padding: "15px 24px", minHeight: "48px" }}
+            >
+              Hubungi Kami via WhatsApp
+            </a>
           </motion.div>
         </Reveal>
       </section>
