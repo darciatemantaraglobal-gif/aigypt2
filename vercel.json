@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "buildCommand": "pnpm install && BASE_PATH=/ PORT=3000 pnpm --filter @workspace/aigypt run build",
+  "outputDirectory": "artifacts/aigypt/dist/public",
+  "rewrites": [
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ]
+}
