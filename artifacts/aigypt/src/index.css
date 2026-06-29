@@ -92,7 +92,13 @@
   --input: var(--border-subtle);
   --ring: var(--accent-main);
   
-  --radius: 0.5rem;
+  --radius: 0.75rem;
+
+  /* Discord-style elevation shadows */
+  --shadow-raised: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-elevated: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-high: 0px 8px 20px rgba(0, 0, 0, 0.4);
+  --shadow-maximum: 0px 16px 32px rgba(0, 0, 0, 0.5);
 }
 
 @layer base {
@@ -114,19 +120,27 @@
 .aigypt-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.2s ease-in-out;
 }
 .aigypt-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .aigypt-btn {
   background: var(--accent-main);
   color: #fff;
+  border-radius: 12px;
+  min-height: 48px;
+  padding: 15px 24px;
+  font-size: 16px;
+  font-weight: 500;
   transition: all 0.2s ease-in-out;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
 }
 .aigypt-btn:hover {
   background: #6D28D9;
-  box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
 }

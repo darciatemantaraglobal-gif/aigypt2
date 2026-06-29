@@ -188,7 +188,7 @@ export default function Home() {
       <Navbar />
 
       {/* ══ SECTION 1: HERO ══ */}
-      <section className="relative overflow-hidden pt-28 pb-32 sm:pt-40 sm:pb-44">
+      <section className="relative overflow-hidden pt-[80px] pb-[80px] sm:pt-[100px] sm:pb-[100px]">
         {/* Breathing glow */}
         <motion.div
           className="absolute pointer-events-none"
@@ -247,10 +247,13 @@ export default function Home() {
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4 mb-16">
             <Link href="/login">
               <span
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white rounded-xl cursor-pointer transition-all duration-300"
+                className="inline-flex items-center gap-2 text-base font-medium text-white cursor-pointer transition-all duration-200"
                 style={{
                   background: "#7C3AED",
-                  boxShadow: "0 0 24px rgba(124,58,237,0.35)",
+                  borderRadius: "12px",
+                  padding: "15px 24px",
+                  minHeight: "48px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
               >
                 Mulai Belajar <IconArrow />
@@ -258,10 +261,13 @@ export default function Home() {
             </Link>
             <Link href="/kurikulum">
               <span
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium rounded-xl cursor-pointer transition-all duration-300 hover:border-purple-500/50 hover:text-white"
+                className="inline-flex items-center gap-2 text-base font-normal cursor-pointer transition-all duration-200 hover:text-white"
                 style={{
                   border: "1px solid rgba(255,255,255,0.1)",
                   color: "#A1A1AA",
+                  borderRadius: "12px",
+                  padding: "15px 24px",
+                  minHeight: "48px",
                 }}
               >
                 Jelajahi Kurikulum
@@ -283,7 +289,7 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 2: VISI / MANIFESTO ══ */}
-      <section className="py-20 sm:py-32" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+      <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <Reveal className="max-w-4xl mx-auto px-6 sm:px-10 text-center">
           <SectionLabel>VISI KAMI</SectionLabel>
           <motion.h2
@@ -308,7 +314,7 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 3: SPEKTRUM PEMBELAJARAN ══ */}
-      <section className="py-20 sm:py-28">
+      <section className="py-[48px] sm:py-[80px]">
         <div className="max-w-6xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-16">
             <SectionLabel>SPEKTRUM PEMBELAJARAN</SectionLabel>
@@ -358,10 +364,12 @@ export default function Home() {
               <motion.div
                 key={i}
                 variants={fadeUp}
-                className="group relative rounded-2xl p-6 transition-all duration-300 cursor-default"
+                className="group relative p-5 transition-all duration-300 cursor-default"
                 style={{
                   background: "rgba(16,16,24,0.6)",
                   border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: "12px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
                 whileHover={{
                   borderColor: "rgba(124,58,237,0.3)",
@@ -369,8 +377,8 @@ export default function Home() {
                 }}
               >
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5 transition-colors duration-300 group-hover:bg-purple-500/20"
-                  style={{ background: "rgba(124,58,237,0.1)", color: "#A855F7" }}
+                  className="w-10 h-10 flex items-center justify-center mb-5 transition-colors duration-300 group-hover:bg-purple-500/20"
+                  style={{ background: "rgba(124,58,237,0.1)", color: "#A855F7", borderRadius: "14px" }}
                 >
                   {item.icon}
                 </div>
@@ -384,7 +392,7 @@ export default function Home() {
 
       {/* ══ SECTION 4: MENGAPA AIGYPT ══ */}
       <section
-        className="py-20 sm:py-28"
+        className="py-[48px] sm:py-[80px]"
         style={{ borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
       >
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
@@ -433,7 +441,7 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 5: KELAS UNGGULAN ══ */}
-      <section className="py-20 sm:py-32">
+      <section className="py-[48px] sm:py-[80px]">
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-12">
             <SectionLabel>MULAI DARI SINI</SectionLabel>
@@ -449,11 +457,12 @@ export default function Home() {
           <Reveal>
             <motion.div
               variants={fadeUp}
-              className="relative rounded-3xl overflow-hidden"
+              className="relative overflow-hidden"
               style={{
                 background: "linear-gradient(135deg, rgba(16,16,24,0.95) 0%, rgba(20,12,36,0.95) 100%)",
                 border: "1px solid rgba(124,58,237,0.2)",
-                boxShadow: "0 0 60px rgba(124,58,237,0.08)",
+                borderRadius: "16px",
+                boxShadow: "0px 8px 20px rgba(0,0,0,0.4)",
               }}
             >
               {/* Glow top */}
@@ -507,8 +516,14 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-4">
                   <Link href="/kelas/maksimalkan-ai">
                     <span
-                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white rounded-xl cursor-pointer transition-all duration-300"
-                      style={{ background: "#7C3AED", boxShadow: "0 0 20px rgba(124,58,237,0.3)" }}
+                      className="inline-flex items-center gap-2 text-base font-medium text-white cursor-pointer transition-all duration-200"
+                      style={{
+                        background: "#7C3AED",
+                        borderRadius: "12px",
+                        padding: "12px 24px",
+                        minHeight: "48px",
+                        boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                      }}
                     >
                       Lihat Kelas Ini <IconArrow />
                     </span>
@@ -529,7 +544,7 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 6: SEGERA HADIR ══ */}
-      <section className="py-20 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+      <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-12">
             <SectionLabel>YANG AKAN DATANG</SectionLabel>
@@ -555,10 +570,12 @@ export default function Home() {
               <motion.div
                 key={i}
                 variants={fadeUp}
-                className="rounded-2xl p-6"
+                className="p-5"
                 style={{
                   background: "rgba(10,10,15,0.6)",
                   border: "1px solid rgba(255,255,255,0.05)",
+                  borderRadius: "12px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
               >
                 <div className="flex items-start justify-between gap-4 mb-3">
@@ -582,7 +599,7 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 7: KEANGGOTAAN ══ */}
-      <section id="keanggotaan" className="py-20 sm:py-28">
+      <section id="keanggotaan" className="py-[48px] sm:py-[80px]">
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-14">
             <SectionLabel>BERGABUNG DENGAN AIGYPT</SectionLabel>
@@ -632,11 +649,12 @@ export default function Home() {
               <motion.div
                 key={tier.name}
                 variants={fadeUp}
-                className="relative rounded-2xl p-8 flex flex-col"
+                className="relative p-5 flex flex-col"
                 style={{
                   background: tier.highlight ? "rgba(20,12,36,0.9)" : "rgba(10,10,15,0.7)",
                   border: tier.highlight ? "1px solid rgba(124,58,237,0.3)" : "1px solid rgba(255,255,255,0.06)",
-                  boxShadow: tier.highlight ? "0 0 40px rgba(124,58,237,0.08)" : "none",
+                  borderRadius: "12px",
+                  boxShadow: tier.highlight ? "0px 8px 20px rgba(0,0,0,0.4)" : "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
               >
                 {tier.highlight && (
@@ -673,11 +691,11 @@ export default function Home() {
                   href={waUrl(tier.msg)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center py-3 text-sm font-semibold rounded-xl transition-all duration-300"
+                  className="block text-center text-base font-medium transition-all duration-200"
                   style={
                     tier.highlight
-                      ? { background: "#7C3AED", color: "#fff", boxShadow: "0 0 20px rgba(124,58,237,0.3)" }
-                      : { border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }
+                      ? { background: "#7C3AED", color: "#fff", borderRadius: "12px", padding: "15px 24px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }
+                      : { border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7", borderRadius: "12px", padding: "15px 24px", minHeight: "48px", display: "flex", alignItems: "center", justifyContent: "center" }
                   }
                 >
                   {tier.cta} →
@@ -689,7 +707,7 @@ export default function Home() {
       </section>
 
       {/* ══ FAQ ══ */}
-      <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+      <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-3xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-12">
             <SectionLabel>PERTANYAAN UMUM</SectionLabel>
@@ -705,7 +723,7 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 8: CTA PENUTUP ══ */}
-      <section className="relative py-28 sm:py-40 overflow-hidden">
+      <section className="relative py-[80px] sm:py-[100px] overflow-hidden">
         <div
           className="absolute pointer-events-none inset-0"
           style={{
@@ -734,10 +752,13 @@ export default function Home() {
               href={waUrl("Halo, saya ingin memulai perjalanan bersama AIGYPT")}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-10 py-4 text-base font-semibold text-white rounded-xl transition-all duration-300"
+              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
               style={{
                 background: "#7C3AED",
-                boxShadow: "0 0 40px rgba(124,58,237,0.4)",
+                borderRadius: "12px",
+                padding: "15px 32px",
+                minHeight: "48px",
+                boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
               }}
             >
               Mulai Perjalananmu <IconArrow />

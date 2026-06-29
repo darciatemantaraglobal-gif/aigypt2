@@ -50,7 +50,7 @@ export default function Login() {
       />
       <div className="relative flex-1 flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md">
-          <div className="rounded-2xl border border-[#1E1E2E] bg-[#12121A] p-8 shadow-[0_0_40px_rgba(124,58,237,0.15)]">
+          <div className="border border-[#1E1E2E] bg-[#12121A] p-5" style={{ borderRadius: "12px", boxShadow: "0px 8px 20px rgba(0,0,0,0.4)" }}>
             <div className="text-center mb-8">
               <div className="font-display font-bold text-2xl text-white mb-1">
                 Masuk ke AI<span className="text-[#A855F7]">GYPT</span>
@@ -68,7 +68,16 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="kamu@email.com"
-                  className="w-full px-4 py-3 rounded-xl border border-[#1E1E2E] bg-[#0A0A0F] text-white placeholder-[#475569] text-sm focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED]/50 transition-colors"
+                  className="w-full px-4 text-sm text-white placeholder-[#475569] focus:outline-none transition-colors"
+                  style={{
+                    height: "40px",
+                    background: "rgba(0,0,0,0.2)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: "8px",
+                    fontSize: "16px",
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = "#7C3AED"; e.currentTarget.style.background = "rgba(0,0,0,0.4)"; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(0,0,0,0.2)"; }}
                   required
                   autoComplete="email"
                 />
@@ -84,7 +93,16 @@ export default function Login() {
                     value={code}
                     onChange={(e) => setCode(e.target.value.toUpperCase())}
                     placeholder="AIGYPT-XXXXXX"
-                    className="w-full px-4 py-3 pr-12 rounded-xl border border-[#1E1E2E] bg-[#0A0A0F] text-white placeholder-[#475569] text-sm font-mono tracking-widest focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED]/50 transition-colors"
+                    className="w-full px-4 pr-12 text-sm text-white placeholder-[#475569] font-mono tracking-widest focus:outline-none transition-colors"
+                    style={{
+                      height: "40px",
+                      background: "rgba(0,0,0,0.2)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: "8px",
+                      fontSize: "16px",
+                    }}
+                    onFocus={e => { e.currentTarget.style.borderColor = "#7C3AED"; e.currentTarget.style.background = "rgba(0,0,0,0.4)"; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(0,0,0,0.2)"; }}
                     required
                   />
                   <button
@@ -116,7 +134,16 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={login.isPending}
-                className="w-full py-3.5 bg-[#7C3AED] hover:bg-[#6D28D9] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-200 text-sm shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] flex items-center justify-center gap-2"
+                className="w-full text-base font-medium text-white disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                style={{
+                  background: "#7C3AED",
+                  borderRadius: "12px",
+                  padding: "15px 24px",
+                  minHeight: "48px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                }}
+                onMouseEnter={e => { if (!login.isPending) e.currentTarget.style.background = "#6D28D9"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "#7C3AED"; }}
               >
                 {login.isPending ? (
                   <>

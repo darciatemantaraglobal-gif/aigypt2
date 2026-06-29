@@ -120,12 +120,13 @@ function KelasCard({
     >
       {/* Cover */}
       <div
-        className="relative w-full h-full rounded-xl overflow-hidden"
+        className="relative w-full h-full overflow-hidden"
         style={{
+          borderRadius: "12px",
           border: "1px solid rgba(255,255,255,0.06)",
           boxShadow: hovered
-            ? `0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px ${kelas.accentColor}33`
-            : "0 4px 20px rgba(0,0,0,0.5)",
+            ? `0px 16px 32px rgba(0,0,0,0.5), 0 0 0 1px ${kelas.accentColor}33`
+            : "0px 4px 12px rgba(0,0,0,0.3)",
           transition: "box-shadow 0.25s ease",
         }}
       >
@@ -245,8 +246,8 @@ function KelasCard({
                 {isAvailable ? (
                   <>
                     <button
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-display font-semibold text-white transition-colors"
-                      style={{ background: "#7C3AED" }}
+                      className="flex-1 flex items-center justify-center gap-1.5 text-sm font-medium text-white transition-colors"
+                      style={{ background: "#7C3AED", borderRadius: "8px", padding: "8px 12px", minHeight: "36px", boxShadow: "0px 2px 4px rgba(0,0,0,0.2)" }}
                       onClick={(e) => {
                         e.stopPropagation();
                         setLocation(`/kelas/${kelas.id}`);
@@ -258,11 +259,14 @@ function KelasCard({
                       Mulai
                     </button>
                     <button
-                      className="px-3 py-2 rounded-lg text-xs font-display font-medium transition-colors"
+                      className="px-3 text-sm font-normal transition-colors"
                       style={{
                         background: "rgba(255,255,255,0.1)",
                         color: "#FAFAFA",
                         border: "1px solid rgba(255,255,255,0.15)",
+                        borderRadius: "8px",
+                        padding: "8px 12px",
+                        minHeight: "36px",
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -274,11 +278,14 @@ function KelasCard({
                   </>
                 ) : (
                   <button
-                    className="flex-1 py-2 rounded-lg text-xs font-display font-medium transition-colors"
+                    className="flex-1 text-sm font-normal transition-colors"
                     style={{
                       background: "rgba(255,255,255,0.08)",
                       color: "#A1A1AA",
                       border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: "8px",
+                      padding: "8px 12px",
+                      minHeight: "36px",
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -460,13 +467,16 @@ function DetailModal({
 
       {/* Modal panel — full-screen on mobile, card on desktop */}
       <motion.div
-        className="relative w-full sm:max-w-lg sm:rounded-2xl overflow-hidden rounded-t-2xl"
+        className="relative w-full sm:max-w-lg overflow-hidden"
         style={{
           background: "rgba(16,16,24,0.97)",
           border: "1px solid rgba(255,255,255,0.08)",
-          boxShadow: "0 40px 100px rgba(0,0,0,0.8)",
+          borderRadius: "12px",
+          boxShadow: "0px 16px 32px rgba(0,0,0,0.5)",
           maxHeight: "92vh",
           overflowY: "auto",
+          borderBottomLeftRadius: "12px",
+          borderBottomRightRadius: "12px",
         }}
         initial={{ opacity: 0, scale: 0.94, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -493,10 +503,11 @@ function DetailModal({
           </div>
           {/* Close */}
           <button
-            className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center transition-colors"
             style={{
-              background: "rgba(0,0,0,0.6)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "rgba(255,255,255,0.1)",
+              border: "0px solid transparent",
+              borderRadius: "14px",
               color: "#A1A1AA",
             }}
             onClick={onClose}
@@ -555,11 +566,16 @@ function DetailModal({
           {/* Actions */}
           {isAvailable ? (
             <button
-              className="w-full py-3 rounded-xl font-display font-semibold text-sm text-white transition-all duration-200"
+              className="w-full text-base font-medium text-white transition-all duration-200 flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
-                boxShadow: "0 0 30px rgba(124,58,237,0.35)",
+                background: "#7C3AED",
+                borderRadius: "12px",
+                padding: "15px 24px",
+                minHeight: "48px",
+                boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
               }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#6D28D9")}
+              onMouseLeave={e => (e.currentTarget.style.background = "#7C3AED")}
               onClick={() => { setLocation(`/kelas/${kelas.id}`); onClose(); }}
             >
               Mulai Belajar
@@ -568,11 +584,14 @@ function DetailModal({
             <div className="space-y-2">
               <button
                 disabled
-                className="w-full py-3 rounded-xl font-display font-semibold text-sm cursor-not-allowed"
+                className="w-full text-base font-normal cursor-not-allowed flex items-center justify-center"
                 style={{
                   background: "rgba(255,255,255,0.04)",
                   color: "#52525B",
                   border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: "12px",
+                  padding: "15px 24px",
+                  minHeight: "48px",
                 }}
               >
                 Segera Hadir
@@ -699,10 +718,13 @@ export default function KelasPage() {
             </p>
             <div className="flex gap-3 flex-wrap">
               <button
-                className="flex items-center gap-2 px-7 py-3 rounded-full font-display font-semibold text-sm text-white transition-all duration-200"
+                className="flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
                 style={{
-                  background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
-                  boxShadow: "0 0 30px rgba(124,58,237,0.4)",
+                  background: "#7C3AED",
+                  borderRadius: "12px",
+                  padding: "15px 28px",
+                  minHeight: "48px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
                 onClick={() => setLocation(`/kelas/${flagship.id}`)}
               >
@@ -712,10 +734,13 @@ export default function KelasPage() {
                 Mulai Belajar
               </button>
               <button
-                className="flex items-center gap-2 px-7 py-3 rounded-full font-display font-medium text-sm transition-all duration-200"
+                className="flex items-center gap-2 text-base font-normal transition-all duration-200"
                 style={{
-                  background: "rgba(255,255,255,0.07)",
-                  border: "1px solid rgba(255,255,255,0.12)",
+                  background: "rgba(255,255,255,0.1)",
+                  border: "0px solid transparent",
+                  borderRadius: "12px",
+                  padding: "15px 28px",
+                  minHeight: "48px",
                   color: "#FAFAFA",
                   backdropFilter: "blur(8px)",
                 }}
@@ -759,15 +784,10 @@ export default function KelasPage() {
                   onClick={() => setActivePersona(p)}
                   className="font-mono text-xs px-3 py-1.5 rounded-full transition-all duration-200"
                   style={{
-                    background:
-                      activePersona === p
-                        ? "rgba(124,58,237,0.8)"
-                        : "rgba(255,255,255,0.05)",
+                    background: activePersona === p ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.05)",
                     color: activePersona === p ? "#FAFAFA" : "#71717A",
-                    border:
-                      activePersona === p
-                        ? "1px solid rgba(168,85,247,0.5)"
-                        : "1px solid rgba(255,255,255,0.07)",
+                    border: activePersona === p ? "1px solid rgba(168,85,247,0.5)" : "1px solid rgba(255,255,255,0.07)",
+                    borderRadius: "100px",
                   }}
                 >
                   {p}

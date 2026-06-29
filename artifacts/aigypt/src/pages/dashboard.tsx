@@ -103,7 +103,7 @@ export default function Dashboard() {
         </div>
 
         {/* Progress tracker */}
-        <div className="rounded-2xl border border-[#1E1E2E] bg-[#12121A] p-6 mb-8">
+        <div className="border border-[#1E1E2E] bg-[#12121A] p-5 mb-8" style={{ borderRadius: "12px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}>
           <h2 className="font-display font-semibold text-white text-sm mb-5">Progress Belajar</h2>
           <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto pb-2">
             {sessions.map((s, i) => (
@@ -137,13 +137,17 @@ export default function Dashboard() {
             return (
               <div
                 key={s.num}
-                className={`group rounded-xl border p-5 transition-all duration-300 ${
+                className={`group border p-5 transition-all duration-300 ${
                   isCompleted
                     ? "border-[#7C3AED]/40 bg-[#12121A] hover:border-[#7C3AED]/60"
                     : isCurrent
-                    ? "border-[#7C3AED]/50 bg-[#12121A] shadow-[0_0_20px_rgba(124,58,237,0.15)]"
+                    ? "border-[#7C3AED]/50 bg-[#12121A]"
                     : "border-[#1E1E2E] bg-[#12121A]/50"
                 }`}
+                style={{
+                  borderRadius: "12px",
+                  boxShadow: isCurrent ? "0px 4px 12px rgba(0,0,0,0.3)" : "none",
+                }}
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-mono text-xs text-[#7C3AED] tracking-widest">SESI {String(s.num).padStart(2, "0")}</span>
@@ -164,16 +168,24 @@ export default function Dashboard() {
                 </h3>
                 {(isCompleted || isCurrent) ? (
                   <Link href={`/kelas/maksimalkan-ai/materi/sesi-${s.num}`}>
-                    <span className={`block text-center text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
-                      isCompleted
-                        ? "border border-[#7C3AED]/30 text-[#A855F7] hover:bg-[#7C3AED]/10"
-                        : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-[0_0_15px_rgba(124,58,237,0.3)]"
-                    }`}>
+                    <span
+                      className={`block text-center text-base font-medium transition-all duration-200 cursor-pointer flex items-center justify-center ${
+                        isCompleted ? "text-[#A855F7]" : "text-white"
+                      }`}
+                      style={{
+                        background: isCompleted ? "transparent" : "#7C3AED",
+                        border: isCompleted ? "1px solid rgba(124,58,237,0.3)" : "none",
+                        borderRadius: "12px",
+                        padding: "15px 24px",
+                        minHeight: "48px",
+                        boxShadow: isCompleted ? "none" : "0px 4px 12px rgba(0,0,0,0.3)",
+                      }}
+                    >
                       {isCompleted ? "Buka Lagi" : "Mulai Belajar"}
                     </span>
                   </Link>
                 ) : (
-                  <span className="block text-center text-xs font-semibold py-2.5 rounded-lg border border-[#1E1E2E] text-[#475569] cursor-not-allowed">
+                  <span className="block text-center text-base font-medium border border-[#1E1E2E] text-[#475569] cursor-not-allowed flex items-center justify-center" style={{ borderRadius: "12px", padding: "15px 24px", minHeight: "48px" }}>
                     Belum Dimulai
                   </span>
                 )}
@@ -184,7 +196,7 @@ export default function Dashboard() {
 
         {/* Kelas info */}
         {user.memberType === "kelas" && (
-          <div className="mt-8 rounded-xl border border-[#7C3AED]/30 bg-[#7C3AED]/8 p-5" style={{ background: "rgba(124,58,237,0.08)" }}>
+          <div className="mt-8 border border-[#7C3AED]/30 p-5" style={{ background: "rgba(124,58,237,0.08)", borderRadius: "12px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}>
             <p className="text-xs font-mono text-[#A855F7] uppercase tracking-wider mb-2">Info Batch {user.batchNumber}</p>
             <p className="text-sm text-[#94A3B8]">
               Jadwal sesi live akan dikomunikasikan melalui grup WhatsApp batch lo. Pastikan lo sudah tergabung di grup alumni AIGYPT Batch {user.batchNumber}.
