@@ -1,0 +1,337 @@
+# Prompt — AIGYPT Halaman Kurikulum (Premium Dark Luxury, Layout Rapi)
+
+Copy-paste prompt ini ke Claude Design atau Replit Agent. Ini perombakan total halaman kurikulum AIGYPT (`/kurikulum`) agar selaras dengan landing page dark luxury — copy diperhalus dan layout dirapikan agar elegan, terbaca, dan berkelas.
+
+---
+
+## PROMPT
+
+Bangun ulang halaman kurikulum untuk **AIGYPT** dengan estetika **dark luxury** yang konsisten dengan landing page. Halaman ini harus terasa seperti membuka sebuah dokumen program eksklusif — tenang, berkelas, dengan hierarki visual yang jernih. Bukan daftar materi yang ramai, tapi sebuah peta perjalanan yang dikurasi dengan cermat.
+
+---
+
+## TECH STACK
+
+- Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- Framer Motion untuk reveal animation saat scroll
+- Deploy: Vercel
+- Route: `/kurikulum` (halaman publik, tidak perlu login)
+- Semua teks Bahasa Indonesia
+
+---
+
+## DESIGN SYSTEM (sama dengan landing page premium)
+
+```css
+--bg-void: #060608
+--bg-deep: #0A0A0F
+--bg-elevated: #101018
+--bg-glass: rgba(20,20,30,0.5)
+--purple-core: #7C3AED
+--purple-bright: #A855F7
+--purple-glow: #C084FC
+--purple-deep: #4C1D95
+--text-primary: #FAFAFA
+--text-secondary: #A1A1AA
+--text-muted: #52525B
+--border-hairline: rgba(255,255,255,0.06)
+--border-glow: rgba(124,58,237,0.3)
+```
+
+Font: Space Grotesk (display, weight 500-600), Inter (body, weight 300-400), JetBrains Mono (label, nomor sesi).
+
+Prinsip: blackspace berlimpah, glow ungu halus, border hairline, tipografi besar tapi ringan, label mono dengan tracking lebar. Tidak ada emoji — gunakan ikon garis tipis Lucide bila perlu.
+
+---
+
+## MASALAH LAYOUT LAMA YANG HARUS DIPERBAIKI
+
+Layout lama menumpuk semua sesi sebagai card penuh yang berat dan ramai, dengan take-home dan tools yang membuat tiap card terlalu padat. Perbaikan:
+
+1. **Hierarki jernih** — pisahkan dengan tegas: judul sesi (besar), esensi (sedang), detail (kecil/tersembunyi sampai di-hover/klik).
+2. **Ruang napas** — jarak antar sesi harus lega, jangan rapat.
+3. **Nomor sesi sebagai elemen desain** — angka besar elegan (mono) sebagai anchor visual tiap baris.
+4. **Detail progresif** — tampilkan esensi tiap sesi dulu; detail materi & take-home muncul saat di-expand, bukan langsung membanjiri.
+5. **Konsistensi vertikal** — semua sesi pakai struktur identik, sejajar rapi.
+
+---
+
+## STRUKTUR HALAMAN
+
+### SECTION 1 — HERO KURIKULUM
+
+**Layout:** Tenang, terpusat atau rata kiri dengan margin lebar. Glow ungu halus di belakang.
+
+**Eyebrow (mono, tracking lebar):**
+```
+KURIKULUM · BATCH 01
+```
+
+**Headline besar:**
+```
+Enam Minggu yang
+Mengubah Caramu Bekerja
+```
+
+**Sub-headline (weight ringan, warna sekunder):**
+```
+Sebuah perjalanan terkurasi dari memahami kecerdasan buatan,
+hingga membangun solusi nyata dengan tanganmu sendiri.
+Setiap sesi dirancang untuk membawamu satu tingkat lebih tinggi.
+```
+
+**Tiga metrik ringkas (mono, dipisah garis hairline vertikal):**
+```
+6 SESI   ·   60 MENIT / SESI   ·   1 KARYA NYATA
+```
+
+---
+
+### SECTION 2 — FILOSOFI (Pembuka Singkat)
+
+**Layout:** Satu blok teks elegan, margin lebar, terpusat.
+
+**Label:**
+```
+PRINSIP DI BALIK KURIKULUM
+```
+
+**Pernyataan (headline editorial sedang):**
+```
+Kami tidak mengajarkan teknologi.
+Kami mengajarkan cara memecahkan masalah.
+```
+
+**Paragraf (body, sekunder):**
+```
+Setiap sesi dibangun di atas sesi sebelumnya — dari fondasi mental,
+menuju keterampilan, lalu penerapan, dan akhirnya penciptaan.
+Di akhir perjalanan, kamu tidak hanya tahu cara menggunakan AI.
+Kamu telah membangun sesuatu yang nyata, lahir dari masalahmu sendiri.
+```
+
+---
+
+### SECTION 3 — ALUR PERJALANAN (Visual Arc)
+
+**Layout:** Visualisasi 5 fase transformasi sebagai busur elegan (horizontal di desktop, vertikal di mobile) dengan garis penghubung bercahaya halus. Reveal saat scroll.
+
+**Label:**
+```
+ALUR TRANSFORMASI
+```
+
+**5 Fase (nomor mono + satu kata + satu kalimat):**
+```
+01 · FONDASI    → Memahami lanskap kecerdasan buatan
+02 · KETERAMPILAN → Menguasai seni berdialog dengan AI
+03 · PENERAPAN  → Menjadikan AI asisten ilmu dan amanah
+04 · PRODUKSI   → Mengubah AI menjadi mesin yang menghasilkan
+05 · PENCIPTAAN → Membangun solusi nyata dengan tangan sendiri
+```
+
+---
+
+### SECTION 4 — ENAM SESI (Bagian Utama — Layout Diperbaiki)
+
+**Layout baru (ini perbaikan utama):**
+
+Tampilkan 6 sesi sebagai **daftar baris elegan yang bisa di-expand**, bukan card berat. Setiap baris:
+
+```
+┌────────────────────────────────────────────────────────┐
+│  [01]   AI Itu Bukan Sulap, Tapi Hampir          [+]   │  ← baris ringkas
+│         Membangun fondasi mental & lanskap AI           │
+└────────────────────────────────────────────────────────┘
+        ↓ saat di-klik/expand, muncul detail:
+┌────────────────────────────────────────────────────────┐
+│  Yang akan kamu kuasai:                                 │
+│  — poin 1                                                │
+│  — poin 2                                                │
+│  — poin 3                                                │
+│  — poin 4                                                │
+│                                                          │
+│  Tools: [badge] [badge] [badge]                          │
+│                                                          │
+│  Misi minggu ini: ...                                    │
+└────────────────────────────────────────────────────────┘
+```
+
+Spesifikasi tiap baris:
+- **Nomor sesi**: angka besar mono (misal "01") di kiri, warna ungu muted, jadi anchor visual
+- **Judul sesi**: Space Grotesk, sedang-besar, putih
+- **Esensi**: satu kalimat di bawah judul, warna sekunder
+- **Ikon expand** (+/−) di kanan
+- **Garis hairline** memisahkan tiap baris
+- **Hover**: baris menyala sangat halus (background sedikit terang + glow tipis)
+- **Saat expand**: detail muncul dengan animasi tinggi halus (Framer Motion height animation), tidak menyentak
+
+**Konten lengkap 6 sesi:**
+
+---
+
+**SESI 01 — AI Itu Bukan Sulap, Tapi Hampir**
+Esensi: Membangun fondasi mental dan memahami lanskap kecerdasan buatan.
+
+Yang akan kamu kuasai:
+— Memahami cara kerja AI tanpa istilah teknis yang membingungkan
+— Mengenali perbedaan ChatGPT, Claude, dan Gemini — kapan memakai yang mana
+— Menyaksikan langsung: satu masalah, tiga AI, tiga hasil berbeda
+— Menyadari mengapa cara bertanya menentukan segalanya
+
+Tools: ChatGPT · Claude · Gemini
+
+Misi minggu ini: Ajukan satu masalah nyata pada dua AI berbeda. Amati perbedaannya.
+
+---
+
+**SESI 02 — Seni Berdialog dengan Kecerdasan**
+Esensi: Menguasai prompting — keterampilan inti yang membedakan amatir dan ahli.
+
+Yang akan kamu kuasai:
+— Formula menyusun perintah yang tajam dan menghasilkan output berkualitas
+— Mengubah pertanyaan biasa menjadi instruksi yang presisi
+— Teknik bertanya bertahap untuk hasil yang kompleks
+— Membangun koleksi prompt pribadi yang bisa dipakai berulang
+
+Tools: Claude · ChatGPT
+
+Misi minggu ini: Susun tiga perintah presisi untuk tiga kebutuhan berbeda dalam hidupmu.
+
+---
+
+**SESI 03 — Asisten untuk Ilmu dan Amanah**
+Esensi: Menerapkan AI pada dunia akademik dan organisasi.
+
+Yang akan kamu kuasai:
+— Menulis dan menyempurnakan makalah berbahasa Arab
+— Menerjemahkan dan memahami kitab klasik yang rumit
+— Merangkum jurnal panjang dan menemukan celah penelitian
+— Menyusun proposal, notulensi, dan laporan secara otomatis
+
+Tools: Claude · NotebookLM · TurboScribe · DeepL
+
+Misi minggu ini: Selesaikan satu tugas akademik atau organisasi nyata dengan AI. Catat waktu yang kamu hemat.
+
+---
+
+**SESI 04 — Kecerdasan yang Menghasilkan**
+Esensi: Memanfaatkan AI untuk bisnis dan karya kreatif.
+
+Yang akan kamu kuasai:
+— Meriset produk dan pasar dengan cermat
+— Menulis copywriting yang benar-benar menjual
+— Merancang kalender konten dan naskah dalam hitungan menit
+— Mengubah satu konten menjadi banyak format untuk banyak kanal
+
+Tools: Claude · Canva AI · CapCut AI
+
+Misi minggu ini: Ciptakan satu konten atau materi promosi dengan AI, dari ide hingga visual.
+
+---
+
+**SESI 05 — Tangan yang Mencipta**
+Esensi: Membangun aplikasi dan solusi nyata melalui vibe coding.
+
+Yang akan kamu kuasai:
+— Memahami vibe coding — membangun tanpa perlu menjadi programmer
+— Menciptakan aplikasi web dari sekadar deskripsi
+— Menghasilkan skrip otomatis untuk tugas yang berulang
+— Merangkai alur kerja otomatis yang berjalan sendiri
+
+Tools: Lovable · Bolt · v0 · Replit · n8n
+
+Misi minggu ini: Rumuskan satu masalah nyata dan solusi yang kamu bayangkan. Inilah benih karyamu.
+
+---
+
+**SESI 06 — Pembuktian**
+Esensi: Demo Day — mempersembahkan karya yang lahir dari perjalananmu.
+
+Yang akan kamu kuasai:
+— Mempresentasikan solusi: dari masalah, proses, hingga hasil nyata
+— Menerima dan memberi umpan balik yang membangun
+— Mendokumentasikan karyamu sebagai portofolio pertama
+— Merancang langkah selanjutnya untuk mengembangkan solusimu
+
+Tools: Seluruh tools yang telah dikuasai
+
+Misi minggu ini: Dokumentasikan karyamu. Ini menjadi bukti nyata kemampuanmu.
+
+---
+
+### SECTION 5 — RITME MINGGUAN (Timeline Elegan)
+
+**Layout:** Garis horizontal halus dengan 6 titik bercahaya, masing-masing diberi label minggu dan nama fase singkat. Bersih, tidak ramai.
+
+**Label:**
+```
+RITME ENAM MINGGU
+```
+
+**Headline:**
+```
+Satu Sesi, Satu Minggu, Satu Lompatan
+```
+
+**Timeline:**
+```
+Minggu 1 — Fondasi
+Minggu 2 — Keterampilan
+Minggu 3 — Penerapan
+Minggu 4 — Produksi
+Minggu 5 — Penciptaan
+Minggu 6 — Pembuktian
+```
+
+---
+
+### SECTION 6 — CTA PENUTUP
+
+**Layout:** Tenang, glow ungu halus di tengah.
+
+**Pernyataan:**
+```
+Perjalananmu menanti.
+```
+
+**Sub:**
+```
+Pelajari pilihan keanggotaan dan amankan tempatmu di Batch 01.
+```
+
+**Dua tombol:**
+- Primer: `Lihat Keanggotaan` (filled ungu, glow)
+- Sekunder: `Kembali ke Beranda` (ghost)
+
+---
+
+## DETAIL ANIMASI & POLISH
+
+1. **Scroll reveal**: tiap section dan baris sesi muncul dengan fade + rise halus (Framer Motion `whileInView`), stagger lembut.
+2. **Expand sesi**: animasi height yang mulus saat baris dibuka/ditutup, ikon +/− berputar halus.
+3. **Garis penghubung di Alur Perjalanan**: menyala dari kiri ke kanan (atau atas ke bawah di mobile) saat di-scroll.
+4. **Hover baris sesi**: background sedikit terang + glow hairline ungu.
+5. **Nomor sesi**: besar, mono, ungu muted — sebagai elemen desain, bukan sekadar angka.
+6. **Tools badge**: pill kecil dengan border hairline, hover glow halus.
+7. Smooth scroll, hormati `prefers-reduced-motion`.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Fully responsive — di mobile, baris sesi tetap rapi; alur perjalanan jadi vertikal
+2. Deploy-ready di Vercel
+3. No TypeScript errors
+4. Tidak ada gambar eksternal — CSS, gradient, SVG, ikon Lucide
+5. Tidak ada localStorage/sessionStorage — gunakan React state untuk expand/collapse
+6. Google Fonts via next/font/google
+7. Semua teks Bahasa Indonesia
+8. SEO metadata
+9. `npm run build` sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Halaman kurikulum premium dark luxury dengan layout yang rapi dan berhierarki: hero, filosofi, alur perjalanan visual, enam sesi dalam baris elegan yang bisa di-expand (perbaikan utama layout), timeline mingguan, dan CTA penutup. Copy diperhalus agar berkelas dan konsisten dengan landing page. Siap deploy ke Vercel.
