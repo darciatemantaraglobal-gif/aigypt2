@@ -1,40 +1,31 @@
 import { useState, useRef } from "react";
-import { waUrl } from "@/lib/wa";
 import { Link } from "wouter";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { waUrl } from "@/lib/wa";
 
-// ─── Animation Helpers ────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: "easeOut" as const },
-  },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
 };
 
-const staggerContainer = {
+const stagger = (delay = 0) => ({
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
+  visible: { transition: { staggerChildren: 0.11, delayChildren: delay } },
+});
 
-function Reveal({
-  children,
-  className,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
+function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
   return (
     <motion.div
-      variants={fadeUp}
+      ref={ref}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ delay }}
+      animate={inView ? "visible" : "hidden"}
+      variants={stagger(delay)}
       className={className}
     >
       {children}
@@ -42,19 +33,48 @@ function Reveal({
   );
 }
 
-// ─── SVG Icons (Lucide-style, 1.5px stroke) ───────────────────────────────────
-
-function IconBookOpen() {
+function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <motion.p
+      variants={fadeUp}
+      className="font-mono text-xs tracking-widest mb-6"
+      style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
+    >
+      {children}
+    </motion.p>
+  );
+}
+
+// ─── Icons ─────────────────────────────────────────────────────────────────────
+
+function IconBrain() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9.5 2a2.5 2.5 0 0 1 5 0v.5a.5.5 0 0 0 .5.5H16a2 2 0 0 1 2 2v.5a2.5 2.5 0 0 1 0 5V11a2 2 0 0 1-2 2h-.5a.5.5 0 0 0-.5.5V14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.5a.5.5 0 0 0-.5-.5H8a2 2 0 0 1-2-2v-.5a2.5 2.5 0 0 1 0-5V5a2 2 0 0 1 2-2h.5a.5.5 0 0 0 .5-.5V2z" />
+    </svg>
+  );
+}
+
+function IconMessage() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function IconBook() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
       <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
     </svg>
   );
 }
+
 function IconUsers() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -62,938 +82,671 @@ function IconUsers() {
     </svg>
   );
 }
-function IconTrendingUp() {
+
+function IconTrending() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
       <polyline points="17 6 23 6 23 12" />
     </svg>
   );
 }
-function IconSparkles() {
+
+function IconCode() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-    </svg>
-  );
-}
-function IconCompass() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
     </svg>
   );
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+function IconArrow() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+  );
+}
 
-const personas = [
-  {
-    Icon: IconBookOpen,
-    label: "Sang Akademisi",
-    desc: "Untuk mereka yang bergelut dengan makalah, kitab klasik, dan riset. AI menjadi asisten yang memahami bahasa Arab, merangkum referensi, dan mempertajam argumen.",
-  },
-  {
-    Icon: IconUsers,
-    label: "Sang Organisator",
-    desc: "Untuk penggerak komunitas. Dari proposal hingga laporan, dari notulensi hingga publikasi — semua menjadi lebih ringan, lebih cepat, lebih rapi.",
-  },
-  {
-    Icon: IconTrendingUp,
-    label: "Sang Pebisnis",
-    desc: "Untuk yang membangun penghidupan. Riset pasar, copywriting yang menjual, hingga melayani pelanggan — dikerjakan dengan kecerdasan, bukan sekadar kerja keras.",
-  },
-  {
-    Icon: IconSparkles,
-    label: "Sang Kreator",
-    desc: "Untuk yang bercerita pada dunia. Ide yang tak pernah kering, naskah yang mengalir, konten yang berlipat — semua dalam hitungan menit, bukan hari.",
-  },
-  {
-    Icon: IconCompass,
-    label: "Sang Pencari",
-    desc: "Untuk yang merasa kewalahan dan belum tahu harus mulai dari mana. Justru di sinilah tempat terbaik untuk memulai.",
-  },
-];
+function IconCheck() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
 
-const journeySteps = [
-  {
-    num: "01",
-    title: "KESADARAN",
-    desc: "Memahami AI bukan sebagai sihir, tapi sebagai alat yang tunduk pada mereka yang tahu cara memerintahnya.",
-  },
-  {
-    num: "02",
-    title: "PENGUASAAN",
-    desc: "Menguasai seni berdialog dengan AI. Satu keterampilan yang akan mengubah segalanya.",
-  },
-  {
-    num: "03",
-    title: "PENERAPAN",
-    desc: "Menerapkan AI pada kehidupan nyata — akademik, organisasi, setiap tugas yang selama ini menyita waktumu.",
-  },
-  {
-    num: "04",
-    title: "PRODUKSI",
-    desc: "Menjadikan AI mesin yang menghasilkan — konten, karya, bahkan penghidupan.",
-  },
-  {
-    num: "05",
-    title: "PENCIPTAAN",
-    desc: "Membangun solusimu sendiri. Aplikasi nyata, dari masalah nyata, dengan tanganmu sendiri — tanpa perlu menjadi programmer.",
-  },
-];
-
-const curriculum = [
-  {
-    num: "SESI 01",
-    title: "AI Itu Bukan Sulap, Tapi Hampir",
-    desc: "Membangun fondasi mental dan memahami lanskap kecerdasan buatan.",
-  },
-  {
-    num: "SESI 02",
-    title: "Seni Berdialog dengan Kecerdasan",
-    desc: "Menguasai prompting — keterampilan inti yang membedakan amatir dan ahli.",
-  },
-  {
-    num: "SESI 03",
-    title: "Asisten untuk Ilmu dan Amanah",
-    desc: "Menerapkan AI pada dunia akademik dan organisasi.",
-  },
-  {
-    num: "SESI 04",
-    title: "Kecerdasan yang Menghasilkan",
-    desc: "Memanfaatkan AI untuk bisnis dan karya kreatif.",
-  },
-  {
-    num: "SESI 05",
-    title: "Tangan yang Mencipta",
-    desc: "Membangun aplikasi dan solusi nyata melalui vibe coding.",
-  },
-  {
-    num: "SESI 06",
-    title: "Pembuktian",
-    desc: "Demo Day — mempersembahkan karya yang lahir dari perjalananmu.",
-  },
-];
-
-const valueProps = [
-  {
-    title: "Sebuah Karya Nyata",
-    desc: "Solusi atau aplikasi buatanmu sendiri, lahir dari masalah yang kamu pahami betul. Bukan latihan — sesuatu yang nyata.",
-  },
-  {
-    title: "Keterampilan yang Tak Lekang",
-    desc: "Kemampuan berdialog dengan AI yang akan relevan sepanjang kariermu, di bidang apapun.",
-  },
-  {
-    title: "Portofolio Pertama",
-    desc: "Bukti nyata kemampuanmu di era kecerdasan buatan — modal berharga untuk masa depan.",
-  },
-  {
-    title: "Akses Abadi",
-    desc: "Seluruh materi AIGYPT, dapat kamu akses kapanpun, selamanya, melalui keanggotaan eksklusifmu.",
-  },
-  {
-    title: "Lingkaran Eksklusif",
-    desc: "Komunitas alumni AIGYPT — tempat para pencipta saling menguatkan dan berkolaborasi.",
-  },
-];
+// ─── FAQ Component ─────────────────────────────────────────────────────────────
 
 const faqs = [
   {
-    q: "Apakah saya perlu bisa memprogram sebelumnya?",
-    a: "Tidak sama sekali. AIGYPT dirancang untuk membawamu dari nol. Justru keindahannya: kamu akan mencipta tanpa perlu menjadi programmer.",
+    q: "Apakah AIGYPT hanya untuk yang sudah bisa coding?",
+    a: "Sama sekali tidak. AIGYPT dirancang untuk semua masisir tanpa syarat teknis apa pun. Yang kamu butuhkan hanya kemauan untuk belajar dan mencoba.",
   },
   {
-    q: "Bagaimana bentuk mentoring langsungnya?",
-    a: "Enam sesi bimbingan intensif bersama mentor, di mana kamu belajar, berlatih, dan mendapat umpan balik langsung atas karyamu.",
+    q: "Bagaimana format pembelajaran di AIGYPT?",
+    a: "Setiap kelas tersusun dari sesi-sesi terstruktur dengan durasi sekitar 60 menit per sesi, dikombinasikan misi praktis yang bisa langsung dikerjakan.",
   },
   {
-    q: "Apa perbedaan Member Mandiri dan Member Kelas?",
-    a: "Member Mandiri belajar dengan kecepatannya sendiri melalui materi. Member Kelas mendapat seluruh materi plus bimbingan langsung, komunitas, dan sertifikat.",
+    q: "Apa yang membedakan AIGYPT dengan kursus AI online lainnya?",
+    a: "Setiap materi, contoh, dan studi kasus dikurasi dengan konteks kehidupan nyata masisir — dari makalah Arab hingga organisasi mahasiswa, dari bisnis perantauan hingga dakwah digital.",
   },
   {
-    q: "Apakah materi tetap bisa diakses setelah selesai?",
-    a: "Selamanya. Keanggotaanmu tidak memiliki tanggal kedaluwarsa.",
-  },
-  {
-    q: "Berapa peserta dalam satu batch?",
-    a: "Sengaja kami batasi untuk menjaga kualitas bimbingan. Setiap peserta layak mendapat perhatian penuh.",
+    q: "Apakah ada sertifikat setelah menyelesaikan kelas?",
+    a: "Ya, peserta yang menyelesaikan seluruh perjalanan dan mengumpulkan karya akan mendapatkan sertifikat dari AIGYPT.",
   },
 ];
 
-// ─── Journey Line Component ───────────────────────────────────────────────────
-
-function JourneyLine() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div ref={ref} className="absolute left-[19px] top-6 bottom-6 w-px overflow-hidden">
-      <motion.div
-        className="w-full origin-top"
-        style={{
-          background: "linear-gradient(to bottom, #7C3AED, #A855F7, rgba(124,58,237,0))",
-        }}
-        initial={{ scaleY: 0 }}
-        animate={inView ? { scaleY: 1 } : { scaleY: 0 }}
-        transition={{ duration: 1.4, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
-      />
+    <div
+      className="cursor-pointer group"
+      style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      onClick={() => setOpen(!open)}
+    >
+      <div className="flex items-start justify-between gap-4 py-5">
+        <p className="text-sm sm:text-base font-medium text-white leading-relaxed">{q}</p>
+        <motion.div
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.22, ease: "easeInOut" }}
+          className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full border flex items-center justify-center transition-colors duration-300"
+          style={{
+            borderColor: open ? "rgba(124,58,237,0.6)" : "rgba(255,255,255,0.1)",
+            color: open ? "#A855F7" : "#52525B",
+          }}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </motion.div>
+      </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="faq-body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            <p className="text-sm leading-relaxed pb-5" style={{ color: "#A1A1AA" }}>{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-// ─── Section Label ────────────────────────────────────────────────────────────
-
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <p className="font-mono text-[10px] tracking-[0.2em] text-[#7C3AED] uppercase mb-5">
-      {children}
-    </p>
-  );
-}
-
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
   return (
-    <div
-      className="min-h-screen overflow-x-hidden"
-      style={{ background: "#060608", color: "#FAFAFA" }}
-    >
-      {/* ═══ NAV ═══ */}
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 sm:px-10 h-16"
-        style={{ background: "rgba(6,6,8,0.8)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
-      >
-        <Link href="/">
-          <span className="font-display font-semibold text-lg tracking-tight cursor-pointer select-none">
-            AI<span style={{ color: "#A855F7" }}>GYPT</span>
-          </span>
-        </Link>
-        <div className="hidden sm:flex items-center gap-6">
-          <Link href="/kurikulum">
-            <span className="text-sm text-[#A1A1AA] hover:text-white transition-colors cursor-pointer font-light tracking-wide">
-              Kurikulum
-            </span>
-          </Link>
-          <a href="#keanggotaan" className="text-sm text-[#A1A1AA] hover:text-white transition-colors font-light tracking-wide">
-            Keanggotaan
-          </a>
-          <Link href="/login">
-            <span className="text-sm font-medium text-[#A855F7] hover:text-white transition-colors cursor-pointer">
-              Masuk
-            </span>
-          </Link>
-        </div>
-        <Link href="/login" className="sm:hidden">
-          <span className="text-sm text-[#A855F7] cursor-pointer">Masuk</span>
-        </Link>
-      </nav>
+    <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
+      <Navbar />
 
-      {/* ═══ SECTION 1 — HERO ═══ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-        {/* Background glow — breathing */}
+      {/* ══ SECTION 1: HERO ══ */}
+      <section className="relative overflow-hidden pt-28 pb-32 sm:pt-40 sm:pb-44">
+        {/* Breathing glow */}
         <motion.div
-          className="absolute inset-0 pointer-events-none"
-          animate={{ opacity: [0.5, 0.8, 0.5] }}
+          className="absolute pointer-events-none"
+          style={{
+            top: "-15%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "80vw",
+            height: "70vh",
+            background: "radial-gradient(ellipse at center, rgba(124,58,237,0.14) 0%, transparent 65%)",
+            filter: "blur(60px)",
+          }}
+          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.05, 1] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "radial-gradient(ellipse 60% 40% at 50% 45%, rgba(124,58,237,0.18) 0%, transparent 70%)",
-            }}
-          />
-        </motion.div>
-
+        />
         {/* Dot grid */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-20"
           style={{
-            backgroundImage: "radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+            backgroundImage: "radial-gradient(rgba(124,58,237,0.2) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
           }}
         />
 
-        {/* Content */}
-        <div className="relative z-10 max-w-3xl mx-auto pt-24 pb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+        <Reveal className="relative max-w-5xl mx-auto px-6 sm:px-10 text-center">
+          <motion.p
+            variants={fadeUp}
+            className="font-mono text-xs tracking-widest mb-8 inline-flex items-center gap-2"
+            style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
           >
-            <p className="font-mono text-[10px] tracking-[0.25em] text-[#7C3AED] uppercase mb-10">
-              Program Eksklusif untuk Masisir &middot; Batch 01
-            </p>
-          </motion.div>
+            RUMAH BELAJAR AI UNTUK MASISIR
+          </motion.p>
 
           <motion.h1
-            className="font-display font-medium leading-[1.08] tracking-tight mb-8"
-            style={{ fontSize: "clamp(2.6rem, 7vw, 5rem)", color: "#FAFAFA" }}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            variants={fadeUp}
+            className="font-display font-semibold leading-[1.05] mb-8"
+            style={{ fontSize: "clamp(2.75rem, 7vw, 5.5rem)", letterSpacing: "-0.025em" }}
           >
-            Ubah Setiap Masalah<br />
-            <span style={{ color: "#A855F7" }}>Menjadi Karya.</span>
+            Kuasai Kecerdasan
+            <br />
+            <span style={{ color: "#A855F7" }}>Buatan.</span>{" "}
+            <span style={{ color: "rgba(250,250,250,0.85)" }}>Ciptakan</span>
+            <br />
+            <span style={{ color: "rgba(250,250,250,0.85)" }}>Masa Depanmu.</span>
           </motion.h1>
 
           <motion.p
-            className="font-light leading-relaxed mb-12 max-w-xl mx-auto"
-            style={{ fontSize: "clamp(1rem, 2vw, 1.125rem)", color: "#A1A1AA" }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35 }}
+            variants={fadeUp}
+            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-12"
+            style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            AIGYPT adalah program transformatif yang mengajarkan masisir menguasai
-            kecerdasan buatan — dari sekadar bertanya, hingga membangun solusi nyata
-            dengan tangan sendiri.
+            AIGYPT adalah tempat masisir belajar memanfaatkan AI untuk segala aspek kehidupan —
+            dari bangku kuliah Al-Azhar, hingga membangun karya dan penghidupan sendiri.
           </motion.p>
 
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-14"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            <a
-              href={waUrl("Halo, saya ingin bergabung dengan AIGYPT")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3.5 text-sm font-medium text-white rounded-xl transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,58,237,0.55)]"
-              style={{
-                background: "#7C3AED",
-                boxShadow: "0 0 24px rgba(124,58,237,0.35)",
-              }}
-            >
-              Mulai Perjalanan
-            </a>
+          <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4 mb-16">
+            <Link href="/login">
+              <span
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white rounded-xl cursor-pointer transition-all duration-300"
+                style={{
+                  background: "#7C3AED",
+                  boxShadow: "0 0 24px rgba(124,58,237,0.35)",
+                }}
+              >
+                Mulai Belajar <IconArrow />
+              </span>
+            </Link>
             <Link href="/kurikulum">
               <span
-                className="px-8 py-3.5 text-sm font-medium text-[#A1A1AA] hover:text-white rounded-xl transition-all duration-300 cursor-pointer block text-center"
-                style={{ border: "1px solid rgba(255,255,255,0.1)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(124,58,237,0.5)")}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium rounded-xl cursor-pointer transition-all duration-300 hover:border-purple-500/50 hover:text-white"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#A1A1AA",
+                }}
               >
                 Jelajahi Kurikulum
               </span>
             </Link>
           </motion.div>
 
-          <motion.p
-            className="font-mono text-[9px] tracking-[0.25em] uppercase"
-            style={{ color: "#52525B" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-          >
-            6 Sesi Terkurasi &middot; Mentoring Langsung &middot; Komunitas Eksklusif
-          </motion.p>
-        </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-        >
           <motion.div
-            className="w-px h-10"
-            style={{ background: "linear-gradient(to bottom, transparent, rgba(124,58,237,0.5))" }}
-            animate={{ scaleY: [0.4, 1, 0.4] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-      </section>
-
-      {/* ═══ SECTION 2 — MANIFESTO ═══ */}
-      <section className="relative px-6 py-32 sm:py-40">
-        <div className="max-w-3xl mx-auto">
-          <Reveal>
-            <SectionLabel>Mengapa AIGYPT Ada</SectionLabel>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2
-              className="font-display font-medium leading-[1.15] tracking-tight mb-8"
-              style={{ fontSize: "clamp(1.9rem, 4.5vw, 3.2rem)", color: "#FAFAFA" }}
-            >
-              Di Mesir, ribuan masisir menyimpan ide brilian yang tak pernah terwujud
-              — bukan karena kurang mampu,{" "}
-              <span style={{ color: "#A1A1AA" }}>tapi karena belum punya alatnya.</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="font-light leading-[1.9] text-base" style={{ color: "#71717A" }}>
-              Kami percaya setiap masisir — akademisi, organisator, pebisnis, maupun
-              kreator — punya potensi untuk menciptakan, bukan sekadar mengonsumsi.
-              Kecerdasan buatan telah meruntuhkan tembok antara "punya ide" dan
-              "mewujudkan ide". AIGYPT hadir untuk memastikan kamu berada di sisi
-              yang tepat dari perubahan ini.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 3 — PERSONA ═══ */}
-      <section className="px-6 py-24 sm:py-32">
-        <div className="max-w-6xl mx-auto">
-          <Reveal>
-            <SectionLabel>Dirancang untuk Setiap Jiwa Masisir</SectionLabel>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2
-              className="font-display font-medium tracking-tight mb-16"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "#FAFAFA" }}
-            >
-              Apapun Jalanmu, AIGYPT Memahaminya
-            </h2>
-          </Reveal>
-
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp}
+            className="inline-flex flex-wrap items-center justify-center gap-6"
           >
-            {personas.map((p) => (
-              <motion.div
-                key={p.label}
-                variants={fadeUp}
-                className="group relative p-6 rounded-2xl cursor-default transition-all duration-400"
-                style={{
-                  background: "rgba(20,20,30,0.5)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  backdropFilter: "blur(12px)",
-                }}
-                whileHover={{
-                  borderColor: "rgba(124,58,237,0.4)",
-                  boxShadow: "0 0 28px rgba(124,58,237,0.12)",
-                }}
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5"
-                  style={{
-                    background: "rgba(124,58,237,0.12)",
-                    border: "1px solid rgba(124,58,237,0.25)",
-                    color: "#A855F7",
-                  }}
-                >
-                  <p.Icon />
-                </div>
-                <h3
-                  className="font-display font-medium text-sm mb-3"
-                  style={{ color: "#FAFAFA" }}
-                >
-                  {p.label}
-                </h3>
-                <p className="text-xs font-light leading-relaxed" style={{ color: "#71717A" }}>
-                  {p.desc}
-                </p>
-              </motion.div>
+            {["DIKURASI UNTUK MASISIR", "BERBASIS PRAKTIK", "KOMUNITAS PENCIPTA"].map((t) => (
+              <span key={t} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
+                {t}
+              </span>
             ))}
           </motion.div>
+        </Reveal>
+      </section>
+
+      {/* ══ SECTION 2: VISI / MANIFESTO ══ */}
+      <section className="py-20 sm:py-32" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <Reveal className="max-w-4xl mx-auto px-6 sm:px-10 text-center">
+          <SectionLabel>VISI KAMI</SectionLabel>
+          <motion.h2
+            variants={fadeUp}
+            className="font-display font-semibold leading-tight mb-10"
+            style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.015em" }}
+          >
+            Kami percaya setiap masisir ditakdirkan untuk{" "}
+            <span style={{ color: "#A855F7" }}>mencipta</span> — bukan sekadar mengonsumsi.
+          </motion.h2>
+          <motion.p
+            variants={fadeUp}
+            className="text-base leading-[1.9] max-w-2xl mx-auto"
+            style={{ color: "#71717A", fontWeight: 300 }}
+          >
+            Di tengah ribuan masisir yang menuntut ilmu di negeri para nabi, tersimpan potensi
+            yang luar biasa. Kecerdasan buatan kini menjadi alat yang mampu melipatgandakan
+            potensi itu. AIGYPT hadir untuk memastikan tak satu pun masisir tertinggal dari
+            perubahan zaman — dengan ilmu yang dikurasi khusus untuk dunia mereka.
+          </motion.p>
+        </Reveal>
+      </section>
+
+      {/* ══ SECTION 3: SPEKTRUM PEMBELAJARAN ══ */}
+      <section className="py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10">
+          <Reveal className="text-center mb-16">
+            <SectionLabel>SPEKTRUM PEMBELAJARAN</SectionLabel>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display font-semibold"
+              style={{ fontSize: "clamp(1.75rem, 4vw, 2.75rem)", letterSpacing: "-0.015em" }}
+            >
+              Satu Platform,{" "}
+              <span style={{ color: "#A855F7" }}>Tak Terbatas Kemungkinan</span>
+            </motion.h2>
+          </Reveal>
+
+          <Reveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                icon: <IconBrain />,
+                title: "Fondasi & Mindset AI",
+                desc: "Memahami cara kerja AI dan mengubah cara berpikir tentangnya.",
+              },
+              {
+                icon: <IconMessage />,
+                title: "Seni Prompting",
+                desc: "Berdialog dengan AI untuk hasil yang berkualitas tinggi.",
+              },
+              {
+                icon: <IconBook />,
+                title: "AI untuk Akademik",
+                desc: "Makalah Arab, kitab klasik, riset, dan skripsi.",
+              },
+              {
+                icon: <IconUsers />,
+                title: "AI untuk Organisasi",
+                desc: "Proposal, notulensi, publikasi, dan laporan.",
+              },
+              {
+                icon: <IconTrending />,
+                title: "AI untuk Bisnis & Konten",
+                desc: "Copywriting, riset pasar, dan produksi konten.",
+              },
+              {
+                icon: <IconCode />,
+                title: "Vibe Coding",
+                desc: "Membangun aplikasi nyata tanpa menjadi programmer.",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                className="group relative rounded-2xl p-6 transition-all duration-300 cursor-default"
+                style={{
+                  background: "rgba(16,16,24,0.6)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+                whileHover={{
+                  borderColor: "rgba(124,58,237,0.3)",
+                  background: "rgba(20,20,32,0.8)",
+                }}
+              >
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5 transition-colors duration-300 group-hover:bg-purple-500/20"
+                  style={{ background: "rgba(124,58,237,0.1)", color: "#A855F7" }}
+                >
+                  {item.icon}
+                </div>
+                <h3 className="font-display font-semibold text-white text-base mb-2">{item.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "#71717A" }}>{item.desc}</p>
+              </motion.div>
+            ))}
+          </Reveal>
         </div>
       </section>
 
-      {/* ═══ SECTION 4 — JOURNEY ═══ */}
-      <section className="px-6 py-28 sm:py-36">
-        <div className="max-w-2xl mx-auto">
-          <Reveal>
-            <SectionLabel>Sebuah Metamorfosis dalam Enam Minggu</SectionLabel>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2
-              className="font-display font-medium tracking-tight mb-20"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "#FAFAFA" }}
-            >
-              Dari Bertanya,<br />Hingga Mencipta
-            </h2>
+      {/* ══ SECTION 4: MENGAPA AIGYPT ══ */}
+      <section
+        className="py-20 sm:py-28"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+      >
+        <div className="max-w-5xl mx-auto px-6 sm:px-10">
+          <Reveal className="mb-16">
+            <SectionLabel>MENGAPA AIGYPT BERBEDA</SectionLabel>
           </Reveal>
 
-          {/* Steps with line */}
-          <div className="relative pl-12">
-            <JourneyLine />
-            {journeySteps.map((step, i) => (
-              <Reveal key={step.num} delay={i * 0.08}>
-                <div className="relative mb-14 last:mb-0">
-                  {/* Dot */}
+          <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-12">
+            {[
+              {
+                num: "01",
+                title: "Dikurasi untuk Masisir",
+                desc: "Setiap contoh dan studi kasus lahir dari kehidupan nyata mahasiswa Indonesia di Mesir. Bukan teori generik yang bisa dicari sendiri.",
+              },
+              {
+                num: "02",
+                title: "Berbasis Praktik",
+                desc: "Kamu tidak hanya belajar — kamu mencipta. Setiap pembelajaran berujung pada karya nyata yang bisa langsung dipakai.",
+              },
+              {
+                num: "03",
+                title: "Bertumbuh Bersamamu",
+                desc: "Dari pemula hingga pencipta. Materi tersusun bertahap, mengikuti perjalananmu dari fondasi menuju penciptaan.",
+              },
+              {
+                num: "04",
+                title: "Komunitas Pencipta",
+                desc: "Bergabung dengan masisir lain yang membangun masa depan dengan kecerdasan buatan — saling belajar, saling mendorong.",
+              },
+            ].map((item, i) => (
+              <motion.div key={i} variants={fadeUp} className="flex gap-6">
+                <span
+                  className="flex-shrink-0 font-mono font-bold text-2xl leading-none mt-0.5"
+                  style={{ color: "rgba(124,58,237,0.3)", letterSpacing: "-0.02em" }}
+                >
+                  {item.num}
+                </span>
+                <div>
+                  <h3 className="font-display font-semibold text-white text-lg mb-3">{item.title}</h3>
+                  <p className="text-sm leading-[1.8]" style={{ color: "#71717A" }}>{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ══ SECTION 5: KELAS UNGGULAN ══ */}
+      <section className="py-20 sm:py-32">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10">
+          <Reveal className="text-center mb-12">
+            <SectionLabel>MULAI DARI SINI</SectionLabel>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display font-semibold"
+              style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
+            >
+              Kelas Perdana AIGYPT
+            </motion.h2>
+          </Reveal>
+
+          <Reveal>
+            <motion.div
+              variants={fadeUp}
+              className="relative rounded-3xl overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, rgba(16,16,24,0.95) 0%, rgba(20,12,36,0.95) 100%)",
+                border: "1px solid rgba(124,58,237,0.2)",
+                boxShadow: "0 0 60px rgba(124,58,237,0.08)",
+              }}
+            >
+              {/* Glow top */}
+              <div
+                className="absolute top-0 left-0 right-0 h-px"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.5), transparent)" }}
+              />
+
+              <div className="p-8 sm:p-12">
+                <div className="flex flex-wrap items-start justify-between gap-6 mb-8">
+                  <div>
+                    <span
+                      className="font-mono text-xs tracking-widest px-3 py-1 rounded-full mb-4 inline-block"
+                      style={{ background: "rgba(124,58,237,0.15)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}
+                    >
+                      TERSEDIA SEKARANG
+                    </span>
+                    <h3
+                      className="font-display font-semibold text-white leading-tight mb-3"
+                      style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)" }}
+                    >
+                      Maksimalkan AI untuk
+                      <br />
+                      Menghasilkan Solusimu
+                    </h3>
+                    <p className="text-sm italic" style={{ color: "#71717A" }}>
+                      "Kelas perdana AIGYPT — dari bertanya, hingga mencipta."
+                    </p>
+                  </div>
                   <div
-                    className="absolute -left-12 w-10 h-10 rounded-full flex items-center justify-center"
+                    className="flex-shrink-0 inline-flex rounded-2xl overflow-hidden"
+                    style={{ border: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    {[["6", "SESI"], ["60 MENIT", "PER SESI"], ["1", "KARYA NYATA"]].map(([val, lbl], i) => (
+                      <div key={i} className="flex items-center">
+                        {i > 0 && <div className="self-stretch w-px" style={{ background: "rgba(255,255,255,0.06)" }} />}
+                        <div className="px-5 py-3 text-center">
+                          <span className="font-mono font-bold text-white text-sm block">{val}</span>
+                          <span className="font-mono text-xs block mt-0.5 tracking-widest" style={{ color: "#52525B" }}>{lbl}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-sm leading-[1.9] mb-8 max-w-2xl" style={{ color: "#A1A1AA", fontWeight: 300 }}>
+                  Perjalanan transformatif dari memahami AI hingga membangun solusi nyata dengan tanganmu sendiri.
+                  Enam sesi yang akan mengubah cara kamu bekerja, belajar, dan berkarya.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link href="/kelas/maksimalkan-ai">
+                    <span
+                      className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white rounded-xl cursor-pointer transition-all duration-300"
+                      style={{ background: "#7C3AED", boxShadow: "0 0 20px rgba(124,58,237,0.3)" }}
+                    >
+                      Lihat Kelas Ini <IconArrow />
+                    </span>
+                  </Link>
+                  <Link href="/kurikulum">
+                    <span
+                      className="text-sm cursor-pointer transition-colors hover:text-white"
+                      style={{ color: "#71717A" }}
+                    >
+                      Lihat detail kurikulum →
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ══ SECTION 6: SEGERA HADIR ══ */}
+      <section className="py-20 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="max-w-5xl mx-auto px-6 sm:px-10">
+          <Reveal className="mb-12">
+            <SectionLabel>YANG AKAN DATANG</SectionLabel>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display font-semibold mb-4"
+              style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
+            >
+              Perjalanan Ini Baru Dimulai
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-sm" style={{ color: "#52525B" }}>
+              Kelas baru terus dikembangkan bersama kebutuhan masisir.
+            </motion.p>
+          </Reveal>
+
+          <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              { title: "Bahasa Arab Akademik dengan AI", desc: "Taklukkan makalah, muthala'ah, dan kitab klasik dengan bantuan AI." },
+              { title: "Bangun Penghidupan dengan AI", desc: "Ubah keterampilan dan ide menjadi sumber penghasilan nyata." },
+              { title: "Vibe Coding: Dari Nol ke Aplikasi", desc: "Bangun software yang berguna tanpa perlu menjadi programmer." },
+              { title: "Konten & Dakwah Digital dengan AI", desc: "Sebarkan kebaikan dan ilmu dengan kecerdasan sebagai alat." },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                className="rounded-2xl p-6"
+                style={{
+                  background: "rgba(10,10,15,0.6)",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                }}
+              >
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <h3 className="font-display font-medium text-white text-base leading-snug">{item.title}</h3>
+                  <span
+                    className="flex-shrink-0 font-mono text-xs px-2 py-0.5 rounded-full"
                     style={{
-                      background: "rgba(124,58,237,0.15)",
-                      border: "1px solid rgba(124,58,237,0.35)",
+                      background: "rgba(82,82,91,0.15)",
+                      color: "#52525B",
+                      border: "1px solid rgba(82,82,91,0.2)",
                     }}
                   >
-                    <span
-                      className="font-mono text-[10px] font-medium"
-                      style={{ color: "#A855F7" }}
-                    >
-                      {step.num}
-                    </span>
-                  </div>
-                  <h3
-                    className="font-mono text-xs tracking-[0.18em] mb-2.5"
-                    style={{ color: "#7C3AED" }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p
-                    className="text-sm font-light leading-relaxed"
-                    style={{ color: "#A1A1AA" }}
-                  >
-                    {step.desc}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={0.3}>
-            <p
-              className="mt-20 font-display font-medium text-xl tracking-tight text-center"
-              style={{ color: "#71717A" }}
-            >
-              Di akhir perjalanan, kamu tidak lagi sama.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 5 — CURRICULUM ═══ */}
-      <section className="px-6 py-28 sm:py-36">
-        <div className="max-w-2xl mx-auto">
-          <Reveal>
-            <SectionLabel>Enam Sesi yang Dikurasi dengan Cermat</SectionLabel>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2
-              className="font-display font-medium tracking-tight mb-16"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "#FAFAFA" }}
-            >
-              Kurikulum
-            </h2>
-          </Reveal>
-
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            {curriculum.map((s, i) => (
-              <Reveal key={s.num} delay={i * 0.07}>
-                <div
-                  className="group flex items-start gap-6 py-6 transition-all duration-300 cursor-default"
-                  style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(124,58,237,0.04)";
-                    e.currentTarget.style.paddingLeft = "12px";
-                    e.currentTarget.style.marginLeft = "-12px";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.paddingLeft = "0";
-                    e.currentTarget.style.marginLeft = "0";
-                  }}
-                >
-                  <span
-                    className="font-mono text-[10px] tracking-[0.15em] flex-shrink-0 mt-1"
-                    style={{ color: "#52525B" }}
-                  >
-                    {s.num}
+                    SEGERA
                   </span>
-                  <div className="flex-1 min-w-0">
-                    <h3
-                      className="font-display font-medium text-base mb-1.5 group-hover:text-white transition-colors"
-                      style={{ color: "#E4E4E7" }}
-                    >
-                      {s.title}
-                    </h3>
-                    <p className="text-sm font-light" style={{ color: "#52525B" }}>
-                      {s.desc}
-                    </p>
-                  </div>
                 </div>
-              </Reveal>
+                <p className="text-xs leading-relaxed" style={{ color: "#52525B" }}>{item.desc}</p>
+              </motion.div>
             ))}
-          </div>
-
-          <Reveal delay={0.1}>
-            <div className="mt-10">
-              <Link href="/kurikulum">
-                <span
-                  className="inline-flex items-center gap-2 text-sm font-light transition-colors cursor-pointer hover:text-white"
-                  style={{ color: "#7C3AED" }}
-                >
-                  Lihat Kurikulum Lengkap
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </Link>
-            </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ═══ SECTION 6 — VALUE PROPS ═══ */}
-      <section className="px-6 py-28 sm:py-36">
-        <div className="max-w-2xl mx-auto">
-          <Reveal>
-            <SectionLabel>Lebih dari Sekadar Kelas</SectionLabel>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2
-              className="font-display font-medium tracking-tight mb-16"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "#FAFAFA" }}
-            >
-              Yang Tinggal Bersamamu,<br />Selamanya
-            </h2>
-          </Reveal>
-
-          <div className="space-y-10">
-            {valueProps.map((v, i) => (
-              <Reveal key={v.title} delay={i * 0.07}>
-                <div className="flex gap-8">
-                  <div
-                    className="w-px flex-shrink-0 mt-1"
-                    style={{ background: "rgba(124,58,237,0.3)", minHeight: "100%" }}
-                  />
-                  <div>
-                    <h3
-                      className="font-display font-medium text-base mb-2"
-                      style={{ color: "#FAFAFA" }}
-                    >
-                      — {v.title}
-                    </h3>
-                    <p className="text-sm font-light leading-relaxed" style={{ color: "#71717A" }}>
-                      {v.desc}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 7 — MEMBERSHIP ═══ */}
-      <section id="keanggotaan" className="px-6 py-28 sm:py-36">
-        <div className="max-w-3xl mx-auto">
-          <Reveal>
-            <SectionLabel>Pilih Tingkat Keanggotaanmu</SectionLabel>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2
-              className="font-display font-medium tracking-tight mb-16"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "#FAFAFA" }}
+      {/* ══ SECTION 7: KEANGGOTAAN ══ */}
+      <section id="keanggotaan" className="py-20 sm:py-28">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10">
+          <Reveal className="text-center mb-14">
+            <SectionLabel>BERGABUNG DENGAN AIGYPT</SectionLabel>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display font-semibold mb-4"
+              style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
             >
               Sebuah Investasi pada Dirimu
-            </h2>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
+              KUOTA TERBATAS PER BATCH UNTUK MENJAGA KUALITAS
+            </motion.p>
           </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
-            {/* Mandiri */}
-            <Reveal delay={0.05}>
-              <div
-                className="relative p-7 rounded-2xl h-full flex flex-col"
+          <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              {
+                name: "Mandiri",
+                tag: "Fleksibel",
+                desc: "Akses mandiri ke semua materi kelas. Belajar dengan kecepatanmu sendiri.",
+                features: [
+                  "Akses seluruh materi kelas",
+                  "Forum komunitas AIGYPT",
+                  "Update materi berkala",
+                  "Sertifikat penyelesaian",
+                ],
+                cta: "Mulai Mandiri",
+                msg: "Halo, saya tertarik dengan Keanggotaan Mandiri AIGYPT",
+                highlight: false,
+              },
+              {
+                name: "Kelas",
+                tag: "Rekomendasi",
+                desc: "Pengalaman belajar penuh dengan sesi langsung, mentor, dan komunitas aktif.",
+                features: [
+                  "Semua fitur Mandiri",
+                  "Sesi live interaktif",
+                  "Mentoring & umpan balik",
+                  "Demo Day & portofolio",
+                ],
+                cta: "Daftar Kelas",
+                msg: "Halo, saya tertarik dengan Keanggotaan Kelas AIGYPT",
+                highlight: true,
+              },
+            ].map((tier) => (
+              <motion.div
+                key={tier.name}
+                variants={fadeUp}
+                className="relative rounded-2xl p-8 flex flex-col"
                 style={{
-                  background: "rgba(16,16,24,0.7)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  backdropFilter: "blur(16px)",
+                  background: tier.highlight ? "rgba(20,12,36,0.9)" : "rgba(10,10,15,0.7)",
+                  border: tier.highlight ? "1px solid rgba(124,58,237,0.3)" : "1px solid rgba(255,255,255,0.06)",
+                  boxShadow: tier.highlight ? "0 0 40px rgba(124,58,237,0.08)" : "none",
                 }}
               >
-                <h3
-                  className="font-display font-medium text-lg mb-2"
-                  style={{ color: "#FAFAFA" }}
-                >
-                  Keanggotaan Mandiri
-                </h3>
-                <p className="text-sm font-light mb-7" style={{ color: "#71717A" }}>
-                  Untuk jiwa yang belajar dengan caranya sendiri.
-                </p>
-                <ul className="space-y-3 mb-8 flex-1">
-                  {[
-                    "Akses penuh seluruh materi AIGYPT",
-                    "Kode keanggotaan eksklusif",
-                    "Pembaruan materi selamanya",
-                    "Akses ke Vibe Coding Toolbox",
-                  ].map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm font-light" style={{ color: "#A1A1AA" }}>
-                      <svg className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#7C3AED" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={waUrl("Halo, saya tertarik dengan Keanggotaan Mandiri AIGYPT")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-center py-3 text-sm font-medium transition-all duration-300 rounded-xl hover:text-white"
-                  style={{
-                    border: "1px solid rgba(124,58,237,0.35)",
-                    color: "#A855F7",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(124,58,237,0.08)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  Bergabung sebagai Member Mandiri
-                </a>
-              </div>
-            </Reveal>
-
-            {/* Kelas — highlighted */}
-            <Reveal delay={0.1}>
-              <div
-                className="relative p-7 rounded-2xl h-full flex flex-col"
-                style={{
-                  background: "rgba(20,16,36,0.7)",
-                  border: "1px solid rgba(124,58,237,0.35)",
-                  backdropFilter: "blur(16px)",
-                  boxShadow: "0 0 40px rgba(124,58,237,0.12)",
-                }}
-              >
-                {/* Badge */}
-                <div className="absolute -top-3.5 left-6">
+                {tier.highlight && (
+                  <div
+                    className="absolute top-0 left-0 right-0 h-px"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.6), transparent)" }}
+                  />
+                )}
+                <div className="flex items-start justify-between mb-5">
+                  <div>
+                    <h3 className="font-display font-semibold text-white text-xl mb-1">{tier.name}</h3>
+                    <p className="text-sm" style={{ color: "#71717A" }}>{tier.desc}</p>
+                  </div>
                   <span
-                    className="font-mono text-[9px] tracking-[0.2em] px-3 py-1.5 rounded-full uppercase"
+                    className="flex-shrink-0 font-mono text-xs px-2 py-1 rounded-full"
                     style={{
-                      background: "#7C3AED",
-                      color: "#FAFAFA",
+                      background: tier.highlight ? "rgba(124,58,237,0.15)" : "rgba(255,255,255,0.05)",
+                      color: tier.highlight ? "#A855F7" : "#52525B",
+                      border: tier.highlight ? "1px solid rgba(124,58,237,0.25)" : "1px solid rgba(255,255,255,0.06)",
                     }}
                   >
-                    Paling Diminati
+                    {tier.tag}
                   </span>
                 </div>
-
-                <h3
-                  className="font-display font-medium text-lg mb-2"
-                  style={{ color: "#FAFAFA" }}
-                >
-                  Keanggotaan Kelas
-                </h3>
-                <p className="text-sm font-light mb-7" style={{ color: "#71717A" }}>
-                  Untuk yang menginginkan bimbingan penuh.
-                </p>
                 <ul className="space-y-3 mb-8 flex-1">
-                  {[
-                    "Segala yang ada di Keanggotaan Mandiri",
-                    "Enam sesi mentoring langsung",
-                    "Bimbingan personal dari mentor",
-                    "Lingkaran diskusi eksklusif per batch",
-                    "Sertifikat penyelesaian",
-                    "Undangan Demo Day",
-                  ].map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm font-light" style={{ color: "#A1A1AA" }}>
-                      <svg className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: "#A855F7" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-sm" style={{ color: "#A1A1AA" }}>
+                      <span style={{ color: "#7C3AED" }}><IconCheck /></span>
                       {f}
                     </li>
                   ))}
                 </ul>
                 <a
-                  href={waUrl("Halo, saya tertarik dengan Keanggotaan Kelas AIGYPT")}
+                  href={waUrl(tier.msg)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center py-3 text-sm font-medium text-white transition-all duration-300 rounded-xl"
-                  style={{
-                    background: "#7C3AED",
-                    boxShadow: "0 0 20px rgba(124,58,237,0.3)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#6D28D9";
-                    e.currentTarget.style.boxShadow = "0 0 32px rgba(124,58,237,0.5)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#7C3AED";
-                    e.currentTarget.style.boxShadow = "0 0 20px rgba(124,58,237,0.3)";
-                  }}
+                  className="block text-center py-3 text-sm font-semibold rounded-xl transition-all duration-300"
+                  style={
+                    tier.highlight
+                      ? { background: "#7C3AED", color: "#fff", boxShadow: "0 0 20px rgba(124,58,237,0.3)" }
+                      : { border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }
+                  }
                 >
-                  Bergabung sebagai Member Kelas
+                  {tier.cta} →
                 </a>
-              </div>
-            </Reveal>
-          </div>
-
-          <Reveal delay={0.15}>
-            <p
-              className="text-center font-mono text-[9px] tracking-[0.2em] uppercase"
-              style={{ color: "#52525B" }}
-            >
-              Kuota Terbatas per Batch untuk Menjaga Kualitas Bimbingan
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 8 — FAQ ═══ */}
-      <section className="px-6 py-24 sm:py-32">
-        <div className="max-w-2xl mx-auto">
-          <Reveal>
-            <SectionLabel>Hal yang Mungkin Kamu Tanyakan</SectionLabel>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2
-              className="font-display font-medium tracking-tight mb-14"
-              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", color: "#FAFAFA" }}
-            >
-              Pertanyaan
-            </h2>
-          </Reveal>
-
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            {faqs.map((faq, i) => (
-              <Reveal key={i} delay={i * 0.05}>
-                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  <button
-                    className="w-full flex items-center justify-between py-5 text-left group"
-                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  >
-                    <span
-                      className="text-sm font-light pr-6 group-hover:text-white transition-colors"
-                      style={{ color: openFaq === i ? "#FAFAFA" : "#E4E4E7" }}
-                    >
-                      {faq.q}
-                    </span>
-                    <motion.svg
-                      animate={{ rotate: openFaq === i ? 180 : 0 }}
-                      transition={{ duration: 0.25 }}
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#7C3AED"
-                      strokeWidth="1.5"
-                      className="flex-shrink-0"
-                    >
-                      <path d="M19 9l-7 7-7-7" />
-                    </motion.svg>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {openFaq === i && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                        style={{ overflow: "hidden" }}
-                      >
-                        <p
-                          className="text-sm font-light leading-relaxed pb-5"
-                          style={{ color: "#71717A" }}
-                        >
-                          {faq.a}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </Reveal>
+              </motion.div>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* ═══ SECTION 9 — GRAND CTA ═══ */}
-      <section className="px-6 py-28 sm:py-40 relative overflow-hidden">
-        {/* Dramatic glow */}
+      {/* ══ FAQ ══ */}
+      <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="max-w-3xl mx-auto px-6 sm:px-10">
+          <Reveal className="mb-12">
+            <SectionLabel>PERTANYAAN UMUM</SectionLabel>
+          </Reveal>
+          <Reveal>
+            {faqs.map((faq, i) => (
+              <motion.div key={i} variants={fadeUp}>
+                <FaqItem q={faq.q} a={faq.a} />
+              </motion.div>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ══ SECTION 8: CTA PENUTUP ══ */}
+      <section className="relative py-28 sm:py-40 overflow-hidden">
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute pointer-events-none inset-0"
           style={{
-            background: "radial-gradient(ellipse 55% 45% at 50% 50%, rgba(124,58,237,0.2) 0%, transparent 68%)",
+            background: "radial-gradient(ellipse at center 70%, rgba(124,58,237,0.12) 0%, transparent 65%)",
           }}
         />
-        <div className="relative z-10 max-w-2xl mx-auto text-center">
-          <Reveal>
-            <h2
-              className="font-display font-medium leading-[1.1] tracking-tight mb-6"
-              style={{ fontSize: "clamp(2.2rem, 5.5vw, 4rem)", color: "#FAFAFA" }}
-            >
-              Ide-idemu layak<br />diwujudkan.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <p className="text-base font-light mb-12" style={{ color: "#A1A1AA" }}>
-              Batch 01 segera dibuka. Tempat sangat terbatas.
-            </p>
-          </Reveal>
-          <Reveal delay={0.14}>
+        <Reveal className="relative max-w-4xl mx-auto px-6 sm:px-10 text-center">
+          <motion.h2
+            variants={fadeUp}
+            className="font-display font-semibold leading-tight mb-6"
+            style={{ fontSize: "clamp(2rem, 5vw, 4rem)", letterSpacing: "-0.02em" }}
+          >
+            Masa depanmu dimulai
+            <br />
+            <span style={{ color: "#A855F7" }}>dengan satu keputusan.</span>
+          </motion.h2>
+          <motion.p
+            variants={fadeUp}
+            className="text-base sm:text-lg mb-12"
+            style={{ color: "#71717A", fontWeight: 300 }}
+          >
+            Bergabunglah dengan masisir yang memilih untuk mencipta.
+          </motion.p>
+          <motion.div variants={fadeUp}>
             <a
-              href={waUrl("Halo, saya ingin amankan tempat di AIGYPT Batch 01")}
+              href={waUrl("Halo, saya ingin memulai perjalanan bersama AIGYPT")}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-12 py-4 text-base font-medium text-white rounded-xl transition-all duration-300"
+              className="inline-flex items-center gap-2 px-10 py-4 text-base font-semibold text-white rounded-xl transition-all duration-300"
               style={{
                 background: "#7C3AED",
-                boxShadow: "0 0 32px rgba(124,58,237,0.4)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#6D28D9";
-                e.currentTarget.style.boxShadow = "0 0 52px rgba(124,58,237,0.65)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#7C3AED";
-                e.currentTarget.style.boxShadow = "0 0 32px rgba(124,58,237,0.4)";
+                boxShadow: "0 0 40px rgba(124,58,237,0.4)",
               }}
             >
-              Amankan Tempatmu
+              Mulai Perjalananmu <IconArrow />
             </a>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <p
-              className="mt-8 font-mono text-[9px] tracking-[0.25em] uppercase"
-              style={{ color: "#52525B" }}
-            >
-              Perjalanan Transformasi Dimulai dari Satu Langkah
-            </p>
-          </Reveal>
-        </div>
+          </motion.div>
+        </Reveal>
       </section>
 
-      {/* ═══ FOOTER ═══ */}
-      <footer
-        className="px-6 py-14"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
-      >
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-          <div>
-            <p className="font-display font-semibold text-base mb-1" style={{ color: "#FAFAFA" }}>
-              AI<span style={{ color: "#A855F7" }}>GYPT</span>
-            </p>
-            <p className="text-xs font-light" style={{ color: "#52525B" }}>
-              Maksimalkan AI untuk Menghasilkan Solusimu
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <Link href="/kurikulum">
-              <span className="text-xs font-light transition-colors cursor-pointer hover:text-white" style={{ color: "#71717A" }}>
-                Kurikulum
-              </span>
-            </Link>
-            <a href="#keanggotaan" className="text-xs font-light transition-colors hover:text-white" style={{ color: "#71717A" }}>
-              Keanggotaan
-            </a>
-            <Link href="/toolbox">
-              <span className="text-xs font-light transition-colors cursor-pointer hover:text-white" style={{ color: "#71717A" }}>
-                Toolbox
-              </span>
-            </Link>
-            <Link href="/login">
-              <span className="text-xs font-light transition-colors cursor-pointer hover:text-white" style={{ color: "#71717A" }}>
-                Masuk
-              </span>
-            </Link>
-          </div>
-
-          <p className="text-xs font-light" style={{ color: "#52525B" }}>
-            &copy; 2026 AIGYPT &middot; Program untuk Masisir, oleh Masisir
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

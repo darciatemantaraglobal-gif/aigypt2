@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { useLocation } from "wouter";
+import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { waUrl } from "@/lib/wa";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Data ──────────────────────────────────────────────────────────────────────
 
 const sessions = [
   {
@@ -95,16 +96,34 @@ const phases = [
   { num: "05", label: "PENCIPTAAN", desc: "Membangun solusi nyata dengan tangan sendiri" },
 ];
 
-const weeks = [
-  { week: "Minggu 1", phase: "Fondasi" },
-  { week: "Minggu 2", phase: "Keterampilan" },
-  { week: "Minggu 3", phase: "Penerapan" },
-  { week: "Minggu 4", phase: "Produksi" },
-  { week: "Minggu 5", phase: "Penciptaan" },
-  { week: "Minggu 6", phase: "Pembuktian" },
+const upcomingClasses = [
+  {
+    title: "Bahasa Arab Akademik dengan AI",
+    tag: "Akademik",
+    desc: "Taklukkan makalah, muthala'ah, dan kitab klasik dengan AI sebagai asisten linguistikmu.",
+    points: ["Penulisan makalah Arab otomatis", "Terjemahan & tafsir kitab klasik", "Riset dan anotasi teks"],
+  },
+  {
+    title: "Bangun Penghidupan dengan AI",
+    tag: "Bisnis",
+    desc: "Ubah keterampilan dan potensimu menjadi sumber penghasilan yang berkelanjutan.",
+    points: ["Identifikasi peluang pasar", "Produk digital dari keahlianmu", "Sistem otomasi penghasilan"],
+  },
+  {
+    title: "Vibe Coding: Dari Nol ke Aplikasi",
+    tag: "Teknologi",
+    desc: "Bangun software yang berguna dan nyata tanpa perlu menjadi programmer.",
+    points: ["Aplikasi web dari deskripsi teks", "Otomasi tugas berulang", "Deploy produk pertamamu"],
+  },
+  {
+    title: "Konten & Dakwah Digital dengan AI",
+    tag: "Konten",
+    desc: "Sebarkan kebaikan dan ilmu dengan kecerdasan buatan sebagai alat produksimu.",
+    points: ["Produksi konten masif & konsisten", "Naskah dakwah yang menyentuh", "Strategi kanal digital"],
+  },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helpers ───────────────────────────────────────────────────────────────────
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -116,7 +135,7 @@ const stagger = (delay = 0) => ({
   visible: { transition: { staggerChildren: 0.1, delayChildren: delay } },
 });
 
-function RevealSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   return (
@@ -132,7 +151,19 @@ function RevealSection({ children, className = "" }: { children: React.ReactNode
   );
 }
 
-// ─── Session Row ──────────────────────────────────────────────────────────────
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.p
+      variants={fadeUp}
+      className="font-mono text-xs tracking-widest mb-6"
+      style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
+    >
+      {children}
+    </motion.p>
+  );
+}
+
+// ─── Session Row ───────────────────────────────────────────────────────────────
 
 function SessionRow({ session, index }: { session: typeof sessions[0]; index: number }) {
   const [open, setOpen] = useState(false);
@@ -162,7 +193,6 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
 
         {/* Row header */}
         <div className="relative flex items-center gap-6 px-4 sm:px-8 py-6 sm:py-8">
-          {/* Session number */}
           <span
             className="flex-shrink-0 font-mono font-bold leading-none select-none"
             style={{
@@ -173,8 +203,6 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
           >
             {session.num}
           </span>
-
-          {/* Title + essence */}
           <div className="flex-1 min-w-0">
             <h3
               className="font-display font-semibold text-white leading-tight mb-1"
@@ -186,8 +214,6 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
               {session.essence}
             </p>
           </div>
-
-          {/* Toggle icon */}
           <div className="flex-shrink-0 ml-4">
             <motion.div
               animate={{ rotate: open ? 45 : 0 }}
@@ -220,12 +246,8 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
                 className="px-4 sm:px-8 pb-8"
                 style={{ paddingLeft: "calc(1rem + clamp(2rem,5vw,3.5rem) + 1.5rem)" }}
               >
-                {/* Mastery list */}
                 <div className="mb-6">
-                  <p
-                    className="font-mono text-xs mb-4 tracking-widest"
-                    style={{ color: "#52525B", letterSpacing: "0.12em" }}
-                  >
+                  <p className="font-mono text-xs mb-4 tracking-widest" style={{ color: "#52525B", letterSpacing: "0.12em" }}>
                     YANG AKAN KAMU KUASAI
                   </p>
                   <ul className="space-y-3">
@@ -238,31 +260,21 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
                         className="flex items-start gap-3 text-sm"
                         style={{ color: "#A1A1AA" }}
                       >
-                        <span
-                          className="flex-shrink-0 mt-1.5 font-mono text-xs"
-                          style={{ color: "rgba(124,58,237,0.6)" }}
-                        >
-                          —
-                        </span>
+                        <span className="flex-shrink-0 mt-1.5 font-mono text-xs" style={{ color: "rgba(124,58,237,0.6)" }}>—</span>
                         {item}
                       </motion.li>
                     ))}
                   </ul>
                 </div>
-
-                {/* Tools */}
                 <div className="mb-6">
-                  <p
-                    className="font-mono text-xs mb-3 tracking-widest"
-                    style={{ color: "#52525B", letterSpacing: "0.12em" }}
-                  >
+                  <p className="font-mono text-xs mb-3 tracking-widest" style={{ color: "#52525B", letterSpacing: "0.12em" }}>
                     TOOLS
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {session.tools.map((tool) => (
                       <span
                         key={tool}
-                        className="font-mono text-xs px-3 py-1 rounded-full transition-all duration-200 hover:border-purple-500/50"
+                        className="font-mono text-xs px-3 py-1 rounded-full"
                         style={{
                           border: "1px solid rgba(124,58,237,0.25)",
                           color: "#A855F7",
@@ -274,8 +286,6 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
                     ))}
                   </div>
                 </div>
-
-                {/* Mission */}
                 <div
                   className="rounded-lg px-5 py-4"
                   style={{
@@ -283,15 +293,10 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
                     border: "1px solid rgba(124,58,237,0.18)",
                   }}
                 >
-                  <p
-                    className="font-mono text-xs mb-2 tracking-widest"
-                    style={{ color: "#7C3AED", letterSpacing: "0.12em" }}
-                  >
+                  <p className="font-mono text-xs mb-2 tracking-widest" style={{ color: "#7C3AED", letterSpacing: "0.12em" }}>
                     MISI MINGGU INI
                   </p>
-                  <p className="text-sm leading-relaxed" style={{ color: "#D4D4D8" }}>
-                    {session.mission}
-                  </p>
+                  <p className="text-sm leading-relaxed" style={{ color: "#D4D4D8" }}>{session.mission}</p>
                 </div>
               </div>
             </motion.div>
@@ -302,19 +307,100 @@ function SessionRow({ session, index }: { session: typeof sessions[0]; index: nu
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ─── Phase Arc (Desktop horizontal / Mobile vertical) ─────────────────────────
+
+function PhaseArc() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+
+  return (
+    <div ref={ref}>
+      {/* Desktop */}
+      <div className="hidden lg:flex items-start gap-0 relative">
+        <div
+          className="absolute top-8 left-[5%] right-[5%] h-px"
+          style={{ background: "rgba(255,255,255,0.06)" }}
+        />
+        <motion.div
+          className="absolute top-8 left-[5%] h-px"
+          style={{ background: "linear-gradient(90deg, rgba(124,58,237,0.6), rgba(168,85,247,0.3))", transformOrigin: "left" }}
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+        />
+        {phases.map((phase, i) => (
+          <div key={i} className="flex-1 flex flex-col items-center relative">
+            <motion.div
+              className="w-4 h-4 rounded-full z-10 mb-5 flex items-center justify-center"
+              style={{ background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.5)" }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={inView ? { scale: 1, opacity: 1 } : {}}
+              transition={{ delay: 0.3 + i * 0.12, duration: 0.4, ease: "backOut" }}
+            >
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#A855F7" }} />
+            </motion.div>
+            <motion.div
+              className="text-center px-2"
+              initial={{ opacity: 0, y: 8 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.4 + i * 0.12, duration: 0.4 }}
+            >
+              <p className="font-mono text-xs mb-2 tracking-widest" style={{ color: "#7C3AED", letterSpacing: "0.15em" }}>
+                {phase.num}
+              </p>
+              <p className="font-mono font-bold text-xs text-white mb-2 tracking-wider">{phase.label}</p>
+              <p className="text-xs leading-relaxed" style={{ color: "#52525B" }}>{phase.desc}</p>
+            </motion.div>
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile vertical */}
+      <div className="lg:hidden flex flex-col gap-0 relative">
+        <div
+          className="absolute left-4 top-4 bottom-4 w-px"
+          style={{ background: "rgba(255,255,255,0.06)" }}
+        />
+        <motion.div
+          className="absolute left-4 top-4 w-px"
+          style={{ background: "linear-gradient(180deg, rgba(124,58,237,0.6), rgba(168,85,247,0.2))", transformOrigin: "top" }}
+          initial={{ scaleY: 0 }}
+          animate={inView ? { scaleY: 1 } : { scaleY: 0 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+        />
+        {phases.map((phase, i) => (
+          <motion.div
+            key={i}
+            className="flex items-start gap-6 relative pl-10 py-5"
+            initial={{ opacity: 0, x: -12 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ delay: 0.3 + i * 0.12, duration: 0.45 }}
+          >
+            <div
+              className="absolute left-2.5 top-7 w-3 h-3 rounded-full z-10"
+              style={{ background: "rgba(124,58,237,0.3)", border: "1px solid rgba(124,58,237,0.6)" }}
+            />
+            <div>
+              <p className="font-mono text-xs mb-1 tracking-widest" style={{ color: "#7C3AED" }}>{phase.num} · {phase.label}</p>
+              <p className="text-sm" style={{ color: "#71717A" }}>{phase.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Kurikulum() {
-  const [, setLocation] = useLocation();
-
   return (
     <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
       <Navbar />
 
-      {/* ── SECTION 1: HERO ── */}
+      {/* ══ SECTION 1: HERO ══ */}
       <section className="relative overflow-hidden pt-28 pb-24 sm:pt-36 sm:pb-32">
-        {/* Background glow */}
-        <div
+        <motion.div
           className="absolute pointer-events-none"
           style={{
             top: "-10%",
@@ -325,88 +411,43 @@ export default function Kurikulum() {
             background: "radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%)",
             filter: "blur(40px)",
           }}
+          animate={{ opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
-        {/* Grid dots */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-30"
+          className="absolute inset-0 pointer-events-none opacity-20"
           style={{
-            backgroundImage: "radial-gradient(rgba(124,58,237,0.15) 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(rgba(124,58,237,0.2) 1px, transparent 1px)",
             backgroundSize: "28px 28px",
           }}
         />
 
-        <RevealSection className="relative max-w-5xl mx-auto px-6 sm:px-10 text-center">
-          <motion.p
-            variants={fadeUp}
-            className="font-mono text-xs tracking-widest mb-6"
-            style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
-          >
-            KURIKULUM · BATCH 01
-          </motion.p>
-
+        <Reveal className="relative max-w-5xl mx-auto px-6 sm:px-10 text-center">
+          <SectionLabel>KURIKULUM AIGYPT</SectionLabel>
           <motion.h1
             variants={fadeUp}
             className="font-display font-semibold leading-tight mb-8"
             style={{ fontSize: "clamp(2.25rem, 6vw, 4.5rem)", letterSpacing: "-0.02em" }}
           >
-            Enam Minggu yang
+            Peta Perjalanan
             <br />
-            <span style={{ color: "#A855F7" }}>Mengubah Caramu Bekerja</span>
+            <span style={{ color: "#A855F7" }}>Belajarmu</span>
           </motion.h1>
-
           <motion.p
             variants={fadeUp}
-            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-12"
+            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
             style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            Sebuah perjalanan terkurasi dari memahami kecerdasan buatan,
-            hingga membangun solusi nyata dengan tanganmu sendiri.
-            Setiap sesi dirancang untuk membawamu satu tingkat lebih tinggi.
+            Dari fondasi hingga penciptaan — inilah seluruh lanskap pembelajaran
+            yang AIGYPT tawarkan untuk masisir.
           </motion.p>
-
-          {/* Metrics */}
-          <motion.div
-            variants={fadeUp}
-            className="inline-flex items-center gap-0 rounded-full overflow-hidden"
-            style={{ border: "1px solid rgba(255,255,255,0.06)" }}
-          >
-            {[
-              { val: "6", label: "SESI" },
-              { val: "60 MENIT", label: "PER SESI" },
-              { val: "1", label: "KARYA NYATA" },
-            ].map((m, i) => (
-              <div key={i} className="flex items-center">
-                {i > 0 && (
-                  <div className="self-stretch w-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-                )}
-                <div
-                  className="px-6 py-3 sm:px-8 sm:py-4 text-center"
-                  style={{ background: "rgba(10,10,15,0.8)" }}
-                >
-                  <span className="font-mono font-bold text-white text-sm sm:text-base block">{m.val}</span>
-                  <span
-                    className="font-mono text-xs block mt-0.5 tracking-widest"
-                    style={{ color: "#52525B", letterSpacing: "0.1em" }}
-                  >
-                    {m.label}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </RevealSection>
+        </Reveal>
       </section>
 
-      {/* ── SECTION 2: FILOSOFI ── */}
-      <section className="py-20 sm:py-28">
-        <RevealSection className="max-w-3xl mx-auto px-6 sm:px-10 text-center">
-          <motion.p
-            variants={fadeUp}
-            className="font-mono text-xs tracking-widest mb-8"
-            style={{ color: "#52525B", letterSpacing: "0.2em" }}
-          >
-            PRINSIP DI BALIK KURIKULUM
-          </motion.p>
+      {/* ══ SECTION 2: FILOSOFI ══ */}
+      <section className="py-20 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <Reveal className="max-w-3xl mx-auto px-6 sm:px-10 text-center">
+          <SectionLabel>PRINSIP KAMI</SectionLabel>
           <motion.h2
             variants={fadeUp}
             className="font-display font-semibold leading-tight mb-8"
@@ -418,89 +459,77 @@ export default function Kurikulum() {
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="text-base leading-relaxed"
+            className="text-base leading-[1.9]"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Setiap sesi dibangun di atas sesi sebelumnya — dari fondasi mental,
-            menuju keterampilan, lalu penerapan, dan akhirnya penciptaan.
-            Di akhir perjalanan, kamu tidak hanya tahu cara menggunakan AI.
-            Kamu telah membangun sesuatu yang nyata, lahir dari masalahmu sendiri.
+            Setiap materi AIGYPT dibangun bertahap — dari memahami, menguasai, menerapkan,
+            hingga mencipta. Tujuan akhirnya bukan sekadar bisa memakai AI, tapi mampu
+            membangun solusi nyata dari masalah yang kamu pahami betul.
           </motion.p>
-        </RevealSection>
+        </Reveal>
       </section>
 
-      {/* Hairline divider */}
-      <div className="max-w-5xl mx-auto px-6 sm:px-10">
-        <div style={{ height: "1px", background: "rgba(255,255,255,0.05)" }} />
-      </div>
-
-      {/* ── SECTION 3: ALUR PERJALANAN ── */}
-      <section className="py-20 sm:py-28">
+      {/* ══ SECTION 3: ALUR TRANSFORMASI ══ */}
+      <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
-          <RevealSection>
-            <motion.p
+          <Reveal className="mb-14">
+            <SectionLabel>ALUR TRANSFORMASI</SectionLabel>
+            <motion.h2
               variants={fadeUp}
-              className="font-mono text-xs tracking-widest mb-4 text-center"
-              style={{ color: "#52525B", letterSpacing: "0.2em" }}
+              className="font-display font-semibold"
+              style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", letterSpacing: "-0.01em" }}
             >
-              ALUR TRANSFORMASI
-            </motion.p>
-          </RevealSection>
-
-          {/* Desktop: horizontal arc */}
-          <div className="hidden sm:block relative mt-12">
-            {/* Connecting line */}
-            <PhaseConnector count={phases.length} />
-
-            <div className="flex items-start justify-between gap-2">
-              {phases.map((phase, i) => (
-                <PhaseNode key={i} phase={phase} index={i} />
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile: vertical */}
-          <div className="sm:hidden mt-10 space-y-0">
-            {phases.map((phase, i) => (
-              <MobilePhaseNode key={i} phase={phase} index={i} isLast={i === phases.length - 1} />
-            ))}
-          </div>
+              Lima fase perjalanan menuju penciptaan
+            </motion.h2>
+          </Reveal>
+          <PhaseArc />
         </div>
       </section>
 
-      {/* Hairline divider */}
-      <div className="max-w-5xl mx-auto px-6 sm:px-10">
-        <div style={{ height: "1px", background: "rgba(255,255,255,0.05)" }} />
-      </div>
-
-      {/* ── SECTION 4: ENAM SESI ── */}
-      <section className="py-20 sm:py-28">
+      {/* ══ SECTION 4: KELAS TERSEDIA — DETAIL FLAGSHIP ══ */}
+      <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
-          <RevealSection className="mb-12">
-            <motion.p
+          <Reveal className="mb-4">
+            <SectionLabel>TERSEDIA SEKARANG</SectionLabel>
+          </Reveal>
+
+          {/* Kelas header */}
+          <Reveal className="mb-12">
+            <motion.div
               variants={fadeUp}
-              className="font-mono text-xs tracking-widest mb-4 text-center"
-              style={{ color: "#52525B", letterSpacing: "0.2em" }}
+              className="rounded-2xl p-6 sm:p-8 flex flex-wrap items-center justify-between gap-6"
+              style={{
+                background: "rgba(16,16,24,0.8)",
+                border: "1px solid rgba(124,58,237,0.2)",
+              }}
             >
-              ENAM SESI
-            </motion.p>
-            <motion.h2
-              variants={fadeUp}
-              className="font-display font-semibold text-center"
-              style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)", color: "#FAFAFA", letterSpacing: "-0.01em" }}
-            >
-              Peta Perjalananmu
-            </motion.h2>
-          </RevealSection>
+              <div>
+                <h2
+                  className="font-display font-semibold text-white leading-tight mb-2"
+                  style={{ fontSize: "clamp(1.25rem, 3vw, 1.75rem)" }}
+                >
+                  Maksimalkan AI untuk Menghasilkan Solusimu
+                </h2>
+                <p className="text-sm" style={{ color: "#71717A" }}>
+                  6 sesi · ~60 menit/sesi · Semua level · Karya nyata
+                </p>
+              </div>
+              <Link href="/kelas/maksimalkan-ai">
+                <span
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white rounded-xl cursor-pointer transition-all duration-300 whitespace-nowrap"
+                  style={{ background: "#7C3AED", boxShadow: "0 0 16px rgba(124,58,237,0.3)" }}
+                >
+                  Masuk ke Kelas
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </Link>
+            </motion.div>
+          </Reveal>
 
           {/* Session rows */}
-          <div
-            className="rounded-xl overflow-hidden"
-            style={{
-              border: "1px solid rgba(255,255,255,0.06)",
-              background: "rgba(16,16,24,0.6)",
-            }}
-          >
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
             {sessions.map((session, i) => (
               <SessionRow key={session.num} session={session} index={i} />
             ))}
@@ -508,328 +537,112 @@ export default function Kurikulum() {
         </div>
       </section>
 
-      {/* Hairline divider */}
-      <div className="max-w-5xl mx-auto px-6 sm:px-10">
-        <div style={{ height: "1px", background: "rgba(255,255,255,0.05)" }} />
-      </div>
-
-      {/* ── SECTION 5: RITME MINGGUAN ── */}
-      <section className="py-20 sm:py-28">
+      {/* ══ SECTION 5: KELAS MENDATANG ══ */}
+      <section className="py-16 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
-          <RevealSection className="text-center mb-16">
-            <motion.p
-              variants={fadeUp}
-              className="font-mono text-xs tracking-widest mb-4"
-              style={{ color: "#52525B", letterSpacing: "0.2em" }}
-            >
-              RITME ENAM MINGGU
-            </motion.p>
+          <Reveal className="mb-12">
+            <SectionLabel>SEGERA HADIR</SectionLabel>
             <motion.h2
               variants={fadeUp}
-              className="font-display font-semibold"
-              style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)", letterSpacing: "-0.01em" }}
+              className="font-display font-semibold mb-4"
+              style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
             >
-              Satu Sesi, Satu Minggu,{" "}
-              <span style={{ color: "#A855F7" }}>Satu Lompatan</span>
+              Lebih Banyak Perjalanan
+              <br />
+              <span style={{ color: "#A855F7" }}>Menanti</span>
             </motion.h2>
-          </RevealSection>
+            <motion.p variants={fadeUp} className="text-sm" style={{ color: "#52525B" }}>
+              Kelas-kelas berikut sedang dikembangkan bersama kebutuhan nyata masisir.
+            </motion.p>
+          </Reveal>
 
-          {/* Timeline */}
-          <WeekTimeline />
+          <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {upcomingClasses.map((cls, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                className="rounded-2xl p-6 flex flex-col gap-4"
+                style={{
+                  background: "rgba(10,10,15,0.7)",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                }}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="font-display font-semibold text-white text-base leading-snug">{cls.title}</h3>
+                  <span
+                    className="flex-shrink-0 font-mono text-xs px-2 py-0.5 rounded-full"
+                    style={{
+                      background: "rgba(82,82,91,0.12)",
+                      color: "#52525B",
+                      border: "1px solid rgba(82,82,91,0.18)",
+                    }}
+                  >
+                    SEGERA
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: "#71717A" }}>{cls.desc}</p>
+                <ul className="space-y-2">
+                  {cls.points.map((pt, j) => (
+                    <li key={j} className="flex items-start gap-2 text-xs" style={{ color: "#52525B" }}>
+                      <span className="mt-0.5 font-mono" style={{ color: "rgba(124,58,237,0.4)" }}>—</span>
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </Reveal>
         </div>
       </section>
 
-      {/* Hairline divider */}
-      <div className="max-w-5xl mx-auto px-6 sm:px-10">
-        <div style={{ height: "1px", background: "rgba(255,255,255,0.05)" }} />
-      </div>
-
-      {/* ── SECTION 6: CTA ── */}
-      <section className="relative py-28 sm:py-36 overflow-hidden">
+      {/* ══ SECTION 6: CTA ══ */}
+      <section className="relative py-24 sm:py-36 overflow-hidden" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(124,58,237,0.1) 0%, transparent 70%)",
+            background: "radial-gradient(ellipse at center 80%, rgba(124,58,237,0.1) 0%, transparent 60%)",
           }}
         />
-        <RevealSection className="relative max-w-2xl mx-auto px-6 sm:px-10 text-center">
+        <Reveal className="relative max-w-3xl mx-auto px-6 sm:px-10 text-center">
+          <SectionLabel>MULAI SEKARANG</SectionLabel>
           <motion.h2
             variants={fadeUp}
-            className="font-display font-semibold mb-5"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
+            className="font-display font-semibold leading-tight mb-6"
+            style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.015em" }}
           >
-            Perjalananmu menanti.
+            Perjalananmu{" "}
+            <span style={{ color: "#A855F7" }}>menanti.</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="text-base mb-10"
+            className="text-base leading-relaxed mb-10"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Pelajari pilihan keanggotaan dan amankan tempatmu di Batch 01.
+            Pilih keanggotaan dan mulai dari kelas pertama.
           </motion.p>
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button
-              onClick={() => setLocation("/")}
-              className="relative inline-flex items-center justify-center px-8 py-3.5 rounded-full font-display font-semibold text-sm text-white transition-all duration-300"
-              style={{
-                background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
-                boxShadow: "0 0 30px rgba(124,58,237,0.35), inset 0 1px 0 rgba(255,255,255,0.1)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 0 50px rgba(124,58,237,0.55), inset 0 1px 0 rgba(255,255,255,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 0 30px rgba(124,58,237,0.35), inset 0 1px 0 rgba(255,255,255,0.1)";
-              }}
+          <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href={waUrl("Halo, saya ingin bergabung dengan AIGYPT")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white rounded-xl transition-all duration-300"
+              style={{ background: "#7C3AED", boxShadow: "0 0 24px rgba(124,58,237,0.35)" }}
             >
               Lihat Keanggotaan
-            </button>
-            <button
-              onClick={() => setLocation("/")}
-              className="inline-flex items-center justify-center px-8 py-3.5 rounded-full font-display font-medium text-sm transition-all duration-300"
-              style={{
-                border: "1px solid rgba(255,255,255,0.1)",
-                color: "#A1A1AA",
-                background: "transparent",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.2)";
-                (e.currentTarget as HTMLElement).style.color = "#FAFAFA";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)";
-                (e.currentTarget as HTMLElement).style.color = "#A1A1AA";
-              }}
-            >
-              Kembali ke Beranda
-            </button>
+            </a>
+            <Link href="/login">
+              <span
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium rounded-xl cursor-pointer transition-all duration-300 hover:text-white"
+                style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#A1A1AA" }}
+              >
+                Mulai Belajar
+              </span>
+            </Link>
           </motion.div>
-        </RevealSection>
+        </Reveal>
       </section>
 
       <Footer />
-    </div>
-  );
-}
-
-// ─── Phase Connector (Desktop) ────────────────────────────────────────────────
-
-function PhaseConnector({ count }: { count: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <div ref={ref} className="absolute top-5 left-0 right-0 flex items-center px-10">
-      {Array.from({ length: count - 1 }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="flex-1 mx-1"
-          initial={{ scaleX: 0, originX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 + i * 0.15, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            height: "1px",
-            background: "linear-gradient(90deg, rgba(124,58,237,0.5), rgba(168,85,247,0.5))",
-            transformOrigin: "left",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function PhaseNode({ phase, index }: { phase: typeof phases[0]; index: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: 0.3 + index * 0.12 }}
-      className="flex-1 flex flex-col items-center text-center gap-3"
-    >
-      {/* Dot */}
-      <div className="relative z-10">
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center"
-          style={{
-            border: "1px solid rgba(124,58,237,0.4)",
-            background: "rgba(124,58,237,0.12)",
-            boxShadow: "0 0 16px rgba(124,58,237,0.2)",
-          }}
-        >
-          <span className="font-mono text-xs font-bold" style={{ color: "#A855F7" }}>
-            {phase.num}
-          </span>
-        </div>
-      </div>
-
-      <div>
-        <p
-          className="font-mono font-bold text-xs mb-1 tracking-widest"
-          style={{ color: "#7C3AED", letterSpacing: "0.12em" }}
-        >
-          {phase.label}
-        </p>
-        <p className="text-xs leading-relaxed max-w-[120px]" style={{ color: "#71717A" }}>
-          {phase.desc}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-function MobilePhaseNode({
-  phase,
-  index,
-  isLast,
-}: {
-  phase: typeof phases[0];
-  index: number;
-  isLast: boolean;
-}) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -12 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.4, delay: index * 0.08 }}
-      className="flex gap-4"
-    >
-      {/* Left: dot + line */}
-      <div className="flex flex-col items-center">
-        <div
-          className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
-          style={{
-            border: "1px solid rgba(124,58,237,0.4)",
-            background: "rgba(124,58,237,0.12)",
-            boxShadow: "0 0 12px rgba(124,58,237,0.18)",
-          }}
-        >
-          <span className="font-mono text-xs font-bold" style={{ color: "#A855F7" }}>
-            {phase.num}
-          </span>
-        </div>
-        {!isLast && (
-          <div
-            className="w-px flex-1 my-2"
-            style={{ background: "linear-gradient(180deg, rgba(124,58,237,0.35), transparent)" }}
-          />
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="pb-6">
-        <p
-          className="font-mono font-bold text-xs mb-1 tracking-widest"
-          style={{ color: "#7C3AED", letterSpacing: "0.12em" }}
-        >
-          {phase.label}
-        </p>
-        <p className="text-xs leading-relaxed" style={{ color: "#71717A" }}>
-          {phase.desc}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-// ─── Week Timeline ─────────────────────────────────────────────────────────────
-
-function WeekTimeline() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-
-  return (
-    <div ref={ref}>
-      {/* Desktop */}
-      <div className="hidden sm:flex items-start gap-0">
-        {weeks.map((w, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 12 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.4, delay: i * 0.1 }}
-            className="flex-1 flex flex-col items-center text-center"
-          >
-            {/* Dot + connector */}
-            <div className="relative w-full flex items-center justify-center mb-4">
-              {/* Left line */}
-              {i > 0 && (
-                <div
-                  className="absolute right-1/2 top-1/2 -translate-y-1/2 mr-3"
-                  style={{
-                    left: 0,
-                    height: "1px",
-                    background: "rgba(124,58,237,0.25)",
-                  }}
-                />
-              )}
-              {/* Right line */}
-              {i < weeks.length - 1 && (
-                <div
-                  className="absolute left-1/2 top-1/2 -translate-y-1/2 ml-3"
-                  style={{
-                    right: 0,
-                    height: "1px",
-                    background: "rgba(124,58,237,0.25)",
-                  }}
-                />
-              )}
-              {/* Dot */}
-              <div
-                className="relative z-10 w-3 h-3 rounded-full"
-                style={{
-                  background: "#7C3AED",
-                  boxShadow: "0 0 10px rgba(124,58,237,0.6)",
-                }}
-              />
-            </div>
-
-            <p className="font-mono text-xs mb-1" style={{ color: "#52525B" }}>
-              {w.week}
-            </p>
-            <p
-              className="font-display font-semibold text-sm"
-              style={{ color: "#A855F7" }}
-            >
-              {w.phase}
-            </p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Mobile */}
-      <div className="sm:hidden space-y-4">
-        {weeks.map((w, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -10 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.35, delay: i * 0.07 }}
-            className="flex items-center gap-4 px-2"
-          >
-            <div
-              className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ background: "#7C3AED", boxShadow: "0 0 8px rgba(124,58,237,0.5)" }}
-            />
-            <span className="font-mono text-xs" style={{ color: "#52525B" }}>
-              {w.week}
-            </span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <span className="font-display font-semibold text-sm" style={{ color: "#A855F7" }}>
-              {w.phase}
-            </span>
-          </motion.div>
-        ))}
-      </div>
     </div>
   );
 }
