@@ -8,12 +8,13 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { materiContent, type MateriStep, type SesiMateri } from "@/lib/materiContent";
+import { materiByKelas, type MateriStep, type SesiMateri } from "@/lib/materiContent";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface ProgressEntry {
   sesiNumber: number;
+  kelasId?: string;
   isCompleted: boolean;
   completedAt: string | null;
   currentStep?: number;
@@ -338,7 +339,7 @@ function CompletionCelebration({
   onNext: () => void;
   onDashboard: () => void;
 }) {
-  const hasNext = sesiNum < 6;
+  const hasNext = sesiNum < 6; // max 6 sesi for current content
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <motion.div
@@ -428,18 +429,20 @@ function DotsNav({
 
 function Sidebar({
   currentSesi,
+  kelasId,
   progress,
   onSesiClick,
   open,
   onClose,
 }: {
   currentSesi: number;
+  kelasId: string;
   progress: ProgressEntry[];
   onSesiClick: (n: number) => void;
   open: boolean;
   onClose: () => void;
 }) {
-  const sesiList = materiContent;
+  const sesiList = materiByKelas[kelasId] ?? [];
 
   const sesiStatus = (n: number) => {
     const p = progress.find((x) => x.sesiNumber === n);
@@ -518,12 +521,12 @@ function Sidebar({
         })}
       </div>
       <div className="p-3 border-t border-[#1E1E2E]">
-        <Link href="/dashboard">
+        <Link href={`/kelas/${kelasId}`}>
           <span className="flex items-center gap-2 text-xs text-[#94A3B8] hover:text-white transition-colors cursor-pointer px-2 py-1.5">
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Dashboard
+            Kembali ke Kelas
           </span>
         </Link>
       </div>
@@ -565,21 +568,28 @@ function Sidebar({
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function MateriPage() {
-  const params = useParams<{ sesi: string }>();
+  const params = useParams<{ kelasId: string; sesi: string }>();
   const [, setLocation] = useLocation();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
 
+  const kelasId = params.kelasId || "maksimalkan-ai";
   const sesiNum = parseInt(params.sesi?.replace("sesi-", "") || "0");
-  const isValid = sesiNum >= 1 && sesiNum <= 6;
+  const kelasMateri = materiByKelas[kelasId] ?? [];
+  const totalSesi = kelasMateri.length;
+  const isValid = sesiNum >= 1 && sesiNum <= (totalSesi || 6);
 
   const { data: rawProgress } = useGetProgress({
     query: { queryKey: getGetProgressQueryKey(), enabled: isAuthenticated },
   });
   const markComplete = useMarkComplete();
 
-  const progress: ProgressEntry[] = (rawProgress || []) as ProgressEntry[];
-  const sesiData: SesiMateri | undefined = materiContent.find(
+  const allProgress: ProgressEntry[] = (rawProgress || []) as ProgressEntry[];
+  // Filter to only this class's progress (fall back to all if kelasId not yet in entry, e.g. old data)
+  const progress: ProgressEntry[] = allProgress.filter(
+    (p) => !p.kelasId || p.kelasId === kelasId
+  );
+  const sesiData: SesiMateri | undefined = kelasMateri.find(
     (s) => s.sesiNumber === sesiNum
   );
 
@@ -616,7 +626,7 @@ export default function MateriPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ sesiNumber: sesiNum, currentStep: step }),
+          body: JSON.stringify({ kelasId, sesiNumber: sesiNum, currentStep: step }),
         }).catch(() => {});
       }, 800);
     },
@@ -644,7 +654,13 @@ export default function MateriPage() {
     );
   }
 
-  if (!isAuthenticated || !isValid || !sesiData) return null;
+  if (!isAuthenticated) return null;
+
+  // No materi for this class yet (coming-soon) or invalid sesi — redirect to class detail
+  if (!isValid || !sesiData) {
+    setLocation(`/kelas/${kelasId}`, { replace: true });
+    return null;
+  }
 
   const steps = sesiData.steps;
   const totalSteps = steps.length;
@@ -674,7 +690,7 @@ export default function MateriPage() {
 
   async function handleComplete() {
     try {
-      await markComplete.mutateAsync({ data: { sesiNumber: sesiNum } });
+      await markComplete.mutateAsync({ data: { kelasId, sesiNumber: sesiNum } });
       queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
       setShowCompletion(true);
     } catch {
@@ -689,7 +705,7 @@ export default function MateriPage() {
       setSkipModal(n);
       return;
     }
-    setLocation(`/materi/sesi-${n}`);
+    setLocation(`/kelas/${kelasId}/materi/sesi-${n}`);
   }
 
   async function handleSkipConfirm(n: number) {
@@ -698,10 +714,10 @@ export default function MateriPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ sesiNumber: n - 1 }),
+      body: JSON.stringify({ kelasId, sesiNumber: n - 1 }),
     }).catch(() => {});
     queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
-    setLocation(`/materi/sesi-${n}`);
+    setLocation(`/kelas/${kelasId}/materi/sesi-${n}`);
   }
 
   const isLastStep = currentStep === totalSteps - 1;
@@ -757,7 +773,7 @@ export default function MateriPage() {
         </span>
 
         {/* Exit */}
-        <Link href="/dashboard">
+        <Link href={`/kelas/${kelasId}`}>
           <span className="flex-shrink-0 flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-white transition-colors cursor-pointer px-2 py-1.5 rounded-lg hover:bg-[#12121A]">
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -772,6 +788,7 @@ export default function MateriPage() {
         {/* Sidebar */}
         <Sidebar
           currentSesi={sesiNum}
+          kelasId={kelasId}
           progress={progress}
           onSesiClick={handleSesiClick}
           open={sidebarOpen}
@@ -910,11 +927,11 @@ export default function MateriPage() {
             sesiNum={sesiNum}
             onNext={() => {
               setShowCompletion(false);
-              setLocation(`/materi/sesi-${sesiNum + 1}`);
+              setLocation(`/kelas/${kelasId}/materi/sesi-${sesiNum + 1}`);
             }}
             onDashboard={() => {
               setShowCompletion(false);
-              setLocation("/dashboard");
+              setLocation(`/kelas/${kelasId}`);
             }}
           />
         )}

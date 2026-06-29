@@ -30,7 +30,7 @@ export default function Login() {
       await login.mutateAsync({ data: { email: email.toLowerCase(), code: code.trim().toUpperCase() } });
       await queryClient.invalidateQueries({ queryKey: getGetMeQueryKey() });
       await queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
-      setLocation("/dashboard");
+      setLocation("/kelas");
     } catch (err: any) {
       const msg = err?.response?.data?.error || err?.data?.error || "Kode akses tidak valid atau sudah digunakan.";
       setError(msg);

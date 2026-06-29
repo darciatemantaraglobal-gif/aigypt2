@@ -5,6 +5,7 @@ import { verifySessionToken } from "./auth";
 
 const router = Router();
 const SESSION_COOKIE = "aigypt_session";
+const DEFAULT_KELAS = "maksimalkan-ai";
 
 async function getAuthEmail(req: any): Promise<string | null> {
   const token = req.cookies?.[SESSION_COOKIE];
@@ -20,14 +21,21 @@ router.get("/progress", async (req, res) => {
     return;
   }
 
+  const kelasId = (req.query["kelasId"] as string) || undefined;
+
+  const conditions = kelasId
+    ? and(eq(materiProgressTable.memberEmail, email), eq(materiProgressTable.kelasId, kelasId))
+    : eq(materiProgressTable.memberEmail, email);
+
   const progress = await db
     .select()
     .from(materiProgressTable)
-    .where(eq(materiProgressTable.memberEmail, email));
+    .where(conditions);
 
   res.json(
     progress.map((p) => ({
       sesiNumber: p.sesiNumber,
+      kelasId: p.kelasId,
       isCompleted: p.isCompleted,
       completedAt: p.completedAt?.toISOString() ?? null,
       currentStep: p.currentStep,
@@ -43,7 +51,9 @@ router.post("/progress", async (req, res) => {
     return;
   }
 
-  const { sesiNumber } = req.body as { sesiNumber?: number };
+  const { sesiNumber, kelasId: rawKelasId } = req.body as { sesiNumber?: number; kelasId?: string };
+  const kelasId = rawKelasId || DEFAULT_KELAS;
+
   if (!sesiNumber || sesiNumber < 1 || sesiNumber > 6) {
     res.status(400).json({ error: "Nomor sesi tidak valid (1-6)" });
     return;
@@ -53,6 +63,7 @@ router.post("/progress", async (req, res) => {
     .insert(materiProgressTable)
     .values({
       memberEmail: email,
+      kelasId,
       sesiNumber,
       isCompleted: true,
       completedAt: new Date(),
@@ -67,6 +78,7 @@ router.post("/progress", async (req, res) => {
     .where(
       and(
         eq(materiProgressTable.memberEmail, email),
+        eq(materiProgressTable.kelasId, kelasId),
         eq(materiProgressTable.sesiNumber, sesiNumber)
       )
     );
@@ -81,7 +93,13 @@ router.post("/progress/step", async (req, res) => {
     return;
   }
 
-  const { sesiNumber, currentStep } = req.body as { sesiNumber?: number; currentStep?: number };
+  const { sesiNumber, currentStep, kelasId: rawKelasId } = req.body as {
+    sesiNumber?: number;
+    currentStep?: number;
+    kelasId?: string;
+  };
+  const kelasId = rawKelasId || DEFAULT_KELAS;
+
   if (!sesiNumber || sesiNumber < 1 || sesiNumber > 6 || typeof currentStep !== "number") {
     res.status(400).json({ error: "Input tidak valid" });
     return;
@@ -93,6 +111,7 @@ router.post("/progress/step", async (req, res) => {
     .where(
       and(
         eq(materiProgressTable.memberEmail, email),
+        eq(materiProgressTable.kelasId, kelasId),
         eq(materiProgressTable.sesiNumber, sesiNumber)
       )
     );
@@ -100,6 +119,7 @@ router.post("/progress/step", async (req, res) => {
   if (existing.length === 0) {
     await db.insert(materiProgressTable).values({
       memberEmail: email,
+      kelasId,
       sesiNumber,
       isCompleted: false,
       currentStep,
@@ -112,6 +132,7 @@ router.post("/progress/step", async (req, res) => {
       .where(
         and(
           eq(materiProgressTable.memberEmail, email),
+          eq(materiProgressTable.kelasId, kelasId),
           eq(materiProgressTable.sesiNumber, sesiNumber)
         )
       );
@@ -127,7 +148,9 @@ router.post("/progress/skip", async (req, res) => {
     return;
   }
 
-  const { sesiNumber } = req.body as { sesiNumber?: number };
+  const { sesiNumber, kelasId: rawKelasId } = req.body as { sesiNumber?: number; kelasId?: string };
+  const kelasId = rawKelasId || DEFAULT_KELAS;
+
   if (!sesiNumber || sesiNumber < 1 || sesiNumber > 6) {
     res.status(400).json({ error: "Nomor sesi tidak valid (1-6)" });
     return;
@@ -139,6 +162,7 @@ router.post("/progress/skip", async (req, res) => {
     .where(
       and(
         eq(materiProgressTable.memberEmail, email),
+        eq(materiProgressTable.kelasId, kelasId),
         eq(materiProgressTable.sesiNumber, sesiNumber)
       )
     );
@@ -146,6 +170,7 @@ router.post("/progress/skip", async (req, res) => {
   if (existing.length === 0) {
     await db.insert(materiProgressTable).values({
       memberEmail: email,
+      kelasId,
       sesiNumber,
       isCompleted: false,
       currentStep: 0,
@@ -158,6 +183,7 @@ router.post("/progress/skip", async (req, res) => {
       .where(
         and(
           eq(materiProgressTable.memberEmail, email),
+          eq(materiProgressTable.kelasId, kelasId),
           eq(materiProgressTable.sesiNumber, sesiNumber)
         )
       );

@@ -8,6 +8,7 @@
 
 export interface Progress {
   sesiNumber: number;
+  kelasId?: string;
   isCompleted: boolean;
   /** @nullable */
   completedAt?: string | null;

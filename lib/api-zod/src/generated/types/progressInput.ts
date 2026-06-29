@@ -8,4 +8,5 @@
 
 export interface ProgressInput {
   sesiNumber: number;
+  kelasId?: string;
 }

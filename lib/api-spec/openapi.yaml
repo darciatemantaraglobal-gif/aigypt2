@@ -231,6 +231,8 @@ components:
       properties:
         sesiNumber:
           type: integer
+        kelasId:
+          type: string
         isCompleted:
           type: boolean
         completedAt:
@@ -242,6 +244,8 @@ components:
       properties:
         sesiNumber:
           type: integer
+        kelasId:
+          type: string
 
     GenerateCodesInput:
       type: object

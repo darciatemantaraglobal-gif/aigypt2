@@ -98,8 +98,8 @@ function KelasCard({
       setTapExpanded((prev) => !prev);
     } else {
       // Pointer device: navigate directly (hover overlay already shows buttons)
-      if (isAvailable && kelas.route) {
-        setLocation(kelas.route);
+      if (isAvailable) {
+        setLocation(`/kelas/${kelas.id}`);
       } else {
         onDetail(kelas);
       }
@@ -249,7 +249,7 @@ function KelasCard({
                       style={{ background: "#7C3AED" }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (kelas.route) setLocation(kelas.route);
+                        setLocation(`/kelas/${kelas.id}`);
                       }}
                     >
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -560,7 +560,7 @@ function DetailModal({
                 background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
                 boxShadow: "0 0 30px rgba(124,58,237,0.35)",
               }}
-              onClick={() => { if (kelas.route) setLocation(kelas.route); onClose(); }}
+              onClick={() => { setLocation(`/kelas/${kelas.id}`); onClose(); }}
             >
               Mulai Belajar
             </button>
@@ -704,7 +704,7 @@ export default function KelasPage() {
                   background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
                   boxShadow: "0 0 30px rgba(124,58,237,0.4)",
                 }}
-                onClick={() => setLocation("/kurikulum")}
+                onClick={() => setLocation(`/kelas/${flagship.id}`)}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M5 3l14 9-14 9V3z" />

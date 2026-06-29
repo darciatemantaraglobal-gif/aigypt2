@@ -1,0 +1,1 @@
+- [AIGYPT Routing Restructure](routing-restructure.md) — class catalog as primary entry, materi nested under /kelas/:kelasId, progress scoped per class.

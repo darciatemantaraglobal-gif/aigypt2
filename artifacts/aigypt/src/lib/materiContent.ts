@@ -1604,3 +1604,8 @@ tapi tetap personal.`,
     ],
   },
 ];
+
+// Multi-class content registry — add new class content here as it becomes available
+export const materiByKelas: Record<string, SesiMateri[]> = {
+  "maksimalkan-ai": materiContent,
+};

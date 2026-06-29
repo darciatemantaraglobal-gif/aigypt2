@@ -457,7 +457,7 @@ export default function Toolbox() {
             <p className="text-[#94A3B8] text-sm mb-8">
               Pilih satu masalah, pilih satu tool, mulai hari ini.
             </p>
-            <Link href="/materi/sesi-5">
+            <Link href="/kelas/maksimalkan-ai/materi/sesi-5">
               <span className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold rounded-xl transition-all text-sm cursor-pointer shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)]">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

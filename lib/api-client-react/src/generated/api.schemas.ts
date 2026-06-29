@@ -34,6 +34,7 @@ export interface Member {
 
 export interface Progress {
   sesiNumber: number;
+  kelasId?: string;
   isCompleted: boolean;
   /** @nullable */
   completedAt?: string | null;
@@ -41,6 +42,7 @@ export interface Progress {
 
 export interface ProgressInput {
   sesiNumber: number;
+  kelasId?: string;
 }
 
 export type GenerateCodesInputType = typeof GenerateCodesInputType[keyof typeof GenerateCodesInputType];

@@ -12,7 +12,7 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 border-b border-[#1E1E2E] bg-[#0A0A0F]/90 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/">
+          <Link href={isAuthenticated ? "/kelas" : "/"}>
             <span className="font-display font-bold text-xl text-white tracking-tight cursor-pointer">
               AI<span className="text-[#A855F7]">GYPT</span>
             </span>
@@ -34,7 +34,7 @@ export function Navbar() {
                 </Link>
                 <Link href="/dashboard">
                   <span className={`text-sm font-medium transition-colors cursor-pointer ${location === "/dashboard" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
-                    Dashboard
+                    Belajar Saya
                   </span>
                 </Link>
                 <Link href="/toolbox">
@@ -92,7 +92,7 @@ export function Navbar() {
                   <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Kelas</span>
                 </Link>
                 <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
-                  <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Dashboard</span>
+                  <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Belajar Saya</span>
                 </Link>
                 <Link href="/toolbox" onClick={() => setMenuOpen(false)}>
                   <span className="block text-sm font-medium text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Toolbox</span>

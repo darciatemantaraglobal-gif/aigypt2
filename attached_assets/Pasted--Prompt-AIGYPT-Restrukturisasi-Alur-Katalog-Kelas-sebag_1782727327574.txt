@@ -1,0 +1,168 @@
+# Prompt — AIGYPT Restrukturisasi Alur: Katalog Kelas sebagai Pintu Masuk
+
+Copy-paste prompt ini ke Replit Agent. Ini menata ulang alur navigasi website AIGYPT yang sudah ada, agar katalog kelas menjadi pintu masuk utama setelah login, dan materi bersarang di dalam tiap kelas.
+
+---
+
+## PROMPT
+
+Restrukturisasi alur navigasi website AIGYPT yang sudah dibangun. Saat ini materi berada di `/materi/[sesi]` dengan asumsi hanya ada satu kelas. Karena AIGYPT kini punya banyak kelas, ubah arsitektur routing agar **katalog kelas menjadi pintu masuk utama** dan materi bersarang di dalam tiap kelas.
+
+PENTING: Ini adalah modifikasi pada proyek yang SUDAH ADA. Jangan bangun dari nol. Pertahankan semua konten, desain, dan fungsi yang sudah ada — hanya pindahkan struktur routing dan sesuaikan alurnya.
+
+---
+
+## ALUR BARU (yang harus dicapai)
+
+```
+Login (/login)
+   ↓
+Katalog Kelas (/kelas)          ← pintu masuk utama setelah login
+   ↓  (pilih kelas)
+Detail Kelas (/kelas/[kelasId]) ← kurikulum & ikhtisar kelas itu
+   ↓  (mulai belajar)
+Materi (/kelas/[kelasId]/materi/[sesi]) ← pengalaman hybrid slide+scroll
+```
+
+---
+
+## PERUBAHAN ROUTING
+
+### 1. Redirect setelah login
+- Setelah login berhasil di `/login`, redirect ke **`/kelas`** (bukan lagi `/dashboard` atau `/materi`).
+- Update API route login dan logika redirect-nya.
+
+### 2. Pindahkan materi ke dalam namespace kelas
+Struktur lama:
+```
+app/materi/[sesi]/page.tsx
+```
+Struktur baru:
+```
+app/kelas/[kelasId]/materi/[sesi]/page.tsx
+```
+
+- Pindahkan halaman materi hybrid (slide + scroll) yang sudah dibangun ke lokasi baru ini.
+- Halaman ini sekarang menerima dua parameter: `kelasId` dan `sesi`.
+- Konten materi diambil berdasarkan `kelasId` — untuk saat ini, hanya kelas `maksimalkan-ai` yang punya materi lengkap (materi 6 sesi yang sudah dibuat). Kelas lain ("coming soon") belum punya materi.
+
+### 3. Buat halaman Detail Kelas (`/kelas/[kelasId]`)
+Halaman baru yang menjadi "hub" tiap kelas. Berisi:
+- Header kelas: judul, tagline, meta (jumlah sesi, durasi, level)
+- Ikhtisar kurikulum kelas tersebut (daftar sesi)
+- Progress peserta di kelas ini (jika sudah mulai)
+- Tombol `Mulai Belajar` / `Lanjutkan` → ke `/kelas/[kelasId]/materi/[sesi]` (sesi terakhir yang dipelajari atau sesi 1)
+- Untuk kelas yang sudah punya materi (`maksimalkan-ai`): tampilkan kurikulum lengkap dengan baris sesi yang bisa di-expand (gunakan layout kurikulum premium yang sudah dibuat)
+- Untuk kelas "coming soon": tampilkan ikhtisar + badge "Segera Hadir" + tombol "Beri Tahu Saya" (nonaktif untuk masuk materi)
+
+Gunakan desain dark luxury yang konsisten (palet hitam-ungu, Space Grotesk, Inter, JetBrains Mono).
+
+### 4. Katalog Kelas (`/kelas`) sebagai pintu masuk
+- Halaman katalog Netflix-style (yang sudah/akan dibangun) menjadi landing setelah login.
+- Setiap kelas tersedia → klik menuju `/kelas/[kelasId]` (detail kelas), BUKAN langsung ke materi.
+- Tambahkan baris "Lanjutkan Belajar" di atas jika peserta punya progress — tampilkan kelas yang sedang dipelajari dengan tombol lanjut cepat.
+
+### 5. Nasib halaman Dashboard lama
+- Ubah `/dashboard` menjadi halaman **"Belajar Saya"** (progress overview lintas kelas) — opsional diakses via navbar, bukan landing utama.
+- ATAU jika lebih sederhana: redirect `/dashboard` → `/kelas`.
+- Pilih opsi yang paling bersih; default: jadikan `/dashboard` sebagai "Belajar Saya" yang menampilkan semua kelas yang sedang/sudah dipelajari beserta progress-nya.
+
+---
+
+## PERUBAHAN DATA & DATABASE
+
+### Tabel `materi_progress` — tambahkan kolom kelas
+Progress sekarang harus terikat ke kelas tertentu, bukan global.
+```sql
+ALTER TABLE materi_progress ADD COLUMN kelas_id VARCHAR(50) NOT NULL DEFAULT 'maksimalkan-ai';
+-- Update unique constraint agar progress unik per (member, kelas, sesi)
+ALTER TABLE materi_progress DROP CONSTRAINT IF EXISTS materi_progress_member_email_sesi_number_key;
+ALTER TABLE materi_progress ADD CONSTRAINT materi_progress_unique UNIQUE(member_email, kelas_id, sesi_number);
+```
+
+### Data konten materi
+- Struktur data materi (`lib/materiContent.ts`) harus dikelompokkan per `kelasId`.
+- Saat ini isi materi lengkap hanya untuk `kelasId: 'maksimalkan-ai'` (6 sesi).
+- Siapkan struktur agar mudah menambah materi untuk kelas lain di masa depan:
+```typescript
+export const materiByKelas: Record<string, SesiMateri[]> = {
+  'maksimalkan-ai': [ /* 6 sesi lengkap yang sudah ada */ ],
+  // kelas lain ditambahkan di sini nanti
+}
+```
+
+### API routes progress
+Update agar menerima `kelasId`:
+- `POST /api/progress/step` — body `{kelasId, sesiNumber, currentStep}`
+- `POST /api/progress/complete` — body `{kelasId, sesiNumber}`
+- `POST /api/progress/skip` — body `{kelasId, sesiNumber}`
+- `GET /api/progress?kelasId=...` — ambil progress untuk kelas tertentu
+
+---
+
+## MIDDLEWARE
+
+Update `middleware.ts` — protected paths sekarang:
+```typescript
+const protectedPaths = ['/kelas', '/dashboard']
+```
+(Route `/materi` lama sudah tidak dipakai karena pindah ke dalam `/kelas`.)
+
+---
+
+## NAVBAR
+
+Update komponen Navbar:
+- Untuk user yang login: link `Kelas` (ke `/kelas`), `Belajar Saya` (ke `/dashboard`), dan `Logout`.
+- Logo AIGYPT mengarah ke `/kelas` (bukan landing publik) jika sudah login.
+
+---
+
+## HANDLING REDIRECT & KOMPATIBILITAS
+
+- Jika ada yang mengakses `/materi/[sesi]` lama secara langsung → redirect ke `/kelas/maksimalkan-ai/materi/[sesi]`.
+- Jika mengakses kelas yang tidak punya materi (coming soon) di route materi → redirect ke halaman detail kelas dengan pesan "Materi kelas ini segera hadir".
+- Jika `kelasId` tidak valid → tampilkan halaman 404 yang elegan (tema dark luxury) dengan tombol kembali ke `/kelas`.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia
+2. Pertahankan desain dark luxury yang konsisten
+3. Jangan hapus/rusak konten materi yang sudah ada — hanya pindahkan
+4. Tidak ada localStorage/sessionStorage
+5. Pertahankan animasi premium (Framer Motion) di halaman materi
+6. Progress tersimpan per kelas dengan benar
+7. Semua link internal diperbarui mengikuti struktur route baru
+8. `npm run build` sukses tanpa error
+9. Fully responsive
+
+---
+
+## RINGKASAN FILE YANG DIUBAH/DIBUAT
+
+```
+PINDAH:
+app/materi/[sesi]/page.tsx → app/kelas/[kelasId]/materi/[sesi]/page.tsx
+
+BUAT BARU:
+app/kelas/[kelasId]/page.tsx        (detail kelas / kurikulum per kelas)
+
+UBAH:
+app/login (redirect ke /kelas)
+app/dashboard/page.tsx              (jadi "Belajar Saya" atau redirect)
+lib/materiContent.ts                (kelompokkan per kelasId)
+components/Navbar.tsx                (link & logo behavior)
+middleware.ts                       (protected paths)
+app/api/progress/* (semua)          (terima kelasId)
+
+SQL:
+materi_progress (tambah kolom kelas_id + ubah unique constraint)
+```
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Alur navigasi yang tertata: login mengarah ke katalog kelas, memilih kelas membuka detail/kurikulum kelas itu, lalu masuk ke materi yang kini bersarang di dalam kelas. Progress tersimpan per kelas. Struktur siap menampung banyak kelas. Semua konten dan desain yang sudah ada tetap utuh. Siap deploy ke Vercel.

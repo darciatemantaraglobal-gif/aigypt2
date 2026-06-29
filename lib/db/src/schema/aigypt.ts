@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, boolean, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, boolean, integer, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -36,13 +36,16 @@ export type Member = typeof membersTable.$inferSelect;
 export const materiProgressTable = pgTable("materi_progress", {
   id: uuid("id").defaultRandom().primaryKey(),
   memberEmail: varchar("member_email", { length: 255 }).references(() => membersTable.email).notNull(),
+  kelasId: varchar("kelas_id", { length: 50 }).notNull().default("maksimalkan-ai"),
   sesiNumber: integer("sesi_number").notNull(),
   isCompleted: boolean("is_completed").default(false).notNull(),
   completedAt: timestamp("completed_at", { withTimezone: true }),
   currentStep: integer("current_step").default(0).notNull(),
   wasSkipped: boolean("was_skipped").default(false).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+}, (table) => [
+  uniqueIndex("materi_progress_unique_idx").on(table.memberEmail, table.kelasId, table.sesiNumber),
+]);
 
 export const insertMateriProgressSchema = createInsertSchema(materiProgressTable).omit({ id: true, createdAt: true });
 export type InsertMateriProgress = z.infer<typeof insertMateriProgressSchema>;

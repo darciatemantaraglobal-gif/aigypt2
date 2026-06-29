@@ -163,7 +163,7 @@ export default function Dashboard() {
                   {s.title}
                 </h3>
                 {(isCompleted || isCurrent) ? (
-                  <Link href={`/materi/sesi-${s.num}`}>
+                  <Link href={`/kelas/maksimalkan-ai/materi/sesi-${s.num}`}>
                     <span className={`block text-center text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
                       isCompleted
                         ? "border border-[#7C3AED]/30 text-[#A855F7] hover:bg-[#7C3AED]/10"

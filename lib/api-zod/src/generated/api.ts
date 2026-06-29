@@ -57,6 +57,7 @@ export const GetMeResponse = zod.object({
  */
 export const GetProgressResponseItem = zod.object({
   "sesiNumber": zod.number(),
+  "kelasId": zod.string().optional(),
   "isCompleted": zod.boolean(),
   "completedAt": zod.string().nullish()
 })
@@ -67,7 +68,8 @@ export const GetProgressResponse = zod.array(GetProgressResponseItem)
  * @summary Mark a session as complete
  */
 export const MarkCompleteBody = zod.object({
-  "sesiNumber": zod.number()
+  "sesiNumber": zod.number(),
+  "kelasId": zod.string().optional()
 })
 
 export const MarkCompleteResponse = zod.object({
