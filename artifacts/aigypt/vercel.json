@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "buildCommand": "cd ../.. && pnpm install && BASE_PATH=/ PORT=3000 pnpm --filter @workspace/aigypt run build",
-  "outputDirectory": "dist/public",
-  "framework": null
-}
