@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { setBaseUrl } from "@workspace/api-client-react";
 import { Switch, Route, Router as WouterRouter, useParams, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -14,6 +15,10 @@ import MateriPage from "@/pages/materi/index";
 import Admin from "@/pages/admin";
 import Toolbox from "@/pages/toolbox";
 
+if (import.meta.env.VITE_API_URL) {
+  setBaseUrl(import.meta.env.VITE_API_URL);
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -23,7 +28,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Redirect old /materi/:sesi routes to new /kelas/maksimalkan-ai/materi/:sesi
 function MateriRedirect() {
   const params = useParams<{ sesi: string }>();
   const [, setLocation] = useLocation();

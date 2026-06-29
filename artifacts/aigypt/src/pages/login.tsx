@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useLogin, getGetMeQueryKey, getGetProgressQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
+import { waUrl } from "@/lib/wa";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -131,7 +132,7 @@ export default function Login() {
 
             <div className="mt-6 text-center">
               <a
-                href="https://wa.me/628xxxxxxxxxx?text=Halo, saya belum punya kode akses AIGYPT"
+                href={waUrl("Halo, saya belum punya kode akses AIGYPT")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-[#94A3B8] hover:text-[#A855F7] transition-colors"

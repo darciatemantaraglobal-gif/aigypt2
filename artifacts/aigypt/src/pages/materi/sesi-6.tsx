@@ -1,4 +1,5 @@
 import { HighlightBox, LatihanBox, SectionHeading, Table } from "@/components/MateriBlocks";
+import { waUrl } from "@/lib/wa";
 import { PromptBlock } from "@/components/PromptBlock";
 
 export default function Sesi6() {
@@ -164,7 +165,7 @@ tapi tetap personal.`}</PromptBlock>
           Lo sekarang bukan hanya pengguna AI — lo adalah builder yang bisa mengubah masalah jadi solusi.
         </p>
         <a
-          href="https://wa.me/628xxxxxxxxxx?text=Halo, saya alumni AIGYPT batch yang ingin tetap terhubung"
+          href={waUrl("Halo, saya alumni AIGYPT batch yang ingin tetap terhubung")}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block px-6 py-3 bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-sm font-semibold rounded-xl transition-all"

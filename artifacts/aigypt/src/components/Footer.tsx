@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { waUrl } from "@/lib/wa";
 
 export function Footer() {
   return (
@@ -24,7 +25,7 @@ export function Footer() {
                   <span className="text-sm text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Masuk</span>
                 </Link>
                 <a
-                  href="https://wa.me/628xxxxxxxxxx"
+                  href={waUrl("Halo, saya ingin menghubungi AIGYPT")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-[#94A3B8] hover:text-white transition-colors"

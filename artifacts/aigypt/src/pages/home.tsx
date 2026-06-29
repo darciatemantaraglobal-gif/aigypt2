@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { waUrl } from "@/lib/wa";
 import { Link } from "wouter";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
@@ -359,7 +360,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <a
-              href="https://wa.me/628xxxxxxxxxx?text=Halo, saya ingin bergabung dengan AIGYPT"
+              href={waUrl("Halo, saya ingin bergabung dengan AIGYPT")}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3.5 text-sm font-medium text-white rounded-xl transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,58,237,0.55)]"
@@ -727,7 +728,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <a
-                  href="https://wa.me/628xxxxxxxxxx?text=Halo, saya tertarik dengan Keanggotaan Mandiri AIGYPT"
+                  href={waUrl("Halo, saya tertarik dengan Keanggotaan Mandiri AIGYPT")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-center py-3 text-sm font-medium transition-all duration-300 rounded-xl hover:text-white"
@@ -794,7 +795,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <a
-                  href="https://wa.me/628xxxxxxxxxx?text=Halo, saya tertarik dengan Keanggotaan Kelas AIGYPT"
+                  href={waUrl("Halo, saya tertarik dengan Keanggotaan Kelas AIGYPT")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-center py-3 text-sm font-medium text-white transition-all duration-300 rounded-xl"
@@ -921,7 +922,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={0.14}>
             <a
-              href="https://wa.me/628xxxxxxxxxx?text=Halo, saya ingin amankan tempat di AIGYPT Batch 01"
+              href={waUrl("Halo, saya ingin amankan tempat di AIGYPT Batch 01")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-12 py-4 text-base font-medium text-white rounded-xl transition-all duration-300"
