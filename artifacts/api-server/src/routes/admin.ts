@@ -3,7 +3,7 @@ import { db, accessCodesTable } from "@workspace/db";
 
 const router = Router();
 
-const ADMIN_PASSWORD = process.env["ADMIN_PASSWORD"] ?? "aigypt-admin-2025";
+const ADMIN_PASSWORD = (process.env["ADMIN_PASSWORD"] ?? "aigypt-admin-2025").trim();
 
 function checkAdminAuth(req: any): boolean {
   const authHeader = req.headers["authorization"];
