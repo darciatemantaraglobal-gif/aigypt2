@@ -1,0 +1,84 @@
+# Prompt — Siapkan AIGYPT (Vite + React) untuk Deploy Aman ke Vercel
+
+Copy-paste prompt ini ke Replit Agent. Tujuannya: menyesuaikan aplikasi agar aman dan siap di-deploy ke Vercel.
+
+---
+
+## PROMPT
+
+Aplikasi AIGYPT ini dibangun dengan Vite + React dan akan di-deploy ke Vercel. Lakukan penyesuaian berikut agar aman dan siap deploy. PENTING: ini modifikasi proyek yang sudah ada, jangan bangun ulang.
+
+### 1. Audit Keamanan Supabase (PALING PENTING)
+
+Karena Vite adalah aplikasi frontend (semua kode berjalan di browser dan bisa dibaca siapa saja):
+
+- **Pastikan TIDAK ADA `SUPABASE_SERVICE_ROLE_KEY` di mana pun dalam kode frontend.** Jika ada, hapus total. Service role key tidak boleh pernah ada di aplikasi Vite.
+- Aplikasi hanya boleh menggunakan **anon key** Supabase.
+- Pastikan Supabase client diinisialisasi hanya dengan anon key:
+```typescript
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+```
+
+### 2. Environment Variables (format Vite)
+
+- Semua env variable harus pakai prefix `VITE_` dan diakses via `import.meta.env.VITE_xxx` (bukan `process.env`).
+- Variabel yang dipakai:
+```
+VITE_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY
+VITE_WA_NUMBER   (nomor WhatsApp untuk tombol kontak)
+```
+- Cari semua penggunaan `process.env.NEXT_PUBLIC_xxx` atau `process.env.xxx` di kode dan ganti ke `import.meta.env.VITE_xxx`.
+- Buat/update file `.env.example` yang mendokumentasikan variabel yang dibutuhkan (tanpa nilai asli).
+- Pastikan `.env` dan `.env.local` ada di `.gitignore` agar kredensial tidak ter-commit.
+
+### 3. Row Level Security (RLS) — Wajib karena pakai anon key
+
+Karena keamanan tidak bisa lagi mengandalkan service role di server, semua proteksi data harus lewat RLS di Supabase. Buatkan file SQL `supabase_rls.sql` berisi policy yang benar untuk skema saat ini:
+
+- Tabel `access_codes`: anon boleh SELECT untuk validasi kode saat login, dan boleh UPDATE hanya untuk menandai kode terpakai. Jangan izinkan anon membaca semua kode sekaligus tanpa kondisi — batasi dengan policy yang masuk akal (misal hanya bisa query berdasarkan code yang spesifik).
+- Tabel `members`: anon boleh INSERT (saat pertama login) dan SELECT/UPDATE hanya baris miliknya sendiri (match email).
+- Tabel `materi_progress`: anon boleh INSERT/SELECT/UPDATE hanya baris dengan email miliknya.
+
+Sertakan komentar di SQL yang menjelaskan tiap policy. Tampilkan SQL ini agar bisa saya jalankan di Supabase SQL Editor.
+
+Catatan: jika skema autentikasi saat ini menyimpan "session" di cookie/localStorage dengan email, jelaskan keterbatasannya dan sarankan apakah perlu pindah ke Supabase Auth untuk keamanan lebih baik. Untuk sekarang, buat RLS seketat mungkin dengan skema yang ada.
+
+### 4. Konfigurasi Vercel
+
+Buat file `vercel.json` di root untuk memastikan routing SPA bekerja (agar refresh di route manapun tidak 404):
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+Pastikan juga:
+- `package.json` punya script `"build": "vite build"`
+- Output build ke folder `dist` (default Vite)
+- Tidak ada dependency yang butuh server Node.js saat runtime (karena Vercel akan serve sebagai static site)
+
+### 5. Verifikasi Build
+
+- Jalankan `npm run build` secara mental/aktual dan pastikan tidak ada error.
+- Pastikan tidak ada import yang merujuk ke variabel `process.env` yang tidak terdefinisi di browser.
+- Pastikan semua route bisa diakses langsung (SPA fallback aktif).
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+1. Konfirmasi tidak ada service role key di frontend
+2. Semua env variable sudah format `VITE_` via `import.meta.env`
+3. File `.env.example`, `vercel.json`, dan `supabase_rls.sql` dibuat
+4. `.gitignore` memuat `.env`
+5. Build sukses dan siap deploy ke Vercel sebagai static site
+
+Setelah selesai, beri ringkasan: env variable apa saja yang harus saya set di Vercel dashboard, dan langkah menjalankan SQL RLS di Supabase.
