@@ -39,6 +39,8 @@ export const materiProgressTable = pgTable("materi_progress", {
   sesiNumber: integer("sesi_number").notNull(),
   isCompleted: boolean("is_completed").default(false).notNull(),
   completedAt: timestamp("completed_at", { withTimezone: true }),
+  currentStep: integer("current_step").default(0).notNull(),
+  wasSkipped: boolean("was_skipped").default(false).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 

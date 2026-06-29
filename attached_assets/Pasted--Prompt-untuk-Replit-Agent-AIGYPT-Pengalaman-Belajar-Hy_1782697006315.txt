@@ -1,0 +1,286 @@
+# Prompt untuk Replit Agent — AIGYPT Pengalaman Belajar Hybrid (Slide + Scroll)
+
+Copy-paste prompt di bawah ini ke Replit Agent. Ini adalah upgrade pada halaman materi AIGYPT yang sudah dibangun — mengubah halaman materi statis menjadi pengalaman belajar hybrid yang premium dan terarah.
+
+---
+
+## PROMPT
+
+Upgrade halaman materi di website AIGYPT (`/materi/[sesi]`) menjadi **pengalaman belajar hybrid premium** yang menggabungkan slideshow (untuk konsep) dan scroll (untuk referensi/prompt), dengan navigasi yang sangat terarah.
+
+Konsep intinya: dalam satu sesi, materi dipecah menjadi rangkaian "langkah" (steps). Setiap langkah adalah satu layar. Langkah bertipe **konsep** ditampilkan sebagai slide fokus (satu ide per layar). Langkah bertipe **praktek** (berisi contoh prompt panjang, tabel, atau kode) ditampilkan sebagai panel yang bisa di-scroll dengan tombol copy.
+
+---
+
+## TECH STACK (sama dengan proyek utama)
+
+- Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- Deploy: Vercel
+- Route: `/materi/[sesi]` (upgrade halaman yang sudah ada)
+- Proteksi: tetap wajib login (middleware sudah ada)
+- Animasi: gunakan Framer Motion untuk transisi slide yang mulus
+
+---
+
+## DESAIN (konsisten dengan tema hitam-ungu AIGYPT)
+
+```css
+--bg-primary: #0A0A0F
+--bg-card: #12121A
+--accent-main: #7C3AED
+--accent-light: #A855F7
+--accent-glow: #C084FC
+--text-primary: #F8FAFC
+--text-secondary: #94A3B8
+--border-subtle: #1E1E2E
+```
+Font: Space Grotesk (heading), Inter (body), JetBrains Mono (kode/badge).
+
+---
+
+## STRUKTUR DATA MATERI
+
+Ubah konten materi tiap sesi menjadi array of "steps". Buat file `lib/materiContent.ts`:
+
+```typescript
+export type StepType = 'concept' | 'practice'
+
+export interface MateriStep {
+  id: string
+  type: StepType           // 'concept' = mode slide, 'practice' = mode scroll
+  title: string
+  subtitle?: string        // hanya untuk concept slide
+  content: string          // markdown content
+  prompts?: PromptBlock[]  // untuk practice step
+}
+
+export interface PromptBlock {
+  label: string            // misal "Prompt untuk Akademisi"
+  prompt: string           // isi prompt yang bisa di-copy
+}
+
+export interface SesiMateri {
+  sesiNumber: number
+  title: string
+  subtitle: string
+  steps: MateriStep[]
+}
+
+export const materiContent: SesiMateri[] = [
+  // ... data 6 sesi
+]
+```
+
+Pecah konten tiap sesi menjadi steps. Aturan pembagian:
+- Bagian mindset, definisi, penjelasan "kenapa", konsep → `type: 'concept'` (slide)
+- Bagian dengan contoh prompt panjang, tabel perbandingan, atau code block → `type: 'practice'` (scroll + copy)
+
+Contoh pembagian Sesi 1 menjadi steps:
+```
+Step 1 (concept): "Selamat datang di Sesi 1" — tujuan sesi
+Step 2 (concept): "AI itu asisten, bukan dukun" — mindset
+Step 3 (concept): "Bagaimana AI bekerja" — penjelasan sederhana
+Step 4 (practice): "Mitos vs Realita" — tabel
+Step 5 (concept): "Kenalan dengan 3 AI" — intro
+Step 6 (practice): "ChatGPT vs Claude vs Gemini" — tabel perbandingan + panduan
+Step 7 (concept): "Kenapa prompt itu segalanya" — konsep
+Step 8 (practice): "Contoh prompt buruk vs bagus" — contoh prompt yang bisa di-copy
+Step 9 (concept): "AI dan hidup lo sebagai masisir" — per persona
+Step 10 (practice): "Latihan sesi ini" — 3 latihan
+Step 11 (concept): "Take-home challenge" — penutup + tandai selesai
+```
+
+Terapkan pembagian serupa untuk Sesi 2-6, sesuaikan dengan konten masing-masing. Sesi yang banyak prompt (Sesi 3, 4, 5) akan punya lebih banyak practice step.
+
+---
+
+## LAYOUT HALAMAN
+
+### Struktur 3 area:
+
+```
+┌─────────────────────────────────────────────┐
+│  TOP BAR: progress sesi + tombol exit         │
+├──────────┬──────────────────────────────────┤
+│          │                                    │
+│ SIDEBAR  │      AREA KONTEN UTAMA             │
+│ (6 sesi) │   (slide atau scroll panel)        │
+│          │                                    │
+├──────────┴──────────────────────────────────┤
+│  BOTTOM BAR: ← Sebelumnya | dots | Berikutnya →│
+└─────────────────────────────────────────────┘
+```
+
+### 1. TOP BAR
+- Kiri: logo AIGYPT kecil + judul sesi (misal "Sesi 1 — AI Itu Bukan Sulap")
+- Tengah: **progress bar tipis** menunjukkan posisi step saat ini dari total step (misal step 4 dari 11)
+- Kanan: tombol `✕ Keluar` → kembali ke `/dashboard`
+
+### 2. SIDEBAR (kiri) — Navigasi 6 Sesi
+- Daftar 6 sesi dengan status visual:
+  - ✅ **Selesai** — ungu solid, ada checkmark
+  - ▶️ **Sedang dipelajari** — ungu outline + glow pulse
+  - 🔒 **Terkunci** — abu-abu + icon gembok (tapi tetap bisa diklik, lihat aturan unlock)
+- Setiap sesi yang sudah/sedang dibuka bisa diklik untuk pindah
+- Di mobile: sidebar jadi drawer yang bisa dibuka via tombol hamburger
+
+### 3. AREA KONTEN UTAMA
+
+**Jika step.type === 'concept' (MODE SLIDE):**
+- Tampilan fokus, terpusat, banyak whitespace
+- Judul besar (Space Grotesk, ukuran besar)
+- Subtitle di bawahnya (warna sekunder)
+- Konten dalam bentuk yang ringkas dan readable — bukan wall of text
+- Animasi masuk: fade + slide dari kanan (Framer Motion)
+- Maksimal terasa seperti satu "kartu konsep" premium di tengah layar
+- Jika konten konsep agak panjang, tetap dalam satu slide tapi rapi
+
+**Jika step.type === 'practice' (MODE SCROLL):**
+- Panel yang bisa di-scroll vertikal di dalam area konten
+- Judul di atas (sticky saat scroll)
+- Konten markdown ter-render dengan baik (tabel, list, dll)
+- Setiap PromptBlock ditampilkan dalam **card prompt khusus**:
+  - Background lebih gelap (`#0D0D18`), border kiri ungu, font mono
+  - Label prompt di atas (misal "Prompt untuk Akademisi")
+  - Isi prompt
+  - **Tombol "📋 Copy"** di pojok kanan atas tiap card — klik untuk copy ke clipboard, lalu berubah jadi "✓ Tersalin" selama 2 detik
+- Indikator visual halus bahwa ini bisa di-scroll (misal fade gradient di bawah)
+
+### 4. BOTTOM BAR — Navigasi Antar Step
+- Kiri: tombol `← Sebelumnya` (disabled di step pertama)
+- Tengah: **dots indicator** — titik untuk tiap step, yang aktif berwarna ungu. Bisa diklik untuk loncat ke step tertentu.
+- Kanan: tombol `Berikutnya →` (di step terakhir berubah jadi `Selesaikan Sesi ✓`)
+- Navigasi juga bisa pakai **keyboard arrow keys** (← →) dan **swipe** di mobile
+
+---
+
+## SISTEM UNLOCK SESI (Terarah tapi Fleksibel)
+
+Aturan: sesi dikunci berurutan, TAPI bisa di-skip kalau peserta memaksa.
+
+Implementasi:
+1. Secara default, hanya Sesi 1 yang terbuka untuk member baru
+2. Sesi berikutnya terbuka otomatis saat sesi sebelumnya ditandai "Selesai"
+3. **Tapi** jika peserta mengklik sesi yang terkunci di sidebar, tampilkan modal konfirmasi:
+   ```
+   "Sesi ini lebih bagus dipelajari setelah sesi sebelumnya.
+   Tapi kalau lo udah ngerti dasarnya, boleh lanjut.
+   
+   [Tetap di sini]  [Lewati & buka sesi ini]"
+   ```
+4. Jika peserta pilih "Lewati & buka", sesi tersebut terbuka dan tercatat sebagai "di-skip" (bukan "selesai")
+5. Progress tetap tersimpan di Supabase
+
+Tabel `materi_progress` yang sudah ada perlu ditambah kolom:
+```sql
+ALTER TABLE materi_progress ADD COLUMN current_step INTEGER DEFAULT 0;
+ALTER TABLE materi_progress ADD COLUMN was_skipped BOOLEAN DEFAULT FALSE;
+```
+
+---
+
+## PENYIMPANAN PROGRESS
+
+1. **Auto-save posisi step**: Setiap peserta pindah step, simpan `current_step` ke Supabase (debounced, jangan tiap detik). Saat peserta kembali ke sesi, lanjut dari step terakhir.
+2. **Tandai selesai**: Di step terakhir, tombol `Selesaikan Sesi ✓`:
+   - Set `is_completed = true`, `completed_at = now()`
+   - Unlock sesi berikutnya
+   - Tampilkan animasi selebrasi singkat (confetti sederhana via CSS, atau check mark besar dengan glow)
+   - Tawarkan: `Lanjut ke Sesi [N+1] →` atau `Kembali ke Dashboard`
+
+API routes (extend yang sudah ada):
+- `POST /api/progress/step` — body `{sesiNumber, currentStep}` → update current_step
+- `POST /api/progress/complete` — body `{sesiNumber}` → set completed, unlock next
+- `POST /api/progress/skip` — body `{sesiNumber}` → set was_skipped, unlock sesi tsb
+
+---
+
+## DETAIL ANIMASI & POLISH (yang bikin premium)
+
+1. **Transisi antar slide**: Framer Motion — slide konsep masuk dengan `opacity 0→1` + `x: 30→0`, keluar dengan `x: 0→-30`. Durasi ~300ms, easing smooth.
+2. **Progress bar atas**: animasikan width-nya saat pindah step.
+3. **Dots indicator**: dot aktif sedikit membesar (scale) + glow ungu.
+4. **Card prompt hover**: border glow makin terang saat hover.
+5. **Tombol copy**: micro-interaction — saat diklik, icon berubah jadi checkmark dengan animasi kecil.
+6. **Mode switching**: saat pindah dari concept (slide) ke practice (scroll), transisi tetap mulus — tidak ada "lompatan" visual yang kasar.
+7. **Sidebar item aktif**: glow pulse halus.
+8. **Selebrasi selesai sesi**: saat tandai selesai, animasi checkmark besar dengan glow + opsional confetti CSS.
+
+Semua animasi harus subtle dan premium — bukan berlebihan. Hormati `prefers-reduced-motion` untuk aksesibilitas.
+
+---
+
+## RESPONSIVE (Mobile-First)
+
+- **Desktop**: layout 3 area penuh (sidebar + konten + nav bar)
+- **Tablet**: sidebar bisa di-collapse
+- **Mobile**:
+  - Sidebar jadi drawer (buka via hamburger di top bar)
+  - Slide konsep tetap fokus dan terbaca
+  - Practice panel scroll nyaman dengan tombol copy yang mudah dijangkau jempol
+  - Navigasi step: swipe kiri/kanan + tombol di bottom bar
+  - Bottom bar tetap sticky di bawah
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks dalam Bahasa Indonesia
+2. Konsisten dengan tema hitam-ungu AIGYPT
+3. Jangan gunakan localStorage/sessionStorage — semua state via React state + Supabase
+4. Framer Motion untuk animasi (tambahkan ke package.json)
+5. Markdown rendering: gunakan library seperti `react-markdown` untuk render konten step
+6. Copy to clipboard: gunakan `navigator.clipboard.writeText()`
+7. Keyboard navigation: arrow keys untuk pindah step
+8. Touch/swipe: untuk mobile (bisa pakai Framer Motion drag atau library swipe)
+9. `npm run build` berhasil tanpa error
+10. Hormati `prefers-reduced-motion`
+
+---
+
+## STRUKTUR FILE YANG DIBUAT/DIUBAH
+
+```
+app/materi/[sesi]/page.tsx        (upgrade total — jadi hybrid experience)
+lib/materiContent.ts              (data 6 sesi dipecah jadi steps)
+components/ConceptSlide.tsx       (komponen slide konsep)
+components/PracticePanel.tsx      (komponen panel praktek + scroll)
+components/PromptCard.tsx         (card prompt dengan tombol copy)
+components/MateriSidebar.tsx      (sidebar 6 sesi)
+components/StepNavigation.tsx     (bottom bar + dots)
+components/SkipModal.tsx          (modal konfirmasi skip sesi)
+components/CompletionCelebration.tsx (animasi selesai sesi)
+app/api/progress/step/route.ts
+app/api/progress/complete/route.ts
+app/api/progress/skip/route.ts
+```
+
+Plus update SQL untuk tabel `materi_progress` (tambah kolom `current_step` dan `was_skipped`).
+
+---
+
+## CATATAN PENTING SOAL KONTEN
+
+Untuk data `lib/materiContent.ts`, masukkan konten LENGKAP dari 6 sesi AIGYPT yang sudah ada (semua materi, contoh prompt, tabel, latihan, take-home). Pecah secara cerdas menjadi concept steps dan practice steps sesuai aturan di atas.
+
+Pastikan:
+- Semua contoh prompt masuk ke practice step dengan tombol copy
+- Semua tabel perbandingan ter-render rapi
+- Setiap sesi diakhiri dengan concept step "Take-home" + tombol selesaikan
+- Tidak ada konten yang hilang dari materi asli
+
+Jika konten sangat panjang, tidak masalah — yang penting terstruktur dengan baik dalam steps. Prioritaskan keterbacaan dan alur yang terarah.
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Bangun pengalaman belajar hybrid lengkap:
+- Halaman materi yang bisa slide (konsep) dan scroll (praktek)
+- Navigasi terarah dengan sidebar 6 sesi + progress
+- Sistem unlock berurutan yang bisa di-skip dengan konfirmasi
+- Tombol copy di setiap prompt
+- Auto-save posisi + tandai selesai dengan selebrasi
+- Animasi premium yang subtle (Framer Motion)
+- Fully responsive, deploy-ready di Vercel
+- `npm run build` sukses
