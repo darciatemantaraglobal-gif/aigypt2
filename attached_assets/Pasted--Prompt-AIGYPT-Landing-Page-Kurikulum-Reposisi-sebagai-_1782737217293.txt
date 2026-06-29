@@ -1,0 +1,337 @@
+# Prompt — AIGYPT Landing Page & Kurikulum: Reposisi sebagai Platform Pembelajaran AI
+
+Copy-paste prompt ini ke Claude Design atau Replit Agent. Ini merombak landing page agar mewakili AIGYPT sebagai **platform pembelajaran AI** secara menyeluruh (bukan satu kelas), dan menyesuaikan halaman kurikulum menjadi peta pembelajaran yang menjelaskan visi AIGYPT beserta semua materi di dalamnya.
+
+---
+
+## KONTEKS POSITIONING BARU
+
+Sebelumnya landing page fokus pada satu kelas ("Maksimalkan AI untuk Menghasilkan Solusimu"). Sekarang AIGYPT adalah **platform** dengan banyak kelas. Maka:
+
+- **Landing page** = halaman brand yang menjual VISI AIGYPT secara keseluruhan: tempat masisir belajar menguasai AI untuk segala aspek kehidupan. Kelas flagship cukup ditampilkan sebagai "yang tersedia sekarang", dengan kelas lain sebagai gambaran arah ke depan.
+- **Halaman kurikulum** = peta pembelajaran: menjelaskan apa yang diajarkan AIGYPT, filosofinya, dan ikhtisar semua kelas/jalur yang ada (tersedia & segera hadir), sehingga pengunjung langsung paham lanskap pembelajaran AIGYPT.
+
+---
+
+## TENTANG AIGYPT (gunakan sebagai sumber narasi)
+
+**Apa itu:** AIGYPT adalah rumah belajar kecerdasan buatan yang dirancang khusus untuk masisir — mahasiswa Indonesia di Mesir. 
+
+**Visi:** Setiap masisir berdaya untuk MENCIPTA dengan AI, bukan sekadar mengonsumsinya. Dari akademisi hingga pebisnis, dari organisator hingga kreator — AI menjadi alat yang memperbesar setiap potensi.
+
+**Keyakinan inti:** Kecerdasan buatan telah meruntuhkan tembok antara "punya ide" dan "mewujudkan ide". AIGYPT memastikan masisir berada di sisi yang tepat dari perubahan ini.
+
+**Yang membedakan:** Bukan kelas AI generik. Setiap materi dikurasi dengan konteks kehidupan masisir nyata — bahasa Arab akademik, organisasi mahasiswa, bisnis perantauan, dakwah digital. Berbasis praktik, bukan teori.
+
+---
+
+## TECH STACK
+
+- Vite + React + TypeScript + Tailwind CSS (sesuai proyek yang sudah ada)
+- Framer Motion untuk animasi
+- Deploy: Vercel
+- Routes: `/` (landing) dan `/kurikulum`
+- Semua teks Bahasa Indonesia
+
+---
+
+## DESIGN SYSTEM (dark luxury, konsisten)
+
+```css
+--bg-void: #060608
+--bg-deep: #0A0A0F
+--bg-elevated: #101018
+--bg-glass: rgba(20,20,30,0.5)
+--purple-core: #7C3AED
+--purple-bright: #A855F7
+--purple-glow: #C084FC
+--purple-deep: #4C1D95
+--text-primary: #FAFAFA
+--text-secondary: #A1A1AA
+--text-muted: #52525B
+--border-hairline: rgba(255,255,255,0.06)
+--border-glow: rgba(124,58,237,0.3)
+```
+Font: Space Grotesk (display), Inter (body, weight 300-400), JetBrains Mono (label). Blackspace berlimpah, glow ungu halus, border hairline, tanpa emoji (pakai ikon garis tipis Lucide). Animasi reveal halus saat scroll.
+
+---
+
+# BAGIAN 1 — LANDING PAGE (`/`) — Platform Edition
+
+### SECTION 1 — HERO (tentang AIGYPT, bukan satu kelas)
+
+```
+Eyebrow (mono): RUMAH BELAJAR AI UNTUK MASISIR
+
+Headline besar:
+Kuasai Kecerdasan Buatan.
+Ciptakan Masa Depanmu.
+
+Sub-headline (weight ringan):
+AIGYPT adalah tempat masisir belajar memanfaatkan AI untuk
+segala aspek kehidupan — dari bangku kuliah Al-Azhar,
+hingga membangun karya dan penghidupan sendiri.
+
+CTA:
+- Primer: Mulai Belajar
+- Sekunder: Jelajahi Kurikulum
+
+Micro trust (mono): DIKURASI UNTUK MASISIR · BERBASIS PRAKTIK · KOMUNITAS PENCIPTA
+```
+
+### SECTION 2 — VISI / MANIFESTO
+
+```
+Label: VISI KAMI
+
+Pernyataan besar:
+Kami percaya setiap masisir ditakdirkan
+untuk mencipta — bukan sekadar mengonsumsi.
+
+Paragraf:
+Di tengah ribuan masisir yang menuntut ilmu di negeri para nabi,
+tersimpan potensi yang luar biasa. Kecerdasan buatan kini menjadi
+alat yang mampu melipatgandakan potensi itu. AIGYPT hadir untuk
+memastikan tak satu pun masisir tertinggal dari perubahan zaman —
+dengan ilmu yang dikurasi khusus untuk dunia mereka.
+```
+
+### SECTION 3 — APA YANG BISA KAMU PELAJARI (Ikhtisar Lanskap)
+
+Bagian ini menggantikan "fitur satu kelas" dengan gambaran luasnya pembelajaran AIGYPT. Tampilkan sebagai grid area pembelajaran (bukan kelas spesifik, tapi domain):
+
+```
+Label: SPEKTRUM PEMBELAJARAN
+
+Headline: Satu Platform, Tak Terbatas Kemungkinan
+
+Area pembelajaran (card dengan ikon garis tipis):
+
+1. Fondasi & Mindset AI (ikon: Brain)
+   Memahami cara kerja AI dan mengubah cara berpikir tentangnya.
+
+2. Seni Prompting (ikon: MessageSquare)
+   Berdialog dengan AI untuk hasil berkualitas tinggi.
+
+3. AI untuk Akademik (ikon: BookOpen)
+   Makalah Arab, kitab klasik, riset, dan skripsi.
+
+4. AI untuk Organisasi (ikon: Users)
+   Proposal, notulensi, publikasi, dan laporan.
+
+5. AI untuk Bisnis & Konten (ikon: TrendingUp)
+   Copywriting, riset pasar, dan produksi konten.
+
+6. Vibe Coding (ikon: Code)
+   Membangun aplikasi nyata tanpa menjadi programmer.
+```
+
+### SECTION 4 — MENGAPA AIGYPT (Diferensiasi)
+
+```
+Label: MENGAPA AIGYPT BERBEDA
+
+3-4 poin pembeda (card atau baris elegan):
+
+— Dikurasi untuk Masisir
+Setiap contoh dan studi kasus lahir dari kehidupan nyata
+mahasiswa Indonesia di Mesir. Bukan teori generik.
+
+— Berbasis Praktik
+Kamu tidak hanya belajar — kamu mencipta. Setiap pembelajaran
+berujung pada karya nyata yang bisa langsung dipakai.
+
+— Bertumbuh Bersamamu
+Dari pemula hingga pencipta. Materi tersusun bertahap,
+mengikuti perjalananmu.
+
+— Komunitas Pencipta
+Bergabung dengan masisir lain yang membangun masa depan
+dengan kecerdasan buatan.
+```
+
+### SECTION 5 — KELAS UNGGULAN (Spotlight Flagship)
+
+Tampilkan kelas flagship sebagai yang tersedia sekarang, elegan:
+
+```
+Label: MULAI DARI SINI
+
+Card spotlight besar:
+Maksimalkan AI untuk Menghasilkan Solusimu
+"Kelas perdana AIGYPT — dari bertanya, hingga mencipta."
+
+6 sesi · 60 menit/sesi · Semua level
+Perjalanan transformatif dari memahami AI hingga membangun
+solusi nyata dengan tanganmu sendiri.
+
+Tombol: Lihat Kelas Ini →
+Status: TERSEDIA SEKARANG
+```
+
+### SECTION 6 — SEGERA HADIR (Arah ke Depan)
+
+Tunjukkan bahwa AIGYPT terus bertumbuh — preview kelas yang akan datang (ringkas, dengan badge "Segera Hadir"):
+
+```
+Label: YANG AKAN DATANG
+
+Headline: Perjalanan Ini Baru Dimulai
+
+Daftar ringkas kelas mendatang (judul + 1 baris):
+— Bahasa Arab Akademik dengan AI
+— Bangun Penghidupan dengan AI
+— Vibe Coding: Dari Nol ke Aplikasi
+— Konten & Dakwah Digital dengan AI
+
+Catatan kecil: Kelas baru terus dikembangkan bersama kebutuhan masisir.
+```
+
+### SECTION 7 — KEANGGOTAAN (ringkas, arahkan ke detail)
+
+```
+Label: BERGABUNG DENGAN AIGYPT
+
+Headline: Sebuah Investasi pada Dirimu
+
+Dua tier ringkas (Mandiri & Kelas) dengan poin singkat,
+tombol mengarah ke halaman keanggotaan/kontak WhatsApp.
+
+Catatan: KUOTA TERBATAS PER BATCH UNTUK MENJAGA KUALITAS
+```
+
+### SECTION 8 — CTA PENUTUP
+
+```
+Pernyataan besar:
+Masa depanmu dimulai dengan satu keputusan.
+
+Sub: Bergabunglah dengan masisir yang memilih untuk mencipta.
+
+Tombol: Mulai Perjalananmu
+```
+
+### FOOTER
+```
+AIGYPT — Rumah Belajar AI untuk Masisir
+[Kurikulum · Kelas · Keanggotaan · Masuk]
+[Kontak WhatsApp]
+© 2026 AIGYPT · Untuk Masisir, oleh Masisir
+```
+
+---
+
+# BAGIAN 2 — HALAMAN KURIKULUM (`/kurikulum`) — Peta Pembelajaran
+
+Reposisi: dari "kurikulum satu kelas" menjadi "peta pembelajaran AIGYPT secara menyeluruh". Pengunjung harus paham visi + semua materi yang ada.
+
+### SECTION 1 — HERO
+
+```
+Eyebrow: KURIKULUM AIGYPT
+
+Headline: Peta Perjalanan Belajarmu
+
+Sub: Dari fondasi hingga penciptaan — inilah seluruh lanskap
+pembelajaran yang AIGYPT tawarkan untuk masisir.
+```
+
+### SECTION 2 — FILOSOFI PEMBELAJARAN
+
+```
+Label: PRINSIP KAMI
+
+Pernyataan:
+Kami tidak mengajarkan teknologi.
+Kami mengajarkan cara memecahkan masalah.
+
+Paragraf:
+Setiap materi AIGYPT dibangun bertahap — dari memahami,
+menguasai, menerapkan, hingga mencipta. Tujuan akhirnya bukan
+sekadar bisa memakai AI, tapi mampu membangun solusi nyata
+dari masalah yang kamu pahami betul.
+```
+
+### SECTION 3 — TAHAP PERJALANAN (Arc)
+
+```
+Label: ALUR TRANSFORMASI
+
+5 fase (nomor mono + kata + kalimat):
+01 · FONDASI    → Memahami lanskap kecerdasan buatan
+02 · KETERAMPILAN → Menguasai seni berdialog dengan AI
+03 · PENERAPAN  → Menjadikan AI asisten ilmu dan amanah
+04 · PRODUKSI   → Mengubah AI menjadi mesin yang menghasilkan
+05 · PENCIPTAAN → Membangun solusi nyata dengan tangan sendiri
+```
+
+### SECTION 4 — KELAS YANG TERSEDIA (Detail Flagship)
+
+Tampilkan kelas flagship beserta 6 sesinya dalam format baris elegan yang bisa di-expand (gunakan layout kurikulum premium yang sudah dibuat: nomor sesi besar, judul, esensi, dan detail "yang akan kamu kuasai" + tools + misi saat di-expand).
+
+```
+Label: TERSEDIA SEKARANG
+
+Judul kelas: Maksimalkan AI untuk Menghasilkan Solusimu
+
+[6 sesi dengan baris expand — konten sama seperti kurikulum premium sebelumnya:
+SESI 01 AI Itu Bukan Sulap, Tapi Hampir
+SESI 02 Seni Berdialog dengan Kecerdasan
+SESI 03 Asisten untuk Ilmu dan Amanah
+SESI 04 Kecerdasan yang Menghasilkan
+SESI 05 Tangan yang Mencipta
+SESI 06 Pembuktian]
+```
+
+### SECTION 5 — KELAS MENDATANG (Ikhtisar)
+
+Tampilkan kelas yang akan datang sebagai gambaran arah, dengan badge "Segera Hadir" dan ikhtisar singkat tiap kelas (judul, tagline, beberapa poin yang akan dipelajari). Tidak bisa diklik masuk, hanya informatif.
+
+```
+Label: SEGERA HADIR
+
+Untuk tiap kelas mendatang, tampilkan kartu ringkas:
+— Bahasa Arab Akademik dengan AI — taklukkan makalah & kitab klasik
+— Bangun Penghidupan dengan AI — ubah keterampilan jadi penghasilan
+— Vibe Coding: Dari Nol ke Aplikasi — bangun software tanpa jadi programmer
+— Konten & Dakwah Digital dengan AI — sebarkan kebaikan dengan kecerdasan
+```
+
+### SECTION 6 — CTA PENUTUP
+
+```
+Pernyataan: Perjalananmu menanti.
+Sub: Pilih keanggotaan dan mulai dari kelas pertama.
+Tombol: Lihat Keanggotaan · Mulai Belajar
+```
+
+---
+
+## DETAIL ANIMASI & POLISH (kedua halaman)
+
+1. Scroll reveal halus (fade + rise, Framer Motion `whileInView`, stagger)
+2. Hero glow ungu yang "bernapas" pelan
+3. Hover card: border hairline → border glow ungu
+4. Baris sesi expand: animasi height mulus, ikon +/− berputar
+5. Garis penghubung di alur perjalanan menyala saat scroll
+6. Nomor (01, 02) besar elegan sebagai elemen desain
+7. Smooth scroll, hormati `prefers-reduced-motion`
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia
+2. Konsisten dark luxury AIGYPT
+3. Vite + React (env via `import.meta.env.VITE_`)
+4. Tidak ada gambar eksternal — CSS, gradient, SVG, ikon Lucide
+5. Tidak ada localStorage/sessionStorage
+6. Fully responsive (mobile-first, tetap elegan di layar kecil)
+7. Link internal benar: landing → kurikulum, kelas, keanggotaan
+8. `npm run build` sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Landing page yang memposisikan AIGYPT sebagai platform pembelajaran AI menyeluruh dengan visi yang jelas, spektrum pembelajaran, kelas unggulan + arah ke depan. Halaman kurikulum sebagai peta pembelajaran lengkap: filosofi, alur transformasi, kelas tersedia (detail), dan kelas mendatang. Keduanya elegan, konsisten, dan siap deploy ke Vercel.
