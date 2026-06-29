@@ -1,0 +1,627 @@
+# Prompt — Integrasi Midtrans ke AIGYPT (Webhook + Auto Generate Kode Akses)
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan sistem pembayaran Midtrans ke website AIGYPT yang sudah ada — lengkap dengan webhook otomatis yang generate kode akses dan notifikasi WhatsApp setelah pembayaran sukses.
+
+---
+
+## PROMPT
+
+Tambahkan integrasi pembayaran **Midtrans** ke website AIGYPT yang sudah ada. Setelah peserta membayar, sistem harus otomatis: (1) generate kode akses unik, (2) simpan ke database Supabase, (3) kirim kode ke peserta via WhatsApp API atau email. Tanpa intervensi manual dari admin.
+
+PENTING: Ini modifikasi pada proyek yang sudah ada. Jangan bangun ulang dari nol. Pertahankan semua halaman, desain, dan fungsi yang ada.
+
+---
+
+## ARSITEKTUR SISTEM PEMBAYARAN
+
+```
+Peserta klik "Daftar Batch 1" di landing page
+      ↓
+Isi form pendaftaran (nama, email, tipe member)
+      ↓
+Redirect ke Midtrans Snap (payment page)
+      ↓
+Peserta bayar (transfer/QRIS/e-wallet)
+      ↓
+Midtrans kirim webhook ke /api/midtrans/webhook
+      ↓
+Server validasi signature webhook
+      ↓
+Generate kode akses unik (format: AIGYPT-XXXXXX)
+      ↓
+Simpan ke Supabase (tabel access_codes + orders)
+      ↓
+Kirim kode ke peserta via WhatsApp (Fonnte API)
+      ↓
+Peserta bisa login dengan email + kode akses
+```
+
+---
+
+## TECH STACK
+
+- Vite + React + TypeScript + Tailwind CSS (frontend — sudah ada)
+- Supabase (database — sudah ada)
+- **Midtrans Snap** untuk payment page
+- **Fonnte API** untuk kirim WhatsApp (gratis, mudah)
+- Deploy: Vercel
+- Semua env via `import.meta.env.VITE_` (frontend) dan Vercel serverless functions (backend/webhook)
+
+### Tentang Backend untuk Webhook
+
+Karena Vite adalah frontend-only dan webhook butuh server, gunakan **Vercel Serverless Functions** (`/api` folder) sebagai backend ringan. Ini sudah didukung Vercel tanpa konfigurasi tambahan dan aman karena tidak expose ke browser.
+
+```
+aigypt/
+├── api/                          ← Vercel Serverless Functions (BARU)
+│   ├── create-transaction.ts     ← buat transaksi Midtrans
+│   └── midtrans/
+│       └── webhook.ts            ← terima notifikasi dari Midtrans
+├── src/                          ← Vite React (sudah ada)
+│   ├── pages/
+│   │   ├── Daftar.tsx            ← halaman form pendaftaran (BARU)
+│   │   └── ...
+│   └── ...
+├── vercel.json                   ← update konfigurasi
+└── ...
+```
+
+---
+
+## DATABASE — TABEL BARU DI SUPABASE
+
+Jalankan SQL ini di Supabase SQL Editor:
+
+```sql
+-- Tabel orders: menyimpan setiap transaksi pembayaran
+CREATE TABLE orders (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  order_id VARCHAR(100) UNIQUE NOT NULL,     -- ID unik untuk Midtrans
+  email VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  phone VARCHAR(20),                          -- untuk kirim WA
+  member_type VARCHAR(20) NOT NULL,           -- 'mandiri' atau 'kelas'
+  batch_number INTEGER DEFAULT 1,
+  amount INTEGER NOT NULL,                    -- harga dalam rupiah
+  status VARCHAR(20) DEFAULT 'pending',       -- pending/paid/failed/expired
+  midtrans_transaction_id VARCHAR(255),
+  access_code VARCHAR(20),                    -- kode yang digenerate
+  paid_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Index untuk performa
+CREATE INDEX orders_email_idx ON orders(email);
+CREATE INDEX orders_order_id_idx ON orders(order_id);
+CREATE INDEX orders_status_idx ON orders(status);
+
+-- RLS
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+-- Hanya service role yang bisa akses (semua dari serverless function)
+```
+
+Update tabel `access_codes` yang sudah ada — tambahkan relasi ke orders:
+```sql
+ALTER TABLE access_codes ADD COLUMN IF NOT EXISTS order_id VARCHAR(100) REFERENCES orders(order_id);
+ALTER TABLE access_codes ADD COLUMN IF NOT EXISTS batch_number INTEGER DEFAULT 1;
+```
+
+---
+
+## ENVIRONMENT VARIABLES
+
+Tambahkan di Vercel Dashboard (Settings → Environment Variables):
+
+```
+# Midtrans
+MIDTRANS_SERVER_KEY=your_server_key          # dari dashboard Midtrans
+MIDTRANS_CLIENT_KEY=your_client_key          # dari dashboard Midtrans
+MIDTRANS_IS_PRODUCTION=false                 # true saat live, false saat sandbox
+
+# Supabase (untuk serverless functions — pakai service role)
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Fonnte (WhatsApp API)
+FONNTE_TOKEN=your_fonnte_token               # dari fonnte.com
+
+# Harga kelas (dalam rupiah)
+PRICE_MANDIRI=150000
+PRICE_KELAS=300000
+
+# Nomor WhatsApp admin (untuk notifikasi setiap ada pembayaran)
+ADMIN_WA_NUMBER=628xxxxxxxxxx
+
+# Frontend (Vite — prefix VITE_)
+VITE_MIDTRANS_CLIENT_KEY=your_client_key
+VITE_SUPABASE_URL=https://xxx.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key
+VITE_WA_NUMBER=628xxxxxxxxxx
+```
+
+---
+
+## IMPLEMENTASI DETAIL
+
+### 1. Halaman Form Pendaftaran (`src/pages/Daftar.tsx`)
+
+Route: `/daftar`
+
+Form elegan dark luxury dengan field:
+```
+- Nama lengkap (text)
+- Email (email)
+- Nomor WhatsApp (tel, format: 08xx atau +628xx)
+- Pilih paket (radio button):
+  ○ Member Mandiri — Rp [PRICE_MANDIRI]
+    Akses materi mandiri selamanya
+  ● Member Kelas — Rp [PRICE_KELAS]  ← default selected, badge "RECOMMENDED"
+    Mentoring live + komunitas Batch 1 + sertifikat
+- Checkbox: "Saya menyetujui syarat dan ketentuan AIGYPT"
+- Tombol: "Lanjut ke Pembayaran →"
+```
+
+Styling: konsisten dark luxury, form card dengan glassmorphism, input dengan border hairline yang glow saat fokus, tombol filled ungu.
+
+Validasi (client-side):
+- Email format valid
+- Nomor WA minimal 10 digit
+- Nama minimal 3 karakter
+- Checkbox harus dicentang
+
+Flow saat submit:
+1. Validasi form
+2. Tampilkan loading state di tombol
+3. POST ke `/api/create-transaction` dengan data form
+4. Terima `snap_token` dari response
+5. Panggil `window.snap.pay(snap_token)` untuk buka Midtrans Snap
+6. Handle callback dari Snap:
+   - `onSuccess`: redirect ke `/sukses?order_id=xxx`
+   - `onPending`: redirect ke `/sukses?order_id=xxx&status=pending`
+   - `onError`: tampilkan error message
+   - `onClose`: tampilkan pesan "Pembayaran dibatalkan"
+
+Load Midtrans Snap JS di `index.html`:
+```html
+<!-- Sandbox -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="YOUR_CLIENT_KEY"></script>
+<!-- Production (ganti saat live) -->
+<!-- <script src="https://app.midtrans.com/snap/snap.js" data-client-key="YOUR_CLIENT_KEY"></script> -->
+```
+
+---
+
+### 2. Serverless Function: Buat Transaksi (`api/create-transaction.ts`)
+
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { createClient } from '@supabase/supabase-js'
+import crypto from 'crypto'
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const { name, email, phone, memberType } = req.body
+
+  // Validasi input
+  if (!name || !email || !phone || !memberType) {
+    return res.status(400).json({ error: 'Semua field wajib diisi' })
+  }
+
+  // Cek apakah email sudah pernah bayar (hindari double order)
+  const { data: existingOrder } = await supabase
+    .from('orders')
+    .select('id, status, access_code')
+    .eq('email', email)
+    .eq('status', 'paid')
+    .single()
+
+  if (existingOrder) {
+    return res.status(400).json({
+      error: 'Email ini sudah terdaftar. Silakan login dengan kode akses yang sudah dikirimkan.'
+    })
+  }
+
+  // Generate order ID unik
+  const orderId = `AIGYPT-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`
+
+  // Tentukan harga
+  const amount = memberType === 'kelas'
+    ? parseInt(process.env.PRICE_KELAS || '300000')
+    : parseInt(process.env.PRICE_MANDIRI || '150000')
+
+  // Simpan order ke database (status: pending)
+  await supabase.from('orders').insert({
+    order_id: orderId,
+    email,
+    name,
+    phone,
+    member_type: memberType,
+    batch_number: 1,
+    amount,
+    status: 'pending'
+  })
+
+  // Buat transaksi Midtrans
+  const serverKey = process.env.MIDTRANS_SERVER_KEY!
+  const isProduction = process.env.MIDTRANS_IS_PRODUCTION === 'true'
+  const baseUrl = isProduction
+    ? 'https://app.midtrans.com'
+    : 'https://app.sandbox.midtrans.com'
+
+  const midtransResponse = await fetch(`${baseUrl}/snap/v1/transactions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${Buffer.from(serverKey + ':').toString('base64')}`
+    },
+    body: JSON.stringify({
+      transaction_details: {
+        order_id: orderId,
+        gross_amount: amount
+      },
+      customer_details: {
+        first_name: name,
+        email: email,
+        phone: phone
+      },
+      item_details: [{
+        id: memberType,
+        price: amount,
+        quantity: 1,
+        name: memberType === 'kelas'
+          ? 'AIGYPT Class Batch 1 — Member Kelas'
+          : 'AIGYPT Class Batch 1 — Member Mandiri'
+      }],
+      callbacks: {
+        finish: `${req.headers.origin}/sukses`
+      }
+    })
+  })
+
+  const midtransData = await midtransResponse.json()
+
+  if (!midtransData.token) {
+    return res.status(500).json({ error: 'Gagal membuat transaksi. Coba lagi.' })
+  }
+
+  return res.status(200).json({
+    snap_token: midtransData.token,
+    order_id: orderId
+  })
+}
+```
+
+---
+
+### 3. Serverless Function: Webhook Midtrans (`api/midtrans/webhook.ts`)
+
+Ini jantung sistemnya. Dipanggil Midtrans setiap ada update transaksi.
+
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { createClient } from '@supabase/supabase-js'
+import crypto from 'crypto'
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+// Generate kode akses unik format AIGYPT-XXXXXX
+function generateAccessCode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let code = ''
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)]
+  }
+  return `AIGYPT-${code}`
+}
+
+// Validasi signature dari Midtrans (WAJIB untuk keamanan)
+function validateSignature(
+  orderId: string,
+  statusCode: string,
+  grossAmount: string,
+  serverKey: string,
+  signatureKey: string
+): boolean {
+  const hash = crypto
+    .createHash('sha512')
+    .update(`${orderId}${statusCode}${grossAmount}${serverKey}`)
+    .digest('hex')
+  return hash === signatureKey
+}
+
+// Kirim WhatsApp via Fonnte
+async function sendWhatsApp(phone: string, message: string): Promise<void> {
+  await fetch('https://api.fonnte.com/send', {
+    method: 'POST',
+    headers: {
+      'Authorization': process.env.FONNTE_TOKEN!
+    },
+    body: new URLSearchParams({
+      target: phone,
+      message: message,
+      countryCode: '62'
+    })
+  })
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const notification = req.body
+  const {
+    order_id,
+    transaction_status,
+    fraud_status,
+    gross_amount,
+    status_code,
+    signature_key,
+    transaction_id
+  } = notification
+
+  // 1. Validasi signature (keamanan — pastikan request dari Midtrans)
+  const isValid = validateSignature(
+    order_id,
+    status_code,
+    gross_amount,
+    process.env.MIDTRANS_SERVER_KEY!,
+    signature_key
+  )
+
+  if (!isValid) {
+    console.error('Invalid Midtrans signature')
+    return res.status(401).json({ error: 'Invalid signature' })
+  }
+
+  // 2. Ambil data order dari database
+  const { data: order, error } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('order_id', order_id)
+    .single()
+
+  if (error || !order) {
+    return res.status(404).json({ error: 'Order not found' })
+  }
+
+  // 3. Cek apakah sudah diproses sebelumnya (idempotency)
+  if (order.status === 'paid') {
+    return res.status(200).json({ message: 'Already processed' })
+  }
+
+  // 4. Tentukan status transaksi
+  const isPaid =
+    transaction_status === 'capture' && fraud_status === 'accept' ||
+    transaction_status === 'settlement'
+
+  const isFailed =
+    transaction_status === 'cancel' ||
+    transaction_status === 'deny' ||
+    transaction_status === 'expire'
+
+  // 5. Proses jika pembayaran sukses
+  if (isPaid) {
+    // Generate kode akses unik (pastikan tidak duplikat)
+    let accessCode = ''
+    let isUnique = false
+    while (!isUnique) {
+      accessCode = generateAccessCode()
+      const { data: existing } = await supabase
+        .from('access_codes')
+        .select('code')
+        .eq('code', accessCode)
+        .single()
+      if (!existing) isUnique = true
+    }
+
+    // Simpan kode akses ke tabel access_codes
+    await supabase.from('access_codes').insert({
+      code: accessCode,
+      type: order.member_type,
+      batch_number: order.batch_number,
+      is_used: false,
+      order_id: order.order_id
+    })
+
+    // Update order: status paid, simpan kode dan transaction_id
+    await supabase
+      .from('orders')
+      .update({
+        status: 'paid',
+        access_code: accessCode,
+        midtrans_transaction_id: transaction_id,
+        paid_at: new Date().toISOString()
+      })
+      .eq('order_id', order_id)
+
+    // Kirim kode akses ke peserta via WhatsApp
+    const memberLabel = order.member_type === 'kelas' ? 'Member Kelas' : 'Member Mandiri'
+    const pesertaMessage =
+      `Assalamualaikum ${order.name}! 🎉\n\n` +
+      `Pembayaran AIGYPT Class Batch 1 kamu sudah dikonfirmasi.\n\n` +
+      `Paket: *${memberLabel}*\n` +
+      `Kode Akses: *${accessCode}*\n\n` +
+      `Cara login:\n` +
+      `1. Buka aigypt.id/login\n` +
+      `2. Masukkan email: ${order.email}\n` +
+      `3. Masukkan kode akses di atas\n\n` +
+      `Simpan kode ini baik-baik ya. Selamat belajar! 🚀\n\n` +
+      `— Tim AIGYPT`
+
+    await sendWhatsApp(order.phone, pesertaMessage)
+
+    // Kirim notifikasi ke admin
+    const adminMessage =
+      `✅ *Pembayaran Baru AIGYPT*\n\n` +
+      `Nama: ${order.name}\n` +
+      `Email: ${order.email}\n` +
+      `WA: ${order.phone}\n` +
+      `Paket: ${memberLabel}\n` +
+      `Amount: Rp ${parseInt(gross_amount).toLocaleString('id-ID')}\n` +
+      `Kode: ${accessCode}\n` +
+      `Order ID: ${order_id}`
+
+    await sendWhatsApp(process.env.ADMIN_WA_NUMBER!, adminMessage)
+
+  } else if (isFailed) {
+    // Update status order jadi failed/expired
+    await supabase
+      .from('orders')
+      .update({ status: transaction_status })
+      .eq('order_id', order_id)
+  }
+
+  // Selalu kembalikan 200 ke Midtrans
+  return res.status(200).json({ message: 'OK' })
+}
+```
+
+---
+
+### 4. Halaman Sukses (`src/pages/Sukses.tsx`)
+
+Route: `/sukses`
+
+Tampilkan setelah pembayaran selesai (berhasil atau pending):
+
+```
+Skenario 1 — Pembayaran Sukses (langsung):
+- Ikon centang besar berwarna ungu dengan animasi glow
+- Heading: "Pembayaran Berhasil!"
+- Sub: "Kode akses sedang dikirimkan ke WhatsApp kamu."
+- Info: "Proses pengiriman maksimal 5 menit."
+- Tombol: "Masuk ke AIGYPT" → /login
+
+Skenario 2 — Pending (transfer bank):
+- Ikon jam berwarna amber
+- Heading: "Menunggu Pembayaran"
+- Sub: "Selesaikan pembayaran sesuai instruksi yang diberikan."
+- Info: "Kode akses akan dikirim ke WhatsApp setelah pembayaran dikonfirmasi."
+- Tombol: "Kembali ke Beranda" → /
+
+Skenario 3 — Error:
+- Ikon X berwarna merah
+- Heading: "Pembayaran Gagal"
+- Sub: "Terjadi masalah dengan pembayaran kamu."
+- Tombol: "Coba Lagi" → /daftar
+```
+
+Deteksi skenario dari URL params: `/sukses?order_id=xxx&transaction_status=settlement`
+
+Styling: konsisten dark luxury, card terpusat, animasi masuk halus.
+
+---
+
+### 5. Update Landing Page
+
+Di semua tombol CTA "Daftar Batch 1 Sekarang" di landing page (`/`) dan kurikulum (`/kurikulum`):
+- Arahkan ke `/daftar` (bukan WhatsApp)
+- Pertahankan desain dan copy yang sudah ada
+
+---
+
+### 6. Update `vercel.json`
+
+```json
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ]
+}
+```
+
+Ini memastikan:
+- Route `/api/*` ditangani serverless functions
+- Semua route lain ditangani Vite SPA
+
+---
+
+### 7. Konfigurasi Midtrans Dashboard
+
+Setelah deploy, lakukan ini di dashboard Midtrans:
+1. Masuk ke **Settings → Configuration**
+2. Set **Payment Notification URL** (webhook): `https://aigypt.id/api/midtrans/webhook`
+3. Set **Finish Redirect URL**: `https://aigypt.id/sukses`
+4. Set **Error Redirect URL**: `https://aigypt.id/sukses?status=error`
+5. Set **Unfinish Redirect URL**: `https://aigypt.id/sukses?status=pending`
+
+### 8. Setup Fonnte (WhatsApp API)
+
+Fonnte gratis dan tidak butuh WhatsApp Business API:
+1. Daftar di fonnte.com
+2. Sambungkan nomor WhatsApp dengan scan QR
+3. Copy token → masukkan ke env `FONNTE_TOKEN`
+
+---
+
+## PACKAGES YANG DIBUTUHKAN
+
+Tambahkan ke `package.json`:
+```json
+{
+  "dependencies": {
+    "@vercel/node": "^3.0.0"
+  }
+}
+```
+
+Midtrans dan Fonnte dipanggil via fetch biasa (tidak butuh SDK) agar lebih ringan.
+
+---
+
+## TESTING (SANDBOX)
+
+Gunakan sandbox Midtrans dulu sebelum live:
+- `MIDTRANS_IS_PRODUCTION=false`
+- Gunakan URL snap sandbox: `app.sandbox.midtrans.com`
+- Kartu test Midtrans: `4811 1111 1111 1114` (sukses), CVV: `123`, Exp: `01/25`
+- Virtual account test: ikuti instruksi di dashboard sandbox
+
+Untuk test webhook lokal: gunakan **ngrok** (`ngrok http 3000`) lalu set URL ngrok sebagai Payment Notification URL di sandbox Midtrans.
+
+---
+
+## SECURITY CHECKLIST
+
+- ✅ Validasi signature Midtrans di setiap webhook (wajib)
+- ✅ Idempotency check — order yang sudah `paid` tidak diproses ulang
+- ✅ Service role key hanya di serverless functions, tidak di frontend
+- ✅ Kode akses generate ulang sampai unik
+- ✅ Validasi input di server (tidak hanya client)
+- ✅ RLS Supabase aktif untuk semua tabel
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia, panggilan "kamu"
+2. Konsisten dark luxury AIGYPT
+3. Webhook HARUS return 200 ke Midtrans (apapun hasilnya) — jika tidak, Midtrans akan retry terus
+4. Error handling lengkap di semua async operation
+5. Log error yang cukup untuk debugging
+6. `npm run build` sukses
+7. Fully responsive
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Sistem pembayaran Midtrans terintegrasi penuh:
+- Form pendaftaran elegan → Midtrans Snap → webhook → kode akses otomatis → notifikasi WhatsApp peserta + admin
+- Halaman sukses yang informatif
+- Semua tombol CTA landing page mengarah ke `/daftar`
+- Aman, idempotent, dan siap produksi
+- Siap deploy ke Vercel

@@ -84,6 +84,37 @@ export interface AccessCode {
   expiresAt?: string | null;
 }
 
+export type CreateTransactionInputMemberType = typeof CreateTransactionInputMemberType[keyof typeof CreateTransactionInputMemberType];
+
+
+export const CreateTransactionInputMemberType = {
+  mandiri: 'mandiri',
+  kelas: 'kelas',
+} as const;
+
+export interface CreateTransactionInput {
+  name: string;
+  email: string;
+  phone: string;
+  memberType: CreateTransactionInputMemberType;
+}
+
+export interface CreateTransactionResult {
+  snapToken: string;
+  orderId: string;
+  snapUrl?: string;
+}
+
+export interface MidtransWebhookPayload {
+  order_id?: string;
+  status_code?: string;
+  gross_amount?: string;
+  signature_key?: string;
+  transaction_status?: string;
+  fraud_status?: string;
+  transaction_id?: string;
+}
+
 export interface SuccessResponse {
   success: boolean;
 }

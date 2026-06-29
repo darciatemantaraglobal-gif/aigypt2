@@ -112,3 +112,38 @@ export const ListCodesResponseItem = zod.object({
 export const ListCodesResponse = zod.array(ListCodesResponseItem)
 
 
+/**
+ * @summary Create Midtrans Snap transaction
+ */
+export const CreateTransactionBody = zod.object({
+  "name": zod.string(),
+  "email": zod.string().email(),
+  "phone": zod.string(),
+  "memberType": zod.enum(['mandiri', 'kelas'])
+})
+
+export const CreateTransactionResponse = zod.object({
+  "snapToken": zod.string(),
+  "orderId": zod.string(),
+  "snapUrl": zod.string().optional()
+})
+
+
+/**
+ * @summary Midtrans payment notification webhook
+ */
+export const MidtransWebhookBody = zod.object({
+  "order_id": zod.string().optional(),
+  "status_code": zod.string().optional(),
+  "gross_amount": zod.string().optional(),
+  "signature_key": zod.string().optional(),
+  "transaction_status": zod.string().optional(),
+  "fraud_status": zod.string().optional(),
+  "transaction_id": zod.string().optional()
+})
+
+export const MidtransWebhookResponse = zod.object({
+  "success": zod.boolean()
+})
+
+

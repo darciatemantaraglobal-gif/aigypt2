@@ -12,6 +12,7 @@ export const accessCodesTable = pgTable("access_codes", {
   usedAt: timestamp("used_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   expiresAt: timestamp("expires_at", { withTimezone: true }),
+  orderId: varchar("order_id", { length: 50 }),
 });
 
 export const insertAccessCodeSchema = createInsertSchema(accessCodesTable).omit({ id: true, createdAt: true });
@@ -50,3 +51,24 @@ export const materiProgressTable = pgTable("materi_progress", {
 export const insertMateriProgressSchema = createInsertSchema(materiProgressTable).omit({ id: true, createdAt: true });
 export type InsertMateriProgress = z.infer<typeof insertMateriProgressSchema>;
 export type MateriProgress = typeof materiProgressTable.$inferSelect;
+
+export const ordersTable = pgTable("orders", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  orderId: varchar("order_id", { length: 50 }).unique().notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 30 }).notNull(),
+  memberType: varchar("member_type", { length: 20 }).notNull(),
+  batchNumber: integer("batch_number"),
+  grossAmount: integer("gross_amount").notNull(),
+  status: varchar("status", { length: 20 }).notNull().default("pending"),
+  snapToken: varchar("snap_token", { length: 255 }),
+  accessCode: varchar("access_code", { length: 20 }),
+  midtransTransactionId: varchar("midtrans_transaction_id", { length: 100 }),
+  paidAt: timestamp("paid_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const insertOrderSchema = createInsertSchema(ordersTable).omit({ id: true, createdAt: true });
+export type InsertOrder = z.infer<typeof insertOrderSchema>;
+export type Order = typeof ordersTable.$inferSelect;

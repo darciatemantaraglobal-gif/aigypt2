@@ -443,15 +443,14 @@ export default function Kurikulum() {
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-col items-center gap-3">
             <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 DIMULAI 5 JULI 2026 · PENDAFTARAN MASIH DIBUKA</p>
-            <a
-              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
-              style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 28px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}
-            >
-              Daftar Sekarang →
-            </a>
+            <Link href="/daftar">
+              <span
+                className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
+                style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 28px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}
+              >
+                Daftar Sekarang →
+              </span>
+            </Link>
           </motion.div>
         </Reveal>
       </section>
@@ -632,15 +631,14 @@ export default function Kurikulum() {
             Daftarkan dirimu sebelum kuota terpenuhi.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
-            <a
-              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
-              style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 28px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}
-            >
-              Daftar Batch 1 Sekarang
-            </a>
+            <Link href="/daftar">
+              <span
+                className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
+                style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 28px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}
+              >
+                Daftar Batch 1 Sekarang
+              </span>
+            </Link>
             <a
               href={waUrl("Halo, saya ingin menghubungi AIGYPT")}
               target="_blank"

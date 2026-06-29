@@ -1,0 +1,58 @@
+# Update — Sambungkan Semua Fitur WhatsApp ke Nomor Admin AIGYPT
+
+Copy-paste prompt ini ke Replit Agent untuk menyambungkan semua fitur WhatsApp (tombol kontak, notifikasi admin, dan koneksi Fonnte) ke satu nomor admin.
+
+---
+
+## PROMPT
+
+Sambungkan semua fitur yang berkaitan dengan WhatsApp di website AIGYPT ke nomor admin. JANGAN hardcode nomor di kode manapun — gunakan environment variable yang sudah didefinisikan, agar nomor tidak ter-expose di repository publik (GitHub) dan mudah diganti di kemudian hari tanpa edit kode.
+
+### Environment Variables yang Digunakan
+
+Pastikan kode mereferensikan variable berikut (BUKAN angka langsung):
+
+```
+# Frontend (Vite) — untuk tombol "Hubungi via WhatsApp" di landing page, footer, FAQ
+VITE_WA_NUMBER=6281311506025
+
+# Backend (Vercel Serverless Functions) — untuk notifikasi admin setiap ada pembayaran baru
+ADMIN_WA_NUMBER=6281311506025
+```
+
+Catatan format: nomor WhatsApp untuk API/wa.me harus tanpa tanda "+", tanpa spasi, dan diawali kode negara (62 untuk Indonesia, bukan 08xx). Jadi +62 813-1150-6025 menjadi `6281311506025`.
+
+### Yang Harus Diperbaiki di Kode
+
+1. **Tombol "Hubungi via WhatsApp"** di landing page, footer, dan FAQ — pastikan semua menggunakan:
+```typescript
+const waLink = `https://wa.me/${import.meta.env.VITE_WA_NUMBER}`
+```
+Cari semua kemunculan nomor WhatsApp yang di-hardcode di kode (jika ada placeholder lama) dan ganti agar mengambil dari `import.meta.env.VITE_WA_NUMBER`.
+
+2. **Notifikasi admin di webhook Midtrans** (`api/midtrans/webhook.ts`) — pastikan baris pengiriman notifikasi admin menggunakan:
+```typescript
+await sendWhatsApp(process.env.ADMIN_WA_NUMBER!, adminMessage)
+```
+Bukan nomor yang di-hardcode.
+
+3. **Verifikasi tidak ada nomor hardcoded** — lakukan pencarian di seluruh codebase untuk pola nomor telepon (contoh: string yang mengandung "628" atau "6281") yang ditulis langsung di file `.tsx`, `.ts`, atau `.html`. Pindahkan semua ke environment variable.
+
+### Tempat Mengatur Environment Variable
+
+Beri tahu saya langkah-langkah untuk mengatur dua variable ini di:
+1. **Replit** (tab Secrets) — untuk development/testing
+2. **Vercel** (Settings → Environment Variables) — untuk production
+
+### Verifikasi
+
+Setelah perubahan, pastikan:
+- Tombol WhatsApp di landing page mengarah ke `https://wa.me/6281311506025`
+- Saat ada pembayaran sukses (test di sandbox Midtrans), notifikasi admin terkirim ke nomor yang sama
+- Tidak ada nomor WhatsApp yang ter-hardcode di kode manapun (cek dengan search codebase)
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Semua fitur WhatsApp (tombol kontak publik dan notifikasi admin internal) tersambung ke nomor yang sama melalui environment variable, tidak ada nomor yang hardcode di kode, dan instruksi jelas cara mengatur variable di Replit Secrets dan Vercel Environment Variables.

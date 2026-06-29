@@ -14,6 +14,8 @@ import Dashboard from "@/pages/dashboard";
 import MateriPage from "@/pages/materi/index";
 import Admin from "@/pages/admin";
 import Toolbox from "@/pages/toolbox";
+import Daftar from "@/pages/daftar";
+import Sukses from "@/pages/sukses";
 
 if (import.meta.env.VITE_API_URL) {
   setBaseUrl(import.meta.env.VITE_API_URL);
@@ -50,6 +52,8 @@ function Router() {
       <Route path="/materi/:sesi" component={MateriRedirect} />
       <Route path="/admin" component={Admin} />
       <Route path="/toolbox" component={Toolbox} />
+      <Route path="/daftar" component={Daftar} />
+      <Route path="/sukses" component={Sukses} />
       <Route component={NotFound} />
     </Switch>
   );

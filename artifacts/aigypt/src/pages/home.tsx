@@ -258,21 +258,20 @@ export default function Home() {
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4 mb-16">
-            <a
-              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
-              style={{
-                background: "#7C3AED",
-                borderRadius: "12px",
-                padding: "15px 24px",
-                minHeight: "48px",
-                boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
-              }}
-            >
-              Daftar Batch 1 Sekarang <IconArrow />
-            </a>
+            <Link href="/daftar">
+              <span
+                className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
+                style={{
+                  background: "#7C3AED",
+                  borderRadius: "12px",
+                  padding: "15px 24px",
+                  minHeight: "48px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                }}
+              >
+                Daftar Batch 1 Sekarang <IconArrow />
+              </span>
+            </Link>
             <Link href="/kurikulum">
               <span
                 className="inline-flex items-center gap-2 text-base font-normal cursor-pointer transition-all duration-200 hover:text-white"
@@ -549,21 +548,20 @@ export default function Home() {
                 </p>
 
                 <div className="flex flex-wrap items-center gap-4">
-                  <a
-                    href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT — Kelas Maksimalkan AI")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
-                    style={{
-                      background: "#7C3AED",
-                      borderRadius: "12px",
-                      padding: "15px 24px",
-                      minHeight: "48px",
-                      boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
-                    }}
-                  >
-                    Daftar Batch 1 Sekarang <IconArrow />
-                  </a>
+                  <Link href="/daftar">
+                    <span
+                      className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
+                      style={{
+                        background: "#7C3AED",
+                        borderRadius: "12px",
+                        padding: "15px 24px",
+                        minHeight: "48px",
+                        boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                      }}
+                    >
+                      Daftar Batch 1 Sekarang <IconArrow />
+                    </span>
+                  </Link>
                   <Link href="/kurikulum">
                     <span
                       className="text-sm cursor-pointer transition-colors hover:text-white"
@@ -665,7 +663,7 @@ export default function Home() {
                   "Akses Vibe Coding Toolbox",
                 ],
                 cta: "Daftar sebagai Member Mandiri",
-                msg: "Halo, saya ingin mendaftar sebagai Member Mandiri AIGYPT",
+                memberType: "mandiri",
                 highlight: false,
               },
               {
@@ -680,7 +678,7 @@ export default function Home() {
                   "Sertifikat penyelesaian",
                 ],
                 cta: "Daftar Batch 1 Sekarang",
-                msg: "Halo, saya ingin mendaftar Batch 1 AIGYPT — Member Kelas",
+                memberType: "kelas",
                 highlight: true,
               },
             ].map((tier) => (
@@ -725,19 +723,18 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href={waUrl(tier.msg)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-center text-base font-medium transition-all duration-200"
-                  style={
-                    tier.highlight
-                      ? { background: "#7C3AED", color: "#fff", borderRadius: "12px", padding: "15px 24px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }
-                      : { border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7", borderRadius: "12px", padding: "15px 24px", minHeight: "48px", display: "flex", alignItems: "center", justifyContent: "center" }
-                  }
-                >
-                  {tier.cta} →
-                </a>
+                <Link href={`/daftar?type=${tier.memberType}`}>
+                  <span
+                    className="block text-center text-base font-medium transition-all duration-200 cursor-pointer"
+                    style={
+                      tier.highlight
+                        ? { background: "#7C3AED", color: "#fff", borderRadius: "12px", padding: "15px 24px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }
+                        : { border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7", borderRadius: "12px", padding: "15px 24px", minHeight: "48px", display: "flex", alignItems: "center", justifyContent: "center" }
+                    }
+                  >
+                    {tier.cta} →
+                  </span>
+                </Link>
               </motion.div>
             ))}
           </Reveal>
@@ -784,21 +781,20 @@ export default function Home() {
             Batch 1 dimulai 5 Juli 2026. Tempat sangat terbatas.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4">
-            <a
-              href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
-              style={{
-                background: "#7C3AED",
-                borderRadius: "12px",
-                padding: "15px 32px",
-                minHeight: "48px",
-                boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
-              }}
-            >
-              Daftar Batch 1 Sekarang <IconArrow />
-            </a>
+            <Link href="/daftar">
+              <span
+                className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
+                style={{
+                  background: "#7C3AED",
+                  borderRadius: "12px",
+                  padding: "15px 32px",
+                  minHeight: "48px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                }}
+              >
+                Daftar Batch 1 Sekarang <IconArrow />
+              </span>
+            </Link>
             <a
               href={waUrl("Halo, saya ingin menghubungi AIGYPT")}
               target="_blank"

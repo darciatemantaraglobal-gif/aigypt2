@@ -21,6 +21,8 @@ import type {
 
 import type {
   AccessCode,
+  CreateTransactionInput,
+  CreateTransactionResult,
   ErrorResponse,
   GenerateCodesInput,
   GenerateCodesResult,
@@ -28,6 +30,7 @@ import type {
   LoginInput,
   LoginResult,
   Member,
+  MidtransWebhookPayload,
   Progress,
   ProgressInput,
   SuccessResponse
@@ -648,4 +651,144 @@ export function useListCodes<TData = Awaited<ReturnType<typeof listCodes>>, TErr
 
 
 
+
+export const getCreateTransactionUrl = () => {
+
+
+
+
+  return `/api/midtrans/create-transaction`
+}
+
+/**
+ * @summary Create Midtrans Snap transaction
+ */
+export const createTransaction = async (createTransactionInput: CreateTransactionInput, options?: RequestInit): Promise<CreateTransactionResult> => {
+
+  return customFetch<CreateTransactionResult>(getCreateTransactionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createTransactionInput)
+  }
+);}
+
+
+
+
+export const getCreateTransactionMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createTransaction>>, TError,{data: BodyType<CreateTransactionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createTransaction>>, TError,{data: BodyType<CreateTransactionInput>}, TContext> => {
+
+const mutationKey = ['createTransaction'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createTransaction>>, {data: BodyType<CreateTransactionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createTransaction(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateTransactionMutationResult = NonNullable<Awaited<ReturnType<typeof createTransaction>>>
+    export type CreateTransactionMutationBody = BodyType<CreateTransactionInput>
+    export type CreateTransactionMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Create Midtrans Snap transaction
+ */
+export const useCreateTransaction = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createTransaction>>, TError,{data: BodyType<CreateTransactionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createTransaction>>,
+        TError,
+        {data: BodyType<CreateTransactionInput>},
+        TContext
+      > => {
+      return useMutation(getCreateTransactionMutationOptions(options));
+    }
+
+export const getMidtransWebhookUrl = () => {
+
+
+
+
+  return `/api/midtrans/webhook`
+}
+
+/**
+ * @summary Midtrans payment notification webhook
+ */
+export const midtransWebhook = async (midtransWebhookPayload: MidtransWebhookPayload, options?: RequestInit): Promise<SuccessResponse> => {
+
+  return customFetch<SuccessResponse>(getMidtransWebhookUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(midtransWebhookPayload)
+  }
+);}
+
+
+
+
+export const getMidtransWebhookMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof midtransWebhook>>, TError,{data: BodyType<MidtransWebhookPayload>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof midtransWebhook>>, TError,{data: BodyType<MidtransWebhookPayload>}, TContext> => {
+
+const mutationKey = ['midtransWebhook'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof midtransWebhook>>, {data: BodyType<MidtransWebhookPayload>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  midtransWebhook(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MidtransWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof midtransWebhook>>>
+    export type MidtransWebhookMutationBody = BodyType<MidtransWebhookPayload>
+    export type MidtransWebhookMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Midtrans payment notification webhook
+ */
+export const useMidtransWebhook = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof midtransWebhook>>, TError,{data: BodyType<MidtransWebhookPayload>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof midtransWebhook>>,
+        TError,
+        {data: BodyType<MidtransWebhookPayload>},
+        TContext
+      > => {
+      return useMutation(getMidtransWebhookMutationOptions(options));
+    }
 
