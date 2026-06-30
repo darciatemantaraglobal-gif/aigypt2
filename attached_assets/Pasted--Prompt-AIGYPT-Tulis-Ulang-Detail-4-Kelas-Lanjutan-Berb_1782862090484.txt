@@ -1,0 +1,153 @@
+# Prompt — AIGYPT: Tulis Ulang Detail 4 Kelas Lanjutan (Berbasis Riset)
+
+Copy-paste prompt ini ke Replit Agent. Ini memperbarui detail 4 kelas "Segera Hadir" di katalog kelas (`/kelas`) dengan konten yang sudah diriset agar lebih kuat, spesifik ke kebutuhan masisir, dan berpotensi menarik banyak peserta.
+
+PENTING: Ini perubahan konten/data pada kelas yang sudah ada (kemungkinan di `lib/classesData.ts` atau file data serupa). Jangan ubah layout, desain card, atau struktur katalog, hanya perbarui isi datanya. Status keempat kelas tetap "Segera Hadir" (coming soon), belum dibuka.
+
+---
+
+## KONTEKS
+
+Keempat kelas lanjutan ini diperbarui berdasarkan riset tentang: skill AI yang paling dicari 2026, peluang penghasilan online realistis untuk mahasiswa Indonesia, dan kebutuhan spesifik masisir (bahasa Arab akademik, kitab turats, dakwah digital). Tujuannya agar setiap kelas terasa relevan dan mendesak bagi calon peserta.
+
+---
+
+## DATA 4 KELAS BARU
+
+Perbarui data kelas di `lib/classesData.ts` (atau file data kelas yang sesuai) dengan konten berikut. Pertahankan field teknis yang sudah ada (id, slug, gradient warna, ikon, status coming-soon), hanya perbarui konten teks (judul, deskripsi, level, jumlah sesi, durasi, dan daftar materi/highlight jika ada).
+
+---
+
+### KELAS 1 — Bahasa Arab & Turats dengan AI
+
+```
+Judul: Bahasa Arab & Turats dengan AI
+Level: Menengah
+Jumlah sesi: 5 sesi
+Durasi: 75 menit per sesi
+Ikon: BookOpen (atau ikon kitab yang sudah dipakai)
+
+Tagline (1 kalimat):
+Taklukkan kitab turats dan bahasa Arab akademik dengan kecerdasan buatan sebagai asisten belajarmu.
+
+Deskripsi:
+Inilah kelas yang paling dekat dengan keseharianmu sebagai mahasiswa Al-Azhar.
+Bukan tentang menggantikan talaqqi atau guru, tapi tentang punya asisten yang
+membantumu memahami matan yang rumit, membaca kitab gundul, dan menyusun
+tulisan akademik berbahasa Arab fusha dengan lebih percaya diri.
+
+Yang akan kamu kuasai:
+- Menerjemah kitab turats secara kontekstual, bukan sekadar kata per kata
+- Menganalisis struktur nahwu dan shorof dari teks Arab yang sulit
+- Memanfaatkan AI bersama Maktabah Shamela dan sumber turats digital lainnya
+- Menyusun makalah dan penelitian berbahasa Arab fusha yang rapi dan akademis
+- Memahami batasan: kapan mempercayai AI dan kapan kembali ke kitab dan guru
+```
+
+---
+
+### KELAS 2 — Bangun Penghidupan Digital dengan AI
+
+```
+Judul: Bangun Penghidupan Digital dengan AI
+Level: Pemula
+Jumlah sesi: 5 sesi
+Durasi: 60 menit per sesi
+Ikon: TrendingUp (atau ikon yang sudah dipakai)
+
+Tagline:
+Ubah keterampilan AI-mu jadi sumber penghasilan nyata, langsung dari kamar kostmu di Kairo.
+
+Deskripsi:
+Maisyah di perantauan tidak harus selalu soal kerja keras tanpa henti.
+Kelas ini fokus pada keterampilan yang benar-benar bisa kamu jual minggu depan,
+bukan teori bisnis yang mengawang. Dari menulis konten, mengelola media sosial
+bisnis orang, hingga membuat produk digital yang bisa dijual berkali-kali.
+
+Yang akan kamu kuasai:
+- Menawarkan jasa penulisan konten dan copywriting berbantuan AI ke klien nyata
+- Mengelola admin dan customer service bisnis online sebagai layanan berbayar
+- Membuat produk digital (template, panduan, e-book) yang dijual tanpa stok
+- Menjalankan jasa desain dan konten media sosial untuk UMKM dan brand kecil
+- Menemukan klien pertama dan menentukan harga yang masuk akal untuk pemula
+```
+
+---
+
+### KELAS 3 — Vibe Coding: Dari Nol ke Aplikasi
+
+```
+Judul: Vibe Coding: Dari Nol ke Aplikasi
+Level: Menengah
+Jumlah sesi: 6 sesi
+Durasi: 75 menit per sesi
+Ikon: Code (atau ikon </> yang sudah dipakai)
+
+Tagline:
+Bangun aplikasi nyata tanpa jadi programmer, cukup dengan mendeskripsikan idemu.
+
+Deskripsi:
+Inilah puncak dari perjalanan AIGYPT. Kamu tidak hanya memakai aplikasi buatan
+orang lain, tapi membangun milikmu sendiri. Dari ide yang ada di kepala, menjadi
+aplikasi web yang benar-benar bisa dipakai, bahkan dijual. Tidak perlu latar
+belakang IT, yang kamu butuhkan hanya masalah yang ingin kamu selesaikan.
+
+Yang akan kamu kuasai:
+- Memahami vibe coding: membangun perangkat lunak lewat percakapan dengan AI
+- Membuat aplikasi web fungsional dari nol menggunakan Lovable, Bolt, dan v0
+- Membangun tools untuk organisasi, usaha, atau kebutuhan masisir sehari-hari
+- Merangkai alur kerja otomatis yang bekerja sendiri tanpa kamu sentuh
+- Mempublikasikan karyamu agar bisa diakses dan dipakai orang lain
+```
+
+---
+
+### KELAS 4 — Konten & Dakwah Digital dengan AI
+
+```
+Judul: Konten & Dakwah Digital dengan AI
+Level: Semua Level
+Jumlah sesi: 4 sesi
+Durasi: 60 menit per sesi
+Ikon: Megaphone (atau ikon yang sudah dipakai)
+
+Tagline:
+Sampaikan ilmu dan kebaikan ke lebih banyak orang, dengan kualitas dan tanggung jawab.
+
+Deskripsi:
+Sebagai penuntut ilmu, kamu punya bekal yang berharga untuk dibagikan. Kelas ini
+membantumu menyebarkan kebaikan secara digital dengan lebih luas dan konsisten,
+tanpa kehilangan kedalaman dan tanggung jawab keilmuan. AI di sini adalah alat
+bantu produksi, bukan pengganti ilmu dan adab.
+
+Yang akan kamu kuasai:
+- Menyusun naskah kultum, ceramah singkat, dan konten edukasi yang terstruktur
+- Membuat konten dakwah untuk Instagram, TikTok, dan YouTube secara konsisten
+- Mendesain poster kajian dan materi visual islami yang menarik
+- Mengubah satu kajian menjadi banyak format konten untuk berbagai platform
+- Menjaga adab dan tanggung jawab: verifikasi sumber, hindari penyalahgunaan AI dalam ranah agama
+```
+
+---
+
+## CATATAN PENTING
+
+1. Pertahankan status "Segera Hadir" untuk keempat kelas, kelas ini belum dibuka, hanya pratinjau yang diperbarui kontennya
+2. Jika struktur data saat ini belum punya field untuk "tagline" atau "daftar materi/highlight", tambahkan field tersebut ke interface/tipe data kelas agar konten baru bisa ditampilkan (sesuaikan dengan card design yang sudah ada, atau simpan untuk dipakai di halaman detail kelas nanti)
+3. Jika card di katalog hanya menampilkan judul, level, jumlah sesi, dan durasi, maka minimal perbarui empat field itu sesuai data di atas. Tagline, deskripsi, dan daftar materi bisa disimpan di data untuk ditampilkan di halaman detail kelas (`/kelas/[id]`) jika halaman itu sudah ada
+4. Pastikan tidak ada perubahan pada kelas flagship Batch 1 (kelas utama yang sudah aktif), perubahan ini hanya untuk 4 kelas "Segera Hadir"
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia, panggilan "kamu"
+2. Pertahankan design system dan layout katalog yang sudah ada
+3. Konsisten dengan tone dark luxury dan vision AIGYPT (transformasi personal, dampak komunitas, konteks masisir)
+4. `npm run build` sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Empat kelas "Segera Hadir" di katalog memiliki judul, deskripsi, dan detail yang lebih kuat dan relevan untuk masisir, berdasarkan riset kebutuhan nyata: bahasa Arab dan turats dengan AI, penghidupan digital, vibe coding, dan dakwah digital. Setiap kelas terasa mendesak dan bernilai, membuat calon peserta menantikan pembukaannya, sambil tetap mempertahankan status coming-soon dan design system yang sudah ada.
