@@ -18,3 +18,9 @@ expertMode = true
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
+
+[userenv]
+
+[userenv.shared]
+VITE_WA_NUMBER = "6281311506025"
+ADMIN_WA_NUMBER = "6281311506025"

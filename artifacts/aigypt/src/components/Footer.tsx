@@ -24,14 +24,9 @@ export function Footer() {
                 <Link href="/kelas">
                   <span className="text-sm text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Kelas</span>
                 </Link>
-                <a
-                  href={waUrl("Halo, saya ingin mendaftar Batch 1 AIGYPT")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[#94A3B8] hover:text-white transition-colors"
-                >
-                  Pendaftaran
-                </a>
+                <Link href="/daftar">
+                  <span className="text-sm text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Pendaftaran</span>
+                </Link>
                 <Link href="/login">
                   <span className="text-sm text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Masuk</span>
                 </Link>

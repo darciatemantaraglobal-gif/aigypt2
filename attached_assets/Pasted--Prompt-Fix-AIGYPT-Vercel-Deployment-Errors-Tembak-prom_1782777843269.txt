@@ -1,0 +1,223 @@
+# Prompt Fix — AIGYPT Vercel Deployment Errors
+
+Tembak prompt ini ke Replit Agent untuk memperbaiki dua error yang muncul setelah deploy ke Vercel: 405 Method Not Allowed di API routes dan TypeError filter on undefined.
+
+---
+
+## PROMPT
+
+Perbaiki dua error yang terjadi setelah deploy ke https://aigypt.vercel.app. Ini modifikasi pada proyek yang sudah ada — jangan rebuild dari nol.
+
+---
+
+## ERROR 1 — 405 Method Not Allowed di `/api/auth/logout`
+
+Error ini muncul berulang kali:
+```
+Failed to load resource: the server responded with a status of 405
+ApiError: HTTP 405 at /api/auth/logout
+```
+
+### Penyebab & Fix:
+
+**A. Pastikan semua API route handler menerima method yang benar**
+
+Cek file `api/auth/logout.ts` (atau lokasi apapun file itu berada). Pastikan:
+1. Handler menerima method yang tepat (`POST` untuk logout)
+2. Ada pengecekan method dengan response yang benar:
+
+```typescript
+// api/auth/logout.ts
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  // Handle OPTIONS untuk CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    return res.status(200).end()
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  // Clear session cookie
+  res.setHeader('Set-Cookie', 'aigypt_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax')
+  return res.status(200).json({ success: true })
+}
+```
+
+**B. Pastikan client memanggil logout dengan POST**
+
+Cari di codebase semua tempat yang memanggil `/api/auth/logout`. Pastikan semua menggunakan `method: 'POST'`:
+
+```typescript
+// Benar:
+await fetch('/api/auth/logout', { method: 'POST' })
+
+// Salah (ini yang menyebabkan 405):
+await fetch('/api/auth/logout')  // default GET
+```
+
+Perbaiki semua pemanggilan yang salah.
+
+**C. Update vercel.json untuk routing yang benar**
+
+Pastikan `vercel.json` di root project seperti ini:
+
+```json
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
+  ]
+}
+```
+
+**D. Cek SEMUA api route lainnya**
+
+Lakukan audit yang sama untuk semua file di folder `api/`:
+- `api/auth/login.ts` → harus handle `POST`
+- `api/midtrans/webhook.ts` → harus handle `POST`
+- `api/create-transaction.ts` → harus handle `POST`
+- `api/progress/step.ts` → harus handle `POST`
+- `api/progress/complete.ts` → harus handle `POST`
+
+Setiap handler harus punya pola ini:
+```typescript
+if (req.method === 'OPTIONS') return res.status(200).end()
+if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+```
+
+---
+
+## ERROR 2 — TypeError: (f || []).filter is not a function
+
+Error ini terjadi di JavaScript bundle:
+```
+TypeError: (f || []).filter is not a function
+```
+
+### Penyebab:
+
+Ada variabel yang seharusnya array tapi nilainya bukan array (kemungkinan `null`, `undefined`, object, atau string). Ini sering terjadi karena:
+1. Data dari Supabase belum ter-load saat komponen render
+2. Env variable Supabase tidak terbaca di production → query gagal → data `null`
+3. State awal komponen tidak diinisialisasi sebagai array
+
+### Fix:
+
+**A. Pastikan semua state yang di-filter diinisialisasi sebagai array kosong:**
+
+Cari di seluruh codebase semua penggunaan `.filter()`, `.map()`, `.forEach()` pada data yang datang dari Supabase atau props. Pastikan ada default value array:
+
+```typescript
+// Benar — inisialisasi sebagai array kosong:
+const [items, setItems] = useState<Item[]>([])
+const [progress, setProgress] = useState<Progress[]>([])
+const [classes, setClasses] = useState<KelasItem[]>([])
+
+// Salah — ini bisa jadi null/undefined:
+const [items, setItems] = useState(null)
+```
+
+**B. Tambahkan optional chaining dan nullish coalescing sebelum operasi array:**
+
+```typescript
+// Ganti semua pola seperti ini:
+data.filter(item => ...)
+items.map(item => ...)
+
+// Menjadi:
+(data ?? []).filter(item => ...)
+(items ?? []).map(item => ...)
+
+// Atau dengan pengecekan:
+Array.isArray(data) ? data.filter(item => ...) : []
+```
+
+**C. Cek semua komponen yang render data dari Supabase**
+
+Terutama komponen yang menerima data dari query seperti:
+- Daftar kelas / katalog
+- Progress tracker
+- Daftar sesi
+- Dashboard member
+
+Pastikan semuanya handle loading state dan empty state dengan benar:
+
+```typescript
+// Pattern yang aman:
+const { data, error, loading } = useSupabaseQuery(...)
+
+if (loading) return <LoadingSpinner />
+if (error) return <ErrorState />
+if (!data || data.length === 0) return <EmptyState />
+
+// Baru render data
+return data.map(item => <Item key={item.id} {...item} />)
+```
+
+**D. Cek env variable Supabase di Vercel**
+
+Jika Supabase query gagal karena env variable tidak terbaca, semua data akan `null`. Pastikan di Vercel Environment Variables sudah ada:
+```
+VITE_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY
+```
+
+Cara verifikasi: tambahkan console.log sementara di Supabase client initialization:
+```typescript
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+console.log('Supabase URL loaded:', !!supabaseUrl)
+console.log('Supabase Key loaded:', !!supabaseKey)
+```
+Cek di browser console setelah deploy — kalau `false`, env variable belum masuk.
+
+---
+
+## ERROR 3 — SPA Routing (halaman lain blank saat diklik)
+
+Saat mengklik link ke `/kurikulum`, `/login`, dll, halaman blank karena Vercel tidak tahu harus serve `index.html` untuk semua route.
+
+### Fix:
+
+Pastikan `vercel.json` sudah benar seperti di atas (Error 1 bagian C). Jika sudah ada tapi masih blank, cek apakah ada file `vercel.json` di root project (bukan di subfolder). Jika root directory Vercel adalah `artifacts/aigypt`, maka `vercel.json` harus ada di dalam `artifacts/aigypt/`, bukan di root repository.
+
+---
+
+## CHECKLIST SETELAH FIX
+
+Setelah semua perbaikan di atas:
+
+1. Jalankan `npm run build` — pastikan tidak ada error
+2. Cek tidak ada TypeScript error
+3. Commit dan push ke GitHub — Vercel akan otomatis redeploy
+4. Setelah deploy, buka browser console di aigypt.vercel.app dan pastikan:
+   - Tidak ada error 405
+   - `Supabase URL loaded: true`
+   - Navigasi ke `/kurikulum` dan `/login` berfungsi
+5. Coba login dengan kode akses test
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+- Tidak ada error 405 di API routes
+- Tidak ada TypeError filter
+- Semua halaman bisa diakses (routing SPA berfungsi)
+- Data dari Supabase ter-load dengan benar
+- Website berjalan normal di aigypt.vercel.app
