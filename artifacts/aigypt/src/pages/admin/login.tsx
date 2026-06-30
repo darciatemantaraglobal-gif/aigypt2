@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { Logo } from "@/components/Logo";
 
 const API_BASE = () => (import.meta.env.VITE_API_URL ?? "/api") as string;
 
@@ -43,10 +44,8 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#060608" }}>
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="font-bold text-2xl mb-1" style={{ fontFamily: "'Space Grotesk',sans-serif", color: "#FAFAFA" }}>
-            AI<span style={{ color: "#A855F7" }}>GYPT</span>
-          </div>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <Logo variant="mark-with-text" className="mb-2" />
           <p className="text-sm font-mono" style={{ color: "#52525B", letterSpacing: "0.15em" }}>ADMIN PANEL</p>
         </div>
 

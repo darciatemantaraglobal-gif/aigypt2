@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth, useLogoutAction } from "@/hooks/use-auth";
+import { Logo } from "@/components/Logo";
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,7 +25,6 @@ export function Navbar() {
     <div className="sticky top-0 z-50">
       {barVisible && (
         <div className="flex items-center py-2 pl-0 pr-3" style={{ background: "#7C3AED" }}>
-          {/* Marquee track — teks diduplikasi 2× agar loop seamless (translateX -50%) */}
           <div className="announcement-bar-outer">
             <div className="announcement-bar-track">
               <span className="announcement-text">
@@ -35,7 +35,6 @@ export function Navbar() {
               </span>
             </div>
           </div>
-          {/* Tombol close — di luar track, tidak ikut bergerak */}
           <button
             onClick={dismissBar}
             className="flex-shrink-0 ml-2 text-white/70 hover:text-white transition-colors"
@@ -47,123 +46,231 @@ export function Navbar() {
           </button>
         </div>
       )}
-    <nav className="border-b border-[#1E1E2E] bg-[#0A0A0F]/90 backdrop-blur-md">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center justify-between py-4">
-          <Link href={isAuthenticated ? "/kelas" : "/"}>
-            <span className="font-display font-bold text-xl text-white tracking-tight cursor-pointer">
-              AI<span className="text-[#A855F7]">GYPT</span>
-            </span>
-          </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
-            <Link href="/kurikulum">
-              <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/kurikulum" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
-                Kurikulum
-              </span>
-            </Link>
-            {isAuthenticated ? (
-              <>
-                <Link href="/kelas">
-                  <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/kelas" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
-                    Kelas
-                  </span>
-                </Link>
-                <Link href="/dashboard">
-                  <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/dashboard" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
-                    Belajar Saya
-                  </span>
-                </Link>
-                <Link href="/toolbox">
-                  <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/toolbox" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
-                    Toolbox
-                  </span>
-                </Link>
-                {user?.name && (
-                  <span className="text-xs text-[#94A3B8] border border-[#1E1E2E] rounded-full px-3 py-1 font-mono ml-2">
-                    {user.memberType === "kelas" ? `Batch ${user.batchNumber}` : "Mandiri"}
-                  </span>
-                )}
-                <button
-                  onClick={handleLogout}
-                  disabled={isPending}
-                  className="text-base font-normal px-4 py-2 text-[#94A3B8] hover:text-white transition-colors disabled:opacity-50"
-                >
-                  Keluar
-                </button>
-              </>
-            ) : (
-              <Link href="/login">
-                <span
-                  className="text-base font-medium text-white cursor-pointer transition-all duration-200 ml-4"
+      {/* Gradient accent line at top of nav */}
+      <div style={{ height: 3, width: "100%", background: "linear-gradient(90deg, #7C3AED, #A855F7, #7C3AED)" }} />
+
+      <nav className="border-b border-[#1E1E2E] bg-[#0A0A0F]/90 backdrop-blur-md">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center justify-between py-4">
+
+            {/* Logo */}
+            <Link href={isAuthenticated ? "/kelas" : "/"}>
+              <div className="cursor-pointer relative">
+                {/* Logo glow effect */}
+                <div
+                  aria-hidden="true"
                   style={{
-                    background: "#7C3AED",
-                    borderRadius: "12px",
-                    padding: "15px 24px",
-                    display: "inline-block",
-                    minHeight: "48px",
-                    boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+                    position: "absolute",
+                    top: "50%",
+                    left: 0,
+                    transform: "translateY(-50%)",
+                    width: 120,
+                    height: 32,
+                    background: "radial-gradient(ellipse, rgba(124,58,237,0.2), transparent 70%)",
+                    filter: "blur(12px)",
+                    pointerEvents: "none",
+                    zIndex: -1,
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#6D28D9")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "#7C3AED")}
-                >
-                  Masuk
+                />
+                {/* Desktop: mark + text */}
+                <div className="hidden md:block">
+                  <Logo variant="mark-with-text" />
+                </div>
+                {/* Mobile: mark + text */}
+                <div className="md:hidden">
+                  <Logo variant="mark-with-text" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-1">
+              <Link href="/kurikulum">
+                <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/kurikulum" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
+                  Kurikulum
                 </span>
               </Link>
-            )}
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden w-10 h-10 flex items-center justify-center text-[#94A3B8] hover:text-white transition-colors"
-            style={{ borderRadius: "14px", background: "rgba(255,255,255,0.1)" }}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              {isAuthenticated ? (
+                <>
+                  <Link href="/kelas">
+                    <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/kelas" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
+                      Kelas
+                    </span>
+                  </Link>
+                  <Link href="/dashboard">
+                    <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/dashboard" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
+                      Belajar Saya
+                    </span>
+                  </Link>
+                  <Link href="/toolbox">
+                    <span className={`text-base font-normal px-4 py-2 transition-colors cursor-pointer ${location === "/toolbox" ? "text-[#A855F7]" : "text-[#94A3B8] hover:text-white"}`}>
+                      Toolbox
+                    </span>
+                  </Link>
+                  {user?.name && (
+                    <span className="text-xs text-[#94A3B8] border border-[#1E1E2E] rounded-full px-3 py-1 font-mono ml-2">
+                      {user.memberType === "kelas" ? `Batch ${user.batchNumber}` : "Mandiri"}
+                    </span>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    disabled={isPending}
+                    className="text-base font-normal px-4 py-2 text-[#94A3B8] hover:text-white transition-colors disabled:opacity-50"
+                  >
+                    Keluar
+                  </button>
+                </>
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <div className="flex items-center gap-3 ml-2">
+                  {/* Batch badge — desktop */}
+                  <span
+                    className="font-mono font-semibold"
+                    style={{
+                      background: "rgba(168,85,247,0.15)",
+                      border: "1px solid rgba(168,85,247,0.3)",
+                      color: "#C084FC",
+                      fontSize: 11,
+                      padding: "4px 10px",
+                      borderRadius: 6,
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    BATCH 1
+                  </span>
+                  <Link href="/login">
+                    <span
+                      className="text-base font-medium text-white cursor-pointer transition-all duration-200"
+                      style={{
+                        background: "#7C3AED",
+                        borderRadius: "12px",
+                        padding: "12px 24px",
+                        display: "inline-block",
+                        boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "#6D28D9")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "#7C3AED")}
+                    >
+                      Masuk
+                    </span>
+                  </Link>
+                </div>
               )}
-            </svg>
-          </button>
-        </div>
+            </div>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden border-t border-[#1E1E2E] py-4 flex flex-col gap-2">
-            <Link href="/kurikulum" onClick={() => setMenuOpen(false)}>
-              <span className="block text-base font-normal px-4 py-2 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Kurikulum</span>
-            </Link>
-            {isAuthenticated ? (
-              <>
-                <Link href="/kelas" onClick={() => setMenuOpen(false)}>
-                  <span className="block text-base font-normal px-4 py-2 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Kelas</span>
-                </Link>
-                <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
-                  <span className="block text-base font-normal px-4 py-2 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Belajar Saya</span>
-                </Link>
-                <Link href="/toolbox" onClick={() => setMenuOpen(false)}>
-                  <span className="block text-base font-normal px-4 py-2 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">Toolbox</span>
-                </Link>
-                <button
-                  onClick={() => { handleLogout(); setMenuOpen(false); }}
-                  className="text-left text-base font-normal px-4 py-2 text-[#94A3B8] hover:text-white transition-colors"
+            {/* Mobile right side: badge + hamburger */}
+            <div className="md:hidden flex items-center gap-3">
+              {!isAuthenticated && (
+                <span
+                  className="font-mono font-semibold"
+                  style={{
+                    background: "rgba(168,85,247,0.15)",
+                    border: "1px solid rgba(168,85,247,0.3)",
+                    color: "#C084FC",
+                    fontSize: 10,
+                    padding: "3px 8px",
+                    borderRadius: 6,
+                    letterSpacing: "0.05em",
+                  }}
                 >
-                  Keluar
-                </button>
-              </>
-            ) : (
-              <Link href="/login" onClick={() => setMenuOpen(false)}>
-                <span className="block text-base font-medium px-4 py-2 text-[#A855F7] cursor-pointer">Masuk</span>
-              </Link>
-            )}
+                  BATCH 1
+                </span>
+              )}
+
+              {/* Hamburger button */}
+              <button
+                className="flex items-center justify-center transition-colors"
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 10,
+                  background: "#16161F",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: menuOpen ? "#A855F7" : "#A1A1AA",
+                  flexShrink: 0,
+                }}
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Toggle menu"
+              >
+                <svg
+                  className="transition-transform duration-200"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ transform: menuOpen ? "rotate(90deg)" : "rotate(0deg)" }}
+                >
+                  {menuOpen ? (
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
           </div>
-        )}
-      </div>
-    </nav>
+
+          {/* Mobile menu drawer */}
+          {menuOpen && (
+            <div className="md:hidden border-t border-[#1E1E2E] py-4 flex flex-col gap-1">
+              {/* Logo in drawer */}
+              <div className="px-4 pb-3 mb-1 border-b border-[#1E1E2E]">
+                <Logo variant="mark-with-text" />
+              </div>
+
+              <Link href="/kurikulum" onClick={() => setMenuOpen(false)}>
+                <span className="block text-base font-normal px-4 py-2.5 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">
+                  Kurikulum
+                </span>
+              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link href="/kelas" onClick={() => setMenuOpen(false)}>
+                    <span className="block text-base font-normal px-4 py-2.5 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">
+                      Kelas
+                    </span>
+                  </Link>
+                  <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
+                    <span className="block text-base font-normal px-4 py-2.5 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">
+                      Belajar Saya
+                    </span>
+                  </Link>
+                  <Link href="/toolbox" onClick={() => setMenuOpen(false)}>
+                    <span className="block text-base font-normal px-4 py-2.5 text-[#94A3B8] hover:text-white transition-colors cursor-pointer">
+                      Toolbox
+                    </span>
+                  </Link>
+                  <button
+                    onClick={() => { handleLogout(); setMenuOpen(false); }}
+                    className="text-left text-base font-normal px-4 py-2.5 text-[#94A3B8] hover:text-white transition-colors"
+                  >
+                    Keluar
+                  </button>
+                </>
+              ) : (
+                <div className="px-4 pt-2">
+                  <Link href="/login" onClick={() => setMenuOpen(false)}>
+                    <span
+                      className="block text-center text-base font-medium text-white cursor-pointer transition-all duration-200"
+                      style={{
+                        background: "#7C3AED",
+                        borderRadius: 12,
+                        padding: "12px 24px",
+                      }}
+                    >
+                      Masuk
+                    </span>
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </nav>
     </div>
   );
 }

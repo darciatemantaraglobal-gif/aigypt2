@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { MessageCircle, Instagram } from "lucide-react";
 import { waUrl } from "@/lib/wa";
 import { containerStagger, cardItem, viewportConfig } from "@/lib/animations";
+import { Logo } from "@/components/Logo";
 
 const colVariants = {
   hidden: {},
@@ -70,8 +71,8 @@ export function Footer() {
           >
             {/* Column 1 — Brand */}
             <motion.div variants={shouldReduceMotion ? undefined : cardItem} className="sm:col-span-2 lg:col-span-1">
-              <div className="font-display font-bold text-2xl text-white mb-3 tracking-tight">
-                AI<span className="text-[#A855F7]">GYPT</span>
+              <div className="mb-3">
+                <Logo variant="full" />
               </div>
               <p className="text-sm text-[#A1A1AA] mb-2 leading-relaxed">
                 Platform Pembelajaran AI untuk Masisir
