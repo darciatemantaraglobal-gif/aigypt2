@@ -3,6 +3,9 @@ import { Link } from "wouter";
 import { motion, useInView, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { FloatingDots } from "@/components/FloatingDots";
+import { FloatingSparkles } from "@/components/FloatingSparkles";
+import { useCursorGlow } from "@/hooks/useCursorGlow";
 import { waUrl } from "@/lib/wa";
 import { testimonials } from "@/lib/testimonials";
 import { showcaseTabs, showcaseGrid } from "@/lib/showcaseExamples";
@@ -753,6 +756,8 @@ function StatItem({ value, suffix, label, inView }: { value: number; suffix: str
 export default function Home() {
   const statRef = useRef(null);
   const statInView = useInView(statRef, { once: true, margin: "-60px" });
+  const heroRef = useRef<HTMLElement>(null);
+  const { position: cursorPos, isActive: cursorActive } = useCursorGlow(heroRef);
 
 
   return (
@@ -760,9 +765,34 @@ export default function Home() {
       <Navbar />
 
       {/* ══ SECTION 1: HERO ══ */}
-      <section className="relative overflow-hidden pt-[80px] pb-[80px] sm:pt-[100px] sm:pb-[100px]">
+      <section ref={heroRef} className="relative overflow-hidden pt-[80px] pb-[80px] sm:pt-[100px] sm:pb-[100px]">
         {/* Centered ambient glow — pulses behind headline */}
         <div className="hero-ambient-glow" />
+
+        {/* Cursor-aware glow — desktop only */}
+        <div
+          className="hidden md:block absolute pointer-events-none rounded-full"
+          style={{
+            width: '350px',
+            height: '350px',
+            left: cursorPos.x - 175,
+            top: cursorPos.y - 175,
+            background: 'radial-gradient(circle, rgba(124,58,237,0.15), transparent 70%)',
+            filter: 'blur(40px)',
+            opacity: cursorActive ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+            zIndex: 0,
+          }}
+        />
+
+        {/* Floating dots background */}
+        <FloatingDots count={8} />
+
+        {/* Sparkles near headline area */}
+        <FloatingSparkles configs={[
+          { left: '8%',  top: '22%', duration: 5.8, delay: 0.0, size: 14 },
+          { left: '91%', top: '35%', duration: 6.4, delay: 1.2, size: 12 },
+        ]} />
 
         {/* Wide elliptical haze */}
         <motion.div
@@ -887,7 +917,8 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 2: VISI / MANIFESTO ══ */}
-      <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+      <section className="relative py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <FloatingDots count={5} />
         <Reveal className="max-w-4xl mx-auto px-6 sm:px-10 text-center">
           <SectionLabel>MENGAPA AIGYPT ADA</SectionLabel>
           <motion.h2
@@ -915,7 +946,8 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 3: SPEKTRUM PEMBELAJARAN ══ */}
-      <section className="py-[48px] sm:py-[80px]">
+      <section className="relative py-[48px] sm:py-[80px]">
+        <FloatingDots count={6} />
         <div className="max-w-6xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-16">
             <SectionLabel>APA YANG AKAN KAMU PELAJARI</SectionLabel>
@@ -1073,7 +1105,12 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 5: KELAS UNGGULAN ══ */}
-      <section className="py-[48px] sm:py-[80px]">
+      <section className="relative py-[48px] sm:py-[80px]">
+        <FloatingSparkles configs={[
+          { left: '5%',  top: '18%', duration: 5.2, delay: 0.4, size: 14 },
+          { left: '93%', top: '55%', duration: 6.1, delay: 1.5, size: 12 },
+          { left: '48%', top: '90%', duration: 5.7, delay: 0.9, size: 13 },
+        ]} />
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-12">
             <SectionLabel>KELAS PERTAMA · TERSEDIA SEKARANG</SectionLabel>
@@ -1254,7 +1291,8 @@ export default function Home() {
       </section>
 
       {/* ══ SECTION 7: KEANGGOTAAN (REVISI — Perpustakaan) ══ */}
-      <section id="keanggotaan" className="py-[48px] sm:py-[80px]">
+      <section id="keanggotaan" className="relative py-[48px] sm:py-[80px]">
+        <FloatingDots count={5} />
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="text-center mb-10">
             <SectionLabel>LEBIH DARI SEKADAR KELAS</SectionLabel>
@@ -1433,6 +1471,11 @@ export default function Home() {
             background: "radial-gradient(ellipse at center 70%, rgba(124,58,237,0.12) 0%, transparent 65%)",
           }}
         />
+        <FloatingDots count={6} />
+        <FloatingSparkles configs={[
+          { left: '12%', top: '20%', duration: 5.5, delay: 0.2, size: 13 },
+          { left: '85%', top: '30%', duration: 6.3, delay: 1.1, size: 12 },
+        ]} />
         <Reveal className="relative max-w-4xl mx-auto px-6 sm:px-10 text-center">
           <motion.h2
             variants={fadeUp}
