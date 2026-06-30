@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { waUrl } from "@/lib/wa";
 import { testimonials } from "@/lib/testimonials";
+import { showcaseTabs, showcaseGrid } from "@/lib/showcaseExamples";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -260,72 +261,124 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 // ─── Showcase Section ──────────────────────────────────────────────────────────
 
-const showcaseTabs = [
-  {
-    id: "akademisi",
-    label: "Akademisi",
-    icon: <IconPen />,
-    before: "Stuck nulis pendahuluan makalah. Dua jam, baru dapat satu paragraf.",
-    after: "Outline lengkap 5 bab + draft pendahuluan + rekomendasi referensi kitab.",
-    time: "~10 MENIT",
-    extraBadge: null,
-  },
-  {
-    id: "organisator",
-    label: "Organisator",
-    icon: <IconMic />,
-    before: "Notulensi rapat dua jam. Nulisnya sejam sendiri, banyak yang kelewat.",
-    after: "Rekam rapat, transkrip otomatis, lalu notulensi rapi plus action items per orang.",
-    time: "~5 MENIT",
-    extraBadge: null,
-  },
-  {
-    id: "pebisnis",
-    label: "Pebisnis",
-    icon: <IconShop />,
-    before: "Bingung bikin caption jualan. Itu-itu saja. Tidak ada yang beli.",
-    after: "5 variasi caption dengan pendekatan berbeda — storytelling, urgency, testimoni.",
-    time: "~30 DETIK",
-    extraBadge: null,
-  },
-  {
-    id: "kreator",
-    label: "Kreator",
-    icon: <IconLightbulb />,
-    before: "Kehabisan ide konten. Sudah seminggu tidak posting.",
-    after: "30 ide konten terkategorisasi, lengkap hook pembuka dan poin utama.",
-    time: "~1 MENIT",
-    extraBadge: null,
-  },
-  {
-    id: "vibe-coding",
-    label: "Vibe Coding",
-    icon: <IconMonitor />,
-    before: "Ingin ada aplikasi pencatat keuangan organisasi, tapi tidak mengerti coding.",
-    after: "Deskripsikan yang kamu mau — aplikasi web jadi, siap dipakai.",
-    time: "~15 MENIT",
-    extraBadge: "TANPA SATU BARIS KODE",
-  },
-];
+const TAB_ICONS = [<IconPen />, <IconMic />, <IconShop />, <IconLightbulb />, <IconMonitor />];
+const GRID_ICONS = [<IconPen />, <IconMic />, <IconShop />, <IconLightbulb />, <IconMonitor />];
+
+// ─── Showcase Card ─────────────────────────────────────────────────────────────
+
+function ShowcaseCard({
+  before,
+  after,
+  time,
+  extraBadge,
+  isVibeCoding,
+  prefersReduced,
+}: {
+  before: string;
+  after: string;
+  time: string;
+  extraBadge?: string;
+  isVibeCoding?: boolean;
+  prefersReduced: boolean | null;
+}) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-xl overflow-hidden"
+      style={{ border: "1px solid rgba(255,255,255,0.05)" }}
+    >
+      {/* Sebelum */}
+      <div
+        className="p-5 flex flex-col gap-3"
+        style={{ background: "rgba(8,8,12,0.7)" }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs tracking-widest" style={{ color: "#3F3F46", letterSpacing: "0.15em" }}>SEBELUM</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3F3F46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <p className="text-sm leading-relaxed flex-1" style={{ color: "#52525B" }}>
+          "{before}"
+        </p>
+      </div>
+
+      {/* Dengan AI */}
+      <motion.div
+        className="p-5 flex flex-col gap-3 relative overflow-hidden"
+        style={{
+          background: isVibeCoding ? "rgba(20,10,36,0.95)" : "rgba(16,12,28,0.9)",
+          borderLeft: "1px solid rgba(124,58,237,0.15)",
+        }}
+        animate={prefersReduced ? {} : {
+          boxShadow: isVibeCoding
+            ? ["0 0 0px rgba(124,58,237,0)", "0 0 30px rgba(124,58,237,0.2)", "0 0 0px rgba(124,58,237,0)"]
+            : ["0 0 0px rgba(124,58,237,0)", "0 0 16px rgba(124,58,237,0.12)", "0 0 0px rgba(124,58,237,0)"],
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.5), transparent)" }}
+        />
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>DENGAN AI</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <p className="text-sm leading-relaxed text-white flex-1">{after}</p>
+        <div className="flex flex-wrap gap-2">
+          <motion.span
+            className="font-mono text-xs font-bold px-3 py-1 rounded-full"
+            style={{ background: "rgba(124,58,237,0.2)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.35)" }}
+            initial={{ scale: prefersReduced ? 1 : 0.7, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.15, duration: prefersReduced ? 0 : 0.22, ease: "backOut" }}
+          >
+            {time}
+          </motion.span>
+          {extraBadge && (
+            <motion.span
+              className="font-mono text-xs px-3 py-1 rounded-full"
+              style={{ background: "rgba(16,185,129,0.12)", color: "#34D399", border: "1px solid rgba(16,185,129,0.25)" }}
+              initial={{ scale: prefersReduced ? 1 : 0.7, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.28, duration: prefersReduced ? 0 : 0.22, ease: "backOut" }}
+            >
+              {extraBadge}
+            </motion.span>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Showcase Section ─────────────────────────────────────────────────────────
 
 function ShowcaseSection() {
   const [activeTab, setActiveTab] = useState(0);
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
+  const [mobileTab, setMobileTab] = useState(0);
   const prefersReduced = useReducedMotion();
 
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, margin: "-60px" });
+  const gridRef = useRef(null);
+  const gridInView = useInView(gridRef, { once: true, margin: "-60px" });
+
   const contentVariants = {
-    hidden: { opacity: 0, y: prefersReduced ? 0 : 10 },
+    hidden: { opacity: 0, y: prefersReduced ? 0 : 12 },
     visible: { opacity: 1, y: 0, transition: { duration: prefersReduced ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
     exit: { opacity: 0, y: prefersReduced ? 0 : -8, transition: { duration: prefersReduced ? 0 : 0.18 } },
   };
 
-  const gridRef = useRef(null);
-  const gridInView = useInView(gridRef, { once: true, margin: "-60px" });
+  const tab = showcaseTabs[activeTab];
+  const mobileTabData = showcaseTabs[mobileTab];
 
   return (
     <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
       <div className="max-w-6xl mx-auto px-6 sm:px-10">
-        {/* Header */}
+
+        {/* ── Header ── */}
         <Reveal className="text-center mb-12">
           <SectionLabel>BUKAN SEKADAR TEORI</SectionLabel>
           <motion.h2
@@ -334,244 +387,230 @@ function ShowcaseSection() {
             style={{ fontSize: "clamp(1.75rem, 4vw, 2.75rem)", letterSpacing: "-0.015em" }}
           >
             Lihat Apa yang Bisa Kamu{" "}
-            <span style={{ color: "#A855F7" }}>Ciptakan</span>
+            <span style={{ color: "#A855F7" }}>Hasilkan</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="text-sm sm:text-base max-w-xl mx-auto leading-relaxed"
+            className="text-sm sm:text-base max-w-2xl mx-auto leading-relaxed"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Ini bukan klaim. Ini yang benar-benar bisa kamu hasilkan setelah memahami cara memanfaatkan AI dengan tepat.
+            Ini bukan janji kosong. Ini hal-hal nyata yang bisa kamu kerjakan sendiri setelah memahami
+            cara memanfaatkan AI dengan tepat — hal yang dulu memakan waktu berjam-jam, kini selesai dalam hitungan menit.
           </motion.p>
         </Reveal>
 
-        {/* ── Desktop: Tab selector ── */}
+        {/* ── DESKTOP: Tab selector + 4 cards ── */}
         <div className="hidden sm:block">
           {/* Tab buttons */}
-          <Reveal className="flex gap-2 mb-8 flex-wrap justify-center">
-            {showcaseTabs.map((tab, i) => (
+          <Reveal className="flex gap-2 mb-3 flex-wrap justify-center">
+            {showcaseTabs.map((t, i) => (
               <motion.button
-                key={tab.id}
+                key={t.id}
                 variants={fadeUp}
                 onClick={() => setActiveTab(i)}
                 className="flex items-center gap-2 font-mono text-xs tracking-widest px-4 py-2.5 rounded-full transition-all duration-200 cursor-pointer"
                 style={
                   activeTab === i
-                    ? {
-                        background: "rgba(124,58,237,0.2)",
-                        color: "#A855F7",
-                        border: "1px solid rgba(124,58,237,0.4)",
-                      }
-                    : {
-                        background: "rgba(255,255,255,0.03)",
-                        color: "#52525B",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                      }
+                    ? { background: "rgba(124,58,237,0.2)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.4)" }
+                    : { background: "rgba(255,255,255,0.03)", color: "#52525B", border: "1px solid rgba(255,255,255,0.06)" }
                 }
               >
-                <span style={{ opacity: activeTab === i ? 1 : 0.5 }}>{tab.icon}</span>
-                {tab.label.toUpperCase()}
+                <span style={{ opacity: activeTab === i ? 1 : 0.5 }}>{TAB_ICONS[i]}</span>
+                {t.label.toUpperCase()}
               </motion.button>
             ))}
           </Reveal>
 
-          {/* Tab content */}
-          <div className="relative" style={{ minHeight: "220px" }}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                variants={contentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="grid grid-cols-2 gap-4"
-              >
-                {/* Sebelum */}
-                <div
-                  className="p-6 rounded-xl"
-                  style={{
-                    background: "rgba(10,10,15,0.5)",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                  }}
-                >
-                  <p className="font-mono text-xs tracking-widest mb-4" style={{ color: "#3F3F46", letterSpacing: "0.15em" }}>
-                    SEBELUM
-                  </p>
-                  <p className="text-base leading-relaxed" style={{ color: "#52525B" }}>
-                    "{showcaseTabs[activeTab].before}"
-                  </p>
-                </div>
+          {/* Tab intro */}
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={`intro-${activeTab}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="text-center text-xs font-mono mb-8"
+              style={{ color: "#52525B", letterSpacing: "0.05em" }}
+            >
+              {tab.intro}
+            </motion.p>
+          </AnimatePresence>
 
-                {/* Dengan AI */}
-                <motion.div
-                  className="p-6 rounded-xl relative overflow-hidden"
-                  style={{
-                    background: "rgba(16,12,28,0.9)",
-                    border: "1px solid rgba(124,58,237,0.25)",
-                  }}
-                  animate={prefersReduced ? {} : {
-                    boxShadow: [
-                      "0 0 0px rgba(124,58,237,0)",
-                      "0 0 20px rgba(124,58,237,0.15)",
-                      "0 0 0px rgba(124,58,237,0)",
-                    ],
-                  }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          {/* 4 cards grid */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="grid grid-cols-1 lg:grid-cols-2 gap-3"
+            >
+              {tab.cards.map((card, ci) => (
+                <ShowcaseCard
+                  key={ci}
+                  before={card.before}
+                  after={card.after}
+                  time={card.time}
+                  extraBadge={card.extraBadge}
+                  isVibeCoding={tab.isVibeCoding}
+                  prefersReduced={prefersReduced}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* ── MOBILE: Dropdown + 4 cards ── */}
+        <div className="sm:hidden">
+          {/* Mobile tab dropdown */}
+          <div className="mb-5">
+            <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+              {showcaseTabs.map((t, i) => (
+                <button
+                  key={t.id}
+                  onClick={() => setMobileTab(i)}
+                  className="flex-shrink-0 flex items-center gap-1.5 font-mono text-xs tracking-widest px-3 py-2 rounded-full cursor-pointer transition-all duration-200"
+                  style={
+                    mobileTab === i
+                      ? { background: "rgba(124,58,237,0.2)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.4)" }
+                      : { background: "rgba(255,255,255,0.03)", color: "#52525B", border: "1px solid rgba(255,255,255,0.06)" }
+                  }
                 >
-                  <div
-                    className="absolute top-0 left-0 right-0 h-px"
-                    style={{ background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.5), transparent)" }}
-                  />
-                  <p className="font-mono text-xs tracking-widest mb-4" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>
-                    DENGAN AI
-                  </p>
-                  <p className="text-base leading-relaxed text-white mb-5">
-                    {showcaseTabs[activeTab].after}
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <motion.span
-                      className="font-mono text-xs font-bold px-3 py-1.5 rounded-full"
-                      style={{
-                        background: "rgba(124,58,237,0.2)",
-                        color: "#A855F7",
-                        border: "1px solid rgba(124,58,237,0.35)",
-                      }}
-                      initial={{ scale: prefersReduced ? 1 : 0.7, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.15, duration: prefersReduced ? 0 : 0.22, ease: "backOut" }}
-                    >
-                      {showcaseTabs[activeTab].time}
-                    </motion.span>
-                    {showcaseTabs[activeTab].extraBadge && (
-                      <motion.span
-                        className="font-mono text-xs px-3 py-1.5 rounded-full"
-                        style={{
-                          background: "rgba(16,185,129,0.12)",
-                          color: "#34D399",
-                          border: "1px solid rgba(16,185,129,0.25)",
-                        }}
-                        initial={{ scale: prefersReduced ? 1 : 0.7, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.25, duration: prefersReduced ? 0 : 0.22, ease: "backOut" }}
-                      >
-                        {showcaseTabs[activeTab].extraBadge}
-                      </motion.span>
-                    )}
-                  </div>
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
+                  <span style={{ opacity: mobileTab === i ? 1 : 0.5 }}>{TAB_ICONS[i]}</span>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs mt-3" style={{ color: "#3F3F46" }}>{mobileTabData.intro}</p>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={mobileTab}
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="space-y-3"
+            >
+              {mobileTabData.cards.map((card, ci) => (
+                <ShowcaseCard
+                  key={ci}
+                  before={card.before}
+                  after={card.after}
+                  time={card.time}
+                  extraBadge={card.extraBadge}
+                  isVibeCoding={mobileTabData.isVibeCoding}
+                  prefersReduced={prefersReduced}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* ── IMPACT STATS STRIP ── */}
+        <div ref={statsRef} className="mt-14 mb-10">
+          <Reveal className="text-center mb-8">
+            <SectionLabel>DAMPAK NYATA</SectionLabel>
+          </Reveal>
+          <div
+            className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+          >
+            {[
+              { display: "6–10 JAM", label: "Bisa kamu hemat setiap minggu", isText: true },
+              { display: "Berjam-jam → MENIT", label: "Tugas yang dulu lama, kini singkat", isText: true },
+              { value: 5, suffix: " PERSONA", label: "Setiap sisi hidupmu, terbantu", isText: false },
+              { value: 1, suffix: " KARYA", label: "Aplikasi nyata buatanmu sendiri", isText: false },
+            ].map((stat, i) => (
+              <StatBlock key={i} stat={stat} inView={statsInView} prefersReduced={!!prefersReduced} />
+            ))}
           </div>
         </div>
 
-        {/* ── Mobile: Accordion ── */}
-        <div className="sm:hidden">
-          {showcaseTabs.map((tab, i) => (
-            <div
-              key={tab.id}
-              className="mb-3 rounded-xl overflow-hidden"
-              style={{ border: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <button
-                className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left cursor-pointer"
-                style={{
-                  background: openAccordion === i ? "rgba(20,12,36,0.9)" : "rgba(10,10,15,0.6)",
-                }}
-                onClick={() => setOpenAccordion(openAccordion === i ? null : i)}
-              >
-                <div className="flex items-center gap-3">
-                  <span style={{ color: "#A855F7" }}>{tab.icon}</span>
-                  <span className="font-mono text-xs tracking-widest font-bold" style={{ color: openAccordion === i ? "#A855F7" : "#71717A", letterSpacing: "0.15em" }}>
-                    {tab.label.toUpperCase()}
-                  </span>
-                </div>
-                <motion.div
-                  animate={{ rotate: openAccordion === i ? 45 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  style={{ color: "#52525B" }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
-                    <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                </motion.div>
-              </button>
-              <AnimatePresence initial={false}>
-                {openAccordion === i && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    style={{ overflow: "hidden" }}
-                  >
-                    <div className="px-5 pb-5 space-y-4">
-                      <div className="p-4 rounded-xl" style={{ background: "rgba(6,6,10,0.6)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                        <p className="font-mono text-xs tracking-widest mb-2" style={{ color: "#3F3F46" }}>SEBELUM</p>
-                        <p className="text-sm leading-relaxed" style={{ color: "#52525B" }}>"{tab.before}"</p>
-                      </div>
-                      <div className="p-4 rounded-xl relative" style={{ background: "rgba(16,12,28,0.9)", border: "1px solid rgba(124,58,237,0.25)" }}>
-                        <p className="font-mono text-xs tracking-widest mb-2" style={{ color: "#A855F7" }}>DENGAN AI</p>
-                        <p className="text-sm leading-relaxed text-white mb-4">{tab.after}</p>
-                        <div className="flex flex-wrap gap-2">
-                          <span className="font-mono text-xs font-bold px-3 py-1 rounded-full" style={{ background: "rgba(124,58,237,0.2)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.35)" }}>
-                            {tab.time}
-                          </span>
-                          {tab.extraBadge && (
-                            <span className="font-mono text-xs px-3 py-1 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#34D399", border: "1px solid rgba(16,185,129,0.25)" }}>
-                              {tab.extraBadge}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Grid ringkas (semua 5 sekaligus) ── */}
-        <div ref={gridRef} className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {showcaseTabs.map((tab, i) => (
+        {/* ── GRID RINGKAS ── */}
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-12">
+          {showcaseGrid.map((item, i) => (
             <motion.div
-              key={tab.id}
-              className="p-4 rounded-xl group cursor-default"
-              style={{
-                background: "rgba(10,10,15,0.6)",
-                border: "1px solid rgba(255,255,255,0.05)",
-              }}
+              key={item.id}
+              className="p-4 rounded-xl cursor-default"
+              style={{ background: "rgba(10,10,15,0.6)", border: "1px solid rgba(255,255,255,0.05)" }}
               initial={{ opacity: 0, y: prefersReduced ? 0 : 18 }}
               animate={gridInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: prefersReduced ? 0 : i * 0.09, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: prefersReduced ? 0 : i * 0.08, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ borderColor: "rgba(124,58,237,0.3)", scale: prefersReduced ? 1 : 1.02 }}
             >
-              <div className="w-8 h-8 flex items-center justify-center rounded-lg mb-3" style={{ background: "rgba(124,58,237,0.1)", color: "#A855F7" }}>
-                {tab.icon}
+              <div
+                className="w-8 h-8 flex items-center justify-center rounded-lg mb-3"
+                style={{ background: "rgba(124,58,237,0.1)", color: "#A855F7" }}
+              >
+                {GRID_ICONS[i]}
               </div>
-              <p className="font-display font-semibold text-white text-xs mb-1">{tab.label}</p>
-              <p className="text-xs leading-relaxed mb-3" style={{ color: "#52525B" }}>
-                {tab.after.split(" ").slice(0, 8).join(" ")}…
-              </p>
-              <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(124,58,237,0.15)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.2)" }}>
-                {tab.time}
-              </span>
+              <p className="font-display font-semibold text-white text-xs mb-1">{item.label}</p>
+              <p className="text-xs leading-relaxed" style={{ color: "#52525B" }}>{item.highlight}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* Penutup section */}
-        <Reveal className="text-center mt-10">
+        {/* ── PENUTUP ── */}
+        <Reveal className="text-center">
           <motion.p
             variants={fadeUp}
-            className="font-mono text-xs tracking-widest"
+            className="font-mono text-xs tracking-widest mb-5"
             style={{ color: "#3F3F46", letterSpacing: "0.2em" }}
           >
-            DAN INI HANYA PERMULAAN DARI APA YANG AKAN KAMU PELAJARI
+            DAN INI HANYA SEBAGIAN KECIL DARI APA YANG AKAN KAMU KUASAI
           </motion.p>
+          <motion.div variants={fadeUp}>
+            <Link href="/kurikulum">
+              <span
+                className="inline-flex items-center gap-2 font-mono text-xs tracking-widest cursor-pointer transition-all duration-200 hover:text-white"
+                style={{
+                  color: "#A855F7",
+                  border: "1px solid rgba(124,58,237,0.3)",
+                  borderRadius: "999px",
+                  padding: "10px 20px",
+                }}
+              >
+                Lihat Kurikulum Lengkap <IconArrow />
+              </span>
+            </Link>
+          </motion.div>
         </Reveal>
+
       </div>
     </section>
+  );
+}
+
+// ─── StatBlock helper ─────────────────────────────────────────────────────────
+
+function StatBlock({
+  stat,
+  inView,
+  prefersReduced,
+}: {
+  stat: { display?: string; value?: number; suffix?: string; label: string; isText: boolean };
+  inView: boolean;
+  prefersReduced: boolean;
+}) {
+  const count = useCountUp(stat.value ?? 0, 800, inView && !stat.isText);
+  return (
+    <div
+      className="flex flex-col items-center justify-center text-center py-8 px-4"
+      style={{ background: "rgba(10,10,15,0.8)" }}
+    >
+      <p
+        className="font-mono font-bold mb-2"
+        style={{ fontSize: "clamp(1rem, 2.5vw, 1.5rem)", color: "#A855F7", lineHeight: 1.2 }}
+      >
+        {stat.isText ? stat.display : `${count}${stat.suffix}`}
+      </p>
+      <p className="font-mono text-xs leading-snug" style={{ color: "#52525B", letterSpacing: "0.05em" }}>
+        {stat.label}
+      </p>
+    </div>
   );
 }
 

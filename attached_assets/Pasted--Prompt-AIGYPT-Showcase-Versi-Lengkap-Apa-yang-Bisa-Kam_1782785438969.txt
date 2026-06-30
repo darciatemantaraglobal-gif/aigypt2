@@ -1,0 +1,292 @@
+# Prompt — AIGYPT Showcase: Versi Lengkap "Apa yang Bisa Kamu Hasilkan dengan AI"
+
+Copy-paste prompt ini ke Replit Agent. Ini mengganti/memperkaya section showcase di landing page dengan contoh konkret yang jauh lebih lengkap, jelas, dan menarik — berbasis use case AI nyata yang relevan untuk masisir.
+
+PENTING: Ini memperluas section showcase yang sudah ada (jika sudah dibuat sebelumnya, ganti dengan versi ini). Pertahankan design system dark luxury dan section lain yang sudah ada.
+
+---
+
+## PROMPT
+
+Bangun (atau perbarui) section showcase "Apa yang Bisa Kamu Hasilkan dengan AI" di landing page AIGYPT menjadi versi yang lebih lengkap dan persuasif. Tujuannya: menunjukkan bukti konkret dan spesifik bahwa AI bisa menyelesaikan masalah nyata masisir, dengan contoh yang detail dan angka penghematan waktu yang membuat orang terdorong untuk ikut.
+
+Tempatkan setelah section Spektrum Pembelajaran.
+
+---
+
+## STRUKTUR SECTION
+
+```
+Label (mono, tracking lebar): BUKAN SEKADAR TEORI
+
+Headline (Space Grotesk, besar):
+Lihat Apa yang Bisa Kamu Hasilkan
+
+Sub (Inter, weight ringan, sekunder):
+Ini bukan janji kosong. Ini hal-hal nyata yang bisa kamu kerjakan
+sendiri setelah memahami cara memanfaatkan AI dengan tepat —
+hal yang dulu memakan waktu berjam-jam, kini selesai dalam hitungan menit.
+```
+
+---
+
+## BAGIAN 1 — TAB INTERAKTIF (5 PERSONA, KAYA DETAIL)
+
+Tab selector horizontal untuk 5 kategori. Klik tab → konten berganti dengan animasi fade halus. Setiap tab menampilkan: judul kategori, lalu 3-4 "kartu hasil" yang masing-masing punya format Sebelum vs Dengan AI + badge waktu.
+
+### TAB 1 — AKADEMISI
+
+Intro tab (1 kalimat): "Tugas akademik Al-Azhar yang menumpuk, kini punya asisten cerdas."
+
+Kartu hasil:
+
+**Kartu 1**
+```
+Sebelum: Menatap layar kosong dua jam, baru dapat satu paragraf pendahuluan makalah.
+Dengan AI: Outline lengkap 5 bab, draft pendahuluan, dan struktur argumen yang rapi.
+Badge: ~10 MENIT
+```
+
+**Kartu 2**
+```
+Sebelum: Terjemah satu halaman kitab klasik, bolak-balik buka kamus, masih bingung maknanya.
+Dengan AI: Terjemahan kata per kata, makna kontekstual, plus penjelasan istilah sulit.
+Badge: ~3 MENIT
+```
+
+**Kartu 3**
+```
+Sebelum: Membaca 20 jurnal untuk mencari referensi skripsi, berhari-hari.
+Dengan AI: Ringkasan poin utama tiap sumber, plus celah penelitian yang belum dibahas.
+Badge: ~15 MENIT
+```
+
+**Kartu 4**
+```
+Sebelum: Bingung apakah argumen makalah sudah cukup kuat sebelum diserahkan ke dosen.
+Dengan AI: Umpan balik soal struktur, kelemahan logika, dan saran penguatan argumen.
+Badge: ~5 MENIT
+```
+
+### TAB 2 — ORGANISATOR
+
+Intro: "Amanah organisasi terasa ringan saat AI mengurus pekerjaan administratifnya."
+
+**Kartu 1**
+```
+Sebelum: Rapat dua jam, notulensi ditulis manual sambil mendengarkan, banyak yang terlewat.
+Dengan AI: Rekaman rapat jadi notulensi rapi, lengkap dengan daftar tugas per orang.
+Badge: ~5 MENIT
+```
+
+**Kartu 2**
+```
+Sebelum: Menyusun proposal kegiatan dari nol, makan waktu dua sampai tiga hari.
+Dengan AI: Draft proposal lengkap — latar belakang, tujuan, rundown, anggaran.
+Badge: ~20 MENIT
+```
+
+**Kartu 3**
+```
+Sebelum: Bingung membuat caption publikasi acara untuk Instagram, TikTok, dan WhatsApp.
+Dengan AI: Satu paket konten publikasi untuk semua platform sekaligus.
+Badge: ~10 MENIT
+```
+
+**Kartu 4**
+```
+Sebelum: Menyusun laporan pertanggungjawaban setelah acara, tiga sampai empat jam.
+Dengan AI: Draft LPJ terstruktur dari data mentah kegiatan.
+Badge: ~30 MENIT
+```
+
+### TAB 3 — PEBISNIS
+
+Intro: "Bangun usaha di perantauan dengan kecerdasan, bukan sekadar kerja keras."
+
+**Kartu 1**
+```
+Sebelum: Caption jualan itu-itu saja, kurang menarik, sepi pembeli.
+Dengan AI: 5 variasi caption dengan pendekatan berbeda — emosional, urgensi, cerita.
+Badge: ~30 DETIK
+```
+
+**Kartu 2**
+```
+Sebelum: Bingung produk apa yang laku dijual ke Indonesia, menebak-nebak.
+Dengan AI: Analisis peluang produk, target pasar, dan estimasi marginnya.
+Badge: ~10 MENIT
+```
+
+**Kartu 3**
+```
+Sebelum: Membalas chat calon pembeli satu per satu, menyita waktu seharian.
+Dengan AI: Template balasan untuk berbagai situasi, tetap terasa personal.
+Badge: ~5 MENIT
+```
+
+**Kartu 4**
+```
+Sebelum: Mau mulai usaha tapi tidak tahu cara menyusun rencana bisnisnya.
+Dengan AI: Rencana bisnis ringkas — modal, target, strategi, dan langkah pertama.
+Badge: ~15 MENIT
+```
+
+### TAB 4 — KREATOR
+
+Intro: "Konten yang konsisten dan berkualitas, tanpa kehabisan ide."
+
+**Kartu 1**
+```
+Sebelum: Kehabisan ide konten, sudah seminggu tidak posting.
+Dengan AI: 30 ide konten terkategorisasi, lengkap hook dan poin utama.
+Badge: ~1 MENIT
+```
+
+**Kartu 2**
+```
+Sebelum: Punya ide tapi bingung menyusun naskah video yang menarik.
+Dengan AI: Naskah reels 60 detik — hook pembuka, isi, hingga ajakan di akhir.
+Badge: ~2 MENIT
+```
+
+**Kartu 3**
+```
+Sebelum: Bingung merencanakan konten sebulan ke depan, posting asal-asalan.
+Dengan AI: Kalender konten satu bulan penuh dengan tema yang tertata.
+Badge: ~10 MENIT
+```
+
+**Kartu 4**
+```
+Sebelum: Satu konten hanya dipakai sekali, lalu bingung bikin lagi dari nol.
+Dengan AI: Satu konten diubah jadi lima format untuk lima platform berbeda.
+Badge: ~5 MENIT
+```
+
+### TAB 5 — VIBE CODING (PALING DRAMATIS)
+
+Intro: "Inilah puncaknya — kamu tidak hanya memakai AI, kamu membangun dengan AI."
+
+**Kartu 1**
+```
+Sebelum: Butuh aplikasi pencatat keuangan organisasi, tapi tidak mengerti coding sama sekali.
+Dengan AI: Aplikasi web fungsional, cukup dengan mendeskripsikan yang kamu mau.
+Badge: ~15 MENIT · TANPA SATU BARIS KODE
+```
+
+**Kartu 2**
+```
+Sebelum: Tugas berulang yang sama setiap minggu, dikerjakan manual terus-menerus.
+Dengan AI: Skrip otomatis yang mengerjakannya untukmu, sekali buat dipakai selamanya.
+Badge: ~20 MENIT
+```
+
+**Kartu 3**
+```
+Sebelum: Ide aplikasi keren cuma jadi angan-angan karena merasa "bukan anak IT".
+Dengan AI: Prototipe nyata yang bisa kamu tunjukkan, bahkan kamu jual.
+Badge: ~30 MENIT
+```
+
+**Kartu 4**
+```
+Sebelum: Pekerjaan manual menghubungkan beberapa aplikasi, melelahkan dan rawan lupa.
+Dengan AI: Alur kerja otomatis yang berjalan sendiri tanpa kamu sentuh lagi.
+Badge: ~25 MENIT
+```
+
+### Styling Kartu Hasil
+- Dua kolom: "Sebelum" (kiri, teks redup/muted, ikon jam pasir atau awan kelabu) vs "Dengan AI" (kanan, teks terang, border/glow ungu halus, ikon percikan/bintang)
+- Badge waktu: pill mono kecil dengan background ungu gelap, muncul dengan animasi scale-in seperti stempel
+- Untuk Tab 5 Vibe Coding, beri penekanan visual sedikit lebih (glow lebih terlihat) karena ini puncak value
+
+---
+
+## BAGIAN 2 — STRIP ANGKA DAMPAK (Impact Stats)
+
+Setelah tab, tampilkan strip horizontal berisi angka-angka dampak yang membuat nilai terasa konkret. Gunakan count-up animation saat masuk viewport.
+
+```
+Label kecil (mono): DAMPAK NYATA
+
+4 angka dalam baris (stat besar + label kecil):
+
+6-10 JAM
+Waktu yang bisa kamu hemat setiap minggu
+
+Berjam-jam → MENIT
+Tugas yang dulu lama, kini singkat
+
+5 PERSONA
+Setiap sisi hidupmu, terbantu
+
+1 KARYA
+Aplikasi nyata buatanmu sendiri
+```
+
+Catatan: angka "6-10 jam per minggu" didukung data umum tentang penghematan waktu dari penggunaan AI yang efektif — gunakan sebagai estimasi yang jujur, bukan jaminan mutlak. Beri framing "bisa" bukan "pasti".
+
+---
+
+## BAGIAN 3 — GRID RINGKAS (semua kategori sekilas)
+
+Di bawah strip angka, tampilkan grid ringkas 5 kategori (card mini dengan ikon + judul kategori + satu kalimat hasil paling kuat dari kategori itu). Untuk yang tidak mau klik-klik tab, mereka tetap lihat keseluruhan.
+
+```
+Akademisi → "Makalah, terjemah kitab, riset — semua lebih cepat."
+Organisator → "Proposal hingga LPJ, beres dalam hitungan menit."
+Pebisnis → "Caption yang menjual, riset pasar, layanan pelanggan otomatis."
+Kreator → "Ide tak pernah habis, konten selalu mengalir."
+Vibe Coding → "Bangun aplikasimu sendiri, tanpa jadi programmer."
+```
+
+---
+
+## BAGIAN 4 — PENUTUP SECTION
+
+```
+Pernyataan (mono, tracking lebar, centered):
+DAN INI HANYA SEBAGIAN KECIL DARI APA YANG AKAN KAMU KUASAI
+
+Tombol kecil di bawahnya (ghost/outline): Lihat Kurikulum Lengkap →
+```
+
+---
+
+## DETAIL ANIMASI
+
+1. Tab switching: konten berganti dengan fade + slight slide (Framer Motion AnimatePresence), durasi sekitar 250ms
+2. Kartu hasil: kolom "Dengan AI" punya glow pulse halus di border untuk menarik perhatian
+3. Badge waktu: scale-in seperti stempel, delay sekitar 150ms setelah kartu muncul
+4. Strip angka: count-up animation dari 0 ke angka final saat masuk viewport (untuk angka yang berupa angka), durasi sekitar 800ms
+5. Grid ringkas: stagger reveal saat scroll
+6. Hormati prefers-reduced-motion
+
+---
+
+## RESPONSIVE
+
+- Desktop: tab horizontal, kartu hasil 2 kolom (sebelum/sesudah bersisian)
+- Mobile: tab menjadi swipeable atau dropdown; kartu hasil tetap 2 kolom kecil atau bertumpuk (sebelum di atas, sesudah di bawah) dengan panah pemisah
+- Strip angka: 4 kolom desktop, 2 kolom mobile
+- Grid ringkas: 1 kolom mobile
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia, panggilan "kamu"
+2. Konsisten dark luxury AIGYPT yang sudah ada
+3. Vite + React, animasi Framer Motion
+4. Tidak ada gambar eksternal — ikon Lucide, CSS, gradient
+5. Data kartu showcase disimpan di file terpisah `lib/showcaseExamples.ts` agar mudah diedit/ditambah nanti
+6. Tidak ada localStorage/sessionStorage
+7. Fully responsive
+8. `npm run build` sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Section showcase yang kaya dan persuasif: 5 tab persona masing-masing dengan 4 kartu hasil before/after yang konkret dan badge waktu dramatis, strip angka dampak dengan count-up, grid ringkas, dan penutup yang mengarah ke kurikulum. Setiap contoh spesifik dan relatable untuk masisir, membuat pengunjung merasa "aku butuh ini". Tetap elegan dark luxury, fully responsive, siap deploy ke Vercel.
