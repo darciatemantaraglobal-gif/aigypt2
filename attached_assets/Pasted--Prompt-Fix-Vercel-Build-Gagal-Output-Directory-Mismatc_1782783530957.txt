@@ -1,0 +1,89 @@
+# Prompt Fix — Vercel Build Gagal: Output Directory Mismatch
+
+Copy-paste prompt ini ke Replit Agent untuk memperbaiki error deploy Vercel: "No Output Directory named 'public' found after the Build completed."
+
+---
+
+## PROMPT
+
+Build Vercel gagal dengan error:
+```
+Error: No Output Directory named "public" found after the Build completed.
+Configure the Output Directory in your Project Settings.
+Alternatively, configure vercel.json#outputDirectory.
+```
+
+Penyebabnya: Vite secara default menghasilkan output build ke folder `dist`, tetapi konfigurasi Vercel mencari folder `public`. Perbaiki ketidaksesuaian ini langsung di kode agar konsisten dan tidak bergantung pada konfigurasi manual di dashboard Vercel.
+
+### Langkah Perbaikan
+
+**1. Cek `vite.config.ts`**
+
+Pastikan tidak ada konfigurasi `build.outDir` yang diarahkan ke `public`. Defaultnya harus `dist`:
+
+```typescript
+export default defineConfig({
+  // ...config lain yang sudah ada
+  build: {
+    outDir: 'dist'
+  }
+})
+```
+
+Jika ada baris yang mengatur `outDir: 'public'`, ubah menjadi `'dist'`.
+
+**2. Cek atau buat `vercel.json` di root project**
+
+Pastikan ada field `outputDirectory` yang eksplisit mengarah ke `dist`, dan rewrites untuk SPA routing tetap ada:
+
+```json
+{
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ]
+}
+```
+
+Jika file `vercel.json` sudah ada dari konfigurasi sebelumnya, tambahkan/perbaiki hanya field `outputDirectory` tanpa menghapus konfigurasi `rewrites` yang sudah ada.
+
+**3. Cek folder `public/` di root project**
+
+Jika ada folder bernama `public` di root project yang berisi static assets (favicon, dll), itu NORMAL untuk Vite — folder `public/` adalah folder source untuk static assets, bukan folder output build. Jangan dihapus. Yang dimaksud error ini adalah folder OUTPUT setelah build (`dist`), bukan folder source `public`.
+
+**4. Verifikasi dengan build lokal**
+
+Jalankan build dan konfirmasi folder yang terbentuk:
+```bash
+npm run build
+ls -la
+```
+Pastikan setelah build, muncul folder `dist` (bukan `public`) yang berisi `index.html` dan asset hasil build.
+
+**5. Cek `package.json`**
+
+Pastikan script build benar:
+```json
+{
+  "scripts": {
+    "build": "vite build"
+  }
+}
+```
+
+---
+
+## CATATAN PENTING
+
+- Jangan ubah folder output menjadi `public` untuk "menyesuaikan" error — itu salah arah. Yang benar adalah memastikan Vercel mencari `dist`, bukan memaksa Vite menghasilkan `public`.
+- Setelah perbaikan ini di kode, TIDAK PERLU lagi mengatur Output Directory secara manual di Vercel Dashboard — biarkan `vercel.json` menjadi satu-satunya sumber konfigurasi agar konsisten setiap kali deploy ulang.
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+1. `vite.config.ts` menghasilkan output ke folder `dist`
+2. `vercel.json` memiliki `outputDirectory: "dist"` yang eksplisit
+3. `npm run build` berhasil dan menghasilkan folder `dist` berisi build yang valid
+4. Setelah push ke GitHub, Vercel berhasil redeploy tanpa error output directory
