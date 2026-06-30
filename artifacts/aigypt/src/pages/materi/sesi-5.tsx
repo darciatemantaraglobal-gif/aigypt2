@@ -14,9 +14,9 @@ export default function Sesi5() {
         </ul>
       </HighlightBox>
 
-      <SectionHeading>Bagian 1 — Apa Itu Vibe Coding?</SectionHeading>
+      <SectionHeading>Bagian 1: Apa Itu Vibe Coding?</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        Istilah "vibe coding" dipopulerkan oleh Andrej Karpathy (mantan Head of AI di Tesla, pendiri OpenAI). Konsepnya sederhana: <strong className="text-white">lo tidak perlu bisa coding untuk membuat software — lo hanya perlu bisa mendeskripsikan apa yang lo mau.</strong>
+        Istilah "vibe coding" dipopulerkan oleh Andrej Karpathy (mantan Head of AI di Tesla, pendiri OpenAI). Konsepnya sederhana: <strong className="text-white">lo tidak perlu bisa coding untuk membuat software. Lo hanya perlu bisa mendeskripsikan apa yang lo mau.</strong>
       </p>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
         Analogi: dulu untuk punya rumah, lo harus bisa tukang batu sendiri. Sekarang lo bisa jadi arsitek yang mendeskripsikan bangunan ke tim kontraktor. Vibe coding = lo jadi arsitek, AI jadi kontraktornya.
@@ -24,7 +24,7 @@ export default function Sesi5() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
-          <p className="text-xs text-red-400 font-mono mb-2">DULU — Cara Lama</p>
+          <p className="text-xs text-red-400 font-mono mb-2">DULU: Cara Lama</p>
           <ul className="space-y-1 text-xs text-[#94A3B8]">
             <li>→ Belajar coding 6-12 bulan dulu</li>
             <li>→ Bayar developer jutaan untuk app sederhana</li>
@@ -33,7 +33,7 @@ export default function Sesi5() {
           </ul>
         </div>
         <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-4">
-          <p className="text-xs text-green-400 font-mono mb-2">SEKARANG — Dengan Vibe Coding</p>
+          <p className="text-xs text-green-400 font-mono mb-2">SEKARANG: Dengan Vibe Coding</p>
           <ul className="space-y-1 text-xs text-[#94A3B8]">
             <li>→ Describe → generate → iterate</li>
             <li>→ Web app sederhana dalam hitungan jam</li>
@@ -43,7 +43,7 @@ export default function Sesi5() {
         </div>
       </div>
 
-      <SectionHeading>Bagian 2 — Tools Vibe Coding: Pilih yang Mana?</SectionHeading>
+      <SectionHeading>Bagian 2: Tools Vibe Coding, Pilih yang Mana?</SectionHeading>
 
       <Table
         headers={["Tools", "Kekuatan", "Terbaik untuk", "Harga"]}
@@ -56,7 +56,7 @@ export default function Sesi5() {
         ]}
       />
 
-      <SectionHeading>Bagian 3 — Demo: Buat Web App dengan Lovable</SectionHeading>
+      <SectionHeading>Bagian 3: Demo, Buat Web App dengan Lovable</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
         Skenario: masisir yang jualan gamis import mau punya website katalog produk sederhana tanpa bayar developer. Berikut prompt yang digunakan di lovable.dev:
       </p>
@@ -72,7 +72,7 @@ Spesifikasi:
 - Halaman "Tentang Kami" dengan cerita singkat toko
 - Desain: warna dusty rose dan cream, feminine tapi elegan
 - Mobile-friendly (penting, mayoritas pelanggan dari HP)
-- Tidak perlu login atau checkout — cukup redirect ke WA
+- Tidak perlu login atau checkout, cukup redirect ke WA
 
 Tone: hangat, premium, terpercaya.`}</PromptBlock>
 
@@ -84,7 +84,7 @@ Tone: hangat, premium, terpercaya.`}</PromptBlock>
 Tambahkan section "Testimoni Pelanggan" dengan 3 testimoni.
 Ganti font heading menjadi serif yang lebih elegan.`}</PromptBlock>
 
-      <SectionHeading>Bagian 4 — Generate Script dengan Claude + Replit</SectionHeading>
+      <SectionHeading>Bagian 4: Generate Script dengan Claude + Replit</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
         Untuk tugas yang berulang, lo bisa minta Claude generate script Python, lalu jalankan di Replit tanpa install apapun.
       </p>
@@ -111,9 +111,9 @@ untuk orang yang belum pernah coding.`}</PromptBlock>
 6. Klik tombol "Run" (segitiga hijau)
 7. Download output file dari panel kiri Replit`}</PromptBlock>
 
-      <SectionHeading>Bagian 5 — Automation dengan n8n</SectionHeading>
+      <SectionHeading>Bagian 5: Automation dengan n8n</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        n8n memungkinkan lo menghubungkan berbagai aplikasi tanpa kode — bayangkan seperti IFTTT tapi jauh lebih powerful.
+        n8n memungkinkan lo menghubungkan berbagai aplikasi tanpa kode, bayangkan seperti IFTTT tapi jauh lebih powerful.
       </p>
 
       <div className="space-y-3 mb-4">
@@ -145,9 +145,9 @@ atau Make (Integromat) untuk menyelesaikan masalah ini:
 Berikan langkah implementasi yang detail dan bisa diikuti 
 orang non-teknis.`}</PromptBlock>
 
-      <SectionHeading>Bagian 6 — Tentukan Proyek Demo Day Lo</SectionHeading>
+      <SectionHeading>Bagian 6: Tentukan Proyek Demo Day Lo</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Di Sesi 6, lo akan mempresentasikan solusi nyata yang dibuat dengan AI. Ini bukan harus sempurna — yang penting nyata dan menyelesaikan masalah lo sendiri.
+        Di Sesi 6, lo akan mempresentasikan solusi nyata yang dibuat dengan AI. Ini bukan harus sempurna. Yang penting nyata dan menyelesaikan masalah lo sendiri.
       </p>
 
       <Table
@@ -173,9 +173,9 @@ Hasil yang bisa dilihat saat Demo Day: [...]`}</PromptBlock>
       <TakeHomeBox>
         <p className="font-semibold text-white mb-3">Sebelum Sesi 6 (Demo Day):</p>
         <ol className="space-y-2 text-sm list-decimal pl-4">
-          <li>Selesaikan proyek lo — tidak harus sempurna, tapi harus bisa di-demo</li>
+          <li>Selesaikan proyek lo, tidak harus sempurna, tapi harus bisa di-demo</li>
           <li>Siapkan presentasi 5-7 menit: Masalah → Proses AI → Demo Hasil</li>
-          <li>Screenshot atau rekam layar proses pembuatannya — ini bagian dari ceritanya</li>
+          <li>Screenshot atau rekam layar proses pembuatannya, ini bagian dari ceritanya</li>
           <li>Pikirkan: bagaimana lo bisa kembangkan solusi ini lebih jauh setelah Demo Day?</li>
         </ol>
       </TakeHomeBox>

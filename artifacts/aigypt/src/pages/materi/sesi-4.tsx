@@ -14,7 +14,7 @@ export default function Sesi4() {
         </ul>
       </HighlightBox>
 
-      <SectionHeading>Bagian 1 — Riset Produk & Kompetitor</SectionHeading>
+      <SectionHeading>Bagian 1: Riset Produk & Kompetitor</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
         Sebelum jual apapun, lo perlu tau pasar. AI bisa membantu lo riset 10x lebih cepat.
       </p>
@@ -48,9 +48,9 @@ Tolong bantu saya membuat framework analisis kompetitor:
 Bonus: berikan template tabel perbandingan kompetitor yang bisa 
 saya isi sendiri.`}</PromptBlock>
 
-      <SectionHeading>Bagian 2 — Copywriting yang Convert</SectionHeading>
+      <SectionHeading>Bagian 2: Copywriting yang Convert</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Formula copywriting bukan soal kreativitas — ini soal psikologi. Ada 4 framework utama:
+        Formula copywriting bukan soal kreativitas, ini soal psikologi. Ada 4 framework utama:
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -96,7 +96,7 @@ Target pain point: [MASALAH UTAMA TARGET PELANGGAN]
 Solusi yang ditawarkan: [MANFAAT UTAMA PRODUK]
 CTA: [TINDAKAN YANG DIINGINKAN]`}</PromptBlock>
 
-      <SectionHeading>Bagian 3 — Content Calendar dengan AI</SectionHeading>
+      <SectionHeading>Bagian 3: Content Calendar dengan AI</SectionHeading>
 
       <PromptBlock label="Prompt: Content Calendar 1 Bulan">{`[Role] Kamu adalah social media strategist yang spesialis 
 di konten untuk bisnis online Indonesia.
@@ -134,7 +134,7 @@ Tujuan: [KESADARAN BRAND/JUALAN/EDUKASI]
 Tambahkan catatan sutradara: kapan harus cut, B-roll apa yang 
 dibutuhkan, teks apa yang muncul di layar.`}</PromptBlock>
 
-      <SectionHeading>Bagian 4 — Repurpose Satu Konten ke Banyak Platform</SectionHeading>
+      <SectionHeading>Bagian 4: Repurpose Satu Konten ke Banyak Platform</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
         Prinsip: <strong className="text-white">buat sekali, distribusikan banyak.</strong> Satu video TikTok bisa jadi 5 format berbeda.
       </p>
@@ -163,7 +163,7 @@ Tolong ubah konten ini menjadi:
 Pertahankan pesan utama yang sama, tapi sesuaikan tone dan format 
 untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`}</PromptBlock>
 
-      <SectionHeading>Bagian 5 — Tools AI untuk Kreasi Visual</SectionHeading>
+      <SectionHeading>Bagian 5: Tools AI untuk Kreasi Visual</SectionHeading>
 
       <Table
         headers={["Tools", "Fungsi", "Rekomendasi Untuk"]}
@@ -180,15 +180,15 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`}</PromptB
         <p className="text-sm mb-3">Pilih satu dari latihan berikut:</p>
         <div className="space-y-3">
           <div>
-            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI A — Bisnisman</p>
+            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI A: Bisnisman</p>
             <p className="text-sm text-[#94A3B8]">Ambil produk yang sedang atau akan lo jual. Buat 3 variasi caption menggunakan prompt AIDA di atas. Minta feedback dari Claude mana yang paling mungkin convert.</p>
           </div>
           <div>
-            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI B — Konten Kreator</p>
+            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI B: Konten Kreator</p>
             <p className="text-sm text-[#94A3B8]">Buat content calendar 2 minggu untuk niche lo menggunakan prompt di atas. Lanjutkan dengan membuat script untuk 1 konten dari calendar tersebut.</p>
           </div>
           <div>
-            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI C — Repurpose Challenge</p>
+            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI C: Repurpose Challenge</p>
             <p className="text-sm text-[#94A3B8]">Ambil satu konten yang sudah pernah lo buat (caption, artikel, tweet, dll). Repurpose ke 3 format berbeda menggunakan prompt repurpose master.</p>
           </div>
         </div>

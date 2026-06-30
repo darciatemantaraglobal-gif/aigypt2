@@ -210,7 +210,7 @@ const faqs = [
   },
   {
     q: "Apa itu format Hybrid?",
-    a: "Kamu mempelajari keseluruhan enam sesi materi secara mandiri di platform, kapan saja sesuai waktumu. Selain itu, ada empat pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026 — momen kita membahas lebih dalam, praktek bersama, dan tanya jawab langsung.",
+    a: "Kamu mempelajari keseluruhan enam sesi materi secara mandiri di platform, kapan saja sesuai waktumu. Selain itu, ada empat pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026. Di sana kita membahas lebih dalam, praktek bersama, dan tanya jawab langsung.",
   },
   {
     q: "Berapa peserta per batch?",
@@ -226,7 +226,7 @@ const faqs = [
   },
   {
     q: "Bagaimana jika saya merasa belum siap?",
-    a: "Justru itu alasan terbaik untuk mulai sekarang. AIGYPT dirancang dari nol — tidak ada prasyarat selain kemauan untuk belajar. Yang menunggu 'siap' biasanya menunggu selamanya.",
+    a: "Justru itu alasan terbaik untuk mulai sekarang. AIGYPT dirancang dari nol. Tidak ada prasyarat selain kemauan untuk belajar. Yang menunggu 'siap' biasanya menunggu selamanya.",
   },
 ];
 
@@ -422,7 +422,7 @@ function ShowcaseSection() {
             style={{ color: "#71717A", fontWeight: 300 }}
           >
             Ini bukan janji kosong. Ini hal-hal nyata yang bisa kamu kerjakan sendiri setelah memahami
-            cara memanfaatkan AI dengan tepat — hal yang dulu memakan waktu berjam-jam, kini selesai dalam hitungan menit.
+            cara memanfaatkan AI dengan tepat, sehingga hal yang dulu memakan waktu berjam-jam kini selesai dalam hitungan menit.
           </motion.p>
         </Reveal>
 
@@ -852,7 +852,7 @@ export default function Home() {
             className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-8"
             style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            AIGYPT adalah platform yang mengajarkan cara memanfaatkan AI secara mendalam —
+            AIGYPT adalah platform yang mengajarkan cara memanfaatkan AI secara mendalam,
             bukan sekadar menggunakannya, tapi menjadikannya alat untuk menciptakan karya dan solusi nyata.
           </motion.p>
 
@@ -938,7 +938,7 @@ export default function Home() {
             Ada jarak antara memakai AI dan menguasainya. Yang pertama mengikuti apa yang disuguhkan.
             Yang kedua menentukan apa yang ingin diciptakan.
             <br /><br />
-            AIGYPT hadir untuk menutup jarak itu — dengan kurikulum yang dirancang dari kebutuhan nyata,
+            AIGYPT hadir untuk menutup jarak itu, dengan kurikulum yang dirancang dari kebutuhan nyata,
             bukan teori generik. Tempat belajar yang membuatmu tidak hanya paham AI, tapi mampu membangun
             sesuatu dengan tanganmu sendiri.
           </motion.p>
@@ -972,7 +972,7 @@ export default function Home() {
               {
                 icon: <IconBrain />,
                 title: "Fondasi & Mindset AI",
-                desc: "Memahami cara kerja AI dengan jernih — tanpa jargon, tanpa mitos. Fondasi yang mengubah cara kamu memandangnya.",
+                desc: "Memahami cara kerja AI dengan jernih, tanpa jargon, tanpa mitos. Fondasi yang mengubah cara kamu memandangnya.",
               },
               {
                 icon: <IconMessage />,
@@ -987,17 +987,17 @@ export default function Home() {
               {
                 icon: <IconUsers />,
                 title: "AI untuk Organisasi & Manajemen",
-                desc: "Dari perencanaan acara, dokumentasi, hingga komunikasi — semua lebih terstruktur dan efisien.",
+                desc: "Dari perencanaan acara, dokumentasi, hingga komunikasi, semua lebih terstruktur dan efisien.",
               },
               {
                 icon: <IconTrending />,
                 title: "AI untuk Bisnis & Konten",
-                desc: "Riset, copywriting, produksi konten, dan strategi — dengan kecepatan dan kualitas yang berbeda.",
+                desc: "Riset, copywriting, produksi konten, dan strategi, dengan kecepatan dan kualitas yang berbeda.",
               },
               {
                 icon: <IconCode />,
                 title: "Vibe Coding",
-                desc: "Membangun aplikasi dan solusi nyata dari masalahmu — tanpa perlu menjadi programmer.",
+                desc: "Membangun aplikasi dan solusi nyata dari masalahmu, tanpa perlu menjadi programmer.",
               },
             ].map((item, i) => (
               <motion.div
@@ -1069,7 +1069,7 @@ export default function Home() {
               {
                 num: "02",
                 title: "Sang Organisator",
-                desc: "Mengelola kepanitiaan, acara, dan publikasi. Dari proposal hingga laporan — semua menjadi lebih ringan dan rapi.",
+                desc: "Mengelola kepanitiaan, acara, dan publikasi. Dari proposal hingga laporan, semua menjadi lebih ringan dan rapi.",
               },
               {
                 num: "03",
@@ -1178,7 +1178,7 @@ export default function Home() {
                 </div>
 
                 <div className="mb-6 flex flex-wrap gap-3">
-                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 1 — PENDAFTARAN DIBUKA</span>
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 1: PENDAFTARAN DIBUKA</span>
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Pertemuan pertama: 6 Juli 2026</span>
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Kuota terbatas per batch</span>
                 </div>
@@ -1310,7 +1310,7 @@ export default function Home() {
               style={{ color: "#71717A", fontWeight: 300 }}
             >
               Saat kamu bergabung, kamu tidak hanya mendapat satu kelas. Kamu mendapat akses ke perpustakaan
-              solusi yang terus berkembang — setiap masalah masisir, setiap jawabannya.
+              solusi yang terus berkembang: setiap masalah masisir, setiap jawabannya.
             </motion.p>
             <motion.p variants={fadeUp} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
               KUOTA TERBATAS · PENDAFTARAN DITUTUP SAAT PENUH
@@ -1347,7 +1347,7 @@ export default function Home() {
               className="text-sm leading-[1.9] max-w-2xl mx-auto text-center"
               style={{ color: "#71717A", fontWeight: 300 }}
             >
-              Setiap prompt sudah diuji untuk konteks nyata — bahasa Arab akademik, organisasi mahasiswa, bisnis dengan modal terbatas, hingga konten yang benar-benar dilihat orang. Kamu tidak mulai dari nol. Kamu mulai dari apa yang sudah terbukti bekerja.
+              Setiap prompt sudah diuji untuk konteks nyata: bahasa Arab akademik, organisasi mahasiswa, bisnis dengan modal terbatas, hingga konten yang benar-benar dilihat orang. Kamu tidak mulai dari nol. Kamu mulai dari apa yang sudah terbukti bekerja.
             </motion.p>
           </Reveal>
 

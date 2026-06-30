@@ -55,7 +55,7 @@ export const tools: Tool[] = [
     url: "https://emergent.sh",
     category: "app-builder",
     description:
-      "Bangun app full-stack lengkap dari natural language — AI bernalar tentang keseluruhan produk lintas fitur.",
+      "Bangun app full-stack lengkap dari natural language. AI bernalar tentang keseluruhan produk lintas fitur.",
     pricing: "Freemium",
   },
   {
@@ -89,7 +89,7 @@ export const tools: Tool[] = [
     url: "https://cursor.com",
     category: "ai-assistant",
     description:
-      "Fork VS Code dengan AI mendalam yang paham seluruh codebase. Pilihan utama developer profesional — $2B ARR pada 2026.",
+      "Fork VS Code dengan AI mendalam yang paham seluruh codebase. Pilihan utama developer profesional, dengan $2B ARR pada 2026.",
     pricing: "Freemium",
   },
   {
@@ -171,7 +171,7 @@ export const tools: Tool[] = [
     url: "https://fonts.google.com/icons",
     category: "icon",
     description:
-      "Variable font icon dari Google — sangat fleksibel dalam weight, size, dan style dari satu file font.",
+      "Variable font icon dari Google, sangat fleksibel dalam weight, size, dan style dari satu file font.",
     pricing: "Gratis",
   },
   {
@@ -187,7 +187,7 @@ export const tools: Tool[] = [
     url: "https://fontawesome.com",
     category: "icon",
     description:
-      "Library ikon klasik sejak 2012 — ribuan ikon dalam 3 style. Dikenal luas dan didokumentasikan dengan baik.",
+      "Library ikon klasik sejak 2012, dengan ribuan ikon dalam 3 style. Dikenal luas dan didokumentasikan dengan baik.",
     pricing: "Freemium",
   },
 
@@ -221,7 +221,7 @@ export const tools: Tool[] = [
     url: "https://lottiefiles.com",
     category: "illustration",
     description:
-      "Animasi Lottie gratis untuk web dan app — ringan, scalable, dan jauh lebih hidup dari GIF biasa.",
+      "Animasi Lottie gratis untuk web dan app, ringan, scalable, dan jauh lebih hidup dari GIF biasa.",
     pricing: "Freemium",
   },
   {
@@ -239,7 +239,7 @@ export const tools: Tool[] = [
     url: "https://magicpattern.design",
     category: "background",
     description:
-      "Mesh gradient generator yang kuat — export SVG/PNG/JPG tanpa signup. Hasil premium, penggunaan instan.",
+      "Mesh gradient generator yang kuat, bisa export SVG/PNG/JPG tanpa signup. Hasil premium, penggunaan instan.",
     pricing: "Gratis",
   },
   {
@@ -255,7 +255,7 @@ export const tools: Tool[] = [
     url: "https://pixelcut.ai",
     category: "background",
     description:
-      "AI gradient generator dari text prompt — watermark-free dan high-res. Describe vibe, langsung jadi.",
+      "AI gradient generator dari text prompt, watermark-free dan high-res. Describe vibe, langsung jadi.",
     pricing: "Freemium",
   },
   {
@@ -279,7 +279,7 @@ export const tools: Tool[] = [
     url: "https://mockey.ai",
     category: "background",
     description:
-      "27.000+ template mockup, 60+ kategori — download tanpa watermark. Cepat untuk presentasi produk.",
+      "27.000+ template mockup, 60+ kategori, download tanpa watermark. Cepat untuk presentasi produk.",
     pricing: "Freemium",
   },
 
@@ -297,7 +297,7 @@ export const tools: Tool[] = [
     url: "https://ui.aceternity.com",
     category: "ui-components",
     description:
-      "200+ komponen dengan efek visual menakjubkan untuk landing page — 3D card, glowing beam, spotlight effect.",
+      "200+ komponen dengan efek visual menakjubkan untuk landing page: 3D card, glowing beam, spotlight effect.",
     pricing: "Freemium",
   },
   {
@@ -305,7 +305,7 @@ export const tools: Tool[] = [
     url: "https://magicui.design",
     category: "ui-components",
     description:
-      "Micro-interaction dan animasi marketing yang polished — animated beam, retro grid, blur fade. Gratis.",
+      "Micro-interaction dan animasi marketing yang polished: animated beam, retro grid, blur fade. Gratis.",
     pricing: "Gratis",
   },
   {
@@ -313,7 +313,7 @@ export const tools: Tool[] = [
     url: "https://reactbits.dev",
     category: "ui-components",
     description:
-      "Komponen animasi tanpa Framer Motion dependency. Text effects terbaik di kelasnya — ringan dan customizable.",
+      "Komponen animasi tanpa Framer Motion dependency. Text effects terbaik di kelasnya, ringan dan customizable.",
     pricing: "Gratis",
   },
   {
@@ -321,7 +321,7 @@ export const tools: Tool[] = [
     url: "https://21st.dev",
     category: "ui-components",
     description:
-      "Marketplace block dan komponen shadcn yang besar — dikurasi untuk AI-assisted development workflow.",
+      "Marketplace block dan komponen shadcn yang besar, dikurasi untuk AI-assisted development workflow.",
     pricing: "Freemium",
   },
 
@@ -363,7 +363,7 @@ export const tools: Tool[] = [
     url: "https://stitch.withgoogle.com",
     category: "design-system",
     description:
-      "Tool desain AI Google yang menggunakan DESIGN.md untuk konsistensi UI — diperkenalkan Maret 2026.",
+      "Tool desain AI Google yang menggunakan DESIGN.md untuk konsistensi UI, diperkenalkan Maret 2026.",
     pricing: "Gratis",
   },
 
@@ -391,7 +391,7 @@ export const tools: Tool[] = [
     url: "https://vercel.com",
     category: "deploy",
     description:
-      "Deploy Next.js paling mulus — gratis untuk personal project, CI/CD otomatis dari GitHub, domain custom gratis.",
+      "Deploy Next.js paling mulus, gratis untuk personal project, CI/CD otomatis dari GitHub, domain custom gratis.",
     pricing: "Freemium",
   },
   {
@@ -409,7 +409,7 @@ export const tools: Tool[] = [
     url: "https://figma.com",
     category: "planning",
     description:
-      "Desain UI dan wireframe standar industri — bisa import screenshot ke vibe coding tools untuk referensi layout.",
+      "Desain UI dan wireframe standar industri, bisa import screenshot ke vibe coding tools untuk referensi layout.",
     pricing: "Freemium",
   },
   {

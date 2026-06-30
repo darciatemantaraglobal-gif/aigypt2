@@ -15,22 +15,22 @@ const sessions = [
     essence: "Bukan sekadar kenalan dengan tools, ini titik di mana kamu berhenti takut dan mulai melihat AI sebagai sesuatu yang bisa kamu kendalikan.",
     mastery: [
       "Memahami cara kerja AI tanpa istilah teknis yang membingungkan, sehingga kamu tidak lagi merasa ini bukan duniaku",
-      "Mengenali ChatGPT, Claude, dan Gemini — dan kapan masing-masing benar-benar relevan untuk dunia akademik Al-Azhar",
+      "Mengenali ChatGPT, Claude, dan Gemini, dan kapan masing-masing benar-benar relevan untuk dunia akademik Al-Azhar",
       "Menyaksikan langsung satu masalah masisir, dijawab tiga AI berbeda, dan belajar membaca mana yang paling bisa dipercaya",
       "Menyadari bahwa cara kamu bertanya hari ini akan menentukan seberapa jauh kamu bisa melangkah di lima sesi berikutnya",
     ],
     tools: ["ChatGPT", "Claude", "Gemini"],
-    mission: "Ajukan satu masalah nyata yang kamu hadapi minggu ini — entah soal kuliah, organisasi, atau maisyah — pada dua AI berbeda. Amati mana yang benar-benar memahami konteksmu.",
+    mission: "Ajukan satu masalah nyata yang kamu hadapi minggu ini, entah soal kuliah, organisasi, atau maisyah, pada dua AI berbeda. Amati mana yang benar-benar memahami konteksmu.",
   },
   {
     num: "02",
     title: "Seni Berdialog dengan Kecerdasan",
     essence: "Ini bukan sekadar teknik. Ini keterampilan yang memisahkan masisir yang pernah coba AI dengan masisir yang benar-benar menguasainya.",
     mastery: [
-      "Formula menyusun perintah yang tajam, sehingga AI memahami konteksmu sebagai mahasiswa Al-Azhar — bukan jawaban generik untuk orang asing",
+      "Formula menyusun perintah yang tajam, sehingga AI memahami konteksmu sebagai mahasiswa Al-Azhar, bukan jawaban generik untuk orang asing",
       "Mengubah pertanyaan biasa menjadi instruksi presisi yang menghasilkan jawaban setara hasil diskusi dengan senior",
       "Teknik bertanya bertahap untuk menyelesaikan hal kompleks, seperti menyusun argumen makalah yang berlapis",
-      "Membangun koleksi prompt pribadimu sendiri — aset yang akan terus kamu pakai jauh setelah AIGYPT selesai",
+      "Membangun koleksi prompt pribadimu sendiri, aset yang akan terus kamu pakai jauh setelah AIGYPT selesai",
     ],
     tools: ["Claude", "ChatGPT"],
     mission: "Susun tiga perintah presisi untuk tiga kebutuhanmu yang paling mendesak sebagai masisir minggu ini.",
@@ -38,9 +38,9 @@ const sessions = [
   {
     num: "03",
     title: "Asisten untuk Ilmu dan Amanah",
-    essence: "Di sinilah AI berhenti jadi mainan dan mulai jadi rekan kerja — untuk ilmu yang kamu tuntut, dan amanah organisasi yang kamu emban.",
+    essence: "Di sinilah AI berhenti jadi mainan dan mulai jadi rekan kerja, untuk ilmu yang kamu tuntut, dan amanah organisasi yang kamu emban.",
     mastery: [
-      "Menulis dan menyempurnakan makalah berbahasa Arab fusha — bahasa yang jauh berbeda dari ammiyah yang kamu dengar tiap hari di Kairo",
+      "Menulis dan menyempurnakan makalah berbahasa Arab fusha, bahasa yang jauh berbeda dari ammiyah yang kamu dengar tiap hari di Kairo",
       "Menerjemah dan memahami kitab turats yang rumit, tanpa harus bolak-balik membuka kamus berjam-jam",
       "Merangkum jurnal panjang dan menemukan celah penelitian untuk skripsimu",
       "Menyusun proposal, notulensi, dan laporan organisasi yang biasanya menyita waktu kepanitiaanmu berhari-hari",
@@ -54,7 +54,7 @@ const sessions = [
     essence: "Maisyah di perantauan tidak harus selalu soal kerja keras tanpa henti. Di sini kamu belajar bekerja dengan kecerdasan.",
     mastery: [
       "Meriset produk dan peluang usaha yang realistis dijalankan masisir, dengan modal dan waktu yang terbatas",
-      "Menulis copywriting yang benar-benar menjual — bukan sekadar caption yang dilewatkan begitu saja",
+      "Menulis copywriting yang benar-benar menjual, bukan sekadar caption yang dilewatkan begitu saja",
       "Merancang kalender konten dan naskah dalam hitungan menit, untuk membangun nama di tengah kesibukan kuliah",
       "Mengubah satu konten menjadi banyak format, sehingga usahamu terlihat di mana-mana tanpa kerja berkali lipat",
     ],
@@ -64,28 +64,28 @@ const sessions = [
   {
     num: "05",
     title: "Tangan yang Mencipta",
-    essence: "Inilah puncaknya — momen kamu berhenti hanya memakai aplikasi buatan orang lain, dan mulai membangun aplikasimu sendiri.",
+    essence: "Inilah puncaknya. Momen kamu berhenti hanya memakai aplikasi buatan orang lain, dan mulai membangun aplikasimu sendiri.",
     mastery: [
-      "Memahami vibe coding — cara membangun perangkat lunak tanpa harus menjadi programmer",
+      "Memahami vibe coding, yaitu cara membangun perangkat lunak tanpa harus menjadi programmer",
       "Menciptakan aplikasi web nyata dari sekadar deskripsi masalah yang kamu hadapi sehari-hari",
       "Menghasilkan skrip otomatis untuk tugas administratif organisasi yang berulang setiap periode kepengurusan",
       "Merangkai alur kerja otomatis yang bekerja sendiri, bahkan saat kamu sedang fokus talaqqi atau ujian",
     ],
     tools: ["Lovable", "Bolt", "v0", "Replit", "n8n"],
-    mission: "Rumuskan satu masalah nyata di lingkunganmu — kekeluargaan, kampus, atau usahamu — dan solusi yang kamu bayangkan. Ini benih karya yang akan kamu bangun.",
+    mission: "Rumuskan satu masalah nyata di lingkunganmu, entah kekeluargaan, kampus, atau usahamu, dan solusi yang kamu bayangkan. Ini benih karya yang akan kamu bangun.",
   },
   {
     num: "06",
     title: "Pembuktian",
-    essence: "Demo Day. Bukan ujian, tapi momen kamu menunjukkan bahwa transformasi ini nyata — dan bisa dilihat, dipakai, dan dirasakan orang lain.",
+    essence: "Demo Day. Bukan ujian, tapi momen kamu menunjukkan bahwa transformasi ini nyata, dan bisa dilihat, dipakai, dan dirasakan orang lain.",
     mastery: [
       "Mempresentasikan solusi: dari masalah yang kamu alami, proses membangunnya, hingga hasil yang bisa langsung dipakai",
       "Menerima dan memberi umpan balik yang membangun dari sesama masisir yang menjalani perjalanan yang sama",
-      "Mendokumentasikan karyamu sebagai portofolio pertama — bukti nyata yang bisa kamu tunjukkan, bukan sekadar sertifikat kursus",
+      "Mendokumentasikan karyamu sebagai portofolio pertama, bukti nyata yang bisa kamu tunjukkan, bukan sekadar sertifikat kursus",
       "Merancang langkah selanjutnya, termasuk bagaimana karyamu bisa terus dipakai dan dikembangkan setelah AIGYPT selesai",
     ],
     tools: ["Seluruh tools yang telah kamu kuasai sepanjang enam sesi"],
-    mission: "Dokumentasikan karyamu. Ini bukan tugas terakhir — ini adalah bukti bahwa kamu pulang dari perantauan membawa lebih dari yang kamu bayangkan.",
+    mission: "Dokumentasikan karyamu. Ini bukan tugas terakhir. Ini adalah bukti bahwa kamu pulang dari perantauan membawa lebih dari yang kamu bayangkan.",
   },
 ];
 
@@ -93,15 +93,15 @@ const phases = [
   { num: "01", label: "FONDASI", desc: "Dari takut dan asal pakai, menjadi memahami AI sebagai alat yang tunduk pada siapa yang mengerti cara memerintahnya" },
   { num: "02", label: "KETERAMPILAN", desc: "Dari bertanya asal-asalan, menjadi menguasai cara berdialog dengan AI yang menghasilkan jawaban setajam yang kamu butuhkan" },
   { num: "03", label: "PENERAPAN", desc: "Dari kewalahan oleh tugas dan amanah, menjadi punya asisten yang memahami beratnya menjadi mahasiswa sekaligus pengurus organisasi" },
-  { num: "04", label: "PRODUKSI", desc: "Dari sekadar bertahan secara finansial, menjadi punya kemampuan menghasilkan nilai — baik untuk diri sendiri maupun sesama masisir" },
-  { num: "05", label: "PENCIPTAAN", desc: "Dari pengguna aplikasi orang lain, menjadi pencipta solusi yang lahir dari masalahmu sendiri — dan bisa dipakai orang lain juga" },
+  { num: "04", label: "PRODUKSI", desc: "Dari sekadar bertahan secara finansial, menjadi punya kemampuan menghasilkan nilai, baik untuk diri sendiri maupun sesama masisir" },
+  { num: "05", label: "PENCIPTAAN", desc: "Dari pengguna aplikasi orang lain, menjadi pencipta solusi yang lahir dari masalahmu sendiri, dan bisa dipakai orang lain juga" },
 ];
 
 const upcomingClasses = [
   {
     title: "Bahasa Arab Akademik dengan AI",
     tag: "Akademik",
-    desc: "Untuk masisir yang ingin makalah, muthala'ah, dan kitab turats tidak lagi menjadi beban — AI sebagai asisten linguistik yang memahami bahasa fusha.",
+    desc: "Untuk masisir yang ingin makalah, muthala'ah, dan kitab turats tidak lagi menjadi beban. AI hadir sebagai asisten linguistik yang memahami bahasa fusha.",
     points: ["Penulisan makalah Arab fusha yang terstruktur", "Terjemahan & pemahaman kitab turats kompleks", "Riset dan anotasi referensi akademik"],
   },
   {
@@ -113,13 +113,13 @@ const upcomingClasses = [
   {
     title: "Vibe Coding: Dari Nol ke Aplikasi",
     tag: "Teknologi",
-    desc: "Bangun perangkat lunak yang berguna dan nyata — untuk kekeluargaan, komunitas, atau dirimu sendiri — tanpa perlu menjadi programmer.",
+    desc: "Bangun perangkat lunak yang berguna dan nyata, untuk kekeluargaan, komunitas, atau dirimu sendiri, tanpa perlu menjadi programmer.",
     points: ["Aplikasi web dari sekadar deskripsi masalah", "Otomasi tugas administratif organisasi", "Deploy dan bagikan produk pertamamu"],
   },
   {
     title: "Konten dan Dakwah Digital dengan AI",
     tag: "Konten",
-    desc: "Sebarkan ilmu dan kebaikan dengan jangkauan yang jauh lebih luas — AI sebagai alat produksi konten yang konsisten dan bermakna.",
+    desc: "Sebarkan ilmu dan kebaikan dengan jangkauan yang jauh lebih luas. AI menjadi alat produksi konten yang konsisten dan bermakna.",
     points: ["Produksi konten masif yang tetap berkualitas", "Naskah yang menyentuh dan sesuai konteks dakwah", "Strategi membangun kanal digital yang tahan lama"],
   },
 ];
@@ -473,20 +473,20 @@ export default function Kurikulum() {
           </motion.h2>
           <motion.div variants={fadeUp} className="space-y-5 text-left max-w-2xl mx-auto">
             <p className="text-base leading-[1.9]" style={{ color: "#71717A", fontWeight: 300 }}>
-              Hampir setiap masisir pernah merasakannya — stuck di depan kitab yang susah dipahami,
+              Hampir setiap masisir pernah merasakannya: stuck di depan kitab yang susah dipahami,
               kewalahan jadi panitia, atau bingung mencari penghasilan tambahan di tengah keterbatasan.
               AIGYPT dimulai dari satu keyakinan sederhana: masalah-masalah ini bukan karena kamu kurang
               mampu, tapi karena belum punya alat yang tepat.
             </p>
             <p className="text-base leading-[1.9]" style={{ color: "#71717A", fontWeight: 300 }}>
-              Setiap sesi dirancang bertahap — dari memahami, menguasai, menerapkan, hingga mencipta.
+              Setiap sesi dirancang bertahap, dari memahami, menguasai, menerapkan, hingga mencipta.
               Tapi yang membedakan AIGYPT bukan hanya kurva belajarnya. Saat satu masisir menguasai ini,
               organisasi yang ia ikuti jadi lebih efisien, adik tingkat yang ia bimbing ikut terbantu,
               dan keluarga di tanah air melihat hasil nyata dari perantauannya.
             </p>
             <p className="text-base leading-[1.9]" style={{ color: "#71717A", fontWeight: 300 }}>
               Ini bukan kurikulum AI yang diterjemahkan dari materi Barat. Setiap contoh lahir dari
-              realita yang kamu jalani — talaqqi dengan masyaikh, bahasa Arab fusha yang jauh berbeda
+              realita yang kamu jalani: talaqqi dengan masyaikh, bahasa Arab fusha yang jauh berbeda
               dari ammiyah pasar, dinamika organisasi kekeluargaan, dan tekanan maisyah yang nyata
               di tengah nilai tukar yang naik turun.
             </p>
@@ -576,7 +576,7 @@ export default function Kurikulum() {
             </motion.h2>
             <motion.p variants={fadeUp} className="text-sm leading-[1.9] max-w-2xl" style={{ color: "#71717A", fontWeight: 300 }}>
               Kamu tetap mempelajari keseluruhan enam sesi secara mandiri di platform, kapan saja sesuai waktumu.
-              Empat pertemuan ini adalah momen kita berkumpul bersama — membahas lebih dalam, praktek langsung,
+              Empat pertemuan ini adalah momen kita berkumpul bersama, membahas lebih dalam, praktek langsung,
               dan menjawab pertanyaanmu secara langsung.
             </motion.p>
           </Reveal>
@@ -642,7 +642,7 @@ export default function Kurikulum() {
               <span style={{ color: "#A855F7" }}>Berhenti di Kamu</span>
             </motion.h2>
             <motion.p variants={fadeUp} className="text-sm leading-relaxed max-w-xl" style={{ color: "#71717A" }}>
-              Setiap masisir yang menguasai ini akan membuka jalan bagi yang berikutnya — inilah kelas-kelas yang akan menyusul.
+              Setiap masisir yang menguasai ini akan membuka jalan bagi yang berikutnya. Inilah kelas-kelas yang akan menyusul.
             </motion.p>
           </Reveal>
 

@@ -77,7 +77,7 @@ export function Footer() {
                 Platform Pembelajaran AI untuk Masisir
               </p>
               <p className="text-xs text-[#71717A] leading-relaxed mb-5">
-                Tempat masisir belajar menguasai kecerdasan buatan —
+                Tempat masisir belajar menguasai kecerdasan buatan,
                 dari memahami hingga mencipta.
               </p>
               <div className="flex flex-col gap-2.5">
@@ -137,7 +137,7 @@ export function Footer() {
                   <Link href="/daftar">
                     <span className="text-sm text-[#A1A1AA] hover:text-[#A855F7] transition-colors duration-200 hover:translate-x-0.5 inline-flex items-center transform transition-transform">
                       <StatusDot />
-                      Batch 1 — Dibuka
+                      Batch 1: Dibuka
                     </span>
                   </Link>
                 </motion.div>

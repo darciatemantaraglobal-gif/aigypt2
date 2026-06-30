@@ -780,7 +780,7 @@ export default function MateriPage() {
         {/* Session info */}
         <div className="flex-shrink-0 hidden md:block">
           <span className="text-xs font-mono text-[#475569]">
-            SESI {String(sesiNum).padStart(2, "0")} —{" "}
+            SESI {String(sesiNum).padStart(2, "0")}: 
           </span>
           <span className="text-xs text-[#94A3B8] hidden lg:inline">{sesiData.title}</span>
         </div>

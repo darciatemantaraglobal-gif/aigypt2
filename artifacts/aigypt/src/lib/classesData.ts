@@ -49,7 +49,7 @@ export const kelasList: KelasItem[] = [
     title: "Bahasa Arab Akademik dengan AI",
     tagline: "Taklukkan makalah dan kitab klasik.",
     description:
-      "Kelas mendalam khusus akademik: menulis makalah Arab tingkat tinggi, memahami kitab klasik, dan riset ilmiah — semua dengan bantuan AI yang memahami bahasa Arab.",
+      "Kelas mendalam khusus akademik: menulis makalah Arab tingkat tinggi, memahami kitab klasik, dan riset ilmiah, semua dengan bantuan AI yang memahami bahasa Arab.",
     sesiCount: 5,
     duration: "60 menit/sesi",
     level: "Menengah",

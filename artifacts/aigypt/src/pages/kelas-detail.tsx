@@ -23,7 +23,7 @@ const sessionsByKelas: Record<string, Array<{
       essence: "Membangun fondasi mental dan memahami lanskap kecerdasan buatan.",
       mastery: [
         "Memahami cara kerja AI tanpa istilah teknis yang membingungkan",
-        "Mengenali perbedaan ChatGPT, Claude, dan Gemini — kapan memakai yang mana",
+        "Mengenali perbedaan ChatGPT, Claude, dan Gemini, kapan memakai yang mana",
         "Menyaksikan langsung: satu masalah, tiga AI, tiga hasil berbeda",
         "Menyadari mengapa cara bertanya menentukan segalanya",
       ],
@@ -33,7 +33,7 @@ const sessionsByKelas: Record<string, Array<{
     {
       num: "02",
       title: "Seni Berdialog dengan Kecerdasan",
-      essence: "Menguasai prompting — keterampilan inti yang membedakan amatir dan ahli.",
+      essence: "Menguasai prompting, keterampilan inti yang membedakan amatir dan ahli.",
       mastery: [
         "Formula menyusun perintah yang tajam dan menghasilkan output berkualitas",
         "Mengubah pertanyaan biasa menjadi instruksi yang presisi",
@@ -74,7 +74,7 @@ const sessionsByKelas: Record<string, Array<{
       title: "Tangan yang Mencipta",
       essence: "Membangun aplikasi dan solusi nyata melalui vibe coding.",
       mastery: [
-        "Memahami vibe coding — membangun tanpa perlu menjadi programmer",
+        "Memahami vibe coding, yaitu membangun tanpa perlu menjadi programmer",
         "Menciptakan aplikasi web dari sekadar deskripsi",
         "Menghasilkan skrip otomatis untuk tugas yang berulang",
         "Merangkai alur kerja otomatis yang berjalan sendiri",
@@ -85,7 +85,7 @@ const sessionsByKelas: Record<string, Array<{
     {
       num: "06",
       title: "Pembuktian",
-      essence: "Demo Day — mempersembahkan karya yang lahir dari perjalananmu.",
+      essence: "Demo Day. Mempersembahkan karya yang lahir dari perjalananmu.",
       mastery: [
         "Mempresentasikan solusi: dari masalah, proses, hingga hasil nyata",
         "Menerima dan memberi umpan balik yang membangun",

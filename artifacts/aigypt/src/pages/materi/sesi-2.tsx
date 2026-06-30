@@ -7,22 +7,22 @@ export default function Sesi2() {
       <HighlightBox>
         <p className="text-xs font-mono text-[#A855F7] uppercase tracking-wider mb-2">Tujuan Sesi</p>
         <ul className="space-y-1 text-sm">
-          <li>Paham anatomy of a great prompt — formula RCTFC</li>
+          <li>Paham anatomy of a great prompt, yaitu formula RCTFC</li>
           <li>Bisa mengubah prompt jelek menjadi prompt bagus secara real-time</li>
           <li>Menguasai teknik prompt chaining untuk tugas kompleks</li>
           <li>Punya prompt library pribadi pertama yang bisa dipakai ulang</li>
         </ul>
       </HighlightBox>
 
-      <SectionHeading>Bagian 1 — Kenapa Prompt Itu Skill, Bukan Keberuntungan</SectionHeading>
+      <SectionHeading>Bagian 1: Kenapa Prompt Itu Skill, Bukan Keberuntungan</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        Ada misconception besar soal AI: <em>"AI itu pintar, jadi harusnya ngerti maksud gue walau gue nanya singkat."</em> Ini salah besar. AI tidak bisa membaca pikiran lo — AI hanya bisa merespons <strong className="text-white">apa yang lo tulis</strong>.
+        Ada misconception besar soal AI: <em>"AI itu pintar, jadi harusnya ngerti maksud gue walau gue nanya singkat."</em> Ini salah besar. AI tidak bisa membaca pikiran lo. AI hanya bisa merespons <strong className="text-white">apa yang lo tulis</strong>.
       </p>
       <p className="text-sm text-[#94A3B8] leading-relaxed">
-        Analogi: bayangkan lo datang ke dokter dan bilang <em>"Dok, saya sakit."</em> Dokter yang baik akan tanya balik. Tapi AI tidak selalu tanya balik. Kalau lo ga kasih informasi yang cukup, AI akan <strong className="text-white">menebak</strong> — dan tebakan itu sering meleset.
+        Analogi: bayangkan lo datang ke dokter dan bilang <em>"Dok, saya sakit."</em> Dokter yang baik akan tanya balik. Tapi AI tidak selalu tanya balik. Kalau lo ga kasih informasi yang cukup, AI akan <strong className="text-white">menebak</strong>, dan tebakan itu sering meleset.
       </p>
 
-      <SectionHeading>Bagian 2 — Formula RCTFC</SectionHeading>
+      <SectionHeading>Bagian 2: Formula RCTFC</SectionHeading>
       <div className="my-4 rounded-xl border border-[#7C3AED]/40 bg-[#7C3AED]/10 p-5">
         <p className="font-mono text-lg text-white font-bold mb-4 text-center tracking-widest">R · C · T · F · C</p>
         <div className="space-y-3">
@@ -45,7 +45,7 @@ export default function Sesi2() {
         </div>
       </div>
 
-      <SectionHeading>Bagian 3 — Workshop: Ubah Prompt Jelek Jadi Bagus</SectionHeading>
+      <SectionHeading>Bagian 3: Workshop, Ubah Prompt Jelek Jadi Bagus</SectionHeading>
 
       {[
         {
@@ -56,7 +56,7 @@ dan ekonomi Islam kontemporer.
 
 [Context] Saya mahasiswa semester 5 Jurusan Syariah Al-Azhar Kairo. 
 Saya harus mengumpulkan makalah 10 halaman untuk mata kuliah Fiqih 
-Muamalat. Dosen saya sangat ketat soal referensi — wajib dari kitab 
+Muamalat. Dosen saya sangat ketat soal referensi, wajib dari kitab 
 klasik, minimal 5 referensi.
 
 [Task] Buatkan outline makalah tentang "Riba dalam Transaksi Digital: 
@@ -68,7 +68,7 @@ singkat (2-3 kalimat) yang menjelaskan argumen utamanya. Di akhir,
 berikan 5 rekomendasi referensi kitab klasik yang relevan.
 
 [Constraint] Bahasa Indonesia formal akademik. Jangan masukkan 
-referensi dari internet atau blog — hanya kitab dan jurnal ilmiah.`,
+referensi dari internet atau blog, hanya kitab dan jurnal ilmiah.`,
         },
         {
           persona: "Organisator",
@@ -91,7 +91,7 @@ Estimasi anggaran dalam bentuk tabel. Total panjang maksimal 3 halaman A4.
 
 [Constraint] Anggaran total tidak lebih dari Rp 5.000.000. 
 Bahasa Indonesia formal. Narasumber adalah mahasiswa S3 Al-Azhar 
-— jangan ada biaya narasumber.`,
+jangan ada biaya narasumber.`,
         },
         {
           persona: "Bisnisman",
@@ -146,26 +146,26 @@ mazhab. Setiap minggu harus ada minimal 1 konten yang bisa viral.`,
         </div>
       ))}
 
-      <SectionHeading>Bagian 4 — Prompt Chaining: Tanya Bertahap</SectionHeading>
+      <SectionHeading>Bagian 4: Prompt Chaining, Tanya Bertahap</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
         Satu prompt besar tidak selalu lebih baik dari serangkaian prompt kecil yang terarah. Ini yang disebut <strong className="text-white">prompt chaining</strong>.
       </p>
       <p className="text-sm text-[#94A3B8] mb-4">Contoh: masisir mau nulis makalah tentang hadits.</p>
-      <PromptBlock label="Prompt 1 — Eksplorasi Topik">{`Saya mahasiswa Al-Azhar jurusan Hadits. Saya mau nulis makalah 
+      <PromptBlock label="Prompt 1: Eksplorasi Topik">{`Saya mahasiswa Al-Azhar jurusan Hadits. Saya mau nulis makalah 
 tentang hadits dhaif tapi bingung angle yang menarik. Berikan 5 
 topik spesifik yang belum banyak ditulis tapi relevan dengan 
 konteks kekinian.`}</PromptBlock>
-      <PromptBlock label="Prompt 2 — Pilih dan Kembangkan">{`Dari 5 topik tadi, saya pilih nomor 3 tentang [topik pilihan]. 
+      <PromptBlock label="Prompt 2: Pilih dan Kembangkan">{`Dari 5 topik tadi, saya pilih nomor 3 tentang [topik pilihan]. 
 Sekarang buatkan outline 5 bab dengan sub-poin detail dan argumen 
 utama per bab.`}</PromptBlock>
-      <PromptBlock label="Prompt 3 — Draft Bagian Pertama">{`Bagus. Sekarang tulis Bab 1 (Pendahuluan) berdasarkan outline di 
+      <PromptBlock label="Prompt 3: Draft Bagian Pertama">{`Bagus. Sekarang tulis Bab 1 (Pendahuluan) berdasarkan outline di 
 atas. Panjang 400-500 kata, gaya akademik formal, dalam bahasa Arab.`}</PromptBlock>
-      <PromptBlock label="Prompt 4 — Review dan Perbaiki">{`Cek teks Arab yang kamu tulis tadi. Apakah ada kesalahan nahwu 
+      <PromptBlock label="Prompt 4: Review dan Perbaiki">{`Cek teks Arab yang kamu tulis tadi. Apakah ada kesalahan nahwu 
 atau sharaf? Perbaiki dan jelaskan koreksinya.`}</PromptBlock>
 
-      <SectionHeading>Bagian 5 — Bangun Prompt Library Pribadi Lo</SectionHeading>
+      <SectionHeading>Bagian 5: Bangun Prompt Library Pribadi Lo</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        Setiap kali lo dapat prompt yang hasilnya bagus — <strong className="text-white">simpan</strong>. Beri nama yang mudah dicari, tandai variabel yang bisa diganti dengan <code className="text-[#A855F7] font-mono">[TOPIK]</code>, <code className="text-[#A855F7] font-mono">[JURUSAN]</code>.
+        Setiap kali lo dapat prompt yang hasilnya bagus, <strong className="text-white">simpan</strong>. Beri nama yang mudah dicari, tandai variabel yang bisa diganti dengan <code className="text-[#A855F7] font-mono">[TOPIK]</code>, <code className="text-[#A855F7] font-mono">[JURUSAN]</code>.
       </p>
       <PromptBlock label="Template Prompt Library">{`[Role] Kamu adalah akademisi Islam yang ahli dalam [BIDANG ILMU].
 
@@ -183,7 +183,7 @@ dengan 5 bab utama dan 3 sub-poin per bab.
         Simpan di: Notion (paling recommended), Google Docs, Notes di HP, atau folder di komputer.
       </p>
 
-      <LatihanBox title="Latihan — Bedah Prompt">
+      <LatihanBox title="Latihan: Bedah Prompt">
         <p className="text-sm mb-3">Identifikasi elemen RCTFC yang ada dan yang kurang dari prompt berikut:</p>
         <PromptBlock label="Prompt A">{`Jelaskan tentang manajemen waktu untuk mahasiswa yang sibuk organisasi`}</PromptBlock>
         <PromptBlock label="Prompt B">{`Saya ketua BEM di kampus. Bantu saya buat jadwal mingguan yang bisa 

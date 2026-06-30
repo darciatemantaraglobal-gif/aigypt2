@@ -13,7 +13,7 @@ export default function Sesi3() {
         </ul>
       </HighlightBox>
 
-      <SectionHeading>Bagian 1 — Nulis dan Review Makalah Bahasa Arab</SectionHeading>
+      <SectionHeading>Bagian 1: Nulis dan Review Makalah Bahasa Arab</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
         Ini yang paling dibutuhkan masisir Al-Azhar. Claude adalah tools terbaik untuk ini karena kemampuannya memahami konteks panjang dan nuansa bahasa Arab akademik.
       </p>
@@ -40,7 +40,7 @@ yang diakui Al-Azhar. Tidak ada referensi internet.`}</PromptBlock>
       <PromptBlock label="Prompt: Review Nahwu & Sharaf">{`Tolong review teks Arab berikut. Cek:
 1. Kesalahan nahwu (harakat, i'rab, tanda baca)
 2. Kesalahan sharaf (bentuk kata, wazan)
-3. Gaya bahasa — apakah sesuai tulisan ilmiah akademik Al-Azhar?
+3. Gaya bahasa, apakah sesuai tulisan ilmiah akademik Al-Azhar?
 
 Untuk setiap kesalahan, jelaskan: letak kesalahan, koreksinya, 
 dan alasan gramatikalnya. Setelah review, tampilkan versi 
@@ -59,7 +59,7 @@ yang sudah dikoreksi secara lengkap.
         ]}
       />
 
-      <SectionHeading>Bagian 2 — Terjemah dan Pahami Kitab Kuning</SectionHeading>
+      <SectionHeading>Bagian 2: Terjemah dan Pahami Kitab Kuning</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
         Ini game-changer untuk masisir. NotebookLM + Claude adalah kombinasi terbaik.
       </p>
@@ -90,7 +90,7 @@ Contoh pertanyaan ke NotebookLM:
 - "Bandingkan pendapat penulis di bab 2 dan bab 5 tentang [masalah]"
 - "Buat timeline kronologis perkembangan pendapat dalam kitab ini"`}</PromptBlock>
 
-      <SectionHeading>Bagian 3 — Riset Skripsi Lebih Efisien</SectionHeading>
+      <SectionHeading>Bagian 3: Riset Skripsi Lebih Efisien</SectionHeading>
 
       <PromptBlock label="Prompt: Cari Gap Penelitian">{`Saya sedang riset untuk skripsi saya tentang [TOPIK UMUM].
 
@@ -102,7 +102,7 @@ Tolong bantu saya:
    mahasiswa S1
 
 Konteks: Saya di [JURUSAN] Al-Azhar, pembimbing saya cenderung 
-suka pendekatan [PENDEKATAN — misal: komparatif, analitis, dll].`}</PromptBlock>
+suka pendekatan [PENDEKATAN, misal: komparatif, analitis, dll].`}</PromptBlock>
 
       <PromptBlock label="Prompt: Bantu Analisis Jurnal">{`Berikut adalah abstrak dari 3 jurnal yang relevan dengan skripsi saya:
 
@@ -117,7 +117,7 @@ Tolong:
    tentang [TOPIK SKRIPSI]?
 4. Apakah ada kontradiksi yang perlu saya address di skripsi?`}</PromptBlock>
 
-      <SectionHeading>Bagian 4 — AI untuk Organisasi Masisir</SectionHeading>
+      <SectionHeading>Bagian 4: AI untuk Organisasi Masisir</SectionHeading>
 
       <PromptBlock label="Prompt: Proposal Kegiatan">{`[Role] Kamu adalah sekretaris profesional berpengalaman di PPMI Mesir.
 
@@ -163,15 +163,15 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
         <p className="text-sm mb-3">Pilih salah satu latihan di bawah ini dan selesaikan sebelum sesi selesai:</p>
         <div className="space-y-3">
           <div>
-            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI A — Akademisi</p>
+            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI A: Akademisi</p>
             <p className="text-sm text-[#94A3B8]">Ambil satu paragraf teks Arab dari kitab yang sedang lo pelajari. Copy ke Claude dengan prompt review nahwu di atas. Perhatikan apa yang AI koreksi.</p>
           </div>
           <div>
-            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI B — Organisator</p>
+            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI B: Organisator</p>
             <p className="text-sm text-[#94A3B8]">Buat draft proposal untuk kegiatan yang sudah direncanakan organisasimu. Pakai prompt proposal di atas, sesuaikan dengan detail nyata.</p>
           </div>
           <div>
-            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI C — Skripsi/Thesis</p>
+            <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI C: Skripsi/Thesis</p>
             <p className="text-sm text-[#94A3B8]">Paste abstrak 2-3 jurnal relevan dengan skripsi lo ke Claude. Minta AI bantu analisis gap dan posisi penelitianmu.</p>
           </div>
         </div>

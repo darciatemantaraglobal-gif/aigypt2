@@ -47,7 +47,7 @@ const workflow = [
   },
   {
     step: "Execute",
-    desc: "Bangun bertahap — jangan one-shot!",
+    desc: "Bangun bertahap, jangan one-shot!",
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -75,13 +75,13 @@ const workflow = [
 ];
 
 const goldenRules = [
-  "Vibe coding bukan one-shot — bangun bertahap, satu fitur per sesi",
-  "Tulis PRD dulu sebelum prompting — AI tidak bisa baca pikiran lo",
+  "Vibe coding bukan one-shot, bangun bertahap, satu fitur per sesi",
+  "Tulis PRD dulu sebelum prompting. AI tidak bisa baca pikiran lo",
   "Pakai DESIGN.md biar UI tidak generik dan AI konsisten",
   "Graduate workflow: prototype di Lovable/Bolt → serius di Cursor/Claude Code",
   "Pilih satu icon library, konsisten selamanya (Lucide untuk shadcn)",
-  "Slice vertically — bangun fitur end-to-end, bukan layer per layer",
-  "Selalu review — 45% kode AI punya kerentanan keamanan yang tersembunyi",
+  "Slice vertically, bangun fitur end-to-end, bukan layer per layer",
+  "Selalu review. 45% kode AI punya kerentanan keamanan yang tersembunyi",
 ];
 
 const stacks = [
@@ -213,10 +213,10 @@ export default function Toolbox() {
             Vibe Coding Toolbox
           </h1>
           <p className="text-[#94A3B8] text-base max-w-2xl mx-auto leading-relaxed mb-2">
-            Semua tools, workflow, dan asset yang lo butuhin untuk bikin solusi sendiri — di satu tempat.
+            Semua tools, workflow, dan asset yang lo butuhin untuk bikin solusi sendiri, di satu tempat.
           </p>
           <p className="text-[#94A3B8] text-sm max-w-xl mx-auto">
-            Koleksi tools vibe coding terbaik 2026 yang dikurasi khusus untuk masisir — dari app builder untuk pemula sampai AI assistant untuk yang sudah serius.
+            Koleksi tools vibe coding terbaik 2026 yang dikurasi khusus untuk masisir, dari app builder untuk pemula sampai AI assistant untuk yang sudah serius.
           </p>
         </div>
 

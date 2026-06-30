@@ -96,7 +96,7 @@ export default function Dashboard() {
           </h1>
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono px-3 py-1 rounded-full border border-[#7C3AED]/40 text-[#A855F7] bg-[#7C3AED]/10">
-              {user.memberType === "kelas" ? `Member Kelas — Batch ${user.batchNumber}` : "Member Mandiri"}
+              {user.memberType === "kelas" ? `Member Kelas, Batch ${user.batchNumber}` : "Member Mandiri"}
             </span>
             <span className="text-xs text-[#94A3B8]">{totalCompleted}/6 sesi selesai</span>
           </div>

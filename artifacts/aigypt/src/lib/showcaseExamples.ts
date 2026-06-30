@@ -53,7 +53,7 @@ export const showcaseTabs: ShowcaseTab[] = [
       },
       {
         before: "Menyusun proposal kegiatan dari nol, makan waktu dua sampai tiga hari.",
-        after: "Draft proposal lengkap — latar belakang, tujuan, rundown, anggaran.",
+        after: "Draft proposal lengkap: latar belakang, tujuan, rundown, anggaran.",
         time: "~20 MENIT",
       },
       {
@@ -75,7 +75,7 @@ export const showcaseTabs: ShowcaseTab[] = [
     cards: [
       {
         before: "Caption jualan itu-itu saja, kurang menarik, sepi pembeli.",
-        after: "5 variasi caption dengan pendekatan berbeda — emosional, urgensi, cerita.",
+        after: "5 variasi caption dengan pendekatan berbeda: emosional, urgensi, cerita.",
         time: "~30 DETIK",
       },
       {
@@ -90,7 +90,7 @@ export const showcaseTabs: ShowcaseTab[] = [
       },
       {
         before: "Mau mulai usaha tapi tidak tahu cara menyusun rencana bisnisnya.",
-        after: "Rencana bisnis ringkas — modal, target, strategi, dan langkah pertama.",
+        after: "Rencana bisnis ringkas: modal, target, strategi, dan langkah pertama.",
         time: "~15 MENIT",
       },
     ],
@@ -107,7 +107,7 @@ export const showcaseTabs: ShowcaseTab[] = [
       },
       {
         before: "Punya ide tapi bingung menyusun naskah video yang menarik.",
-        after: "Naskah reels 60 detik — hook pembuka, isi, hingga ajakan di akhir.",
+        after: "Naskah reels 60 detik: hook pembuka, isi, hingga ajakan di akhir.",
         time: "~2 MENIT",
       },
       {
@@ -125,7 +125,7 @@ export const showcaseTabs: ShowcaseTab[] = [
   {
     id: "vibe-coding",
     label: "Vibe Coding",
-    intro: "Inilah puncaknya — kamu tidak hanya memakai AI, kamu membangun dengan AI.",
+    intro: "Inilah puncaknya. Kamu tidak hanya memakai AI, kamu membangun dengan AI.",
     isVibeCoding: true,
     cards: [
       {
@@ -157,7 +157,7 @@ export const showcaseGrid = [
   {
     id: "akademisi",
     label: "Akademisi",
-    highlight: "Makalah, terjemah kitab, riset — semua lebih cepat.",
+    highlight: "Makalah, terjemah kitab, riset: semua lebih cepat.",
   },
   {
     id: "organisator",

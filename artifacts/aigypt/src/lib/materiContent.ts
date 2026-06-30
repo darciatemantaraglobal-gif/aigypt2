@@ -54,11 +54,11 @@ export const materiContent: SesiMateri[] = [
         title: "Selamat Datang di Sesi 1",
         subtitle: "Kenali AI, pahami cara kerjanya, dan mulai pakai AI dengan benar",
         content:
-          "Sebelum kita mulai, satu pertanyaan jujur: lo selama ini pakai AI buat apa? Kemungkinan besar: belum pernah, cuma nanya random, atau hasilnya sering ga memuaskan. Apapun jawabannya — itu normal.",
+          "Sebelum kita mulai, satu pertanyaan jujur: lo selama ini pakai AI buat apa? Kemungkinan besar: belum pernah, cuma nanya random, atau hasilnya sering ga memuaskan. Apapun jawabannya, itu normal.",
         bullets: [
-          "Punya mindset yang benar soal AI — bukan takut, bukan lebay",
+          "Punya mindset yang benar soal AI, bukan takut, bukan lebay",
           "Ngerti cara kerja AI secara sederhana tanpa jargon teknis",
-          "Tau perbedaan ChatGPT, Claude, dan Gemini — kapan pakai yang mana",
+          "Tau perbedaan ChatGPT, Claude, dan Gemini, kapan pakai yang mana",
           "Sudah coba sendiri minimal satu interaksi dengan AI yang berguna",
         ],
       },
@@ -68,27 +68,27 @@ export const materiContent: SesiMateri[] = [
         title: "AI Itu Asisten, Bukan Dukun",
         subtitle: "Mindset yang benar sebelum mulai",
         content:
-          "Yang paling banyak terjadi: orang pakai AI seperti pakai mesin pencari — tanya satu kalimat pendek, dapat jawaban, selesai. Padahal AI itu jauh lebih dari itu.",
+          "Yang paling banyak terjadi: orang pakai AI seperti pakai mesin pencari, tanya satu kalimat pendek, dapat jawaban, selesai. Padahal AI itu jauh lebih dari itu.",
         quote:
-          "AI bukan Google. AI itu asisten pribadi yang sangat pintar — tapi lo yang harus jadi atasannya.",
+          "AI bukan Google. AI itu asisten pribadi yang sangat pintar. Lo yang harus jadi atasannya.",
         bullets: [
-          "AI tidak bisa membaca pikiran lo — dia hanya tau apa yang lo tulis",
+          "AI tidak bisa membaca pikiran lo, dia hanya tau apa yang lo tulis",
           "Semakin detail lo menjelaskan, semakin bagus hasilnya",
-          "AI adalah tools — hasil akhirnya tetap tanggung jawab lo",
+          "AI adalah tools, hasil akhirnya tetap tanggung jawab lo",
         ],
       },
       {
         id: "s1-3",
         type: "concept",
-        title: "Cara Kerja AI — Sederhana Tapi Powerful",
+        title: "Cara Kerja AI: Sederhana Tapi Powerful",
         subtitle: "Memahami LLM tanpa jargon teknis",
         content:
           "AI seperti ChatGPT, Claude, dan Gemini adalah Large Language Models (LLM). Cara kerjanya: mereka membaca miliaran teks, belajar pola, lalu memprediksi kata demi kata yang paling relevan untuk menjawab pertanyaan lo.",
         quote:
-          "Bayangkan santri yang sudah khatam ribuan kitab dan hafal jutaan hadits — dan sekarang lo bisa tanya apa saja kepadanya. Dia tidak selalu benar 100%, tapi sangat berpengetahuan.",
+          "Bayangkan santri yang sudah khatam ribuan kitab dan hafal jutaan hadits, dan sekarang lo bisa tanya apa saja kepadanya. Dia tidak selalu benar 100%, tapi sangat berpengetahuan.",
         bullets: [
           "AI dilatih pada miliaran teks dari internet, buku, dan kode",
-          "AI memprediksi — bukan mencari. Ini kenapa kadang 'hallucinate'",
+          "AI memprediksi, bukan mencari. Ini kenapa kadang 'hallucinate'",
           "Semakin baru modelnya, semakin pintar dan akurat hasilnya",
         ],
       },
@@ -102,13 +102,13 @@ export const materiContent: SesiMateri[] = [
         table: {
           headers: ["Mitos", "Realita"],
           rows: [
-            ["AI selalu benar", "AI bisa salah — lo harus tetap kritis"],
+            ["AI selalu benar", "AI bisa salah, lo harus tetap kritis"],
             ["AI bisa baca pikiran", "AI hanya tau apa yang lo tulis kepadanya"],
             ["AI bakal gantiin lo", "AI memperkuat kemampuan lo, bukan menggantikan"],
             ["AI itu ribet dan teknis", "Siapapun bisa pakai AI kalau tau caranya"],
             [
               "AI itu haram/tidak etis",
-              "Tergantung cara pakainya — pisau bisa masak, bisa juga berbahaya",
+              "Tergantung cara pakainya: pisau bisa masak, bisa juga berbahaya",
             ],
           ],
         },
@@ -122,9 +122,9 @@ export const materiContent: SesiMateri[] = [
         content:
           "Tidak semua AI diciptakan sama. Setiap AI punya keunggulan berbeda. Mengetahui kapan pakai yang mana adalah skill yang akan menghemat banyak waktu lo.",
         bullets: [
-          "ChatGPT — paling populer, komunitas terbesar, cocok untuk brainstorming umum",
-          "Claude — terbaik untuk teks panjang, dokumen, nulis akademik yang nuanced",
-          "Gemini — terintegrasi Google, bisa akses internet real-time, cek fakta terkini",
+          "ChatGPT: paling populer, komunitas terbesar, cocok untuk brainstorming umum",
+          "Claude: terbaik untuk teks panjang, dokumen, nulis akademik yang nuanced",
+          "Gemini: terintegrasi Google, bisa akses internet real-time, cek fakta terkini",
         ],
       },
       {
@@ -133,12 +133,12 @@ export const materiContent: SesiMateri[] = [
         title: "Perbandingan 3 AI: Panduan Pilih yang Tepat",
         subtitle: "Kapan pakai ChatGPT, Claude, atau Gemini?",
         content:
-          "Tidak ada AI yang 'terbaik' secara absolut — yang terbaik adalah yang cocok untuk tugas spesifik lo. Gunakan tabel ini sebagai panduan cepat:",
+          "Tidak ada AI yang 'terbaik' secara absolut. Yang terbaik adalah yang cocok untuk tugas spesifik lo. Gunakan tabel ini sebagai panduan cepat:",
         cards: [
           {
             title: "ChatGPT (OpenAI)",
             items: [
-              "+ Paling populer — komunitas dan tutorial terbanyak",
+              "+ Paling populer, komunitas dan tutorial terbanyak",
               "+ GPT-4o bisa lihat gambar dan file",
               "+ Ada plugins dan GPT custom",
               "- Versi gratis terbatas",
@@ -150,7 +150,7 @@ export const materiContent: SesiMateri[] = [
           {
             title: "Claude (Anthropic)",
             items: [
-              "+ Terbaik untuk teks panjang — baca dokumen, kitab, PDF",
+              "+ Terbaik untuk teks panjang, baca dokumen, kitab, PDF",
               "+ Jawaban lebih nuanced dan thoughtful",
               "+ Lebih jujur kalau tidak tahu",
               "- Tidak selalu bisa browsing internet",
@@ -192,7 +192,7 @@ export const materiContent: SesiMateri[] = [
         title: "Kenapa Prompt Itu Segalanya",
         subtitle: "Skill yang membedakan pengguna biasa dan power user",
         content:
-          "Dua orang pakai AI yang sama, dapat hasil yang sangat berbeda. Kenapa? Cara mereka bertanya. Ini yang disebut prompting — dan ini skill yang bisa dipelajari.",
+          "Dua orang pakai AI yang sama, dapat hasil yang sangat berbeda. Kenapa? Cara mereka bertanya. Ini yang disebut prompting, dan ini skill yang bisa dipelajari.",
         quote:
           "Skenario: dua masisir, pakai Claude yang sama, tanya soal makalah. Yang pertama dapat outline generik 5 baris. Yang kedua dapat outline lengkap 5 bab dengan sub-poin dan referensi kitab. Bedanya? Cara bertanya.",
         bullets: [
@@ -210,7 +210,7 @@ export const materiContent: SesiMateri[] = [
           "Skenario: Kamu harus membuat makalah tentang 'Konsep Tawazun dalam Islam'. Lihat bagaimana kualitas prompt menentukan kualitas output:",
         prompts: [
           {
-            label: "Prompt Demo Live — Kirim ke 3 AI",
+            label: "Prompt Demo Live: Kirim ke 3 AI",
             prompt: `Saya mahasiswa Al-Azhar Kairo. Saya harus menulis makalah 
 dalam bahasa Arab tentang "Konsep Tawazun dalam Islam dan 
 Relevansinya dengan Kehidupan Modern". Tolong bantu saya 
@@ -218,15 +218,15 @@ membuat outline makalah yang kuat dengan 5 bab utama,
 lengkap dengan sub-poin setiap bab.`,
           },
           {
-            label: "Prompt Buruk — Hasilnya Generik",
+            label: "Prompt Buruk: Hasilnya Generik",
             prompt: `bantu makalah saya`,
           },
           {
-            label: "Prompt Sedang — Lumayan Tapi Masih Luas",
+            label: "Prompt Sedang: Lumayan Tapi Masih Luas",
             prompt: `Bantu saya nulis makalah tentang zakat`,
           },
           {
-            label: "Prompt Bagus — Hasil Langsung Bisa Dipakai",
+            label: "Prompt Bagus: Hasil Langsung Bisa Dipakai",
             prompt: `Saya mahasiswa semester 3 di Fakultas Syariah Al-Azhar Kairo. 
 Saya perlu menulis makalah 15 halaman tentang "Zakat Digital: 
 Hukum Zakat atas Aset Kripto dalam Perspektif Fiqih Kontemporer".
@@ -239,7 +239,7 @@ Tolong bantu saya:
 Gunakan gaya akademik formal sesuai standar penulisan ilmiah Arab.`,
           },
         ],
-        note: "Pelajaran utama: tidak ada AI yang 'terbaik' secara absolut — yang terbaik adalah yang cocok untuk tugas spesifik lo.",
+        note: "Pelajaran utama: tidak ada AI yang 'terbaik' secara absolut. Yang terbaik adalah yang cocok untuk tugas spesifik lo.",
       },
       {
         id: "s1-9",
@@ -247,7 +247,7 @@ Gunakan gaya akademik formal sesuai standar penulisan ilmiah Arab.`,
         title: "AI dan Kehidupan Lo sebagai Masisir",
         subtitle: "Relevansi AI untuk 4 persona masisir",
         content:
-          "AI bukan hanya untuk yang 'teknis'. Apapun peran lo sebagai masisir — akademisi, organisator, bisnisman, atau kreator — AI bisa mengubah cara lo bekerja secara radikal.",
+          "AI bukan hanya untuk yang 'teknis'. Apapun peran lo sebagai masisir, entah akademisi, organisator, bisnisman, atau kreator, AI bisa mengubah cara lo bekerja secara radikal.",
         cards: [
           {
             title: "Akademisi",
@@ -296,7 +296,7 @@ Gunakan gaya akademik formal sesuai standar penulisan ilmiah Arab.`,
           "Teori sudah cukup. Sekarang waktunya lo sendiri yang berinteraksi dengan AI. Buka salah satu dari ChatGPT, Claude, atau Gemini, dan coba prompt berikut:",
         prompts: [
           {
-            label: "Latihan 1 — Kenali Dirimu (Refleksi 5 menit)",
+            label: "Latihan 1: Kenali Dirimu (Refleksi 5 menit)",
             prompt: `Persona mana yang paling menggambarkan lo sebagai masisir?
 (Akademisi / Organisator / Bisnisman / Kreator / Overwhelmed)
 
@@ -305,7 +305,7 @@ Apa satu masalah terbesar lo sebagai masisir yang paling sering bikin frustrasi?
 Kalau masalah itu bisa diselesaikan dengan AI, hidup lo akan berubah seperti apa?`,
           },
           {
-            label: "Latihan 2 — First Contact (15 menit)",
+            label: "Latihan 2: First Contact (15 menit)",
             prompt: `Saya adalah mahasiswa [jurusan lo] di Al-Azhar Kairo, semester [X].
 Masalah terbesar saya minggu ini adalah [masalah nyata lo].
 Tolong bantu saya dengan memberikan:
@@ -313,7 +313,7 @@ Tolong bantu saya dengan memberikan:
 2. Satu langkah pertama yang bisa saya lakukan sekarang`,
           },
         ],
-        note: "Simpan jawaban dari latihan 1 — kita akan kembali ke sini di Sesi 6.",
+        note: "Simpan jawaban dari latihan 1, kita akan kembali ke sini di Sesi 6.",
       },
       {
         id: "s1-11",
@@ -325,8 +325,8 @@ Tolong bantu saya dengan memberikan:
         bullets: [
           "Pilih satu masalah nyata yang lo hadapi minggu ini sebagai masisir",
           "Tanyakan ke dua AI berbeda (boleh pakai prompt bebas dulu)",
-          "Screenshot atau catat hasilnya — mana yang lebih berguna, kenapa?",
-          "Bawa ke Sesi 2 — kita akan gunakan ini sebagai bahan belajar prompting",
+          "Screenshot atau catat hasilnya, mana yang lebih berguna, kenapa?",
+          "Bawa ke Sesi 2, kita akan gunakan ini sebagai bahan belajar prompting",
         ],
         isCompletion: true,
       },
@@ -339,7 +339,7 @@ Tolong bantu saya dengan memberikan:
   {
     sesiNumber: 2,
     title: "Ngomong yang Bener, Dapet yang Bener",
-    subtitle: "Kuasai seni prompting — dari biasa ke powerful",
+    subtitle: "Kuasai seni prompting, dari biasa ke powerful",
     steps: [
       {
         id: "s2-1",
@@ -347,11 +347,11 @@ Tolong bantu saya dengan memberikan:
         title: "Prompt Adalah Skill, Bukan Keberuntungan",
         subtitle: "Kenapa ada yang dapat hasil bagus, ada yang tidak",
         content:
-          "Ada misconception besar: 'AI itu pintar, harusnya ngerti maksud gue walau nanya singkat.' Ini salah besar. AI tidak bisa membaca pikiran lo — AI hanya merespons apa yang lo tulis.",
+          "Ada misconception besar: 'AI itu pintar, harusnya ngerti maksud gue walau nanya singkat.' Ini salah besar. AI tidak bisa membaca pikiran lo, AI hanya merespons apa yang lo tulis.",
         quote:
-          "Bayangkan lo datang ke dokter dan bilang 'Dok, saya sakit.' Dokter yang baik akan tanya balik. Tapi AI tidak selalu tanya balik. Kalau lo ga kasih info yang cukup, AI akan menebak — dan tebakan itu sering meleset.",
+          "Bayangkan lo datang ke dokter dan bilang 'Dok, saya sakit.' Dokter yang baik akan tanya balik. Tapi AI tidak selalu tanya balik. Kalau lo ga kasih info yang cukup, AI akan menebak, dan tebakan itu sering meleset.",
         bullets: [
-          "Paham anatomy of a great prompt — formula RCTFC",
+          "Paham anatomy of a great prompt, yaitu formula RCTFC",
           "Bisa mengubah prompt jelek menjadi prompt bagus secara real-time",
           "Menguasai teknik prompt chaining untuk tugas kompleks",
           "Punya prompt library pribadi pertama yang bisa dipakai ulang",
@@ -366,7 +366,7 @@ Tolong bantu saya dengan memberikan:
           "RCTFC adalah framework yang bisa lo gunakan untuk hampir semua tugas. Setiap huruf mewakili satu elemen penting yang harus ada di prompt lo.",
         cards: [
           {
-            title: "R — Role",
+            title: "R: Role",
             items: [
               "Siapa AI ini dalam konteks ini?",
               "Kasih AI sebuah 'identitas' yang sesuai.",
@@ -375,7 +375,7 @@ Tolong bantu saya dengan memberikan:
             accent: "purple",
           },
           {
-            title: "C — Context",
+            title: "C: Context",
             items: [
               "Apa situasi dan latar belakangnya?",
               "Ceritakan siapa lo, di mana, apa yang sedang terjadi.",
@@ -384,7 +384,7 @@ Tolong bantu saya dengan memberikan:
             accent: "blue",
           },
           {
-            title: "T — Task",
+            title: "T: Task",
             items: [
               "Apa yang lo minta AI lakukan?",
               "Gunakan kata kerja spesifik: buatkan, analisis, rangkum, terjemahkan.",
@@ -393,7 +393,7 @@ Tolong bantu saya dengan memberikan:
             accent: "green",
           },
           {
-            title: "F — Format",
+            title: "F: Format",
             items: [
               "Bagaimana lo mau output-nya disajikan?",
               "Bullet points, tabel, paragraf, bahasa tertentu, panjang tertentu.",
@@ -402,7 +402,7 @@ Tolong bantu saya dengan memberikan:
             accent: "purple",
           },
           {
-            title: "C — Constraint",
+            title: "C: Constraint",
             items: [
               "Apa yang tidak boleh ada, atau batasan yang harus diikuti.",
               'Contoh: "Jangan gunakan referensi di luar kitab klasik. Maksimal 300 kata per bagian."',
@@ -414,23 +414,23 @@ Tolong bantu saya dengan memberikan:
       {
         id: "s2-3",
         type: "practice",
-        title: "Workshop RCTFC — Akademisi & Organisator",
+        title: "Workshop RCTFC: Akademisi & Organisator",
         subtitle: "Lihat transformasi prompt dari jelek ke powerful",
         content:
           "Ini adalah contoh nyata transformasi prompt menggunakan formula RCTFC. Perhatikan perbedaan antara prompt biasa dan prompt yang sudah dioptimasi:",
         prompts: [
           {
-            label: "Akademisi — Prompt Jelek",
+            label: "Akademisi: Prompt Jelek",
             prompt: `tolong buatin makalah tentang riba`,
           },
           {
-            label: "Akademisi — Prompt RCTFC (Hasil Jauh Lebih Baik)",
+            label: "Akademisi: Prompt RCTFC (Hasil Jauh Lebih Baik)",
             prompt: `[Role] Kamu adalah akademisi Islam yang ahli dalam fiqih muamalat 
 dan ekonomi Islam kontemporer.
 
 [Context] Saya mahasiswa semester 5 Jurusan Syariah Al-Azhar Kairo. 
 Saya harus mengumpulkan makalah 10 halaman untuk mata kuliah Fiqih 
-Muamalat. Dosen saya sangat ketat soal referensi — wajib dari kitab 
+Muamalat. Dosen saya sangat ketat soal referensi, wajib dari kitab 
 klasik, minimal 5 referensi.
 
 [Task] Buatkan outline makalah tentang "Riba dalam Transaksi Digital: 
@@ -442,10 +442,10 @@ singkat (2-3 kalimat) yang menjelaskan argumen utamanya. Di akhir,
 berikan 5 rekomendasi referensi kitab klasik yang relevan.
 
 [Constraint] Bahasa Indonesia formal akademik. Jangan masukkan 
-referensi dari internet atau blog — hanya kitab dan jurnal ilmiah.`,
+referensi dari internet atau blog, hanya kitab dan jurnal ilmiah.`,
           },
           {
-            label: "Organisator — Prompt RCTFC",
+            label: "Organisator: Prompt RCTFC",
             prompt: `[Role] Kamu adalah sekretaris profesional yang berpengalaman 
 membuat proposal kegiatan mahasiswa di luar negeri.
 
@@ -464,18 +464,18 @@ Estimasi anggaran dalam bentuk tabel. Total panjang maksimal 3 halaman A4.
 
 [Constraint] Anggaran total tidak lebih dari Rp 5.000.000. 
 Bahasa Indonesia formal. Narasumber adalah mahasiswa S3 Al-Azhar 
-— jangan ada biaya narasumber.`,
+jangan ada biaya narasumber.`,
           },
         ],
       },
       {
         id: "s2-4",
         type: "practice",
-        title: "Workshop RCTFC — Bisnisman & Konten Kreator",
+        title: "Workshop RCTFC: Bisnisman & Konten Kreator",
         subtitle: "RCTFC bekerja untuk semua persona masisir",
         prompts: [
           {
-            label: "Bisnisman — Prompt RCTFC",
+            label: "Bisnisman: Prompt RCTFC",
             prompt: `[Role] Kamu adalah copywriter e-commerce yang spesialis 
 di fashion muslimah Indonesia.
 
@@ -496,7 +496,7 @@ informatif, storytelling, urgency, dan testimonial.
 sejagat". Tone harus hangat dan autentik, bukan hard-selling.`,
           },
           {
-            label: "Konten Kreator — Prompt RCTFC",
+            label: "Konten Kreator: Prompt RCTFC",
             prompt: `[Role] Kamu adalah content strategist yang spesialis di konten 
 edukasi-hiburan untuk mahasiswa Muslim Indonesia.
 
@@ -524,12 +524,12 @@ mazhab. Setiap minggu harus ada minimal 1 konten yang bisa viral.`,
         title: "Prompt Chaining: Tanya Bertahap",
         subtitle: "Teknik lanjutan untuk hasil yang jauh lebih baik",
         content:
-          "Satu prompt besar tidak selalu lebih baik dari serangkaian prompt kecil yang terarah. Ini yang disebut prompt chaining — memecah tugas besar menjadi langkah-langkah yang lebih mudah dikontrol.",
+          "Satu prompt besar tidak selalu lebih baik dari serangkaian prompt kecil yang terarah. Ini yang disebut prompt chaining, yaitu memecah tugas besar menjadi langkah-langkah yang lebih mudah dikontrol.",
         bullets: [
-          "Mulai dari eksplorasi — biarkan AI bantu lo menemukan angle terbaik",
-          "Pilih yang terbaik — baru minta AI kembangkan lebih dalam",
-          "Buat bagian per bagian — jangan minta semuanya sekaligus",
-          "Review setiap hasil — perbaiki sebelum lanjut ke tahap berikutnya",
+          "Mulai dari eksplorasi, biarkan AI bantu lo menemukan angle terbaik",
+          "Pilih yang terbaik, baru minta AI kembangkan lebih dalam",
+          "Buat bagian per bagian, jangan minta semuanya sekaligus",
+          "Review setiap hasil, perbaiki sebelum lanjut ke tahap berikutnya",
         ],
         quote:
           "Prompt chaining = lo jadi sutradara yang memimpin AI step by step, bukan sekaligus satu kali.",
@@ -540,28 +540,28 @@ mazhab. Setiap minggu harus ada minimal 1 konten yang bisa viral.`,
         title: "Contoh Prompt Chain: Menulis Makalah",
         subtitle: "4 prompt bertahap untuk satu makalah hadits yang kuat",
         content:
-          "Contoh nyata prompt chaining untuk menulis makalah hadits. Ikuti urutan ini — setiap prompt bergantung pada hasil prompt sebelumnya:",
+          "Contoh nyata prompt chaining untuk menulis makalah hadits. Ikuti urutan ini, setiap prompt bergantung pada hasil prompt sebelumnya:",
         prompts: [
           {
-            label: "Prompt 1 — Eksplorasi Topik",
+            label: "Prompt 1: Eksplorasi Topik",
             prompt: `Saya mahasiswa Al-Azhar jurusan Hadits. Saya mau nulis makalah 
 tentang hadits dhaif tapi bingung angle yang menarik. Berikan 5 
 topik spesifik yang belum banyak ditulis tapi relevan dengan 
 konteks kekinian.`,
           },
           {
-            label: "Prompt 2 — Pilih dan Kembangkan",
+            label: "Prompt 2: Pilih dan Kembangkan",
             prompt: `Dari 5 topik tadi, saya pilih nomor 3 tentang [topik pilihan]. 
 Sekarang buatkan outline 5 bab dengan sub-poin detail dan argumen 
 utama per bab.`,
           },
           {
-            label: "Prompt 3 — Draft Bagian Pertama",
+            label: "Prompt 3: Draft Bagian Pertama",
             prompt: `Bagus. Sekarang tulis Bab 1 (Pendahuluan) berdasarkan outline di 
 atas. Panjang 400-500 kata, gaya akademik formal, dalam bahasa Arab.`,
           },
           {
-            label: "Prompt 4 — Review dan Perbaiki",
+            label: "Prompt 4: Review dan Perbaiki",
             prompt: `Cek teks Arab yang kamu tulis tadi. Apakah ada kesalahan nahwu 
 atau sharaf? Perbaiki dan jelaskan koreksinya.`,
           },
@@ -571,9 +571,9 @@ atau sharaf? Perbaiki dan jelaskan koreksinya.`,
         id: "s2-7",
         type: "concept",
         title: "Bangun Prompt Library Pribadi Lo",
-        subtitle: "Simpan prompt bagus — jangan buat ulang dari nol",
+        subtitle: "Simpan prompt bagus, jangan buat ulang dari nol",
         content:
-          "Setiap kali lo dapat prompt yang hasilnya bagus — simpan. Beri nama yang mudah dicari, tandai variabel yang bisa diganti dengan [TOPIK], [JURUSAN], dll.",
+          "Setiap kali lo dapat prompt yang hasilnya bagus, simpan. Beri nama yang mudah dicari, tandai variabel yang bisa diganti dengan [TOPIK], [JURUSAN], dll.",
         bullets: [
           "Simpan di Notion (paling recommended), Google Docs, atau Notes di HP",
           "Tandai variabel dengan tanda kurung siku: [TOPIK], [JURUSAN], [NAMA]",
@@ -581,7 +581,7 @@ atau sharaf? Perbaiki dan jelaskan koreksinya.`,
           "Review dan update library-mu setiap bulan",
         ],
         quote:
-          "Prompt library adalah aset yang nilainya bertambah seiring waktu — semakin sering lo pakai AI, semakin kaya library lo.",
+          "Prompt library adalah aset yang nilainya bertambah seiring waktu. Semakin sering lo pakai AI, semakin kaya library lo.",
       },
       {
         id: "s2-8",
@@ -592,7 +592,7 @@ atau sharaf? Perbaiki dan jelaskan koreksinya.`,
           "Template berikut bisa langsung lo copy ke prompt library lo. Ganti bagian dalam tanda kurung siku dengan konteks spesifik lo:",
         prompts: [
           {
-            label: "Template Master — Prompt Akademik",
+            label: "Template Master: Prompt Akademik",
             prompt: `[Role] Kamu adalah akademisi Islam yang ahli dalam [BIDANG ILMU].
 
 [Context] Saya mahasiswa [JURUSAN] semester [X] di Al-Azhar Kairo. 
@@ -607,11 +607,11 @@ dengan 5 bab utama dan 3 sub-poin per bab.
 [Constraint] Bahasa Indonesia formal. Referensi hanya dari kitab klasik.`,
           },
           {
-            label: "Latihan — Bedah Prompt A (Analisis)",
+            label: "Latihan: Bedah Prompt A (Analisis)",
             prompt: `Jelaskan tentang manajemen waktu untuk mahasiswa yang sibuk organisasi`,
           },
           {
-            label: "Latihan — Bedah Prompt B (Lebih Baik — Kenapa?)",
+            label: "Latihan: Bedah Prompt B (Lebih Baik, Kenapa?)",
             prompt: `Saya ketua BEM di kampus. Bantu saya buat jadwal mingguan yang bisa 
 balance antara kuliah, rapat, dan belajar mandiri. Saya punya kuliah 
 20 jam/minggu dan rapat rata-rata 8 jam/minggu.`,
@@ -701,7 +701,7 @@ yang diakui Al-Azhar. Tidak ada referensi internet.`,
             prompt: `Tolong review teks Arab berikut. Cek:
 1. Kesalahan nahwu (harakat, i'rab, tanda baca)
 2. Kesalahan sharaf (bentuk kata, wazan)
-3. Gaya bahasa — apakah sesuai tulisan ilmiah akademik Al-Azhar?
+3. Gaya bahasa, apakah sesuai tulisan ilmiah akademik Al-Azhar?
 
 Untuk setiap kesalahan, jelaskan: letak kesalahan, koreksinya, 
 dan alasan gramatikalnya. Setelah review, tampilkan versi 
@@ -771,7 +771,7 @@ Tolong bantu saya:
    mahasiswa S1
 
 Konteks: Saya di [JURUSAN] Al-Azhar, pembimbing saya cenderung 
-suka pendekatan [PENDEKATAN — misal: komparatif, analitis, dll].`,
+suka pendekatan [PENDEKATAN, misal: komparatif, analitis, dll].`,
           },
           {
             label: "Prompt: Bantu Analisis Jurnal",
@@ -796,7 +796,7 @@ Tolong:
         title: "AI untuk Organisasi Masisir",
         subtitle: "Proposal, notulensi, dan workflow lebih cepat",
         content:
-          "Untuk yang aktif di PPMI atau organisasi masisir lainnya — AI bisa menghemat puluhan jam kerja administratif setiap bulannya.",
+          "Untuk yang aktif di PPMI atau organisasi masisir lainnya. AI bisa menghemat puluhan jam kerja administratif setiap bulannya.",
         prompts: [
           {
             label: "Prompt: Proposal Kegiatan",
@@ -852,7 +852,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
           "Teori sudah cukup. Pilih satu latihan di bawah ini dan selesaikan sebelum sesi berakhir. Yang penting: gunakan prompt yang sudah disediakan, bukan prompt asal-asalan.",
         cards: [
           {
-            title: "Opsi A — Akademisi",
+            title: "Opsi A: Akademisi",
             items: [
               "Ambil satu paragraf teks Arab dari kitab yang sedang lo pelajari",
               "Copy ke Claude dengan prompt review nahwu",
@@ -861,7 +861,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
             accent: "purple",
           },
           {
-            title: "Opsi B — Organisator",
+            title: "Opsi B: Organisator",
             items: [
               "Buat draft proposal untuk kegiatan yang sudah direncanakan organisasimu",
               "Pakai prompt proposal di atas, sesuaikan dengan detail nyata",
@@ -870,7 +870,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
             accent: "blue",
           },
           {
-            title: "Opsi C — Skripsi/Thesis",
+            title: "Opsi C: Skripsi/Thesis",
             items: [
               "Paste abstrak 2-3 jurnal relevan dengan skripsi lo ke Claude",
               "Minta AI bantu analisis gap dan posisi penelitianmu",
@@ -886,7 +886,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
         title: "Take-Home Challenge",
         subtitle: "Yang harus lo lakukan sebelum Sesi 4",
         content:
-          "Sesi 3 adalah checkpoint penting: untuk pertama kalinya lo harus menggunakan AI untuk menyelesaikan tugas nyata — bukan hanya latihan.",
+          "Sesi 3 adalah checkpoint penting: untuk pertama kalinya lo harus menggunakan AI untuk menyelesaikan tugas nyata, bukan hanya latihan.",
         bullets: [
           "Selesaikan minimal satu tugas akademik atau organisasi nyata menggunakan AI",
           "Catat: berapa lama biasanya lo kerjakan vs dengan AI? Berapa persen lebih cepat?",
@@ -911,7 +911,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
         title: "Selamat Datang di Sesi 4",
         subtitle: "AI untuk bisnis dan konten yang menghasilkan",
         content:
-          "Sesi ini untuk lo yang punya bisnis atau mau punya bisnis — jualan gamis, jasa desain, konten kreator, atau apapun. AI bisa jadi mesin pendukung yang menghemat biaya dan waktu riset.",
+          "Sesi ini untuk lo yang punya bisnis atau mau punya bisnis, entah jualan gamis, jasa desain, konten kreator, atau apapun. AI bisa jadi mesin pendukung yang menghemat biaya dan waktu riset.",
         bullets: [
           "Bisa riset produk dan kompetitor dengan AI lebih efisien",
           "Kuasai formula copywriting AI yang convert untuk jualan online",
@@ -925,7 +925,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
         title: "Riset Produk & Kompetitor",
         subtitle: "Sebelum jual apapun, riset dulu",
         content:
-          "Sebelum jual apapun, lo perlu tau pasar. AI bisa membantu lo riset 10x lebih cepat — yang biasanya butuh beberapa hari riset manual bisa selesai dalam satu jam.",
+          "Sebelum jual apapun, lo perlu tau pasar. AI bisa membantu lo riset 10x lebih cepat. Yang biasanya butuh beberapa hari riset manual bisa selesai dalam satu jam.",
         prompts: [
           {
             label: "Prompt: Riset Pasar Produk",
@@ -968,7 +968,7 @@ saya isi sendiri.`,
         title: "Framework Copywriting yang Convert",
         subtitle: "Formula yang sudah terbukti, bukan asal kreatif",
         content:
-          "Formula copywriting bukan soal kreativitas — ini soal psikologi. Ada 4 framework utama yang bisa lo gunakan dengan AI untuk menghasilkan konten yang menggerakkan orang untuk membeli.",
+          "Formula copywriting bukan soal kreativitas, ini soal psikologi. Ada 4 framework utama yang bisa lo gunakan dengan AI untuk menghasilkan konten yang menggerakkan orang untuk membeli.",
         cards: [
           {
             title: "AIDA",
@@ -1052,7 +1052,7 @@ CTA: [TINDAKAN YANG DIINGINKAN]`,
         title: "Content Calendar + Script Video",
         subtitle: "Rencanakan konten 1 bulan dalam 10 menit",
         content:
-          "Satu sesi dengan AI bisa menghasilkan content calendar lengkap 1 bulan. Ditambah script untuk setiap video yang siap dibacakan — tinggal rekam.",
+          "Satu sesi dengan AI bisa menghasilkan content calendar lengkap 1 bulan. Ditambah script untuk setiap video yang siap dibacakan, tinggal rekam.",
         prompts: [
           {
             label: "Prompt: Content Calendar 1 Bulan",
@@ -1118,7 +1118,7 @@ dibutuhkan, teks apa yang muncul di layar.`,
         },
         prompts: [
           {
-            label: "Prompt: Repurpose Master — 1 Konten ke 5 Format",
+            label: "Prompt: Repurpose Master, 1 Konten ke 5 Format",
             prompt: `Berikut adalah [VIDEO SCRIPT / ARTIKEL / THREAD] yang sudah saya buat:
 
 [PASTE KONTEN ORIGINAL DI SINI]
@@ -1141,7 +1141,7 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`,
         title: "Take-Home Challenge",
         subtitle: "Yang harus lo lakukan sebelum Sesi 5",
         content:
-          "Sesi 5 adalah tentang vibe coding — lo akan buat aplikasi atau otomasi sendiri. Mulai pikirkan masalah apa yang mau lo selesaikan.",
+          "Sesi 5 adalah tentang vibe coding. Lo akan buat aplikasi atau otomasi sendiri. Mulai pikirkan masalah apa yang mau lo selesaikan.",
         bullets: [
           "Buat satu konten lengkap dari A sampai Z dengan AI: ide → teks → visual (Canva AI)",
           "Kalau punya bisnis: buat 3 caption dan coba posting salah satunya",
@@ -1166,7 +1166,7 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`,
         title: "Apa Itu Vibe Coding?",
         subtitle: "Paradigma baru membangun software",
         content:
-          'Istilah "vibe coding" dipopulerkan oleh Andrej Karpathy (mantan Head of AI di Tesla, pendiri OpenAI). Konsepnya sederhana: lo tidak perlu bisa coding untuk membuat software — lo hanya perlu bisa mendeskripsikan apa yang lo mau.',
+          'Istilah "vibe coding" dipopulerkan oleh Andrej Karpathy (mantan Head of AI di Tesla, pendiri OpenAI). Konsepnya sederhana: lo tidak perlu bisa coding untuk membuat software. Lo hanya perlu bisa mendeskripsikan apa yang lo mau.',
         quote:
           "Dulu untuk punya rumah, lo harus bisa tukang batu sendiri. Sekarang lo bisa jadi arsitek yang mendeskripsikan bangunan ke tim kontraktor. Vibe coding = lo jadi arsitek, AI jadi kontraktornya.",
         bullets: [
@@ -1182,10 +1182,10 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`,
         title: "Dulu vs Sekarang",
         subtitle: "Revolusi yang sedang terjadi sekarang",
         content:
-          "Ini bukan hype — ini pergeseran nyata. 92% developer di AS sudah pakai AI coding tools setiap hari. Lovable mencapai $300 juta revenue per tahun dalam waktu kurang dari setahun setelah diluncurkan.",
+          "Ini bukan hype, ini pergeseran nyata. 92% developer di AS sudah pakai AI coding tools setiap hari. Lovable mencapai $300 juta revenue per tahun dalam waktu kurang dari setahun setelah diluncurkan.",
         cards: [
           {
-            title: "Dulu — Cara Lama",
+            title: "Dulu: Cara Lama",
             items: [
               "Belajar coding 6-12 bulan dulu",
               "Bayar developer jutaan untuk app sederhana",
@@ -1195,7 +1195,7 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`,
             accent: "red",
           },
           {
-            title: "Sekarang — Dengan Vibe Coding",
+            title: "Sekarang: Dengan Vibe Coding",
             items: [
               "Describe → generate → iterate",
               "Web app sederhana dalam hitungan jam",
@@ -1250,7 +1250,7 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`,
           "Skenario: masisir yang jualan gamis import mau punya website katalog produk sederhana tanpa bayar developer. Buka lovable.dev dan coba prompt berikut:",
         prompts: [
           {
-            label: "Prompt untuk Lovable.dev — Web App Katalog Produk",
+            label: "Prompt untuk Lovable.dev: Web App Katalog Produk",
             prompt: `Buat website katalog produk untuk toko gamis online bernama 
 "Nisa Collection - Gamis Import Mesir".
 
@@ -1262,12 +1262,12 @@ Spesifikasi:
 - Halaman "Tentang Kami" dengan cerita singkat toko
 - Desain: warna dusty rose dan cream, feminine tapi elegan
 - Mobile-friendly (penting, mayoritas pelanggan dari HP)
-- Tidak perlu login atau checkout — cukup redirect ke WA
+- Tidak perlu login atau checkout, cukup redirect ke WA
 
 Tone: hangat, premium, terpercaya.`,
           },
           {
-            label: "Prompt Iterasi — Setelah Generate Pertama",
+            label: "Prompt Iterasi: Setelah Generate Pertama",
             prompt: `Ubah section produk agar ada badge "Terlaris" pada produk pertama.
 Tambahkan section "Testimoni Pelanggan" dengan 3 testimoni.
 Ganti font heading menjadi serif yang lebih elegan.`,
@@ -1279,7 +1279,7 @@ Ganti font heading menjadi serif yang lebih elegan.`,
         id: "s5-4",
         type: "practice",
         title: "Generate Script + Jalankan di Replit",
-        subtitle: "Python tanpa install apapun — langsung di browser",
+        subtitle: "Python tanpa install apapun, langsung di browser",
         content:
           "Untuk tugas berulang, minta Claude generate script Python, lalu jalankan di Replit tanpa install apapun. Gratis dan langsung bisa dipakai:",
         prompts: [
@@ -1317,7 +1317,7 @@ untuk orang yang belum pernah coding.`,
         title: "Automation dengan n8n",
         subtitle: "Hubungkan semua apps lo tanpa kode",
         content:
-          "n8n memungkinkan lo menghubungkan berbagai aplikasi tanpa kode — bayangkan seperti IFTTT tapi jauh lebih powerful. Setiap workflow adalah rangkaian trigger dan action yang berjalan otomatis.",
+          "n8n memungkinkan lo menghubungkan berbagai aplikasi tanpa kode, bayangkan seperti IFTTT tapi jauh lebih powerful. Setiap workflow adalah rangkaian trigger dan action yang berjalan otomatis.",
         cards: [
           {
             title: "Auto-post konten ke semua platform",
@@ -1355,7 +1355,7 @@ untuk orang yang belum pernah coding.`,
         title: "Rancang Workflow + Tentukan Proyek Demo Day",
         subtitle: "Dari otomasi ke proyek nyata yang bisa dipresentasikan",
         content:
-          "Di Sesi 6, lo akan mempresentasikan solusi nyata yang dibuat dengan AI. Ini bukan harus sempurna — yang penting nyata dan menyelesaikan masalah lo sendiri.",
+          "Di Sesi 6, lo akan mempresentasikan solusi nyata yang dibuat dengan AI. Ini bukan harus sempurna. Yang penting nyata dan menyelesaikan masalah lo sendiri.",
         prompts: [
           {
             label: "Prompt: Rancang Workflow Otomasi",
@@ -1399,11 +1399,11 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
         title: "Take-Home Challenge",
         subtitle: "Yang harus lo lakukan sebelum Sesi 6 (Demo Day)",
         content:
-          "Ini challenge terakhir sebelum Demo Day. Tidak harus sempurna — yang penting bisa di-demo dan menyelesaikan masalah nyata.",
+          "Ini challenge terakhir sebelum Demo Day. Tidak harus sempurna. Yang penting bisa di-demo dan menyelesaikan masalah nyata.",
         bullets: [
-          "Selesaikan proyek lo — tidak harus sempurna, tapi harus bisa di-demo",
+          "Selesaikan proyek lo, tidak harus sempurna, tapi harus bisa di-demo",
           "Siapkan presentasi 5-7 menit: Masalah → Proses AI → Demo Hasil",
-          "Screenshot atau rekam layar proses pembuatannya — ini bagian dari ceritanya",
+          "Screenshot atau rekam layar proses pembuatannya, ini bagian dari ceritanya",
           "Pikirkan: bagaimana lo bisa kembangkan solusi ini lebih jauh setelah Demo Day?",
         ],
         isCompletion: true,
@@ -1417,7 +1417,7 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
   {
     sesiNumber: 6,
     title: "Ini Solusi Gue",
-    subtitle: "Demo Day — presentasikan solusi nyata yang lo bangun",
+    subtitle: "Demo Day: presentasikan solusi nyata yang lo bangun",
     steps: [
       {
         id: "s6-1",
@@ -1425,17 +1425,17 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
         title: "Selamat, Lo Sudah Jauh!",
         subtitle: "Ingat dari mana lo mulai",
         content:
-          "Ingat Sesi 1 — lo masuk dengan satu pertanyaan: 'AI sebenarnya bisa apa sih buat gue?' Hari ini, lo jawab sendiri pertanyaan itu.",
+          "Ingat Sesi 1, lo masuk dengan satu pertanyaan: 'AI sebenarnya bisa apa sih buat gue?' Hari ini, lo jawab sendiri pertanyaan itu.",
         cards: [
           {
             title: "Perjalanan 6 Sesi Lo",
             items: [
-              "S01 — Lo paham cara kerja AI dan beda ChatGPT, Claude, Gemini",
-              "S02 — Lo kuasai formula RCTFC — prompt lo sekarang jauh lebih tajam",
-              "S03 — Lo bisa selesaikan tugas akademik dan organisasi lebih cepat",
-              "S04 — Lo tahu cara bikin copywriting dan konten yang efektif",
-              "S05 — Lo membangun sesuatu yang nyata — produk, tools, atau otomasi",
-              "S06 — Lo mempresentasikan solusi lo ke komunitas hari ini",
+              "S01: Lo paham cara kerja AI dan beda ChatGPT, Claude, Gemini",
+              "S02: Lo kuasai formula RCTFC, prompt lo sekarang jauh lebih tajam",
+              "S03: Lo bisa selesaikan tugas akademik dan organisasi lebih cepat",
+              "S04: Lo tahu cara bikin copywriting dan konten yang efektif",
+              "S05: Lo membangun sesuatu yang nyata, yaitu produk, tools, atau otomasi",
+              "S06: Lo mempresentasikan solusi lo ke komunitas hari ini",
             ],
             accent: "purple",
           },
@@ -1456,34 +1456,34 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
           "Setiap peserta mendapat 5-7 menit untuk presentasi + 2 menit Q&A. Gunakan 4 bagian berikut untuk struktur yang kuat:",
         cards: [
           {
-            title: "01 — Masalah (1 menit)",
+            title: "01: Masalah (1 menit)",
             items: [
-              "Ceritakan masalah nyata yang lo hadapi — bukan abstrak",
+              "Ceritakan masalah nyata yang lo hadapi, bukan abstrak",
               "Buat audiens bisa merasakan frustrasi yang lo rasakan",
-              'Contoh: "Saya ketua divisi akademik PPMI. Setiap minggu saya kirim reminder iuran ke 150 orang — manual, satu-satu, via WA. Itu 3 jam kerja sia-sia setiap minggu."',
+              'Contoh: "Saya ketua divisi akademik PPMI. Setiap minggu saya kirim reminder iuran ke 150 orang, manual, satu-satu, via WA. Itu 3 jam kerja sia-sia setiap minggu."',
             ],
             accent: "red",
           },
           {
-            title: "02 — Proses AI (2-3 menit)",
+            title: "02: Proses AI (2-3 menit)",
             items: [
               "Tunjukkan journey lo: prompt yang lo pakai, tools yang lo pilih, iterasi yang lo lakukan",
-              "Hal-hal yang tidak berjalan sesuai ekspektasi — ini justru menarik",
-              'Contoh: "Saya coba Lovable pertama kali — hasilnya 70% bagus. Lalu saya iterate dengan 5 prompt tambahan..."',
+              "Hal-hal yang tidak berjalan sesuai ekspektasi, ini justru menarik",
+              'Contoh: "Saya coba Lovable pertama kali, hasilnya 70% bagus. Lalu saya iterate dengan 5 prompt tambahan..."',
             ],
             accent: "purple",
           },
           {
-            title: "03 — Demo Hasil (2 menit)",
+            title: "03: Demo Hasil (2 menit)",
             items: [
-              "Tunjukkan produknya secara live — jangan hanya screenshot",
+              "Tunjukkan produknya secara live, jangan hanya screenshot",
               "Kalau web app, buka di browser. Kalau script, jalankan langsung",
               'Contoh: "Sekarang saya akan demo: saya upload file Excel-nya, klik run, dan dalam 10 detik... 150 pesan sudah siap dikirim."',
             ],
             accent: "green",
           },
           {
-            title: "04 — Dampak & Next Steps (30 detik)",
+            title: "04: Dampak & Next Steps (30 detik)",
             items: [
               "Sebutkan dampak konkret: berapa waktu yang dihemat",
               "Apa rencana pengembangan selanjutnya?",
@@ -1502,7 +1502,7 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
           "Setiap presenter mendapat feedback dari minimal 2 peserta menggunakan framework WWW + EBI. Framework ini memastikan feedback selalu ada sisi positif dan saran pengembangan.",
         cards: [
           {
-            title: "WWW — What Worked Well",
+            title: "WWW: What Worked Well",
             items: [
               "Fokus pada apa yang sudah bagus",
               "Contoh: Masalah yang dipilih sangat relatable",
@@ -1513,7 +1513,7 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
             accent: "green",
           },
           {
-            title: "EBI — Even Better If",
+            title: "EBI: Even Better If",
             items: [
               "Saran konkret untuk pengembangan",
               "Contoh: Kalau ada versi mobile-nya",
@@ -1535,7 +1535,7 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
         prompts: [
           {
             label: "Prompt: Buat Dokumentasi Portofolio",
-            prompt: `Saya baru selesai membuat [NAMA SOLUSI] — sebuah [DESKRIPSI 
+            prompt: `Saya baru selesai membuat [NAMA SOLUSI], sebuah [DESKRIPSI 
 SINGKAT] yang dibuat menggunakan AI (tools: [TOOLS YANG DIPAKAI]).
 
 Tolong bantu saya membuat dokumentasi portofolio yang mencakup:
@@ -1560,7 +1560,7 @@ tapi tetap personal.`,
         title: "Setelah AIGYPT: Ke Mana Selanjutnya?",
         subtitle: "Lo sekarang bukan sekadar pengguna AI",
         content:
-          "Ini bukan akhir — ini awal. Lo sekarang punya fondasi yang tidak dimiliki kebanyakan orang. Tinggal pilih jalur mana yang paling sesuai dengan tujuan lo:",
+          "Ini bukan akhir. Ini awal. Lo sekarang punya fondasi yang tidak dimiliki kebanyakan orang. Tinggal pilih jalur mana yang paling sesuai dengan tujuan lo:",
         table: {
           headers: ["Jalur", "Next Steps"],
           rows: [
@@ -1592,7 +1592,7 @@ tapi tetap personal.`,
         title: "Refleksi & Penutup",
         subtitle: "Sebelum sesi berakhir",
         content:
-          "Lo sekarang bukan hanya pengguna AI — lo adalah builder yang bisa mengubah masalah jadi solusi. Terima kasih sudah bersama AIGYPT.",
+          "Lo sekarang bukan hanya pengguna AI. Lo adalah builder yang bisa mengubah masalah jadi solusi. Terima kasih sudah bersama AIGYPT.",
         bullets: [
           "Dibanding Sesi 1, apa yang paling berubah dari cara lo melihat AI?",
           "Solusi mana yang akan lo terus kembangkan setelah AIGYPT?",
