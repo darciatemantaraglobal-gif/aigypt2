@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { waUrl } from "@/lib/wa";
+import { viewportConfig, containerStagger, cardItem } from "@/lib/animations";
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 
@@ -566,11 +567,17 @@ export default function Kurikulum() {
             </motion.p>
           </Reveal>
 
-          <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={containerStagger}
+          >
             {upcomingClasses.map((cls, i) => (
               <motion.div
                 key={i}
-                variants={fadeUp}
+                variants={cardItem}
                 className="rounded-2xl p-6 flex flex-col gap-4"
                 style={{
                   background: "rgba(10,10,15,0.7)",
@@ -601,7 +608,7 @@ export default function Kurikulum() {
                 </ul>
               </motion.div>
             ))}
-          </Reveal>
+          </motion.div>
         </div>
       </section>
 

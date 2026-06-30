@@ -1,0 +1,115 @@
+# Prompt — AIGYPT: Animasi Scroll Reveal di Seluruh Halaman
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan animasi scroll-triggered reveal (elemen muncul saat di-scroll ke dalam viewport) ke seluruh landing page dan halaman kurikulum AIGYPT yang sudah ada, disesuaikan gaya animasinya per jenis elemen agar terasa natural, bukan seragam membosankan.
+
+PENTING: Ini penambahan animasi pada elemen yang sudah ada. Jangan ubah struktur, konten, atau layout, hanya tambahkan perilaku animasi saat scroll.
+
+---
+
+## PROMPT
+
+Tambahkan animasi scroll-triggered reveal ke seluruh landing page (rute "/") dan halaman kurikulum (rute "/kurikulum") AIGYPT menggunakan Framer Motion. Setiap elemen muncul dengan gaya animasi yang disesuaikan dengan jenis dan posisinya, tidak semua elemen menggunakan animasi yang sama, agar halaman terasa hidup dan bervariasi secara natural.
+
+---
+
+## PRINSIP UMUM
+
+1. Gunakan Framer Motion whileInView dengan viewport once true dan amount 0.2, agar animasi hanya berjalan sekali saat elemen pertama kali masuk viewport, tidak berulang setiap scroll naik-turun.
+2. Durasi animasi antara 400ms hingga 700ms, easing halus seperti cubic-bezier 0.21, 0.47, 0.32, 0.98, bukan linear.
+3. Untuk grup elemen seperti grid, list, atau card berderet, gunakan stagger, setiap elemen muncul berurutan dengan jeda kecil sekitar 0.1 hingga 0.15 detik, bukan muncul bersamaan.
+4. Threshold scroll: elemen mulai animasi saat sekitar 20 persen bagian elemen terlihat di viewport.
+5. Wajib hormati prefers-reduced-motion, jika aktif semua elemen langsung tampil tanpa animasi (opacity 1, tanpa transform).
+
+---
+
+## PEMETAAN GAYA ANIMASI PER JENIS ELEMEN
+
+### A. Headline dan Sub-headline Section, gaya Fade plus Rise, lembut
+
+Untuk setiap heading besar dan paragraf sub-headline di awal section (hero, visi, filosofi, dan lainnya), gunakan variant dengan opacity dari 0 ke 1 dan posisi y dari 24px ke 0, durasi sekitar 0.6 detik dengan easing halus. Alasan: ini elemen pembuka tiap section, harus terasa tenang dan jelas, tidak mencuri perhatian berlebihan.
+
+### B. Grid Card seperti Persona, Spektrum Pembelajaran, Kelas Mendatang, Galeri Karya, gaya Stagger Reveal
+
+Untuk grid berisi banyak card sejenis, buat container dengan staggerChildren sekitar 0.12 detik, dan setiap card item muncul dengan opacity dari 0 ke 1 dan posisi y dari 20px ke 0, durasi sekitar 0.5 detik. Bungkus container grid dengan variant container, dan setiap card dengan variant item. Hasilnya card muncul satu per satu berurutan dari kiri-atas ke kanan-bawah, bukan muncul serentak.
+
+Terapkan pada section: Persona (5 card), Spektrum Pembelajaran (6 card), Kelas Mendatang, Galeri Karya (grid placeholder), grid ringkas showcase, dan item accordion FAQ.
+
+### C. Showcase Tab Cards (Sebelum/Sesudah), gaya Fade plus Scale, lebih megah
+
+Untuk kartu hasil "Sebelum vs Dengan AI" di section showcase, gunakan opacity dari 0 ke 1 dan scale dari 0.92 ke 1, durasi sekitar 0.5 detik. Terapkan dengan stagger juga karena ada beberapa kartu per tab. Alasan: konten ini paling persuasif di halaman, layak diberi sedikit kemegahan lebih dari elemen biasa.
+
+### D. Kolom Berpasangan (Sebelum kiri, Dengan AI kanan dalam satu kartu), gaya Slide from Side
+
+Untuk dua kolom dalam satu kartu showcase, kolom "Sebelum" meluncur masuk dari kiri (opacity 0 ke 1, x dari -30px ke 0), dan kolom "Dengan AI" meluncur masuk dari kanan (opacity 0 ke 1, x dari 30px ke 0) dengan delay sedikit lebih lambat sekitar 0.1 detik. Ini menciptakan kesan transformasi dari kiri ke kanan saat keduanya muncul.
+
+### E. Angka Statistik (Strip Dampak, Stat Grid Keanggotaan), gaya Glow Pop plus Count-up
+
+Untuk angka-angka besar seperti "50+ Prompt" atau "6-10 Jam", gunakan animasi opacity dari 0 ke 1, posisi y dari 16px ke 0, disertai efek drop-shadow ungu yang muncul lalu meredup kembali ke normal dalam sekitar 600ms setelah animasi utama selesai (agar tidak terus menyala secara statis).
+
+Kombinasikan dengan count-up untuk angka numerik (dari 0 ke angka final, durasi sekitar 800ms, dimulai bersamaan dengan animasi muncul). Gunakan custom hook dengan requestAnimationFrame, atau Framer Motion useMotionValue dan animate().
+
+Terapkan pada: strip "Dampak Nyata", stat grid di section Keanggotaan, dan badge waktu di kartu showcase (tanpa count-up untuk badge waktu, cukup glow pop karena bukan angka yang perlu dihitung naik).
+
+### F. Garis Penghubung atau Timeline (Alur Transformasi, Ritme Mingguan), gaya Draw Line
+
+Untuk garis yang menghubungkan titik-titik di section Alur Transformasi dan Timeline Batch 1, jika garis dibuat dengan SVG path, gunakan animasi pathLength dari 0 ke 1 dengan durasi sekitar 1.2 detik dan easing easeInOut. Jika dibuat dengan CSS border atau div, gunakan animasi scaleX dari 0 ke 1 dengan transform-origin kiri. Titik-titik bernomor di sepanjang garis muncul dengan stagger setelah garis mulai tergambar.
+
+### G. Baris Sesi yang Bisa Di-expand di halaman Kurikulum, gaya Fade plus Rise dengan stagger
+
+Untuk enam baris sesi di halaman kurikulum, gunakan container dengan staggerChildren sekitar 0.08 detik (sedikit lebih cepat karena enam item berturutan vertikal), setiap baris muncul dengan fade plus rise namun jarak y lebih kecil sekitar 16px karena berbentuk baris horizontal panjang, bukan card.
+
+### H. Testimoni Card, gaya Fade plus Scale dengan rotasi halus
+
+Sama seperti pola C, namun tambahkan sedikit rotasi awal halus (sekitar -1 derajat ke 0 derajat) untuk kesan organik, durasi sekitar 0.55 detik.
+
+### I. Tombol CTA Utama di akhir tiap section
+
+Tombol CTA muncul terakhir setelah heading dan paragraf di sekitarnya selesai animasi, dengan delay tambahan sekitar 0.2 hingga 0.3 detik dari elemen sebelumnya, agar terasa seperti ajakan yang muncul setelah konteks tersampaikan.
+
+---
+
+## IMPLEMENTASI TEKNIS
+
+Buat file helper terpusat lib/animations.ts yang mengekspor semua variant di atas (fadeRise, containerStagger, cardItem, fadeScale, slideFromLeft, slideFromRight, glowPop, drawLine, testimonialReveal, dan viewportConfig dengan once true dan amount 0.2), agar bisa diimpor dan dipakai konsisten di seluruh komponen menggunakan tipe Variants dari framer-motion.
+
+Setiap komponen section mengimpor variant yang sesuai dari file ini dan menerapkannya pada elemen motion.div, motion.h2, motion.p, dan sejenisnya dengan pola initial hidden, whileInView visible, viewport sesuai viewportConfig, dan variants sesuai yang dipilih.
+
+---
+
+## DAFTAR PENERAPAN PER SECTION (RINGKASAN)
+
+Hero (headline, sub) menggunakan Fade plus Rise.
+Visi atau Manifesto menggunakan Fade plus Rise.
+Persona (grid 5 card) menggunakan Stagger plus Card Item.
+Spektrum Pembelajaran (grid 6) menggunakan Stagger plus Card Item.
+Showcase tab cards menggunakan Fade plus Scale dengan Stagger.
+Showcase kolom Sebelum/Sesudah menggunakan Slide from Side.
+Strip Angka Dampak menggunakan Glow Pop plus Count-up.
+Testimoni menggunakan Testimonial Reveal.
+Galeri Karya (grid placeholder) menggunakan Stagger plus Card Item.
+Kelas Batch 1 (card spotlight) menggunakan Fade plus Scale.
+Kelas Mendatang (grid) menggunakan Stagger plus Card Item.
+Keanggotaan (2 tier card) menggunakan Fade plus Rise, tier kedua dengan delay sedikit lebih lama.
+Stat grid di Keanggotaan menggunakan Glow Pop plus Count-up.
+FAQ (accordion items) menggunakan Stagger plus Card Item.
+CTA Penutup menggunakan Fade plus Rise dengan delay tombol.
+Kurikulum Alur Transformasi menggunakan Draw Line plus stagger node.
+Kurikulum 6 Baris Sesi menggunakan Stagger plus Fade Rise.
+Kurikulum Timeline Batch 1 menggunakan Draw Line plus stagger node.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua animasi menggunakan Framer Motion (sudah menjadi dependency dari implementasi sebelumnya)
+2. Animasi hanya berjalan sekali per elemen (once true), tidak mengulang saat scroll naik-turun
+3. Tidak ada layout shift, gunakan transform dan opacity, hindari animasi pada width atau height kecuali untuk Draw Line yang memang membutuhkannya (gunakan scaleX sebagai alternatif performa lebih baik jika memungkinkan)
+4. Wajib mendukung prefers-reduced-motion: gunakan hook useReducedMotion dari Framer Motion, dan jika true, set semua variant ke langsung visible tanpa transisi
+5. Performa: hindari menganimasikan terlalu banyak elemen sekaligus dalam satu viewport, gunakan stagger untuk mendistribusikan beban, bukan animasi simultan masif
+6. npm run build harus sukses tanpa error
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Seluruh landing page dan halaman kurikulum AIGYPT memiliki animasi scroll-reveal yang disesuaikan per jenis elemen: headline muncul lembut, grid card muncul berurutan (stagger), kartu showcase muncul megah dengan scale, kolom sebelum-sesudah meluncur dari sisi berlawanan, angka statistik muncul dengan glow dan count-up, garis timeline tergambar progresif, dan CTA muncul terakhir sebagai ajakan. Semua terasa premium, terkoordinasi, tidak seragam membosankan, dan menghormati preferensi aksesibilitas pengguna.

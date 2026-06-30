@@ -6,6 +6,16 @@ import { Footer } from "@/components/Footer";
 import { waUrl } from "@/lib/wa";
 import { testimonials } from "@/lib/testimonials";
 import { showcaseTabs, showcaseGrid } from "@/lib/showcaseExamples";
+import {
+  viewportConfig,
+  containerStagger,
+  cardItem,
+  testimonialReveal,
+  slideFromLeft,
+  slideFromRight,
+  glowPop,
+  fadeRise,
+} from "@/lib/animations";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -273,6 +283,7 @@ function ShowcaseCard({
   extraBadge,
   isVibeCoding,
   prefersReduced,
+  index = 0,
 }: {
   before: string;
   after: string;
@@ -280,15 +291,22 @@ function ShowcaseCard({
   extraBadge?: string;
   isVibeCoding?: boolean;
   prefersReduced: boolean | null;
+  index?: number;
 }) {
+  const baseDelay = index * 0.07;
+  const slideEase = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-xl overflow-hidden"
       style={{ border: "1px solid rgba(255,255,255,0.05)" }}
     >
-      {/* Sebelum */}
-      <div
+      {/* Sebelum — slide from left */}
+      <motion.div
         className="p-5 flex flex-col gap-3"
         style={{ background: "rgba(8,8,12,0.7)" }}
+        initial={prefersReduced ? false : { opacity: 0, x: -22 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.45, delay: baseDelay, ease: slideEase }}
       >
         <div className="flex items-center gap-2">
           <span className="font-mono text-xs tracking-widest" style={{ color: "#3F3F46", letterSpacing: "0.15em" }}>SEBELUM</span>
@@ -299,11 +317,16 @@ function ShowcaseCard({
         <p className="text-sm leading-relaxed flex-1" style={{ color: "#52525B" }}>
           "{before}"
         </p>
-      </div>
+      </motion.div>
 
-      {/* Dengan AI */}
+      {/* Dengan AI — slide from right + pulse glow */}
       <motion.div
-        className="p-5 flex flex-col gap-3 relative overflow-hidden"
+        initial={prefersReduced ? false : { opacity: 0, x: 22 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.45, delay: baseDelay + 0.09, ease: slideEase }}
+      >
+      <motion.div
+        className="p-5 flex flex-col gap-3 relative overflow-hidden h-full"
         style={{
           background: isVibeCoding ? "rgba(20,10,36,0.95)" : "rgba(16,12,28,0.9)",
           borderLeft: "1px solid rgba(124,58,237,0.15)",
@@ -348,6 +371,7 @@ function ShowcaseCard({
             </motion.span>
           )}
         </div>
+      </motion.div>
       </motion.div>
     </div>
   );
@@ -455,6 +479,7 @@ function ShowcaseSection() {
                   extraBadge={card.extraBadge}
                   isVibeCoding={tab.isVibeCoding}
                   prefersReduced={prefersReduced}
+                  index={ci}
                 />
               ))}
             </motion.div>
@@ -503,6 +528,7 @@ function ShowcaseSection() {
                   extraBadge={card.extraBadge}
                   isVibeCoding={mobileTabData.isVibeCoding}
                   prefersReduced={prefersReduced}
+                  index={ci}
                 />
               ))}
             </motion.div>
@@ -640,11 +666,17 @@ function TestimoniSection() {
           </motion.h2>
         </Reveal>
 
-        <Reveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          variants={containerStagger}
+        >
           {testimonials.map((t, i) => (
             <motion.div
               key={i}
-              variants={fadeUp}
+              variants={testimonialReveal}
               className="relative p-6 flex flex-col group"
               style={{
                 background: "rgba(12,10,20,0.7)",
@@ -682,7 +714,7 @@ function TestimoniSection() {
               </div>
             </motion.div>
           ))}
-        </Reveal>
+        </motion.div>
 
         {/* Watermark jika masih placeholder */}
         {isPlaceholder && (
@@ -886,7 +918,13 @@ export default function Home() {
             </motion.h2>
           </Reveal>
 
-          <Reveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={containerStagger}
+          >
             {[
               {
                 icon: <IconBrain />,
@@ -921,7 +959,7 @@ export default function Home() {
             ].map((item, i) => (
               <motion.div
                 key={i}
-                variants={fadeUp}
+                variants={cardItem}
                 className="group relative p-5 transition-all duration-300 cursor-default"
                 style={{
                   background: "rgba(16,16,24,0.6)",
@@ -944,7 +982,7 @@ export default function Home() {
                 <p className="text-sm leading-relaxed" style={{ color: "#71717A" }}>{item.desc}</p>
               </motion.div>
             ))}
-          </Reveal>
+          </motion.div>
         </div>
       </section>
 
@@ -972,7 +1010,13 @@ export default function Home() {
             </motion.h2>
           </Reveal>
 
-          <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-12">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={containerStagger}
+          >
             {[
               {
                 num: "01",
@@ -1000,7 +1044,7 @@ export default function Home() {
                 desc: "Tahu AI penting, tapi belum tahu harus mulai dari mana. Justru di sinilah tempat yang paling tepat untuk memulai.",
               },
             ].map((item, i) => (
-              <motion.div key={i} variants={fadeUp} className="flex gap-6">
+              <motion.div key={i} variants={cardItem} className="flex gap-6">
                 <span
                   className="flex-shrink-0 font-mono font-bold text-2xl leading-none mt-0.5"
                   style={{ color: "rgba(124,58,237,0.3)", letterSpacing: "-0.02em" }}
@@ -1013,7 +1057,7 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
-          </Reveal>
+          </motion.div>
         </div>
       </section>
 
@@ -1154,7 +1198,13 @@ export default function Home() {
             </motion.p>
           </Reveal>
 
-          <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={containerStagger}
+          >
             {[
               { title: "Bahasa Arab Akademik dengan AI", desc: "Taklukkan makalah, muthala'ah, dan teks akademik dengan AI sebagai asisten linguistikmu." },
               { title: "Bangun Penghidupan dengan AI", desc: "Ubah keterampilan dan potensimu menjadi sumber penghasilan yang berkelanjutan." },
@@ -1163,7 +1213,7 @@ export default function Home() {
             ].map((item, i) => (
               <motion.div
                 key={i}
-                variants={fadeUp}
+                variants={cardItem}
                 className="p-5"
                 style={{
                   background: "rgba(10,10,15,0.6)",
@@ -1188,7 +1238,7 @@ export default function Home() {
                 <p className="text-xs leading-relaxed" style={{ color: "#52525B" }}>{item.desc}</p>
               </motion.div>
             ))}
-          </Reveal>
+          </motion.div>
         </div>
       </section>
 
