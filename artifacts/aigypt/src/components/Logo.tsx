@@ -51,7 +51,7 @@ export function Logo({ variant = "full", className = "" }: LogoProps) {
       src={logoImg}
       alt="AIGYPT"
       className={className}
-      style={{ height: 36, width: "auto" }}
+      style={{ height: 24, width: "auto" }}
     />
   );
 }
