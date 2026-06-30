@@ -144,3 +144,75 @@
   background: #6D28D9;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
 }
+
+/* ── Pulsing glow: urgency card di hero ───────────────────────────────────── */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 12px 0px rgba(168, 85, 247, 0.25);
+    border-color: rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px 4px rgba(168, 85, 247, 0.55);
+    border-color: rgba(168, 85, 247, 0.8);
+  }
+}
+
+.batch-urgency-card {
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  animation: pulseGlow 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .batch-urgency-card {
+    animation: none;
+    box-shadow: 0 0 18px 2px rgba(168, 85, 247, 0.4);
+    border-color: rgba(168, 85, 247, 0.5);
+  }
+}
+
+/* ── Marquee: announcement bar ────────────────────────────────────────────── */
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.announcement-bar-outer {
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.announcement-bar-track {
+  display: inline-flex;
+  animation: marqueeScroll 14s linear infinite;
+}
+
+.announcement-bar-track:hover {
+  animation-play-state: paused;
+}
+
+.announcement-text {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: #F3E8FF;
+  flex-shrink: 0;
+  padding: 0 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-bar-track {
+    animation: none;
+    transform: none;
+  }
+  .announcement-text:nth-child(2) {
+    display: none;
+  }
+  .announcement-bar-outer {
+    white-space: normal;
+    text-align: center;
+  }
+}

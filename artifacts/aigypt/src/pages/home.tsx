@@ -746,8 +746,8 @@ export default function Home() {
 
           <motion.div
             variants={fadeUp}
-            className="inline-flex flex-col items-center gap-1 mb-4 px-5 py-3 rounded-xl"
-            style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)" }}
+            className="batch-urgency-card inline-flex flex-col items-center gap-1 mb-4 px-5 py-3 rounded-xl"
+            style={{ background: "rgba(124,58,237,0.1)" }}
           >
             <span className="font-mono text-xs font-bold tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 · PENDAFTARAN DIBUKA</span>
             <span className="font-mono text-xs" style={{ color: "#71717A" }}>Kelas dimulai 5 Juli 2026 · Tempat sangat terbatas</span>

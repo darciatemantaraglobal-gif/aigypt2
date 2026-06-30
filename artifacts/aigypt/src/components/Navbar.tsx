@@ -23,13 +23,22 @@ export function Navbar() {
   return (
     <div className="sticky top-0 z-50">
       {barVisible && (
-        <div className="relative flex items-center justify-center gap-3 py-2 px-6 text-center" style={{ background: "#7C3AED" }}>
-          <p className="font-mono text-xs tracking-widest text-white" style={{ letterSpacing: "0.15em" }}>
-            PENDAFTARAN BATCH 1 DIBUKA · KELAS DIMULAI 5 JULI 2026 · TEMPAT TERBATAS
-          </p>
+        <div className="flex items-center py-2 pl-0 pr-3" style={{ background: "#7C3AED" }}>
+          {/* Marquee track — teks diduplikasi 2× agar loop seamless (translateX -50%) */}
+          <div className="announcement-bar-outer">
+            <div className="announcement-bar-track">
+              <span className="announcement-text">
+                PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; KELAS DIMULAI 5 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;&nbsp;
+              </span>
+              <span className="announcement-text">
+                PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; KELAS DIMULAI 5 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;&nbsp;
+              </span>
+            </div>
+          </div>
+          {/* Tombol close — di luar track, tidak ikut bergerak */}
           <button
             onClick={dismissBar}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors"
+            className="flex-shrink-0 ml-2 text-white/70 hover:text-white transition-colors"
             aria-label="Tutup"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
