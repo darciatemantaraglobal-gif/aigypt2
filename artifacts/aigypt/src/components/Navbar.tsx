@@ -8,7 +8,15 @@ export function Navbar() {
   const [barVisible, setBarVisible] = useState(false);
   const { user, isAuthenticated } = useAuth();
   const { handleLogout, isPending } = useLogoutAction();
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
+
+  function handleLogoClick() {
+    if (location === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate("/");
+    }
+  }
 
   useEffect(() => {
     if (!sessionStorage.getItem("aigypt-bar-dismissed")) {
@@ -55,34 +63,25 @@ export function Navbar() {
           <div className="flex items-center justify-between py-4">
 
             {/* Logo */}
-            <Link href={isAuthenticated ? "/kelas" : "/"}>
-              <div className="cursor-pointer relative">
-                {/* Logo glow effect */}
-                <div
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: 0,
-                    transform: "translateY(-50%)",
-                    width: 120,
-                    height: 32,
-                    background: "radial-gradient(ellipse, rgba(124,58,237,0.2), transparent 70%)",
-                    filter: "blur(12px)",
-                    pointerEvents: "none",
-                    zIndex: -1,
-                  }}
-                />
-                {/* Desktop: mark + text */}
-                <div className="hidden md:block">
-                  <Logo variant="mark-with-text" />
-                </div>
-                {/* Mobile: mark + text */}
-                <div className="md:hidden">
-                  <Logo variant="mark-with-text" />
-                </div>
-              </div>
-            </Link>
+            <button onClick={handleLogoClick} className="relative cursor-pointer" aria-label="Ke halaman utama">
+              {/* Logo glow effect */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: 0,
+                  transform: "translateY(-50%)",
+                  width: 120,
+                  height: 36,
+                  background: "radial-gradient(ellipse, rgba(124,58,237,0.2), transparent 70%)",
+                  filter: "blur(12px)",
+                  pointerEvents: "none",
+                  zIndex: -1,
+                }}
+              />
+              <Logo variant="full" />
+            </button>
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1">
@@ -219,7 +218,7 @@ export function Navbar() {
             <div className="md:hidden border-t border-[#1E1E2E] py-4 flex flex-col gap-1">
               {/* Logo in drawer */}
               <div className="px-4 pb-3 mb-1 border-b border-[#1E1E2E]">
-                <Logo variant="mark-with-text" />
+                <Logo variant="full" />
               </div>
 
               <Link href="/kurikulum" onClick={() => setMenuOpen(false)}>
