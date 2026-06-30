@@ -1,0 +1,79 @@
+# Prompt — AIGYPT: Hapus Semua Em Dash dari Seluruh Website
+
+Copy-paste prompt ini ke Replit Agent. Ini mencari dan mengganti SEMUA penggunaan em dash di seluruh teks website AIGYPT agar copy terasa lebih natural dan tidak terlihat seperti ditulis AI.
+
+PENTING: Ini perubahan teks atau typo saja. Jangan ubah struktur, layout, desain, atau logic apapun.
+
+---
+
+## PROMPT
+
+Lakukan pencarian menyeluruh di SELURUH codebase untuk karakter em dash (tanda hubung panjang, kode unicode U+2014) dan ganti masing-masing dengan alternatif yang lebih natural sesuai konteks kalimatnya. Em dash sering muncul dalam teks yang sebelumnya diberikan dan membuat copy terasa seperti ditulis AI, ganti semua.
+
+### Lokasi yang Harus Dicek
+
+Cari di SEMUA file yang berisi teks tampilan, termasuk namun tidak terbatas pada:
+```
+src/pages/home.tsx
+src/pages/kurikulum.tsx
+src/pages/kelas.tsx
+src/pages/kelas-detail.tsx
+src/pages/daftar.tsx
+src/pages/sukses.tsx
+src/pages/toolbox.tsx
+src/lib/materiContent.ts
+src/lib/testimonials.ts (jika ada)
+src/lib/showcaseWorks.ts (jika ada)
+src/lib/showcaseExamples.ts (jika ada)
+src/lib/classesData.ts atau lib/kelasContent.ts (jika ada)
+Semua komponen di src/components/
+```
+
+Gunakan pencarian global (grep atau search-and-replace) untuk karakter em dash di seluruh folder src/ dan pastikan tidak ada yang terlewat.
+
+### Cara Mengganti
+
+Em dash biasanya dipakai untuk salah satu dari fungsi berikut, ganti sesuai fungsinya masing-masing, JANGAN asal hapus tanpa menyesuaikan kalimat:
+
+1. Jika berfungsi sebagai jeda atau penjelasan tambahan dalam kalimat, pisah menjadi dua kalimat, atau gunakan koma, atau gunakan kata penghubung natural seperti "yaitu", "yakni", "artinya". Contoh: "Setiap sesi dirancang bertahap, dari memahami, menguasai" menggantikan versi dengan em dash.
+
+2. Jika berfungsi memisahkan dua klausa yang kontras atau berurutan, pisah menjadi dua kalimat terpisah, atau gunakan koma jika benar-benar masih satu kesatuan ide. Contoh: "Dari takut dan asal pakai, menjadi memahami AI" menggantikan versi dengan em dash.
+
+3. Jika dipakai sebagai pengganti tanda kurung untuk sisipan informasi, gunakan tanda kurung biasa atau koma. Contoh: "Sang Pencari, belum tahu harus mulai dari mana" menggantikan versi dengan em dash.
+
+4. Jika dipakai di awal label atau badge sebagai bullet style, ganti dengan tanda hubung biasa atau hapus saja jika styling bullet sudah ditangani komponen (CSS list-style atau ikon), bukan karakter tanda baca dalam teks.
+
+### Setelah Mengganti, Pastikan
+
+1. Kalimat tetap mengalir natural secara tata bahasa Indonesia setelah perubahan, baca ulang tiap kalimat yang diubah untuk memastikan tidak janggal
+2. Tidak ada em dash yang tersisa di mana pun dalam kode
+3. Tidak ada dampak pada styling atau komponen, karena ini perubahan teks murni, pastikan tidak merusak markup JSX di sekitarnya
+4. Tanda baca pengganti (koma, titik, tanda hubung biasa) digunakan secara konsisten dan sesuai kaidah bahasa Indonesia yang baik
+
+### Verifikasi Akhir
+
+Setelah selesai, lakukan pencarian ulang untuk karakter em dash di seluruh folder src/ dan pastikan hasilnya nol kecocokan. Jika ada karakter serupa yang memang bagian dari font icon atau elemen non-teks yang tidak relevan, jelaskan jika ada pengecualian semacam itu.
+
+---
+
+## YANG TIDAK BOLEH DIUBAH
+
+1. Struktur JSX, komponen, atau logic
+2. Layout dan desain visual
+3. Tanda hubung pendek biasa yang memang sudah benar secara gramatikal (misalnya dalam "AI-powered" atau penomoran "Sesi 1-6"), ini bukan em dash, jangan disentuh
+4. Konten substansi atau makna kalimat, hanya tanda baca yang disesuaikan
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Pencarian dan penggantian dilakukan secara menyeluruh di seluruh folder src/
+2. Setiap penggantian disesuaikan konteks kalimatnya masing-masing, tidak asal hapus karakter
+3. npm run build harus sukses tanpa error setelah perubahan
+4. Tidak ada perubahan pada bagian non-teks (kode logic, styling, struktur)
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Seluruh teks di website AIGYPT tidak lagi mengandung karakter em dash. Setiap kalimat yang sebelumnya menggunakan em dash sudah disesuaikan dengan tanda baca alternatif yang natural dan sesuai kaidah bahasa Indonesia, sehingga copy terasa lebih manusiawi dan tidak menunjukkan ciri khas tulisan yang dihasilkan AI.

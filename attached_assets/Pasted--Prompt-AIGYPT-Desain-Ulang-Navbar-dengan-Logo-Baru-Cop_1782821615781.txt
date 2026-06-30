@@ -1,0 +1,165 @@
+# Prompt — AIGYPT: Desain Ulang Navbar dengan Logo Baru
+
+Copy-paste prompt ini ke Replit Agent. Ini mengganti logo teks "AIGYPT" yang sekarang dengan logo gambar baru (segitiga ungu dengan ikon gear/sun di tengah), sekaligus mendesain ulang navbar secara keseluruhan agar lebih hidup dan tidak kosong, terutama di tampilan mobile.
+
+PENTING: Logo baru sudah diberikan sebagai file gambar terlampir. Simpan file tersebut ke project terlebih dahulu sebelum menggunakannya di komponen.
+
+---
+
+## LANGKAH 1 — Simpan File Logo
+
+Simpan file logo yang dilampirkan ke folder assets project:
+```
+artifacts/aigypt/src/assets/logo-aigypt.png       (logo lengkap dengan tulisan, untuk desktop/area lebar)
+artifacts/aigypt/src/assets/logo-aigypt-mark.png  (hanya ikon segitiga, untuk area sempit/mobile/favicon)
+```
+
+Jika project menggunakan folder public/ untuk static assets, sesuaikan path penyimpanan dengan konvensi yang sudah ada di project (cek apakah ada folder public/images/ atau sejenisnya).
+
+Jika diperlukan, buat juga versi favicon dari mark logo (ikon segitiga saja) dan update index.html untuk menggunakan favicon baru ini.
+
+---
+
+## LANGKAH 2 — Desain Ulang Navbar
+
+### Konsep Navbar Baru
+
+Navbar saat ini di mobile terasa kosong (hanya logo dan hamburger menu dengan banyak ruang hampa di antaranya). Desain ulang agar terasa lebih hidup dengan menambahkan elemen pendukung, tanpa membuatnya ramai.
+
+### Struktur Navbar Desktop
+
+Logo lengkap (gambar plus AIGYPT) di kiri, lalu link Kurikulum, Kelas, Toolbox (hanya untuk user login) di tengah, lalu badge Batch 1 dan tombol Masuk di kanan.
+
+### Struktur Navbar Mobile (FOKUS UTAMA PERBAIKAN)
+
+Logo mark (ikon segitiga) plus teks AIGYPT di kiri, badge Batch 1 dan hamburger menu di kanan.
+
+Detail elemen baru yang ditambahkan di mobile:
+
+**1. Logo dengan ikon mark**
+Gunakan kombinasi ikon mark (segitiga) berukuran sekitar 28-32px di samping teks "AIGYPT" (pertahankan styling teks yang sudah ada: "AI" putih, "GYPT" ungu). Ikon dan teks disejajarkan vertikal center dengan jarak sekitar 8px.
+
+**2. Badge status kecil**
+Tambahkan badge kecil bertuliskan "BATCH 1" di antara logo dan hamburger menu, dengan styling:
+```css
+.navbar-badge {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #C084FC;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+```
+Badge ini hanya muncul jika status pendaftaran sedang aktif (kondisional berdasarkan state pendaftaran Batch 1 yang sudah ada di aplikasi, jika ada). Jika tidak ada state semacam itu, tampilkan secara statis untuk saat ini.
+
+**3. Garis aksen gradient tipis di paling atas navbar**
+Tambahkan garis tipis (3px) dengan gradient ungu di paling atas navbar, di atas seluruh konten navbar:
+```css
+.navbar-top-accent {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #7C3AED, #A855F7, #7C3AED);
+}
+```
+
+**4. Glow halus di belakang logo**
+Tambahkan glow ungu sangat halus di belakang area logo (efek ambient kecil, bukan dominan):
+```css
+.navbar-logo-glow {
+  position: absolute;
+  width: 120px;
+  height: 32px;
+  background: radial-gradient(ellipse, rgba(124, 58, 237, 0.2), transparent 70%);
+  filter: blur(12px);
+  pointer-events: none;
+  z-index: -1;
+}
+```
+
+**5. Hamburger menu icon styling**
+Pastikan tombol hamburger menu memiliki:
+- Ukuran touch target minimal 44x44px (sesuai standar mobile yang sudah ditetapkan sebelumnya)
+- Background subtle: #16161F dengan border tipis rgba(255,255,255,0.08)
+- Border radius sekitar 10px
+- Icon garis (3 baris horizontal) berwarna #A1A1AA, berubah warna ke #A855F7 saat menu terbuka (state aktif)
+- Animasi transformasi ke ikon X saat menu terbuka (transisi halus, bukan langsung berganti)
+
+### Drawer/Menu Mobile yang Terbuka
+
+Saat hamburger menu di-tap, pastikan drawer yang terbuka (sesuai implementasi yang sudah ada) juga menggunakan logo baru di bagian atasnya, dan tampilkan badge "Batch 1" yang sama jika relevan untuk konsistensi visual.
+
+---
+
+## LANGKAH 3 — Update Semua Penggunaan Logo di Tempat Lain
+
+Selain navbar, cari penggunaan logo "AIGYPT" (versi teks) di tempat lain dan ganti dengan logo gambar baru untuk konsistensi:
+```
+Footer (logo di kolom Brand)
+Halaman Login (jika ada logo di atas form)
+Halaman Admin Login (jika ada logo)
+Halaman Sukses pendaftaran (jika ada logo)
+Favicon di index.html
+```
+
+Gunakan logo lengkap (dengan tulisan) di tempat yang punya ruang cukup (footer, halaman login), dan logo mark saja di tempat yang sempit (favicon).
+
+---
+
+## KOMPONEN LOGO REUSABLE
+
+Buat komponen Logo yang reusable agar konsisten di seluruh aplikasi:
+
+```tsx
+import logoFull from '@/assets/logo-aigypt.png'
+import logoMark from '@/assets/logo-aigypt-mark.png'
+
+interface LogoProps {
+  variant?: 'full' | 'mark-with-text' | 'mark-only'
+  className?: string
+}
+
+export function Logo({ variant = 'full', className = '' }: LogoProps) {
+  if (variant === 'mark-only') {
+    return <img src={logoMark} alt="AIGYPT" className={`h-8 w-auto ${className}`} />
+  }
+
+  if (variant === 'mark-with-text') {
+    return (
+      <div className={`flex items-center gap-2 ${className}`}>
+        <img src={logoMark} alt="" className="h-7 w-auto" />
+        <span className="font-bold text-lg" style={{ fontFamily: 'Space Grotesk' }}>
+          <span className="text-[#FAFAFA]">AI</span>
+          <span className="text-[#A855F7]">GYPT</span>
+        </span>
+      </div>
+    )
+  }
+
+  return <img src={logoFull} alt="AIGYPT" className={`h-9 w-auto ${className}`} />
+}
+```
+
+Gunakan variant mark-with-text di navbar mobile, variant full di navbar desktop dan footer, variant mark-only di tempat yang sangat sempit.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. File logo disimpan dengan benar di folder assets project
+2. Komponen Logo dibuat reusable dan dipakai konsisten di semua tempat (navbar, footer, halaman auth)
+3. Touch target hamburger menu tetap memenuhi standar 44x44px minimum
+4. Badge "Batch 1" tidak boleh membuat navbar terlalu padat, beri jarak yang cukup antar elemen
+5. Garis aksen gradient dan glow logo bersifat dekoratif, tidak boleh mengganggu keterbacaan logo atau interaksi navigasi
+6. Pastikan logo tetap terlihat jelas dengan kontras baik terhadap background gelap navbar
+7. Fully responsive: navbar desktop dan mobile tetap konsisten secara branding meski elemen berbeda
+8. npm run build harus sukses tanpa error
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Navbar AIGYPT menggunakan logo gambar baru (segitiga ungu dengan ikon gear di tengah) yang dipasang secara konsisten di seluruh aplikasi. Navbar mobile tidak lagi terasa kosong, dengan tambahan badge status "Batch 1", garis aksen gradient di atas, dan glow halus di belakang logo, namun tetap elegan dan tidak ramai. Hamburger menu memiliki touch target yang nyaman dengan animasi transisi yang halus.
