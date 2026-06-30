@@ -28,10 +28,10 @@ export function Navbar() {
           <div className="announcement-bar-outer">
             <div className="announcement-bar-track">
               <span className="announcement-text">
-                PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; KELAS DIMULAI 5 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;&nbsp;
+                PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; PERTEMUAN PERTAMA 6 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;&nbsp;
               </span>
               <span className="announcement-text">
-                PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; KELAS DIMULAI 5 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;&nbsp;
+                PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; PERTEMUAN PERTAMA 6 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;&nbsp;
               </span>
             </div>
           </div>

@@ -59,7 +59,7 @@ const tiers = [
     desc: "Bimbingan penuh, komunitas aktif, dan sertifikat.",
     features: [
       "Semua yang ada di Member Mandiri",
-      "6 sesi mentoring live (mulai 5 Juli 2026)",
+      "4 pertemuan live bersama mentor (6, 8, 11, 13 Juli 2026)",
       "Bimbingan dan feedback langsung",
       "Komunitas eksklusif Batch 1",
       "Sertifikat penyelesaian",
@@ -240,7 +240,7 @@ export default function Daftar() {
               className="text-base leading-relaxed max-w-xl mx-auto"
               style={{ color: "#71717A", fontWeight: 300 }}
             >
-              Batch 1 dimulai 5 Juli 2026. Kuota sangat terbatas — amankan tempatmu sekarang.
+              Pertemuan pertama Batch 1 pada 6 Juli 2026. Kuota sangat terbatas — amankan tempatmu sekarang.
             </motion.p>
           </motion.div>
 

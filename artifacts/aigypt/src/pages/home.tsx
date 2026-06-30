@@ -207,7 +207,7 @@ const faqs = [
   },
   {
     q: "Apa itu format Hybrid?",
-    a: "Ada jadwal mentoring live bersama mentor setiap minggunya. Tapi seluruh materi sudah terbuka sejak hari pertama — kamu bisa belajar kapan saja sesuai waktumu.",
+    a: "Kamu mempelajari keseluruhan enam sesi materi secara mandiri di platform, kapan saja sesuai waktumu. Selain itu, ada empat pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026 — momen kita membahas lebih dalam, praktek bersama, dan tanya jawab langsung.",
   },
   {
     q: "Berapa peserta per batch?",
@@ -832,7 +832,7 @@ export default function Home() {
             style={{ background: "rgba(124,58,237,0.1)" }}
           >
             <span className="font-mono text-xs font-bold tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 · PENDAFTARAN DIBUKA</span>
-            <span className="font-mono text-xs" style={{ color: "#71717A" }}>Kelas dimulai 5 Juli 2026 · Tempat sangat terbatas</span>
+            <span className="font-mono text-xs" style={{ color: "#71717A" }}>Pertemuan pertama: 6 Juli 2026 · Tempat sangat terbatas</span>
           </motion.div>
 
           {/* Tambahan: Angkatan Pertama */}
@@ -877,7 +877,7 @@ export default function Home() {
             variants={fadeUp}
             className="inline-flex flex-wrap items-center justify-center gap-6"
           >
-            {["6 SESI", "60 MENIT/SESI", "HYBRID", "SEMUA LEVEL"].map((t) => (
+            {["6 SESI MATERI", "4 PERTEMUAN LIVE", "HYBRID", "SEMUA LEVEL"].map((t) => (
               <span key={t} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
                 {t}
               </span>
@@ -1121,14 +1121,14 @@ export default function Home() {
                       Menghasilkan Solusimu
                     </h3>
                     <p className="text-sm" style={{ color: "#71717A" }}>
-                      Kelas perdana AIGYPT. Enam minggu perjalanan dari memahami AI hingga membangun solusi nyata atas masalah yang kamu hadapi.
+                      Kelas perdana AIGYPT. Pelajari 6 sesi materi lengkap secara mandiri, plus 4 pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026.
                     </p>
                   </div>
                   <div
                     className="flex-shrink-0 inline-flex rounded-2xl overflow-hidden"
                     style={{ border: "1px solid rgba(255,255,255,0.06)" }}
                   >
-                    {[["6", "SESI"], ["60 MENIT", "PER SESI"], ["1", "KARYA NYATA"]].map(([val, lbl], i) => (
+                    {[["6", "SESI MATERI"], ["4", "PERTEMUAN LIVE"], ["1", "KARYA NYATA"]].map(([val, lbl], i) => (
                       <div key={i} className="flex items-center">
                         {i > 0 && <div className="self-stretch w-px" style={{ background: "rgba(255,255,255,0.06)" }} />}
                         <div className="px-5 py-3 text-center">
@@ -1142,12 +1142,12 @@ export default function Home() {
 
                 <div className="mb-6 flex flex-wrap gap-3">
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 1 — PENDAFTARAN DIBUKA</span>
-                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Dimulai: 5 Juli 2026</span>
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Pertemuan pertama: 6 Juli 2026</span>
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Kuota terbatas per batch</span>
                 </div>
 
                 <p className="text-sm leading-[1.9] mb-8 max-w-2xl" style={{ color: "#A1A1AA", fontWeight: 300 }}>
-                  Format Hybrid: ada jadwal mentoring live, tapi seluruh materi bisa kamu akses kapan saja setelah mendaftar.
+                  Format Hybrid: pelajari 6 sesi materi secara mandiri kapan saja, plus 4 pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026.
                 </p>
 
                 {/* Tambahan: Mengapa Bergabung Sekarang */}
@@ -1337,7 +1337,7 @@ export default function Home() {
                 subDesc: "Semua itu, plus dibimbing langsung menerapkannya.",
                 features: [
                   "Semua yang ada di Member Mandiri",
-                  "6 sesi mentoring live (mulai 5 Juli 2026)",
+                  "4 pertemuan live bersama mentor (6, 8, 11, 13 Juli 2026)",
                   "Bimbingan dan feedback langsung",
                   "Komunitas eksklusif Batch 1",
                   "Sertifikat penyelesaian",
@@ -1446,7 +1446,7 @@ export default function Home() {
             className="text-base sm:text-lg mb-10"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Batch 1 dimulai 5 Juli 2026. Tempat sangat terbatas.
+            Pertemuan pertama Batch 1 pada 6 Juli 2026. Tempat sangat terbatas.
           </motion.p>
           {/* Risk-reversal */}
           <motion.p

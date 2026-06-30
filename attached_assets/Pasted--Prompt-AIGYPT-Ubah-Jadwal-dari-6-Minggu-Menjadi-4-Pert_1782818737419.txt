@@ -1,0 +1,164 @@
+# Prompt — AIGYPT: Ubah Jadwal dari 6 Minggu Menjadi 4 Pertemuan Padat
+
+Copy-paste prompt ini ke Replit Agent. Ini mengubah struktur jadwal Batch 1 dari "6 minggu, 1 sesi per minggu" menjadi "4 pertemuan padat" pada tanggal 6, 8, 11, dan 13 Juli 2026, masing-masing 1.5-2 jam, dengan materi 6 sesi yang sudah ada dipadatkan menjadi 4 pertemuan (bukan dihapus atau ditulis ulang).
+
+PENTING: Ini perubahan struktural pada jadwal dan beberapa teks terkait. Materi 6 sesi yang sudah ada di materiContent.ts TETAP DIPERTAHANKAN UTUH, peserta tetap belajar 6 sesi materi lengkap, hanya jadwal mentoring live-nya yang dipadatkan jadi 4 pertemuan. Jangan hapus atau gabungkan konten 6 sesi di sistem pembelajaran (rute /kelas/[id]/materi/[sesi]), itu tetap 6 sesi terpisah seperti sebelumnya, peserta tetap bisa belajar bertahap di platform.
+
+---
+
+## KONTEKS PENTING, PISAHKAN DUA HAL INI
+
+Ada dua hal yang harus dibedakan dengan jelas:
+
+1. Materi pembelajaran di platform (rute /kelas/[id]/materi/sesi-1 sampai sesi-6), TETAP 6 sesi terpisah, tidak berubah, peserta tetap mengakses dan menyelesaikan 6 sesi seperti biasa secara mandiri di platform.
+
+2. Jadwal mentoring live bersama mentor, INI YANG BERUBAH, dari "6 sesi, 1 pertemuan per minggu selama 6 minggu" menjadi "4 pertemuan padat", di mana setiap pertemuan live membahas gabungan beberapa sesi materi sekaligus.
+
+Pemetaan pertemuan live:
+
+Pertemuan 1, Senin 6 Juli 2026, 1.5-2 jam, membahas Sesi 1 (Fondasi) plus Sesi 2 (Keterampilan/Prompting)
+
+Pertemuan 2, Rabu 8 Juli 2026, 1.5-2 jam, membahas Sesi 3 (Penerapan, Akademik dan Organisasi)
+
+Pertemuan 3, Sabtu 11 Juli 2026, 1.5-2 jam, membahas Sesi 4 (Produksi, Bisnis dan Konten) plus Sesi 5 (Penciptaan, Vibe Coding)
+
+Pertemuan 4, Senin 13 Juli 2026, 1.5-2 jam, membahas Sesi 6 (Pembuktian, Demo Day)
+
+---
+
+## PERUBAHAN YANG DIMINTA
+
+### 1. Section Timeline di Halaman Kurikulum (rute /kurikulum)
+
+Ganti total konten section "Ritme Enam Minggu Batch 1" yang sebelumnya menampilkan 6 baris mingguan, menjadi section baru "4 Pertemuan Live" dengan konten berikut:
+
+```
+Label (mono): JADWAL PERTEMUAN LIVE BATCH 1
+
+Headline: Empat Pertemuan, Satu Transformasi Penuh
+
+Sub-headline (baru, penting, jelaskan ke pengunjung bahwa materi tetap lengkap 6 sesi):
+Kamu tetap mempelajari keseluruhan enam sesi secara mandiri di platform,
+kapan saja sesuai waktumu. Empat pertemuan ini adalah momen kita
+berkumpul bersama, membahas lebih dalam, praktek langsung,
+dan menjawab pertanyaanmu secara langsung.
+```
+
+Tampilkan 4 card pertemuan (bukan 6 lagi) dengan layout grid 2x2 (sama seperti struktur grid yang sudah ada, hanya jumlah card berkurang dari 6 ke 4). Setiap card berisi: nomor pertemuan (lingkaran ungu seperti sebelumnya), tanggal dan hari, judul tema gabungan, dan baris kecil menyebutkan sesi mana saja yang dibahas.
+
+```
+Card 1:
+Nomor: 1
+Tanggal: Senin, 6 Juli 2026
+Judul: Fondasi dan Keterampilan
+Sub: Membahas Sesi 1-2, mindset AI dan seni berdialog dengan kecerdasan
+
+Card 2:
+Nomor: 2
+Tanggal: Rabu, 8 Juli 2026
+Judul: Penerapan
+Sub: Membahas Sesi 3, AI untuk ilmu dan amanah organisasi
+
+Card 3:
+Nomor: 3
+Tanggal: Sabtu, 11 Juli 2026
+Judul: Produksi dan Penciptaan
+Sub: Membahas Sesi 4-5, dari menghasilkan karya hingga membangun aplikasi
+
+Card 4:
+Nomor: 4
+Tanggal: Senin, 13 Juli 2026
+Judul: Pembuktian
+Sub: Membahas Sesi 6, Demo Day, mempersembahkan karyamu
+```
+
+Catatan kecil di bawah grid (mono, muted), GANTI dari "Jadwal mentoring live dikonfirmasi setelah pendaftaran" menjadi:
+```
+SETIAP PERTEMUAN BERLANGSUNG 1.5-2 JAM SECARA LIVE BERSAMA MENTOR
+```
+
+### 2. Hero Section, Urgency Block
+
+Cari urgency block di hero landing page (rute /) yang berisi teks "Kelas dimulai 5 Juli 2026". Ganti tanggal menjadi:
+
+```
+BATCH 1 · PENDAFTARAN DIBUKA
+Pertemuan pertama: 6 Juli 2026 · Tempat sangat terbatas
+```
+
+### 3. Announcement Bar
+
+Cari teks announcement bar yang berisi "PENDAFTARAN BATCH 1 DIBUKA KELAS DIMULAI 5 JULI 2026 TEMPAT TERBATAS". Ganti menjadi:
+
+```
+PENDAFTARAN BATCH 1 DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026 · TEMPAT TERBATAS
+```
+
+Termasuk pada versi marquee/teks yang diduplikasi untuk animasi berjalan, jika sudah diimplementasikan sebelumnya.
+
+### 4. Countdown Timer
+
+Cari implementasi countdown timer yang menghitung mundur ke tanggal 5 Juli 2026 (format ISO 2026-07-05T00:00:00 plus 03:00). Ubah target tanggal menjadi tanggal pertemuan pertama:
+
+```typescript
+const targetDate = new Date('2026-07-06T00:00:00+03:00')
+```
+
+Jika ada label di sekitar countdown seperti "DIMULAI DALAM", boleh disesuaikan menjadi "PERTEMUAN PERTAMA DALAM" agar lebih akurat secara makna.
+
+### 5. Section Kelas Batch 1 di Landing Page (Spotlight)
+
+Cari card spotlight kelas flagship di landing page yang menampilkan detail "6 SESI 60 MENIT PER SESI SEMUA LEVEL" dan informasi "Dimulai 5 Juli 2026". Update menjadi:
+
+```
+6 SESI MATERI · 4 PERTEMUAN LIVE · SEMUA LEVEL
+
+Format: Hybrid
+Pelajari 6 sesi materi lengkap secara mandiri kapan saja, plus
+4 pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026.
+
+BATCH 1 — PENDAFTARAN DIBUKA
+Pertemuan pertama: 6 Juli 2026
+Kuota: Terbatas per batch
+```
+
+### 6. FAQ, Update Jawaban Terkait Format
+
+Cari pertanyaan FAQ "Apa itu format Hybrid?" dan update jawabannya agar konsisten dengan struktur baru:
+
+```
+Apa itu format Hybrid?
+Kamu mempelajari keseluruhan enam sesi materi secara mandiri di
+platform, kapan saja sesuai waktumu. Selain itu, ada empat
+pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026,
+momen kita membahas lebih dalam, praktek bersama, dan tanya jawab
+langsung.
+```
+
+### 7. Halaman Detail Kelas atau Dashboard (jika ada referensi jadwal serupa)
+
+Cari di halaman kelas-detail.tsx atau dashboard.tsx apakah ada referensi ke "6 minggu" atau tanggal mentoring yang sama, dan sinkronkan dengan perubahan di atas agar tidak ada informasi yang bertentangan di halaman berbeda.
+
+---
+
+## YANG TIDAK BOLEH DIUBAH
+
+1. Materi 6 sesi lengkap di materiContent.ts dan halaman /kelas/[id]/materi/sesi-1 sampai sesi-6, TETAP UTUH 6 sesi terpisah, tidak digabung atau dihapus
+2. Sistem progress tracking per sesi (peserta tetap menyelesaikan 6 sesi secara individual di platform)
+3. Layout, desain, dan struktur visual yang sudah ada, ini perubahan konten/data, bukan rebuild tampilan
+4. Format baris sesi yang bisa di-expand di halaman kurikulum tetap menampilkan 6 sesi (karena ini representasi materi pembelajaran, bukan jadwal pertemuan)
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia, panggilan "kamu"
+2. Pastikan konsistensi tanggal di seluruh halaman, tidak ada lagi referensi ke "5 Juli" atau "6 minggu" yang tersisa setelah perubahan ini
+3. Cari secara menyeluruh di seluruh codebase untuk referensi tanggal lama ("5 Juli 2026", "9 Agustus 2026", "Minggu 1" sampai "Minggu 6" dalam konteks timeline) dan pastikan semuanya terupdate
+4. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Seluruh halaman AIGYPT (landing page dan kurikulum) menampilkan jadwal yang konsisten: materi pembelajaran tetap 6 sesi lengkap yang bisa diakses mandiri, sementara jadwal pertemuan live mentoring berubah menjadi 4 pertemuan padat pada 6, 8, 11, dan 13 Juli 2026, masing-masing 1.5-2 jam, dengan pemetaan tema yang jelas per pertemuan. Tidak ada lagi referensi ke jadwal mingguan lama atau tanggal 5 Juli yang tersisa.

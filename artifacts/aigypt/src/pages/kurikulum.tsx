@@ -439,13 +439,13 @@ export default function Kurikulum() {
             className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-8"
             style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            Enam minggu yang dirancang bukan untuk membuatmu tahu lebih banyak
+            Empat pertemuan padat yang dirancang bukan untuk membuatmu tahu lebih banyak
             tentang kecerdasan buatan, tapi untuk mengubah caramu memandang
             setiap masalah yang kamu hadapi sebagai masisir. Dari yang dulu
             hanya bisa menunggu solusi, menjadi yang menciptakannya sendiri.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-col items-center gap-3">
-            <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 DIMULAI 5 JULI 2026 · PENDAFTARAN MASIH DIBUKA</p>
+            <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 · PENDAFTARAN DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026</p>
             <Link href="/daftar">
               <span
                 className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
@@ -565,48 +565,52 @@ export default function Kurikulum() {
       {/* ══ SECTION 5: TIMELINE BATCH 1 ══ */}
       <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
-          <Reveal className="mb-12">
-            <SectionLabel>RITME ENAM MINGGU BATCH 1</SectionLabel>
+          <Reveal className="mb-6">
+            <SectionLabel>JADWAL PERTEMUAN LIVE BATCH 1</SectionLabel>
             <motion.h2
               variants={fadeUp}
-              className="font-display font-semibold"
+              className="font-display font-semibold mb-4"
               style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", letterSpacing: "-0.01em" }}
             >
-              Satu Sesi, Satu Minggu, Satu Pergeseran
+              Empat Pertemuan, Satu Transformasi Penuh
             </motion.h2>
+            <motion.p variants={fadeUp} className="text-sm leading-[1.9] max-w-2xl" style={{ color: "#71717A", fontWeight: 300 }}>
+              Kamu tetap mempelajari keseluruhan enam sesi secara mandiri di platform, kapan saja sesuai waktumu.
+              Empat pertemuan ini adalah momen kita berkumpul bersama — membahas lebih dalam, praktek langsung,
+              dan menjawab pertanyaanmu secara langsung.
+            </motion.p>
           </Reveal>
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             initial="hidden"
             whileInView="visible"
             viewport={viewportConfig}
             variants={containerStagger}
           >
             {[
-              { week: "Minggu 1", date: "5 Juli", phase: "Fondasi" },
-              { week: "Minggu 2", date: "12 Juli", phase: "Keterampilan" },
-              { week: "Minggu 3", date: "19 Juli", phase: "Penerapan" },
-              { week: "Minggu 4", date: "26 Juli", phase: "Produksi" },
-              { week: "Minggu 5", date: "2 Agustus", phase: "Penciptaan" },
-              { week: "Minggu 6", date: "9 Agustus", phase: "Pembuktian" },
-            ].map((item, i) => (
+              { num: 1, day: "Senin, 6 Juli 2026",   title: "Fondasi dan Keterampilan",    sub: "Membahas Sesi 1–2: mindset AI dan seni berdialog dengan kecerdasan" },
+              { num: 2, day: "Rabu, 8 Juli 2026",    title: "Penerapan",                   sub: "Membahas Sesi 3: AI untuk ilmu dan amanah organisasi" },
+              { num: 3, day: "Sabtu, 11 Juli 2026",  title: "Produksi dan Penciptaan",     sub: "Membahas Sesi 4–5: dari menghasilkan karya hingga membangun aplikasi" },
+              { num: 4, day: "Senin, 13 Juli 2026",  title: "Pembuktian",                  sub: "Membahas Sesi 6: Demo Day, mempersembahkan karyamu" },
+            ].map((item) => (
               <motion.div
-                key={i}
+                key={item.num}
                 variants={cardItem}
-                className="flex items-center gap-4 rounded-xl px-5 py-4"
+                className="flex items-start gap-4 rounded-xl px-5 py-5"
                 style={{ background: "rgba(10,10,15,0.7)", border: "1px solid rgba(255,255,255,0.05)" }}
               >
                 <div
-                  className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-mono text-xs font-bold"
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-mono text-sm font-bold mt-0.5"
                   style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }}
                 >
-                  {i + 1}
+                  {item.num}
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] mb-0.5" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>
-                    {item.week} · {item.date}
+                  <p className="font-mono text-[10px] mb-1" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>
+                    {item.day}
                   </p>
-                  <p className="text-sm font-medium text-white">{item.phase}</p>
+                  <p className="text-sm font-semibold text-white mb-1">{item.title}</p>
+                  <p className="text-xs leading-snug" style={{ color: "#52525B" }}>{item.sub}</p>
                 </div>
               </motion.div>
             ))}
@@ -619,7 +623,7 @@ export default function Kurikulum() {
             viewport={viewportConfig}
             transition={{ delay: 0.6 }}
           >
-            JADWAL MENTORING LIVE DIKONFIRMASI SETELAH PENDAFTARAN
+            SETIAP PERTEMUAN BERLANGSUNG 1.5–2 JAM SECARA LIVE BERSAMA MENTOR
           </motion.p>
         </div>
       </section>
