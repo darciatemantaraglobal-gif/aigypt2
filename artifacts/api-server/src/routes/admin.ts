@@ -3,7 +3,14 @@ import { db, accessCodesTable } from "@workspace/db";
 
 const router = Router();
 
-const ADMIN_PASSWORD = (process.env["ADMIN_PASSWORD"] ?? "aigypt-admin-2025").trim();
+const adminPasswordEnv = process.env["ADMIN_PASSWORD"];
+if (!adminPasswordEnv) {
+  if (process.env["NODE_ENV"] === "production") {
+    throw new Error("ADMIN_PASSWORD env var must be set in production");
+  }
+  console.warn("[admin] WARNING: ADMIN_PASSWORD tidak diset. Semua endpoint admin dinonaktifkan sampai env var ini diset.");
+}
+const ADMIN_PASSWORD = adminPasswordEnv?.trim() ?? "";
 
 function checkAdminAuth(req: any): boolean {
   const authHeader = req.headers["authorization"];

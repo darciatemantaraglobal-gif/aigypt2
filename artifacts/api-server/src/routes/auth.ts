@@ -6,8 +6,16 @@ import { SignJWT, jwtVerify } from "jose";
 const router = Router();
 
 const SESSION_COOKIE = "aigypt_session";
+
+const sessionSecretEnv = process.env["SESSION_SECRET"];
+if (!sessionSecretEnv) {
+  if (process.env["NODE_ENV"] === "production") {
+    throw new Error("SESSION_SECRET env var must be set in production");
+  }
+  console.warn("[auth] WARNING: SESSION_SECRET tidak diset. Menggunakan nilai acak — sesi tidak akan bertahan setelah restart server.");
+}
 const SECRET = new TextEncoder().encode(
-  process.env["SESSION_SECRET"] ?? "aigypt-default-secret-change-in-production"
+  sessionSecretEnv ?? crypto.randomUUID() + crypto.randomUUID()
 );
 const EXPIRY_DAYS = 30;
 
