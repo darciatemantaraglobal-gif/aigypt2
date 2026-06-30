@@ -42,19 +42,42 @@ function KelasGradientCover({
           filter: "blur(24px)",
         }}
       />
-      {/* Icon */}
+      {/* Extra ambient softening layer for hero (counters solid gradient) */}
+      {isHero && (
+        <>
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(to bottom, rgba(6,6,8,0.45) 0%, transparent 50%)",
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: "10%",
+              right: "15%",
+              width: "45%",
+              height: "55%",
+              background: `radial-gradient(ellipse at center, ${kelas.accentColor}18 0%, transparent 70%)`,
+              filter: "blur(48px)",
+            }}
+          />
+        </>
+      )}
+      {/* Icon — small and subtle for hero, decorative for card/modal */}
       <div
         className="absolute"
         style={{
-          top: isHero ? "30%" : "22%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          opacity: isHero ? 0.18 : 0.2,
+          top: isHero ? "18%" : "22%",
+          right: isHero ? "12%" : "auto",
+          left: isHero ? "auto" : "50%",
+          transform: isHero ? "none" : "translate(-50%, -50%)",
+          opacity: isHero ? 0.3 : 0.2,
         }}
       >
         <svg
-          width={isHero ? 160 : isModal ? 120 : 80}
-          height={isHero ? 160 : isModal ? 120 : 80}
+          width={isHero ? 20 : isModal ? 120 : 80}
+          height={isHero ? 20 : isModal ? 120 : 80}
           viewBox="0 0 24 24"
           fill="none"
           stroke={kelas.accentColor}
@@ -685,16 +708,17 @@ export default function KelasPage() {
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
             <p
-              className="font-mono text-xs tracking-widest mb-4"
-              style={{ color: "#A855F7", letterSpacing: "0.2em" }}
+              className="font-mono tracking-widest mb-6"
+              style={{ color: "#A855F7", letterSpacing: "0.1em", fontSize: "12px", fontWeight: 600 }}
             >
               KELAS UNGGULAN · TERSEDIA SEKARANG
             </p>
             <h1
-              className="font-display font-semibold leading-tight mb-4"
+              className="font-display font-semibold mb-6"
               style={{
-                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                fontSize: "clamp(2rem, 6vw, 3.5rem)",
                 letterSpacing: "-0.02em",
+                lineHeight: 1.1,
                 maxWidth: "600px",
               }}
             >
@@ -703,14 +727,14 @@ export default function KelasPage() {
               <span style={{ color: "#A855F7" }}>Menghasilkan Solusimu</span>
             </h1>
             <p
-              className="font-mono text-xs tracking-widest mb-4"
-              style={{ color: "#52525B" }}
+              className="font-mono tracking-widest mb-5"
+              style={{ color: "#71717A", fontSize: "13px", letterSpacing: "0.05em" }}
             >
               6 SESI · 60 MENIT/SESI · SEMUA LEVEL · BAHASA INDONESIA
             </p>
             <p
-              className="text-base leading-relaxed mb-8 max-w-md"
-              style={{ color: "#A1A1AA", fontWeight: 300 }}
+              className="mb-10"
+              style={{ color: "#A1A1AA", fontWeight: 400, fontSize: "17px", lineHeight: 1.7, maxWidth: "600px" }}
             >
               Dari sekadar bertanya pada AI, hingga membangun aplikasi nyata
               dengan tanganmu sendiri. Kelas transformatif yang dirancang
@@ -718,13 +742,23 @@ export default function KelasPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
-                className="flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 text-base font-semibold text-white transition-all duration-200 w-full sm:w-auto"
                 style={{
                   background: "#7C3AED",
-                  borderRadius: "12px",
-                  padding: "15px 28px",
+                  borderRadius: "10px",
+                  padding: "14px 28px",
                   minHeight: "52px",
-                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                  boxShadow: "0 0 24px rgba(124,58,237,0.4), 0px 4px 12px rgba(0,0,0,0.3)",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "#6D28D9";
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 32px rgba(124,58,237,0.6), 0px 6px 16px rgba(0,0,0,0.4)";
+                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "#7C3AED";
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 24px rgba(124,58,237,0.4), 0px 4px 12px rgba(0,0,0,0.3)";
+                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
                 }}
                 onClick={() => setLocation(`/kelas/${flagship.id}`)}
               >
@@ -734,15 +768,23 @@ export default function KelasPage() {
                 Mulai Belajar
               </button>
               <button
-                className="flex items-center justify-center gap-2 text-base font-normal transition-all duration-200 w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 text-base font-semibold transition-all duration-200 w-full sm:w-auto"
                 style={{
-                  background: "rgba(255,255,255,0.1)",
-                  border: "0px solid transparent",
-                  borderRadius: "12px",
-                  padding: "15px 28px",
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "10px",
+                  padding: "14px 28px",
                   minHeight: "52px",
                   color: "#FAFAFA",
                   backdropFilter: "blur(8px)",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.07)";
+                  (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(124,58,237,0.4)";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.03)";
+                  (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(255,255,255,0.1)";
                 }}
                 onClick={() => setModalKelas(flagship)}
               >

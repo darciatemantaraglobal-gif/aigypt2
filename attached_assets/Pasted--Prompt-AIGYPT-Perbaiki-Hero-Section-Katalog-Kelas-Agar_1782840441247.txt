@@ -1,0 +1,139 @@
+# Prompt — AIGYPT: Perbaiki Hero Section Katalog Kelas Agar Elegan
+
+Copy-paste prompt ini ke Replit Agent. Ini memperbaiki tampilan hero section di halaman katalog kelas (rute /kelas) yang saat ini terlihat kurang elegan, terlalu tebal/kasar, dan tidak konsisten dengan design system dark luxury yang sudah established di landing page utama (rute /).
+
+PENTING: Ini perbaikan visual murni. Jangan ubah konten, struktur informasi, atau fungsi. Gunakan landing page utama (rute /) sebagai REFERENSI STANDAR kualitas visual yang harus dicapai di halaman ini.
+
+---
+
+## MASALAH PADA TAMPILAN SAAT INI
+
+1. Headline terlalu tebal secara keseluruhan, tidak ada variasi font-weight yang menciptakan hierarki elegan (semua terasa berat dan kasar)
+2. Sparkle dekoratif di pojok kanan atas terlalu besar dan terlalu mencolok, terlihat seperti elemen tempelan, bukan aksen halus
+3. Background gradient ungu terlalu pekat/blok solid di sebagian area, kurang gradasi halus yang menciptakan kedalaman
+4. Tombol "Mulai Belajar" terasa flat dan generic, tidak ada glow premium seperti tombol CTA di landing page utama
+5. Tombol "Lihat Detail" terlalu polos, kurang detail visual (border, sedikit transparansi atau glass effect)
+6. Spacing antar elemen (eyebrow, headline, meta info, deskripsi, tombol) terasa kurang proporsional, beberapa terlalu rapat
+
+---
+
+## STANDAR YANG HARUS DICAPAI (Rujuk ke Hero Landing Page Utama)
+
+Buka dan analisis implementasi hero section di halaman landing page utama yang sudah dibangun sebelumnya, itu adalah standar kualitas visual yang harus direplikasi di sini. Karakteristik yang harus disamakan:
+
+1. Tipografi berlapis: headline besar dengan font-weight 500-600 (bukan 700-800/extra bold), letter-spacing sedikit negatif (tracking-tight), terasa ringan tapi tegas, bukan tebal dan berat
+2. Ambient glow yang halus: radial gradient blur tinggi dengan opacity rendah, bukan blok warna solid. Background harus terasa seperti cahaya yang menyebar lembut, bukan gradient kasar
+3. Sparkle atau dekorasi minimal dan halus: jika tetap menggunakan sparkle, kecilkan ukurannya signifikan (12-16px, bukan besar mendominasi), turunkan opacity ke 0.3-0.5, posisikan agar tidak mencuri perhatian dari headline
+4. Tombol CTA dengan glow premium: tombol primer menggunakan box-shadow ungu yang lembut, bukan flat color tanpa depth
+5. Tombol sekunder dengan glass effect: gunakan background semi-transparan dengan backdrop-blur dan border tipis, bukan warna solid flat
+6. Spacing yang lega dan proporsional: jarak antara eyebrow-headline-meta-deskripsi-tombol mengikuti rhythm yang sama dengan hero landing page utama
+
+---
+
+## PERBAIKAN SPESIFIK
+
+### 1. Eyebrow Badge (teks "KELAS UNGGULAN TERSEDIA SEKARANG")
+```css
+font-family: 'JetBrains Mono', monospace;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: 0.1em;
+color: #A855F7;
+text-transform: uppercase;
+```
+Pastikan menggunakan styling yang identik dengan eyebrow badge di hero landing page utama.
+
+### 2. Headline Utama
+```css
+font-family: 'Space Grotesk', sans-serif;
+font-weight: 600;
+font-size: clamp(32px, 6vw, 56px);
+letter-spacing: -0.02em;
+line-height: 1.1;
+```
+Baris kedua (yang berwarna ungu) tetap berwarna aksen ungu, tapi pastikan font-weight-nya sama dengan baris pertama agar terlihat seperti satu kesatuan desain yang disengaja, bukan dua gaya yang berbeda.
+
+### 3. Sparkle Dekoratif
+Kecilkan ukuran sparkle secara signifikan dan turunkan opacity:
+```css
+.hero-sparkle {
+  width: 20px;
+  height: 20px;
+  opacity: 0.35;
+  color: #A855F7;
+}
+```
+Reposisikan agar berada di area yang benar-benar kosong (misalnya pojok kanan atas yang jauh dari teks), atau pertimbangkan untuk menghapusnya sama sekali jika setelah dikecilkan masih terasa mengganggu, prioritaskan keelokan headline di atas dekorasi.
+
+### 4. Background Ambient Glow
+Ganti pendekatan background dari gradient blok menjadi radial glow yang lembut, dengan dua sumber cahaya halus di posisi berbeda dan opacity rendah, dipadukan dengan warna dasar gelap, agar menciptakan kedalaman tanpa terasa sebagai blok warna kasar.
+
+### 5. Meta Info (teks "6 SESI 60 MENIT PER SESI SEMUA LEVEL BAHASA INDONESIA")
+```css
+font-family: 'JetBrains Mono', monospace;
+font-size: 13px;
+color: #71717A;
+letter-spacing: 0.05em;
+```
+Gunakan warna lebih muted dari sebelumnya agar tidak bersaing dengan headline.
+
+### 6. Deskripsi Paragraf
+```css
+font-size: 17px;
+line-height: 1.7;
+color: #A1A1AA;
+font-weight: 400;
+max-width: 600px;
+```
+Batasi lebar maksimal agar tidak terlalu memanjang di layar besar.
+
+### 7. Tombol "Mulai Belajar" (Primer)
+```css
+background: #7C3AED;
+color: #FAFAFA;
+font-weight: 600;
+padding: 14px 28px;
+border-radius: 10px;
+box-shadow: 0 0 24px rgba(124, 58, 237, 0.4);
+transition: all 0.2s ease;
+```
+State hover: background lebih gelap, box-shadow menguat, dan sedikit terangkat ke atas (translateY negatif kecil).
+
+### 8. Tombol "Lihat Detail" (Sekunder)
+```css
+background: rgba(255, 255, 255, 0.03);
+backdrop-filter: blur(8px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+color: #FAFAFA;
+font-weight: 600;
+padding: 14px 28px;
+border-radius: 10px;
+transition: all 0.2s ease;
+```
+State hover: background sedikit lebih terang, border berubah ke warna ungu muted.
+
+### 9. Spacing Vertikal Antar Elemen
+Sesuaikan jarak vertikal antar elemen hero agar memiliki rhythm yang lega dan proporsional: jarak eyebrow ke headline sekitar 20-24px, headline ke meta info sekitar 24-28px, meta info ke deskripsi sekitar 16-20px, deskripsi ke tombol sekitar 32-40px.
+
+---
+
+## KONSISTENSI LINTAS HALAMAN
+
+Setelah memperbaiki hero section ini, lakukan audit cepat terhadap section-section lain di halaman katalog kelas (rute /kelas), termasuk baris "Tersedia Sekarang" dan card-card kelas di bawahnya, untuk memastikan tipografi, spacing, dan treatment visual (font-weight, glow, button style) konsisten dengan perbaikan yang baru diterapkan pada hero ini. Halaman ini harus terasa sebagai satu kesatuan kualitas visual dengan landing page utama, bukan halaman terpisah dengan gaya berbeda.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Tidak mengubah konten teks, struktur, atau fungsi tombol
+2. Gunakan landing page utama sebagai referensi kualitas visual yang harus disamakan
+3. Pertahankan warna dasar dark luxury (palet ungu-hitam yang sudah ditetapkan)
+4. Pastikan kontras teks tetap terjaga (tidak mengorbankan keterbacaan demi estetika)
+5. Fully responsive, perbaikan ini berlaku di semua ukuran layar
+6. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Hero section halaman katalog kelas terlihat elegan, premium, dan konsisten secara kualitas visual dengan landing page utama AIGYPT, tipografi dengan hierarki yang halus (bukan tebal kasar), ambient glow yang lembut (bukan blok gradient), sparkle dekoratif yang kecil dan tidak mengganggu, serta tombol CTA dengan glow dan glass effect premium.
