@@ -1,0 +1,109 @@
+# Prompt Kecil — Tambal Celah Guard Steps Kosong di Halaman Materi
+
+Copy-paste prompt ini ke Replit Agent. Ini perbaikan kecil dan presisi — tidak mengubah desain, layout, atau konten apapun.
+
+---
+
+## PROMPT
+
+Di file `artifacts/aigypt/src/pages/materi/index.tsx`, ada celah keamanan logic yang perlu ditambal.
+
+### Masalah
+
+Saat ini ada guard untuk sesi yang tidak valid:
+```typescript
+if (!isValid || !sesiData) {
+  setLocation(`/kelas/${kelasId}`, { replace: true });
+  return null;
+}
+
+const steps = sesiData.steps;
+const totalSteps = steps.length;
+const step = steps[currentStep];  // <-- tidak ada guard jika steps kosong
+```
+
+Tapi tidak ada guard untuk kasus `sesiData` valid namun `sesiData.steps` adalah array kosong (`[]`). Jika ini terjadi (misalnya saat menambah kelas baru di masa depan yang materinya belum lengkap), `step` akan bernilai `undefined`, dan baris-baris berikutnya yang mengakses `step.title`, `step.type`, `step.content`, dll akan crash dengan error "Cannot read properties of undefined".
+
+### Perbaikan yang Diminta
+
+Tambahkan guard tambahan tepat setelah baris `if (!isValid || !sesiData)`, sebelum `const steps = sesiData.steps`:
+
+```typescript
+if (!isValid || !sesiData) {
+  setLocation(`/kelas/${kelasId}`, { replace: true });
+  return null;
+}
+
+// Guard tambahan: sesi valid tapi belum punya konten steps
+if (!sesiData.steps || sesiData.steps.length === 0) {
+  return (
+    <div
+      className="min-h-screen flex flex-col items-center justify-center text-center px-6"
+      style={{ background: "#0A0A0F" }}
+    >
+      <div className="text-[#A855F7] text-5xl mb-4">⚙</div>
+      <h2 className="text-2xl font-semibold text-[#FAFAFA] mb-2">
+        Materi Sedang Disiapkan
+      </h2>
+      <p className="text-[#A1A1AA] max-w-md">
+        Konten untuk sesi ini sedang dalam proses penyusunan.
+        Silakan kembali lagi nanti atau lanjut ke sesi yang sudah tersedia.
+      </p>
+      <button
+        onClick={() => setLocation(`/kelas/${kelasId}`)}
+        className="mt-6 px-6 py-2.5 rounded-lg bg-[#7C3AED] text-white hover:bg-[#6D28D9] transition"
+      >
+        Kembali ke Daftar Sesi
+      </button>
+    </div>
+  );
+}
+
+const steps = sesiData.steps;
+const totalSteps = steps.length;
+const step = steps[currentStep];
+```
+
+Tambahkan juga pengaman tambahan agar `step` tidak pernah undefined meskipun `currentStep` di luar rentang (misalnya akibat data progress lama yang tersimpan dengan nilai aneh di database):
+
+```typescript
+const steps = sesiData.steps;
+const totalSteps = steps.length;
+const safeStepIndex = Math.min(Math.max(currentStep, 0), totalSteps - 1);
+const step = steps[safeStepIndex];
+
+if (!step) {
+  return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "#0A0A0F" }}>
+      <svg className="animate-spin w-8 h-8 text-[#7C3AED]" viewBox="0 0 24 24" fill="none">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+      </svg>
+    </div>
+  );
+}
+```
+
+Pastikan seluruh kode di bawahnya yang sebelumnya memakai `currentStep` langsung untuk indexing array (jika ada selain baris `step = steps[currentStep]`) ikut menggunakan `safeStepIndex` agar konsisten dan tidak ada akses index yang masih bisa keluar rentang.
+
+### Yang TIDAK Boleh Diubah
+
+- Jangan ubah desain, warna, atau struktur halaman lain
+- Jangan ubah konten 6 sesi yang sudah ada di `materiContent.ts`
+- Jangan ubah logic auth guard, save progress, atau navigasi yang sudah berjalan dengan benar
+- Ini perbaikan presisi pada satu celah logic saja
+
+---
+
+## VERIFIKASI
+
+Setelah perbaikan, pastikan:
+1. Membuka sesi manapun dari 1-6 tetap berjalan normal seperti sebelumnya (tidak ada regresi)
+2. `npm run build` sukses tanpa error
+3. Secara logic, jika suatu saat ada kelas/sesi baru dengan `steps: []`, halaman menampilkan pesan "Materi Sedang Disiapkan" yang elegan, bukan crash
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Halaman materi tidak akan pernah crash lagi meskipun ada sesi dengan steps kosong atau currentStep di luar rentang — baik untuk 6 sesi yang sudah ada maupun kelas-kelas baru yang akan ditambahkan di masa depan.

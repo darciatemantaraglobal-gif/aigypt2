@@ -662,12 +662,50 @@ export default function MateriPage() {
     return null;
   }
 
+  // Guard: sesi valid but steps array is empty (content not yet ready)
+  if (!sesiData.steps || sesiData.steps.length === 0) {
+    return (
+      <div
+        className="min-h-screen flex flex-col items-center justify-center text-center px-6"
+        style={{ background: "#0A0A0F" }}
+      >
+        <div className="text-[#A855F7] text-5xl mb-4">⚙</div>
+        <h2 className="text-2xl font-semibold text-[#FAFAFA] mb-2">
+          Materi Sedang Disiapkan
+        </h2>
+        <p className="text-[#A1A1AA] max-w-md">
+          Konten untuk sesi ini sedang dalam proses penyusunan.
+          Silakan kembali lagi nanti atau lanjut ke sesi yang sudah tersedia.
+        </p>
+        <button
+          onClick={() => setLocation(`/kelas/${kelasId}`)}
+          className="mt-6 px-6 py-2.5 rounded-lg bg-[#7C3AED] text-white hover:bg-[#6D28D9] transition"
+        >
+          Kembali ke Daftar Sesi
+        </button>
+      </div>
+    );
+  }
+
   const steps = sesiData.steps;
   const totalSteps = steps.length;
-  const step = steps[currentStep];
+  const safeStepIndex = Math.min(Math.max(currentStep, 0), totalSteps - 1);
+  const step = steps[safeStepIndex];
+
+  if (!step) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0A0A0F" }}>
+        <svg className="animate-spin w-8 h-8 text-[#7C3AED]" viewBox="0 0 24 24" fill="none">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+      </div>
+    );
+  }
+
   const completedSet = new Set(progress.filter((p) => p.isCompleted).map((p) => p.sesiNumber));
   const isSesiCompleted = completedSet.has(sesiNum);
-  const progressPct = ((currentStep + 1) / totalSteps) * 100;
+  const progressPct = ((safeStepIndex + 1) / totalSteps) * 100;
 
   function goTo(index: number) {
     if (index < 0 || index >= totalSteps) return;
