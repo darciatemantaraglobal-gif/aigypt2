@@ -1,4 +1,4 @@
-modules = ["nodejs-24", "python-3.11"]
+modules = ["nodejs-20", "web", "bash"]
 
 [deployment]
 router = "application"
@@ -26,3 +26,6 @@ VITE_WA_NUMBER = "6281311506025"
 ADMIN_WA_NUMBER = "6281311506025"
 MIDTRANS_IS_PRODUCTION = "false"
 VITE_MIDTRANS_IS_PRODUCTION = "false"
+
+[nix]
+channel = "stable-25_05"
