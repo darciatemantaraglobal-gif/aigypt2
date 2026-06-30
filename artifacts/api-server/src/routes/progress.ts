@@ -14,6 +14,10 @@ async function getAuthEmail(req: any): Promise<string | null> {
   return payload?.email ?? null;
 }
 
+router.options("/progress", (_req, res) => {
+  res.setHeader("Allow", "GET, POST");
+  res.status(204).end();
+});
 router.get("/progress", async (req, res) => {
   const email = await getAuthEmail(req);
   if (!email) {
@@ -86,6 +90,15 @@ router.post("/progress", async (req, res) => {
   res.json({ success: true });
 });
 
+router.all("/progress", (_req, res) => {
+  res.setHeader("Allow", "GET, POST, OPTIONS");
+  res.status(405).json({ error: "Method Not Allowed" });
+});
+
+router.options("/progress/step", (_req, res) => {
+  res.setHeader("Allow", "POST");
+  res.status(204).end();
+});
 router.post("/progress/step", async (req, res) => {
   const email = await getAuthEmail(req);
   if (!email) {
@@ -141,6 +154,15 @@ router.post("/progress/step", async (req, res) => {
   res.json({ success: true });
 });
 
+router.all("/progress/step", (_req, res) => {
+  res.setHeader("Allow", "POST, OPTIONS");
+  res.status(405).json({ error: "Method Not Allowed" });
+});
+
+router.options("/progress/skip", (_req, res) => {
+  res.setHeader("Allow", "POST");
+  res.status(204).end();
+});
 router.post("/progress/skip", async (req, res) => {
   const email = await getAuthEmail(req);
   if (!email) {
@@ -190,6 +212,10 @@ router.post("/progress/skip", async (req, res) => {
   }
 
   res.json({ success: true });
+});
+router.all("/progress/skip", (_req, res) => {
+  res.setHeader("Allow", "POST, OPTIONS");
+  res.status(405).json({ error: "Method Not Allowed" });
 });
 
 export default router;

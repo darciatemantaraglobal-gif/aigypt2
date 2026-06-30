@@ -134,6 +134,10 @@ router.post("/auth/logout", (_req, res) => {
   res.clearCookie(SESSION_COOKIE);
   res.json({ success: true });
 });
+router.all("/auth/logout", (_req, res) => {
+  res.setHeader("Allow", "POST");
+  res.status(405).json({ error: "Method Not Allowed" });
+});
 
 router.get("/auth/me", async (req, res) => {
   const token = req.cookies?.[SESSION_COOKIE];
@@ -164,6 +168,15 @@ router.get("/auth/me", async (req, res) => {
     memberType: member.memberType,
     batchNumber: member.batchNumber ?? null,
   });
+});
+
+router.all("/auth/login", (_req, res) => {
+  res.setHeader("Allow", "POST");
+  res.status(405).json({ error: "Method Not Allowed" });
+});
+router.all("/auth/me", (_req, res) => {
+  res.setHeader("Allow", "GET");
+  res.status(405).json({ error: "Method Not Allowed" });
 });
 
 export default router;

@@ -68,7 +68,7 @@ export default function Dashboard() {
 
   if (!isAuthenticated || !user) return null;
 
-  const completedSet = new Set((progress || []).filter((p) => p.isCompleted).map((p) => p.sesiNumber));
+  const completedSet = new Set((Array.isArray(progress) ? progress : []).filter((p) => p.isCompleted).map((p) => p.sesiNumber));
   const totalCompleted = completedSet.size;
 
   const getSessionStatus = (num: number): "completed" | "current" | "locked" => {

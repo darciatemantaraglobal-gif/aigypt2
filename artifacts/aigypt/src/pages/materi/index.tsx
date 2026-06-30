@@ -584,7 +584,7 @@ export default function MateriPage() {
   });
   const markComplete = useMarkComplete();
 
-  const allProgress: ProgressEntry[] = (rawProgress || []) as ProgressEntry[];
+  const allProgress: ProgressEntry[] = (Array.isArray(rawProgress) ? rawProgress : []) as ProgressEntry[];
   // Filter to only this class's progress (fall back to all if kelasId not yet in entry, e.g. old data)
   const progress: ProgressEntry[] = allProgress.filter(
     (p) => !p.kelasId || p.kelasId === kelasId

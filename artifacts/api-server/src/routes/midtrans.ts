@@ -53,6 +53,10 @@ async function sendWhatsApp(target: string, message: string): Promise<void> {
   }
 }
 
+router.options("/midtrans/create-transaction", (_req, res) => {
+  res.setHeader("Allow", "POST");
+  res.status(204).end();
+});
 router.post("/midtrans/create-transaction", async (req, res) => {
   const { name, email, phone, memberType } = req.body as {
     name?: string;
@@ -157,6 +161,15 @@ router.post("/midtrans/create-transaction", async (req, res) => {
   }
 });
 
+router.all("/midtrans/create-transaction", (_req, res) => {
+  res.setHeader("Allow", "POST, OPTIONS");
+  res.status(405).json({ error: "Method Not Allowed" });
+});
+
+router.options("/midtrans/webhook", (_req, res) => {
+  res.setHeader("Allow", "POST");
+  res.status(204).end();
+});
 router.post("/midtrans/webhook", async (req, res) => {
   const body = req.body as {
     order_id?: string;
@@ -317,6 +330,10 @@ router.post("/midtrans/webhook", async (req, res) => {
   }
 
   respond();
+});
+router.all("/midtrans/webhook", (_req, res) => {
+  res.setHeader("Allow", "POST, OPTIONS");
+  res.status(405).json({ error: "Method Not Allowed" });
 });
 
 export default router;

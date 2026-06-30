@@ -331,7 +331,7 @@ export default function KelasDetailPage() {
     query: { queryKey: getGetProgressQueryKey(), enabled: isAuthenticated },
   });
 
-  const allProgress = (rawProgress || []) as Array<{
+  const allProgress = (Array.isArray(rawProgress) ? rawProgress : []) as Array<{
     sesiNumber: number;
     kelasId?: string;
     isCompleted: boolean;
