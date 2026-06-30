@@ -6,7 +6,6 @@ import { Footer } from "@/components/Footer";
 import { waUrl } from "@/lib/wa";
 import { testimonials } from "@/lib/testimonials";
 import { showcaseTabs, showcaseGrid } from "@/lib/showcaseExamples";
-import { useTypewriter } from "@/hooks/useTypewriter";
 import {
   viewportConfig,
   containerStagger,
@@ -755,13 +754,6 @@ export default function Home() {
   const statRef = useRef(null);
   const statInView = useInView(statRef, { once: true, margin: "-60px" });
 
-  const prefersReducedMotion = useReducedMotion();
-  const { displayedText, showCursor } = useTypewriter({
-    text: prefersReducedMotion ? "" : "Ciptakan Sesuatu yang Nyata.",
-    speed: 40,
-    startDelay: 650,
-  });
-  const heroLine2 = prefersReducedMotion ? "Ciptakan Sesuatu yang Nyata." : displayedText;
 
   return (
     <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
@@ -804,40 +796,23 @@ export default function Home() {
 
           <motion.h1
             variants={fadeUp}
-            className="font-display font-semibold leading-[1.05] mb-3"
+            className="font-display font-semibold leading-[1.05] mb-8"
             style={{ fontSize: "clamp(2.75rem, 7vw, 5.5rem)", letterSpacing: "-0.025em" }}
           >
             Kuasai Kecerdasan
             <br />
-            <span style={{ color: "#A855F7" }}>Buatan.</span>
+            <span style={{ color: "#A855F7" }}>Buatan.</span>{" "}
+            <span style={{ color: "rgba(250,250,250,0.85)" }}>Ciptakan</span>
+            <br />
+            <span style={{ color: "rgba(250,250,250,0.85)" }}>Sesuatu yang Nyata.</span>
+            <motion.span
+              style={{ color: "#A855F7", fontWeight: 300, marginLeft: "4px", display: "inline-block" }}
+              animate={{ opacity: [1, 1, 0, 0] }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: "linear", times: [0, 0.45, 0.5, 0.95] }}
+            >
+              |
+            </motion.span>
           </motion.h1>
-
-          {/* Typewriter line */}
-          <div
-            className="font-display font-semibold leading-[1.05] mb-8"
-            style={{
-              fontSize: "clamp(2.75rem, 7vw, 5.5rem)",
-              letterSpacing: "-0.025em",
-              color: "rgba(250,250,250,0.85)",
-              minHeight: "1.1em",
-            }}
-          >
-            {heroLine2}
-            {!prefersReducedMotion && (
-              <span
-                style={{
-                  display: "inline-block",
-                  marginLeft: "3px",
-                  color: "#A855F7",
-                  fontWeight: 300,
-                  opacity: showCursor ? 1 : 0,
-                  transition: "opacity 0.1s ease",
-                }}
-              >
-                |
-              </span>
-            )}
-          </div>
 
           <motion.p
             variants={fadeUp}
