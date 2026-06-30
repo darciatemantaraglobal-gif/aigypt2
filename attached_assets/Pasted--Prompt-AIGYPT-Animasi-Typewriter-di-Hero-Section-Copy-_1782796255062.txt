@@ -1,0 +1,181 @@
+# Prompt — AIGYPT: Animasi Typewriter di Hero Section
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan efek typewriter (mengetik karakter per karakter dengan kursor berkedip) pada baris kedua headline di hero section landing page AIGYPT.
+
+PENTING: Ini penambahan animasi pada elemen yang sudah ada. Jangan ubah konten teks, struktur, atau layout hero, hanya tambahkan perilaku animasi pada baris kedua headline.
+
+---
+
+## PROMPT
+
+Tambahkan efek typewriter ke baris kedua headline hero di landing page AIGYPT. Baris pertama headline tetap tampil normal (fade in seperti biasa), sedangkan baris kedua diketik karakter per karakter secara animatif dengan kursor berkedip di akhir teks, seperti seseorang sedang mengetik secara langsung.
+
+Headline hero saat ini terdiri dari dua baris:
+```
+Baris 1 (statis, fade in normal): Kuasai Kecerdasan Buatan.
+Baris 2 (typewriter): Ciptakan Sesuatu yang Nyata.
+```
+
+---
+
+## PERILAKU YANG DIINGINKAN
+
+1. Saat halaman dimuat (atau saat hero masuk viewport pertama kali), baris pertama headline muncul dengan animasi fade-in biasa (sesuai animasi yang sudah ada).
+2. Setelah baris pertama selesai muncul (beri jeda singkat sekitar 300-400ms), baris kedua mulai diketik karakter demi karakter dari kosong hingga lengkap.
+3. Kursor berbentuk garis vertikal tipis muncul di akhir teks yang sedang diketik, berkedip selama proses pengetikan berlangsung.
+4. Setelah teks selesai diketik sepenuhnya, kursor tetap berkedip selama beberapa detik (sekitar 2-3 detik) lalu menghilang secara halus (fade out), agar terlihat natural seperti seseorang selesai mengetik dan berhenti.
+5. Animasi ini HANYA berjalan SEKALI saat halaman pertama dimuat, tidak mengulang setiap kali halaman di-scroll naik-turun ke hero.
+
+---
+
+## IMPLEMENTASI
+
+Gunakan pendekatan custom hook dengan useState dan useEffect (lebih ringan daripada library eksternal untuk kebutuhan sederhana ini):
+
+```typescript
+// hooks/useTypewriter.ts
+import { useState, useEffect } from 'react'
+
+interface UseTypewriterOptions {
+  text: string
+  speed?: number
+  startDelay?: number
+}
+
+export function useTypewriter({ text, speed = 40, startDelay = 0 }: UseTypewriterOptions) {
+  const [displayedText, setDisplayedText] = useState('')
+  const [isComplete, setIsComplete] = useState(false)
+  const [showCursor, setShowCursor] = useState(true)
+
+  useEffect(() => {
+    let currentIndex = 0
+    let typingInterval: ReturnType<typeof setInterval>
+
+    const startTimeout = setTimeout(() => {
+      typingInterval = setInterval(() => {
+        if (currentIndex <= text.length) {
+          setDisplayedText(text.slice(0, currentIndex))
+          currentIndex++
+        } else {
+          clearInterval(typingInterval)
+          setIsComplete(true)
+        }
+      }, speed)
+    }, startDelay)
+
+    return () => {
+      clearTimeout(startTimeout)
+      clearInterval(typingInterval)
+    }
+  }, [text, speed, startDelay])
+
+  useEffect(() => {
+    if (!isComplete) {
+      const blinkInterval = setInterval(() => {
+        setShowCursor(prev => !prev)
+      }, 530)
+      return () => clearInterval(blinkInterval)
+    } else {
+      const blinkInterval = setInterval(() => {
+        setShowCursor(prev => !prev)
+      }, 530)
+      const stopBlinkTimeout = setTimeout(() => {
+        clearInterval(blinkInterval)
+        setShowCursor(false)
+      }, 2500)
+      return () => {
+        clearInterval(blinkInterval)
+        clearTimeout(stopBlinkTimeout)
+      }
+    }
+  }, [isComplete])
+
+  return { displayedText, isComplete, showCursor }
+}
+```
+
+Penggunaan di komponen Hero:
+
+```tsx
+import { useTypewriter } from '@/hooks/useTypewriter'
+
+function HeroHeadline() {
+  const { displayedText, showCursor } = useTypewriter({
+    text: 'Ciptakan Sesuatu yang Nyata.',
+    speed: 40,
+    startDelay: 600
+  })
+
+  return (
+    <div>
+      <motion.h1 className="hero-line-1">
+        Kuasai Kecerdasan Buatan.
+      </motion.h1>
+      <h1 className="hero-line-2">
+        {displayedText}
+        <span
+          className="typewriter-cursor"
+          style={{ opacity: showCursor ? 1 : 0 }}
+        >
+          |
+        </span>
+      </h1>
+    </div>
+  )
+}
+```
+
+### Styling Kursor
+
+```css
+.typewriter-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  color: #A855F7;
+  font-weight: 300;
+  transition: opacity 0.1s ease;
+}
+
+.hero-line-2 {
+  min-height: 1.2em;
+}
+```
+
+---
+
+## CATATAN PENTING
+
+1. Cegah layout shift: beri min-height pada container baris kedua sesuai tinggi font, agar saat teks masih kosong (awal animasi) tidak ada elemen di bawahnya yang melompat naik lalu turun lagi saat teks bertambah panjang.
+2. Kecepatan ketik: 40ms per karakter terasa pas, tidak terlalu cepat (terlihat seperti glitch) atau terlalu lambat (membuat orang menunggu lama sebelum membaca pesan inti). Sesuaikan jika terasa kurang pas saat dilihat langsung.
+3. Hormati prefers-reduced-motion: jika preferensi ini aktif, langsung tampilkan teks baris kedua secara penuh tanpa animasi mengetik dan tanpa kursor berkedip, gunakan hook useReducedMotion dari Framer Motion untuk deteksi, lalu skip seluruh logic typewriter jika true.
+
+```typescript
+import { useReducedMotion } from 'framer-motion'
+
+const prefersReducedMotion = useReducedMotion()
+const { displayedText, showCursor } = useTypewriter({
+  text: prefersReducedMotion ? '' : 'Ciptakan Sesuatu yang Nyata.',
+  speed: 40,
+  startDelay: 600
+})
+
+const finalText = prefersReducedMotion ? 'Ciptakan Sesuatu yang Nyata.' : displayedText
+```
+
+4. Pastikan warna teks baris kedua tetap sesuai desain yang sudah ada (jika baris kedua memang diberi warna aksen ungu berbeda dari baris pertama, pertahankan itu, animasi typewriter ini hanya menambah perilaku mengetik, tidak mengubah styling warna atau font yang sudah ditentukan sebelumnya).
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Hanya menyentuh komponen Hero, tidak mengubah section lain
+2. Animasi berjalan satu kali saat halaman dimuat, tidak berulang
+3. Tidak ada layout shift selama animasi berlangsung
+4. Mendukung prefers-reduced-motion sepenuhnya
+5. npm run build harus sukses tanpa error
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Baris pertama headline hero muncul dengan fade-in normal. Setelah jeda singkat, baris kedua diketik karakter demi karakter dengan kursor ungu yang berkedip, lalu kursor menghilang halus beberapa detik setelah pengetikan selesai. Efek ini berjalan sekali saat halaman dimuat, tidak mengganggu keterbacaan, dan tetap menghormati preferensi aksesibilitas pengguna.
