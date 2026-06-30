@@ -46,6 +46,8 @@ export async function verifySessionToken(token: string) {
   }
 }
 
+const PREVIEW_CODE = process.env["PREVIEW_CODE"]?.trim().toUpperCase();
+
 router.post("/auth/login", async (req, res) => {
   const { email, code } = req.body as { email?: string; code?: string };
 
@@ -61,6 +63,23 @@ router.post("/auth/login", async (req, res) => {
   }
 
   const upperCode = code.toUpperCase().trim();
+
+  if (PREVIEW_CODE && upperCode === PREVIEW_CODE) {
+    const token = await createSessionToken({
+      email: email.toLowerCase(),
+      memberType: "kelas",
+      batchNumber: 1,
+      name: "Preview",
+    });
+    res.cookie(SESSION_COOKIE, token, {
+      httpOnly: true,
+      secure: process.env["NODE_ENV"] === "production",
+      sameSite: "lax",
+      maxAge: EXPIRY_DAYS * 24 * 60 * 60 * 1000,
+    });
+    res.json({ success: true, memberType: "kelas", batchNumber: 1, name: "Preview" });
+    return;
+  }
 
   const [accessCode] = await db
     .select()
@@ -149,6 +168,16 @@ router.get("/auth/me", async (req, res) => {
   const payload = await verifySessionToken(token);
   if (!payload) {
     res.status(401).json({ error: "Sesi tidak valid atau sudah kadaluarsa" });
+    return;
+  }
+
+  if (PREVIEW_CODE) {
+    res.json({
+      email: payload.email,
+      name: payload.name ?? null,
+      memberType: payload.memberType,
+      batchNumber: payload.batchNumber ?? null,
+    });
     return;
   }
 
