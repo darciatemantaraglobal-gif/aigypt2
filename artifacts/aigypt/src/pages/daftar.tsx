@@ -69,7 +69,7 @@ const tiers = [
 ];
 
 export default function Daftar() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
   const defaultType = searchParams.get("type") === "mandiri" ? "mandiri" : "kelas";
 
@@ -112,6 +112,36 @@ export default function Daftar() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     if (error) setError("");
+  };
+
+  const validateForm = (): boolean => {
+    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
+      setError("Semua field wajib diisi.");
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setError("Format email tidak valid.");
+      return false;
+    }
+    const phoneClean = form.phone.replace(/\D/g, "");
+    if (phoneClean.length < 9 || phoneClean.length > 15) {
+      setError("Nomor WhatsApp tidak valid.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleQris = () => {
+    setError("");
+    if (!validateForm()) return;
+    const params = new URLSearchParams({
+      type: selectedType,
+      name: form.name.trim(),
+      email: form.email.trim().toLowerCase(),
+      phone: form.phone.trim(),
+    });
+    setLocation(`/daftar/pembayaran?${params.toString()}`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -434,7 +464,7 @@ export default function Daftar() {
                 </motion.div>
               )}
 
-              <div className="pt-2">
+              <div className="pt-2 space-y-3">
                 <button
                   type="submit"
                   disabled={loading}
@@ -456,13 +486,36 @@ export default function Daftar() {
                       Memproses...
                     </>
                   ) : (
-                    <>
-                      Lanjut ke Pembayaran <IconArrow />
-                    </>
+                    <>Bayar via Midtrans <IconArrow /></>
                   )}
                 </button>
 
-                <p className="text-center text-xs mt-4" style={{ color: "#52525B" }}>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+                  <span className="text-xs font-mono" style={{ color: "#3F3F46" }}>atau</span>
+                  <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+                </div>
+
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={handleQris}
+                  className="w-full inline-flex items-center justify-center gap-2 text-base font-medium transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: "12px",
+                    padding: "15px 24px",
+                    minHeight: "52px",
+                    color: "#A1A1AA",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(124,58,237,0.4)"; e.currentTarget.style.color = "#FAFAFA"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#A1A1AA"; }}
+                >
+                  Bayar via QRIS <IconArrow />
+                </button>
+
+                <p className="text-center text-xs pt-1" style={{ color: "#52525B" }}>
                   Dengan mendaftar, kamu menyetujui syarat & ketentuan AIGYPT.{" "}
                   <Link href="/">
                     <span className="underline cursor-pointer" style={{ color: "#71717A" }}>Kembali ke beranda</span>

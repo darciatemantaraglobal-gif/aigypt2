@@ -1,0 +1,79 @@
+# Prompt Tambahan — AIGYPT: Crop QRIS + Catatan Nominal Manual
+
+Copy-paste prompt ini ke Replit Agent SETELAH prompt utama "Halaman Pendaftaran dengan Pembayaran QRIS" (atau gabungkan jadi satu pesan bersama file gambar QRIS yang dilampirkan). Ini menambahkan instruksi spesifik soal cropping gambar QRIS dan penyesuaian penting karena QRIS yang digunakan bersifat statis.
+
+PENTING: Lampirkan file gambar QRIS_Temantiket.PNG bersama prompt ini agar Replit Agent bisa memproses dan menyimpannya.
+
+---
+
+## PROMPT
+
+File QRIS yang dilampirkan adalah poster QRIS resmi lengkap (berukuran 1240x1748px) berisi kop "QRIS Standar Pembayaran Nasional", logo GPN, nama merchant TEMANTIKET, NMID, kode QR itu sendiri, dan instruksi cara bayar di bagian bawah. Untuk ditampilkan di halaman web, lakukan langkah berikut:
+
+### 1. Crop Gambar QR Code
+
+Crop gambar yang dilampirkan untuk mengambil HANYA bagian kotak QR code-nya saja (area kotak hitam-putih persegi di tengah gambar, tanpa kop header, tanpa instruksi cara bayar di bagian bawah, tanpa elemen dekoratif merah di pinggir). Hasil crop harus berupa gambar persegi yang rapat ke tepi QR code (dengan sedikit padding putih di sekeliling, sekitar 20-30px, agar tidak terlalu mepet).
+
+Simpan hasil crop ke:
+```
+artifacts/aigypt/src/assets/qris-payment.png
+```
+
+Jika tooling di environment tidak memungkinkan melakukan image processing/cropping otomatis, gunakan pendekatan CSS object-fit cover dengan object-position yang disesuaikan untuk menampilkan hanya area QR code dari gambar penuh di dalam container yang sudah dibatasi ukurannya, sebagai alternatif jika cropping file tidak memungkinkan. Namun cropping langsung pada file lebih diutamakan jika tools mendukung (misalnya dengan Python PIL/Pillow yang tersedia di environment).
+
+Setelah crop, tampilkan gambar ini di halaman /daftar/pembayaran sesuai spesifikasi yang sudah dijelaskan di prompt sebelumnya (card QRIS terpusat dan menonjol).
+
+### 2. PENTING, QRIS yang Digunakan Bersifat Statis
+
+QR Code ini adalah QRIS statis standar (NMID ID1025414983672, merchant TEMANTIKET), BUKAN QRIS dinamis dengan nominal yang sudah tertanam di kode. Ini berarti:
+
+- Saat peserta scan QR ini, aplikasi pembayaran mereka TIDAK akan otomatis menampilkan nominal yang harus dibayar
+- Peserta HARUS mengetik nominal secara manual sesuai paket yang mereka pilih
+
+Karena itu, di halaman pembayaran, perbesar dan perjelas tampilan nominal yang harus dibayar, dan tambahkan peringatan eksplisit:
+
+```
+Tambahkan callout box (border kuning/amber, ikon peringatan) tepat di atas instruksi:
+
+PENTING: Masukkan Nominal Secara Manual
+
+QR Code ini tidak menyimpan nominal otomatis. Setelah scan,
+kamu perlu mengetik sendiri jumlah pembayaran berikut:
+
+[Nominal besar, mono, sangat jelas]
+Rp [nominal sesuai paket]
+
+Pastikan nominal yang kamu masukkan PERSIS sama dengan jumlah
+di atas, agar verifikasi pembayaran berjalan lancar.
+```
+
+Update juga instruksi numbered list yang sudah dirancang sebelumnya menjadi:
+```
+1. Buka aplikasi e-wallet atau mobile banking kamu
+2. Scan kode QRIS di atas
+3. Masukkan nominal secara manual: Rp [nominal] (lihat peringatan di atas)
+4. Periksa kembali nominal sebelum konfirmasi pembayaran di aplikasimu
+5. Setelah transfer berhasil, klik tombol konfirmasi di bawah
+```
+
+### 3. Tampilkan Identitas Merchant untuk Kepercayaan
+
+Di bawah gambar QR code, tampilkan informasi merchant secara kecil dan rapi (mono font, warna sekunder) untuk meyakinkan peserta bahwa QR ini sah dan resmi:
+```
+Merchant: TEMANTIKET
+NMID: ID1025414983672
+```
+
+---
+
+## REQUIREMENTS TEKNIS TAMBAHAN
+
+1. Pastikan nominal pembayaran ditampilkan minimal di dua tempat pada halaman yang sama (di dalam card QRIS dan di ringkasan pesanan) untuk meminimalkan kesalahan input dari peserta
+2. Callout peringatan nominal manual harus cukup menonjol secara visual (tidak boleh tersembunyi atau samar) karena ini adalah sumber kesalahan paling umum pada QRIS statis
+3. Gambar QR code hasil crop harus tetap tajam dan scannable, jangan dikompresi berlebihan hingga kualitas QR rusak dan sulit dipindai
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Gambar QRIS yang sudah di-crop rapi (hanya kotak QR, tanpa kop dan instruksi bawaan poster) ditampilkan di halaman pembayaran, dilengkapi peringatan jelas bahwa nominal harus dimasukkan manual karena ini QRIS statis, beserta identitas merchant Temantiket untuk kredibilitas.

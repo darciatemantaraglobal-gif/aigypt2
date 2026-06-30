@@ -19,6 +19,7 @@ import AdminMembers from "@/pages/admin/members";
 import AdminOrders from "@/pages/admin/orders";
 import Toolbox from "@/pages/toolbox";
 import Daftar from "@/pages/daftar";
+import Pembayaran from "@/pages/pembayaran";
 import Sukses from "@/pages/sukses";
 
 if (import.meta.env.VITE_API_URL) {
@@ -61,6 +62,7 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/toolbox" component={Toolbox} />
       <Route path="/daftar" component={Daftar} />
+      <Route path="/daftar/pembayaran" component={Pembayaran} />
       <Route path="/sukses" component={Sukses} />
       <Route component={NotFound} />
     </Switch>

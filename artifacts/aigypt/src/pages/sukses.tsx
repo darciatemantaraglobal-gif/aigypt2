@@ -35,7 +35,7 @@ function IconError() {
   );
 }
 
-type Scenario = "success" | "pending" | "error";
+type Scenario = "success" | "pending" | "qris" | "error";
 
 export default function Sukses() {
   const [scenario, setScenario] = useState<Scenario>("pending");
@@ -53,6 +53,8 @@ export default function Sukses() {
       setScenario("error");
     } else if (transactionStatus === "settlement" || transactionStatus === "capture") {
       setScenario("success");
+    } else if (transactionStatus === "pending_qris") {
+      setScenario("qris");
     } else if (transactionStatus === "pending" || status === "pending") {
       setScenario("pending");
     } else if (transactionStatus === "deny" || transactionStatus === "cancel" || transactionStatus === "expire") {
@@ -86,6 +88,19 @@ export default function Sukses() {
       heading: "Selesaikan Pembayaranmu",
       sub: "Ikuti instruksi pembayaran yang diberikan oleh Midtrans.",
       info: "Kode akses akan dikirim ke WhatsApp kamu segera setelah pembayaran dikonfirmasi oleh sistem.",
+      action: { label: "Kembali ke Beranda", href: "/" },
+      actionStyle: { border: "1px solid rgba(255,255,255,0.1)", color: "#A1A1AA" } as React.CSSProperties,
+    },
+    qris: {
+      icon: <IconPending />,
+      glowColor: "rgba(245,158,11,0.15)",
+      badge: "MENUNGGU VERIFIKASI QRIS",
+      badgeColor: "#F59E0B",
+      badgeBg: "rgba(245,158,11,0.08)",
+      badgeBorder: "rgba(245,158,11,0.2)",
+      heading: "Konfirmasi Diterima!",
+      sub: "Tim AIGYPT akan memverifikasi transfer QRIS kamu.",
+      info: "Kode akses akan dikirimkan ke WhatsApp kamu setelah pembayaran terverifikasi oleh admin. Proses verifikasi biasanya selesai dalam 1x24 jam.",
       action: { label: "Kembali ke Beranda", href: "/" },
       actionStyle: { border: "1px solid rgba(255,255,255,0.1)", color: "#A1A1AA" } as React.CSSProperties,
     },
