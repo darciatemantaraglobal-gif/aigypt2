@@ -1,0 +1,189 @@
+# Prompt — AIGYPT: Rombak Footer Jadi Lebih Elegan
+
+Copy-paste prompt ini ke Replit Agent. Ini merombak total footer landing page AIGYPT yang sudah ada — saat ini terasa kosong dan kaku (logo + tagline di kiri, list link polos di kanan, banyak ruang hampa). Versi baru lebih seimbang, elegan, dan konsisten dengan tema dark luxury.
+
+PENTING: Ini modifikasi pada elemen yang sudah ada. Pertahankan semua link dan tujuan yang sudah benar — hanya rombak layout dan tambahkan elemen visual.
+
+---
+
+## MASALAH PADA FOOTER SAAT INI
+
+1. Layout timpang — kolom kiri (logo+tagline) terlalu kosong, kolom kanan (links) menumpuk semua di satu area
+2. Tidak ada border/separator yang jelas antara footer dan section sebelumnya
+3. Tidak ada CTA kecil atau elemen yang mengundang aksi terakhir
+4. Terasa seperti footer template generik, bukan footer brand premium
+5. Copyright line di kiri bawah terasa terpisah sendiri tanpa konteks
+
+---
+
+## DESAIN FOOTER BARU
+
+### Struktur Layout (4 kolom di desktop, stack di mobile)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  [Border-top hairline dengan glow ungu sangat halus]          │
+│                                                                 │
+│  AIGYPT                  PLATFORM      KELAS         HUBUNGI  │
+│  Platform Pembelajaran   Kurikulum     Batch 1        WhatsApp│
+│  AI untuk Masisir        Kelas         Pendaftaran    Email   │
+│                          Pendaftaran   Masuk                  │
+│  [Ikon sosial/kontak]    Masuk                                │
+│                                                                 │
+│  ─────────────────────────────────────────────────────────    │
+│                                                                 │
+│  © 2026 AIGYPT              Dibuat untuk Masisir, oleh Masisir│
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Detail Tiap Kolom
+
+**Kolom 1 — Brand (lebih kaya dari sebelumnya)**
+```
+AIGYPT (logo, dengan "AI" putih dan "GYPT" ungu seperti sudah ada)
+
+Platform Pembelajaran AI untuk Masisir
+
+Paragraf kecil tambahan (baru, 1-2 kalimat, warna sekunder):
+Tempat masisir belajar menguasai kecerdasan buatan —
+dari memahami hingga mencipta.
+
+Baris kontak singkat (baru, dengan ikon Lucide kecil):
+[ikon MessageCircle] Hubungi via WhatsApp
+[ikon Mail] (jika ada email kontak, tampilkan; jika tidak ada, skip baris ini)
+```
+
+**Kolom 2 — Platform**
+```
+Label kolom (mono, kecil, tracking lebar, warna muted): PLATFORM
+
+Kurikulum
+Kelas
+Pendaftaran
+Masuk
+```
+
+**Kolom 3 — Kelas (baru, pisahkan dari kolom Platform agar lebih terstruktur)**
+```
+Label kolom (mono): KELAS
+
+Batch 1 — Pendaftaran Dibuka (badge kecil di sebelah teks ini, dot ungu kecil berkedip halus)
+Vibe Coding Toolbox (jika sudah ada halaman ini, link ke situ)
+Lihat Semua Kelas
+```
+
+**Kolom 4 — Hubungi**
+```
+Label kolom (mono): HUBUNGI KAMI
+
+WhatsApp (dengan ikon kecil, link wa.me menggunakan VITE_WA_NUMBER)
+[jika ada Instagram/sosial media lain, tambahkan di sini sebagai link dengan ikon]
+```
+
+### Bottom Bar (baris paling bawah)
+
+```
+Border-top hairline tipis memisahkan dari konten kolom di atasnya
+
+Kiri: © 2026 AIGYPT
+Kanan: Dibuat untuk Masisir, oleh Masisir (italic atau warna aksen ungu muted)
+```
+
+Di mobile, bottom bar ini menjadi stack (center-aligned, dua baris).
+
+---
+
+## ELEMEN VISUAL TAMBAHAN
+
+### 1. Border-top dengan Glow Halus
+Footer dipisahkan dari section sebelumnya dengan border-top yang punya glow ungu sangat halus di tengahnya (bukan garis polos rata):
+```css
+.footer-top-border {
+  position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.footer-top-border::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.6), transparent);
+}
+```
+
+### 2. Background Footer Sedikit Berbeda
+Footer punya background yang sedikit lebih gelap atau ada radial gradient ungu sangat halus di salah satu sudut (pojok kiri atas atau kanan bawah), agar footer tidak terasa "menyatu kosong" dengan section di atasnya — beri sedikit kedalaman.
+
+### 3. Hover State pada Semua Link
+Setiap link di footer (kolom Platform, Kelas, Hubungi) punya transisi warna halus saat hover — dari warna sekunder (`#A1A1AA`) ke warna terang/aksen ungu (`#A855F7`), dengan transition 200ms. Tambahkan juga sedikit pergeseran horizontal kecil (`translateX(2px)`) saat hover agar terasa interaktif.
+
+```css
+.footer-link {
+  color: #A1A1AA;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+.footer-link:hover {
+  color: #A855F7;
+  transform: translateX(2px);
+}
+```
+
+### 4. Badge "Pendaftaran Dibuka" dengan Dot Berkedip
+Pada link "Batch 1" di kolom Kelas, tambahkan dot kecil berkedip (sama seperti yang dipakai di status urgency lain) untuk menunjukkan ini adalah item yang aktif/penting:
+```css
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #A855F7;
+  display: inline-block;
+  margin-right: 6px;
+  animation: dotBlink 1.8s ease-in-out infinite;
+}
+@keyframes dotBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+```
+
+### 5. Ikon Lucide untuk Kontak
+Gunakan ikon kecil (16px, warna sekunder, berubah ungu saat hover) di samping link WhatsApp dan kontak lainnya: `MessageCircle` untuk WhatsApp, `Mail` untuk email jika ada, `Instagram` jika ada link sosial media.
+
+---
+
+## ANIMASI SCROLL REVEAL
+
+Terapkan pola animasi yang konsisten dengan section lain (sesuai sistem animasi yang sudah dibangun sebelumnya):
+- Kolom-kolom footer menggunakan stagger reveal (container stagger + card item) saat footer masuk viewport
+- Border-top glow muncul dengan fade-in halus sebelum kolom-kolom muncul
+
+---
+
+## RESPONSIVE
+
+- **Desktop**: 4 kolom sejajar seperti struktur di atas
+- **Tablet**: 2 kolom x 2 baris (Brand+Platform di atas, Kelas+Hubungi di bawah, atau susunan yang proporsional)
+- **Mobile**: semua kolom stack vertikal, center-aligned, dengan jarak yang cukup antar kolom agar tidak terasa padat. Bottom bar (copyright) menjadi dua baris terpisah, center-aligned
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia
+2. Pertahankan semua link dan tujuan navigasi yang sudah benar dari footer sebelumnya — hanya ubah layout dan tambahan visual
+3. Konsisten dengan design system dark luxury AIGYPT (warna, font Space Grotesk/Inter/JetBrains Mono)
+4. Gunakan ikon Lucide, tidak ada gambar eksternal
+5. Animasi menggunakan Framer Motion, mengikuti pola variant yang sudah ada di `lib/animations.ts`
+6. Hormati `prefers-reduced-motion`
+7. Fully responsive
+8. `npm run build` sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Footer AIGYPT yang elegan dan seimbang: 4 kolom terstruktur (Brand, Platform, Kelas, Hubungi) dengan border-top glow halus, hover state interaktif pada semua link, badge status berkedip pada Batch 1, ikon kontak, dan bottom bar copyright yang rapi. Tidak ada lagi ruang kosong yang terasa hampa — footer terasa sebagai penutup halaman yang premium, bukan sekadar daftar link generik.
