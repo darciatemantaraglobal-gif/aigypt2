@@ -1,0 +1,381 @@
+# Prompt — AIGYPT Admin Panel Lengkap
+
+Copy-paste prompt ini ke Replit Agent. Ini membangun halaman admin yang lengkap untuk AIGYPT — login terpisah, generate kode akses, kelola member, dan tracking pembayaran manual (karena Midtrans masih menunggu approval).
+
+PENTING: Ini modifikasi/penambahan pada proyek yang sudah ada. Jangan bangun ulang dari nol.
+
+---
+
+## PROMPT
+
+Bangun **admin panel lengkap** untuk AIGYPT dengan login terpisah dari sistem member biasa. Admin panel ini menjadi pusat kendali untuk generate kode akses, kelola member, dan tracking pembayaran manual (transfer bank) selama Midtrans belum aktif.
+
+---
+
+## ARSITEKTUR
+
+```
+/admin/login          → halaman login admin (password-based, terpisah dari member)
+/admin                → dashboard utama admin (setelah login)
+/admin/codes          → kelola kode akses (generate, lihat, hapus)
+/admin/members        → kelola member yang sudah daftar
+/admin/orders         → kelola pesanan/pembayaran manual
+```
+
+---
+
+## TECH STACK
+
+- Vite + React + TypeScript + Tailwind CSS (proyek yang sudah ada)
+- Supabase untuk database
+- Vercel Serverless Functions untuk API admin (folder `api/admin/`)
+- Deploy: Vercel
+
+---
+
+## KEAMANAN — Login Admin Terpisah
+
+Admin TIDAK menggunakan sistem login member (email + kode akses). Admin punya password sendiri yang disimpan sebagai environment variable, bukan di database.
+
+### Environment Variable Baru
+
+```
+ADMIN_PASSWORD=buat_password_yang_kuat_di_sini
+ADMIN_SESSION_SECRET=random_string_minimal_32_karakter
+```
+
+### Halaman Login Admin (`/admin/login`)
+
+Form sederhana dengan desain dark luxury konsisten:
+```
+Heading: Masuk sebagai Admin
+Input: Password
+Tombol: Masuk
+```
+
+Tidak ada link "lupa password" — kalau lupa, admin ubah langsung di Vercel Environment Variables.
+
+### API Route: `api/admin/login.ts`
+
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { SignJWT } from 'jose'
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const { password } = req.body
+
+  if (password !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Password salah' })
+  }
+
+  const secret = new TextEncoder().encode(process.env.ADMIN_SESSION_SECRET!)
+  const token = await new SignJWT({ role: 'admin' })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('8h')
+    .sign(secret)
+
+  res.setHeader(
+    'Set-Cookie',
+    `aigypt_admin_session=${token}; Path=/; Max-Age=28800; HttpOnly; Secure; SameSite=Lax`
+  )
+
+  return res.status(200).json({ success: true })
+}
+```
+
+### Middleware Proteksi Admin
+
+Buat fungsi helper `api/_lib/verifyAdmin.ts` yang dipakai semua API route admin:
+
+```typescript
+import { jwtVerify } from 'jose'
+import type { VercelRequest } from '@vercel/node'
+
+export async function verifyAdminSession(req: VercelRequest): Promise<boolean> {
+  const cookie = req.headers.cookie || ''
+  const match = cookie.match(/aigypt_admin_session=([^;]+)/)
+  if (!match) return false
+
+  try {
+    const secret = new TextEncoder().encode(process.env.ADMIN_SESSION_SECRET!)
+    const { payload } = await jwtVerify(match[1], secret)
+    return payload.role === 'admin'
+  } catch {
+    return false
+  }
+}
+```
+
+Setiap API route admin HARUS memanggil ini di awal:
+```typescript
+const isAdmin = await verifyAdminSession(req)
+if (!isAdmin) {
+  return res.status(401).json({ error: 'Unauthorized' })
+}
+```
+
+Untuk proteksi halaman frontend (`/admin/*` kecuali `/admin/login`), buat pengecekan session di setiap halaman admin — jika tidak ada session valid, redirect ke `/admin/login`. Karena Vite SPA, lakukan ini dengan memanggil endpoint `api/admin/verify.ts` saat halaman admin dimuat.
+
+### API Route: `api/admin/verify.ts`
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { verifyAdminSession } from '../_lib/verifyAdmin'
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const isAdmin = await verifyAdminSession(req)
+  return res.status(isAdmin ? 200 : 401).json({ authenticated: isAdmin })
+}
+```
+
+### API Route: `api/admin/logout.ts`
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+
+  res.setHeader('Set-Cookie', 'aigypt_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly')
+  return res.status(200).json({ success: true })
+}
+```
+
+---
+
+## LAYOUT ADMIN (konsisten dark luxury, tapi lebih fungsional)
+
+Admin panel boleh sedikit lebih "kerja" dan kurang "marketing" dibanding halaman publik — tetap dark luxury tapi prioritaskan kejelasan data di atas estetika dekoratif.
+
+### Sidebar Admin (kiri, selalu tampil)
+```
+AIGYPT ADMIN
+
+Dashboard       → /admin
+Kode Akses      → /admin/codes
+Member          → /admin/members
+Pesanan         → /admin/orders
+
+[Logout]
+```
+
+---
+
+## HALAMAN 1 — Dashboard Admin (`/admin`)
+
+Ringkasan cepat dalam card-card statistik:
+```
+Total Member | Kode Belum Terpakai | Pesanan Pending | Pesanan Lunas
+```
+
+Di bawahnya, tabel ringkas "5 Pesanan Terbaru" dengan kolom: Nama, Email, Status, Tanggal, dan tombol cepat "Lihat Semua" ke `/admin/orders`.
+
+Ambil data dari Supabase via API route `api/admin/dashboard-stats.ts` yang query tabel `members`, `access_codes`, dan `orders`.
+
+---
+
+## HALAMAN 2 — Kelola Kode Akses (`/admin/codes`)
+
+### Bagian A — Generate Kode Baru
+Form di bagian atas:
+```
+Tipe: [Mandiri / Kelas] (dropdown)
+Batch Number: [input angka, default 1]
+Jumlah kode yang di-generate: [input angka, default 1, max 50]
+Tombol: Generate Kode
+```
+
+Setelah generate, tampilkan hasil kode-kode baru dalam list dengan tombol "Copy" per kode, dan tombol "Copy Semua" untuk copy semua kode sekaligus (dipisah baris baru, siap paste ke Excel/WhatsApp).
+
+### Bagian B — Daftar Semua Kode
+Tabel dengan kolom:
+```
+Kode | Tipe | Batch | Status | Digunakan Oleh | Dibuat | Aksi
+```
+- Status: badge "Tersedia" (hijau muted) atau "Terpakai" (abu-abu)
+- Filter di atas tabel: by tipe, by batch, by status
+- Search box untuk cari kode spesifik
+- Aksi: tombol "Hapus" untuk kode yang belum terpakai (dengan konfirmasi modal)
+- Pagination jika lebih dari 20 baris
+
+### API Routes:
+```
+POST /api/admin/codes/generate
+  body: { type: 'mandiri'|'kelas', batchNumber: number, count: number }
+  return: { codes: string[] }
+
+GET /api/admin/codes/list
+  query: ?type=&batch=&status=&search=
+  return: { codes: AccessCode[] }
+
+DELETE /api/admin/codes/:code
+  return: { success: boolean }
+```
+
+Semua route memvalidasi `verifyAdminSession` di awal.
+
+---
+
+## HALAMAN 3 — Kelola Member (`/admin/members`)
+
+Tabel semua member yang terdaftar:
+```
+Nama | Email | WhatsApp | Tipe | Batch | Progress | Terdaftar | Aksi
+```
+- Progress: tampilkan ringkas, misal "3/6 sesi" dengan mini progress bar
+- Search by nama/email
+- Filter by tipe member dan batch
+- Klik baris untuk expand detail: kode akses yang dipakai, riwayat login terakhir, progress detail per sesi
+- Aksi: tombol "Reset Progress" (dengan konfirmasi) untuk kasus khusus
+
+### API Routes:
+```
+GET /api/admin/members/list
+  query: ?search=&type=&batch=
+  return: { members: Member[] }
+
+GET /api/admin/members/:email/detail
+  return: { member: Member, progress: Progress[], accessCode: string }
+
+POST /api/admin/members/:email/reset-progress
+  return: { success: boolean }
+```
+
+---
+
+## HALAMAN 4 — Kelola Pesanan / Pembayaran Manual (`/admin/orders`)
+
+Ini PENTING karena Midtrans belum aktif — semua pembayaran Batch 1 akan manual via transfer.
+
+### Bagian A — Tambah Pesanan Manual
+Form untuk mencatat pembayaran yang masuk via transfer manual:
+```
+Nama: [input]
+Email: [input]
+WhatsApp: [input]
+Tipe Member: [Mandiri/Kelas] (dropdown)
+Batch: [input angka, default 1]
+Jumlah Transfer: [input angka, rupiah]
+Status: [Pending/Lunas] (dropdown, default Lunas karena dicatat setelah transfer masuk)
+Tombol: Catat Pesanan & Generate Kode
+```
+
+Saat submit dengan status "Lunas":
+1. Generate kode akses otomatis (format AIGYPT-XXXXXX)
+2. Simpan ke tabel `orders` dan `access_codes`
+3. Tampilkan kode yang dihasilkan dengan tombol "Copy" dan tombol "Buka WhatsApp" yang langsung membuka `https://wa.me/[nomor_wa_member]?text=[pesan_template_kode_akses]` agar admin bisa langsung kirim manual
+
+Template pesan WA (URL-encoded):
+```
+Halo [nama]! Pembayaran AIGYPT Batch 1 kamu sudah dikonfirmasi.
+
+Paket: [tipe member]
+Kode Akses: [kode]
+
+Cara login:
+1. Buka aigypt.vercel.app/login
+2. Masukkan email: [email]
+3. Masukkan kode akses di atas
+
+Selamat belajar!
+```
+
+### Bagian B — Daftar Semua Pesanan
+Tabel:
+```
+Nama | Email | Tipe | Jumlah | Status | Kode | Tanggal | Aksi
+```
+- Status badge: "Pending" (amber), "Lunas" (hijau), "Dibatalkan" (merah)
+- Filter by status, by tipe
+- Aksi untuk status Pending: tombol "Tandai Lunas" (generate kode otomatis saat diklik) dan "Batalkan"
+
+### API Routes:
+```
+POST /api/admin/orders/create
+  body: { name, email, phone, memberType, batchNumber, amount, status }
+  return: { order: Order, accessCode?: string }
+
+GET /api/admin/orders/list
+  query: ?status=&type=
+  return: { orders: Order[] }
+
+POST /api/admin/orders/:orderId/mark-paid
+  return: { success: boolean, accessCode: string }
+
+POST /api/admin/orders/:orderId/cancel
+  return: { success: boolean }
+```
+
+---
+
+## KOMPONEN UI YANG DIBUTUHKAN
+
+```
+components/admin/AdminSidebar.tsx
+components/admin/AdminStatCard.tsx
+components/admin/AdminTable.tsx       (reusable table dengan search/filter/pagination)
+components/admin/CopyButton.tsx       (tombol copy dengan feedback "Tersalin")
+components/admin/ConfirmModal.tsx     (modal konfirmasi untuk aksi destruktif)
+components/admin/StatusBadge.tsx      (badge berwarna sesuai status)
+```
+
+---
+
+## DESIGN SYSTEM (sama dengan halaman publik, tone lebih fungsional)
+
+```css
+--bg-void: #060608
+--bg-deep: #0A0A0F
+--bg-elevated: #101018
+--purple-core: #7C3AED
+--purple-bright: #A855F7
+--text-primary: #FAFAFA
+--text-secondary: #A1A1AA
+--border-hairline: rgba(255,255,255,0.06)
+```
+Font: Space Grotesk (heading), Inter (body), JetBrains Mono (kode, angka, status).
+Tabel: baris dengan hover halus, border hairline antar baris, header tabel sticky saat scroll.
+
+---
+
+## PACKAGES YANG DIBUTUHKAN
+
+Tambahkan ke `package.json`:
+```json
+{
+  "dependencies": {
+    "jose": "^5.0.0"
+  }
+}
+```
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia
+2. Admin panel terpisah total dari sistem auth member — tidak boleh saling bocor
+3. Semua API route admin WAJIB verifikasi session sebelum proses apapun
+4. Password admin TIDAK PERNAH di-hardcode, hanya dari `process.env.ADMIN_PASSWORD`
+5. Konfirmasi modal untuk semua aksi destruktif (hapus kode, batalkan pesanan)
+6. Loading state di semua tombol yang memanggil API
+7. Toast/notifikasi sukses-gagal untuk setiap aksi
+8. Fully responsive (meski admin biasanya dipakai di desktop, pastikan tidak rusak di mobile)
+9. `npm run build` sukses
+
+---
+
+## SETELAH SELESAI — Beri Saya Instruksi
+
+1. Cara mengatur `ADMIN_PASSWORD` dan `ADMIN_SESSION_SECRET` di Replit Secrets dan Vercel Environment Variables
+2. Konfirmasi bahwa route `/admin/*` tidak ter-index oleh search engine (tambahkan ke `robots.txt` jika perlu: `Disallow: /admin`)
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Admin panel lengkap dengan login password terpisah, dashboard statistik, generate & kelola kode akses, kelola member dengan progress tracking, dan kelola pesanan manual (termasuk catat transfer, generate kode otomatis, dan kirim WhatsApp langsung). Aman, fungsional, konsisten dark luxury, siap deploy ke Vercel.

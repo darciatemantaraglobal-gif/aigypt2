@@ -12,7 +12,11 @@ import KelasDetailPage from "@/pages/kelas-detail";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import MateriPage from "@/pages/materi/index";
-import Admin from "@/pages/admin";
+import AdminDashboard from "@/pages/admin";
+import AdminLogin from "@/pages/admin/login";
+import AdminCodes from "@/pages/admin/codes";
+import AdminMembers from "@/pages/admin/members";
+import AdminOrders from "@/pages/admin/orders";
 import Toolbox from "@/pages/toolbox";
 import Daftar from "@/pages/daftar";
 import Sukses from "@/pages/sukses";
@@ -50,7 +54,11 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/materi/:sesi" component={MateriRedirect} />
-      <Route path="/admin" component={Admin} />
+      <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin/codes" component={AdminCodes} />
+      <Route path="/admin/members" component={AdminMembers} />
+      <Route path="/admin/orders" component={AdminOrders} />
+      <Route path="/admin" component={AdminDashboard} />
       <Route path="/toolbox" component={Toolbox} />
       <Route path="/daftar" component={Daftar} />
       <Route path="/sukses" component={Sukses} />
