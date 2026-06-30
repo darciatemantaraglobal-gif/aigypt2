@@ -1,0 +1,70 @@
+# Prompt — AIGYPT: Hapus Elemen Dekoratif Floating Dots dan Sparkle
+
+Copy-paste prompt ini ke Replit Agent. Ini menghapus elemen dekoratif FloatingDots dan FloatingSparkles yang sebelumnya ditambahkan ke landing page AIGYPT, elemen ini terlihat mengganggu atau aneh di tampilan, jadi dihapus total.
+
+PENTING: Ini hanya menghapus dua elemen dekoratif spesifik. Jangan ubah konten, layout, atau elemen lain seperti ambient glow di hero, cursor glow, atau animasi scroll-reveal yang sudah ada, itu semua tetap dipertahankan.
+
+---
+
+## PROMPT
+
+Hapus seluruh implementasi dua komponen dekoratif berikut dari landing page AIGYPT:
+
+1. FloatingDots, titik-titik kecil ungu yang mengambang di background section
+2. FloatingSparkles, ikon sparkle yang mengambang dengan rotasi di beberapa section
+
+### Langkah yang Harus Dilakukan
+
+1. Hapus file komponen:
+```
+components/FloatingDots.tsx
+components/FloatingSparkles.tsx
+```
+
+2. Cari dan hapus semua pemanggilan kedua komponen ini di seluruh halaman, termasuk di:
+```
+Hero section
+Section Visi/Manifesto
+Section Spektrum Pembelajaran
+Section Showcase
+Section Keanggotaan
+Section CTA Penutup
+Section Galeri Karya
+```
+Hapus baris pemanggilan FloatingDots dan FloatingSparkles (atau nama pemanggilan apapun yang dipakai) beserta import statement-nya di setiap file yang menggunakannya.
+
+3. Hapus keyframes CSS yang terkait jika sudah tidak dipakai oleh elemen lain:
+```css
+@keyframes dotFloat { ... }
+@keyframes sparkleFloat { ... }
+```
+Cek dulu apakah keyframes ini dipakai elemen lain sebelum dihapus, jika hanya dipakai oleh FloatingDots/FloatingSparkles, aman untuk dihapus.
+
+4. Hapus import Sparkles dari lucide-react jika sudah tidak digunakan di tempat lain pada file yang sama.
+
+---
+
+## YANG TETAP DIPERTAHANKAN (JANGAN DIHAPUS)
+
+1. Ambient glow statis di belakang headline hero
+2. Cursor-aware glow yang mengikuti mouse di hero
+3. Semua animasi scroll-reveal (fade rise, stagger, fade scale, dan lainnya dari lib/animations.ts)
+4. Pulsing glow pada card urgency Batch 1
+5. Marquee announcement bar
+6. Semua konten, layout, dan komponen lain yang tidak terkait dengan FloatingDots/FloatingSparkles
+
+---
+
+## VERIFIKASI
+
+Setelah penghapusan, pastikan:
+1. Tidak ada lagi import atau pemanggilan FloatingDots atau FloatingSparkles di seluruh codebase (cek dengan pencarian global)
+2. Tidak ada error build akibat import yang hilang atau referensi komponen yang sudah dihapus
+3. Section-section yang sebelumnya memiliki elemen ini tetap terlihat normal tanpa ada celah/ruang kosong yang janggal akibat penghapusan
+4. npm run build harus sukses tanpa error
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Landing page AIGYPT tidak lagi menampilkan elemen floating dots maupun sparkle yang mengambang. Elemen dekoratif lain (ambient glow hero, cursor glow, pulsing glow, marquee) tetap berfungsi normal seperti sebelumnya.
