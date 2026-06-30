@@ -1,0 +1,186 @@
+# Prompt — AIGYPT: Animasi Pulsing Glow + Marquee Announcement Bar
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan dua animasi ke landing page AIGYPT yang sudah ada: (1) pulsing glow pada card "Batch 1 · Pendaftaran Dibuka" di hero, dan (2) scrolling marquee pada announcement bar di paling atas halaman.
+
+PENTING: Ini modifikasi pada elemen yang sudah ada. Jangan ubah struktur, konten, atau section lain, hanya tambahkan animasi pada dua elemen spesifik ini.
+
+---
+
+## PROMPT
+
+Tambahkan dua animasi berikut ke landing page AIGYPT:
+
+---
+
+## 1. PULSING GLOW, Card Urgency di Hero
+
+Elemen target: card kecil "BATCH 1 · PENDAFTARAN DIBUKA" yang berada di bawah sub-headline hero (berisi teks "Kelas dimulai 5 Juli 2026 · Tempat sangat terbatas").
+
+### Efek yang Diinginkan
+Card ini berdenyut secara halus dan terus-menerus, border dan glow-nya membesar lalu mengecil dalam siklus lambat, menciptakan kesan hidup dan menarik perhatian tanpa mengganggu.
+
+### Implementasi CSS
+
+Tambahkan style berikut (gunakan CSS-in-JS, styled-component, atau className Tailwind dengan custom animation, sesuaikan dengan pendekatan styling yang sudah dipakai di proyek):
+
+```css
+.batch-urgency-card {
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  animation: pulseGlow 2.4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 12px 0px rgba(168, 85, 247, 0.25);
+    border-color: rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px 4px rgba(168, 85, 247, 0.55);
+    border-color: rgba(168, 85, 247, 0.8);
+  }
+}
+```
+
+Jika menggunakan Tailwind dengan konfigurasi custom, tambahkan ke tailwind.config.ts:
+
+```typescript
+extend: {
+  keyframes: {
+    pulseGlow: {
+      '0%, 100%': {
+        boxShadow: '0 0 12px 0px rgba(168, 85, 247, 0.25)',
+        borderColor: 'rgba(168, 85, 247, 0.3)'
+      },
+      '50%': {
+        boxShadow: '0 0 28px 4px rgba(168, 85, 247, 0.55)',
+        borderColor: 'rgba(168, 85, 247, 0.8)'
+      }
+    }
+  },
+  animation: {
+    'pulse-glow': 'pulseGlow 2.4s ease-in-out infinite'
+  }
+}
+```
+
+Lalu terapkan className animate-pulse-glow pada card tersebut.
+
+### Catatan Penting
+- Animasi ini harus berjalan terus-menerus (infinite), tidak hanya saat hover
+- Pastikan tidak mengubah ukuran atau posisi card secara tiba-tiba, hanya glow dan border color yang berubah, agar tidak menyebabkan layout shift
+- Hormati prefers-reduced-motion: jika user mengaktifkan preferensi ini, animasi berhenti dan card tetap menampilkan state glow yang tetap (state di tengah siklus, bukan hilang total)
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .batch-urgency-card {
+    animation: none;
+    box-shadow: 0 0 18px 2px rgba(168, 85, 247, 0.4);
+    border-color: rgba(168, 85, 247, 0.5);
+  }
+}
+```
+
+---
+
+## 2. MARQUEE, Announcement Bar
+
+Elemen target: announcement bar sticky di paling atas halaman, berisi teks "PENDAFTARAN BATCH 1 DIBUKA · KELAS DIMULAI 5 JULI 2026 · TEMPAT TERBATAS".
+
+### Efek yang Diinginkan
+Teks bergerak terus-menerus dari kanan ke kiri secara horizontal (scrolling marquee), looping tanpa terputus, efek seperti running text atau ticker.
+
+### Implementasi
+
+Duplikasi teks dua kali berdampingan dalam satu container, lalu animasikan transform translateX agar terlihat seamless tanpa jeda saat loop berulang:
+
+```tsx
+<div className="announcement-bar-outer">
+  <div className="announcement-bar-track">
+    <span className="announcement-text">
+      PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; KELAS DIMULAI 5 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;·&nbsp;
+    </span>
+    <span className="announcement-text">
+      PENDAFTARAN BATCH 1 DIBUKA &nbsp;·&nbsp; KELAS DIMULAI 5 JULI 2026 &nbsp;·&nbsp; TEMPAT TERBATAS &nbsp;·&nbsp;
+    </span>
+  </div>
+</div>
+```
+
+```css
+.announcement-bar-outer {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.announcement-bar-track {
+  display: inline-flex;
+  animation: marqueeScroll 14s linear infinite;
+}
+
+.announcement-text {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: #F3E8FF;
+  flex-shrink: 0;
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+```
+
+### Catatan Penting
+- Teks harus diduplikasi tepat 2 kali dengan konten identik agar animasi translateX(-50%) menghasilkan loop yang seamless, tanpa terlihat patah saat mengulang
+- Kecepatan: durasi 14 detik untuk satu putaran penuh terasa pas, tidak terlalu cepat (norak) atau terlalu lambat (membosankan). Sesuaikan jika terasa kurang tepat setelah dilihat langsung
+- Tombol close dan tombol CTA "Daftar Sekarang" (jika ada di desain sebelumnya) harus tetap berada di luar area yang dianimasikan, tidak ikut bergerak. Posisikan dengan layout flex terpisah di kanan bar, di luar track yang bergerak
+- Saat bar di-hover, opsional: pause animasi dengan animation-play-state paused agar user bisa membaca dengan nyaman jika ingin
+
+```css
+.announcement-bar-track:hover {
+  animation-play-state: paused;
+}
+```
+
+- Hormati prefers-reduced-motion: jika aktif, hentikan animasi dan tampilkan teks secara statis tanpa terpotong
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .announcement-bar-track {
+    animation: none;
+    transform: none;
+  }
+  .announcement-text:nth-child(2) {
+    display: none;
+  }
+  .announcement-bar-outer {
+    white-space: normal;
+    text-align: center;
+  }
+}
+```
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Tidak mengubah konten, struktur, atau section lain di landing page
+2. Animasi menggunakan CSS keyframes (bukan JavaScript interval) untuk performa terbaik
+3. Tetap konsisten dengan design system dark luxury yang sudah ada
+4. Pastikan tidak ada layout shift atau jank saat animasi berjalan
+5. Tombol close dan CTA di announcement bar tetap fungsional dan tidak ikut animasi
+6. npm run build harus sukses tanpa error
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Card "Batch 1 · Pendaftaran Dibuka" di hero berdenyut halus dengan glow ungu yang membesar dan mengecil secara terus-menerus. Announcement bar di paling atas memiliki teks yang bergerak terus-menerus dari kanan ke kiri tanpa putus, dengan tombol close dan CTA yang tetap diam di posisinya. Keduanya tetap elegan, tidak norak, dan konsisten dengan tema dark luxury AIGYPT.

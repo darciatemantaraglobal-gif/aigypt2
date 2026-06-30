@@ -1,0 +1,247 @@
+# Prompt — AIGYPT Landing Page: Showcase & Konversi Maksimal
+
+Copy-paste prompt ini ke Replit Agent. Ini upgrade landing page AIGYPT yang sudah ada — menambahkan showcase kemampuan AI yang konkret, reposisi value membership jadi "perpustakaan", dan sentuhan psikologis yang membuat masisir terdorong mendaftar.
+
+PENTING: Ini modifikasi pada proyek yang sudah ada. Pertahankan struktur, desain, dan section yang sudah dibangun sebelumnya (hero, visi, persona, spektrum, kelas batch 1, dll). Prompt ini MENAMBAHKAN section baru dan MEREVISI beberapa bagian — bukan membangun ulang dari nol.
+
+---
+
+## YANG DITAMBAHKAN/DIREVISI
+
+1. **Section baru: Showcase "Lihat Apa yang Bisa Kamu Ciptakan"** — ditempatkan setelah section "Spektrum Pembelajaran", sebelum "Kelas Batch 1"
+2. **Revisi section Keanggotaan** — reposisi dari "akses materi" menjadi "perpustakaan solusi AI"
+3. **Section baru: Testimoni** — ditempatkan setelah Showcase
+4. **Penguatan urgency** — angle psikologis tambahan di beberapa CTA
+
+Semua tetap dalam design system dark luxury yang sudah ada (palet ungu-hitam, Space Grotesk, Inter, JetBrains Mono, panggilan "kamu").
+
+---
+
+## SECTION BARU — SHOWCASE "Lihat Apa yang Bisa Kamu Ciptakan"
+
+Tempatkan setelah section Spektrum Pembelajaran.
+
+### Layout: Kombinasi Interaktif + Statis
+
+**Bagian atas (interaktif):** Tab selector horizontal untuk 5 kategori. Klik tab → konten before/after berganti dengan animasi fade yang halus.
+
+**Bagian bawah (statis):** Setelah tab interaktif, tampilkan grid ringkas semua 5 contoh sekaligus dalam card kecil (agar yang malas klik tab tetap lihat semua bukti).
+
+```
+Label (mono): BUKAN SEKADAR TEORI
+
+Headline: Lihat Apa yang Bisa Kamu Ciptakan
+
+Sub: Ini bukan klaim. Ini yang benar-benar bisa kamu hasilkan
+setelah memahami cara memanfaatkan AI dengan tepat.
+```
+
+### Tab Interaktif — 5 Kategori
+
+Setiap tab menampilkan dua kolom bersisian: "Sebelum" (kiri, muted/redup) vs "Dengan AI" (kanan, terang dengan glow ungu halus). Tambahkan badge waktu di kolom kanan untuk efek dramatis.
+
+**TAB 1 — Akademisi**
+```
+SEBELUM (kolom kiri, redup):
+"Stuck nulis pendahuluan makalah. Dua jam, baru dapat satu paragraf."
+
+DENGAN AI (kolom kanan, terang + glow):
+Outline lengkap 5 bab + draft pendahuluan + rekomendasi referensi kitab.
+Badge waktu: ~10 MENIT
+```
+
+**TAB 2 — Organisator**
+```
+SEBELUM:
+"Notulensi rapat dua jam. Nulisnya sejam sendiri, banyak yang kelewat."
+
+DENGAN AI:
+Rekam rapat lalu transkrip otomatis lalu notulensi rapi plus action items per orang.
+Badge waktu: ~5 MENIT
+```
+
+**TAB 3 — Pebisnis**
+```
+SEBELUM:
+"Bingung bikin caption jualan. Itu-itu saja. Tidak ada yang beli."
+
+DENGAN AI:
+5 variasi caption dengan pendekatan berbeda — storytelling, urgency, testimoni.
+Badge waktu: ~30 DETIK
+```
+
+**TAB 4 — Kreator**
+```
+SEBELUM:
+"Kehabisan ide konten. Sudah seminggu tidak posting."
+
+DENGAN AI:
+30 ide konten terkategorisasi, lengkap hook pembuka dan poin utama.
+Badge waktu: ~1 MENIT
+```
+
+**TAB 5 — Vibe Coding (paling dramatis, beri penekanan visual lebih)**
+```
+SEBELUM:
+"Ingin ada aplikasi pencatat keuangan organisasi, tapi tidak mengerti coding."
+
+DENGAN AI:
+Deskripsikan yang kamu mau lalu aplikasi web jadi, siap dipakai.
+Badge waktu: ~15 MENIT
+Tambahan badge kecil: TANPA SATU BARIS KODE
+```
+
+### Grid Ringkas (di bawah tab, tampilkan semua 5 sekaligus dalam ukuran kecil)
+
+Card mini, masing-masing dengan ikon kategori, judul, satu baris hasil, dan badge waktu. Hover: scale halus plus border glow.
+
+### Penutup Section
+
+```
+Pernyataan kecil di bawah grid (mono, tracking lebar):
+DAN INI HANYA PERMULAAN DARI APA YANG AKAN KAMU PELAJARI
+```
+
+---
+
+## SECTION BARU — TESTIMONI
+
+Tempatkan setelah Showcase.
+
+```
+Label (mono): DARI MEREKA YANG SUDAH MENCOBA
+
+Headline: Bukan Kami yang Bilang. Mereka yang Membuktikan.
+```
+
+### Format Card Testimoni (placeholder, instruksi untuk pemilik website)
+
+Buat 3-4 card testimoni dalam layout grid atau carousel horizontal. Gunakan struktur data berikut sebagai placeholder yang mudah diedit (simpan di file terpisah `lib/testimonials.ts` agar pemilik website bisa mengganti tanpa menyentuh komponen):
+
+```typescript
+export interface Testimonial {
+  quote: string        // kutipan spesifik, bukan generik
+  result: string        // hasil konkret, contoh: "Hemat 5 jam per minggu"
+  name: string          // nama depan plus inisial, contoh: "Ahmad R."
+  role: string           // contoh: "Mahasiswa Syariah, Tahun ke-3"
+}
+
+export const testimonials: Testimonial[] = [
+  {
+    quote: "GANTI_DENGAN_KUTIPAN_ASLI — buat spesifik, sebutkan masalah dan hasil konkret",
+    result: "GANTI_DENGAN_HASIL_KONKRET",
+    name: "GANTI_NAMA",
+    role: "GANTI_PERAN"
+  }
+  // tambahkan 2-3 lagi dengan pola yang sama
+]
+```
+
+Tampilkan placeholder ini di production dengan watermark kecil "Contoh testimoni, akan diperbarui" agar tidak terkesan menipu sebelum testimoni asli dimasukkan oleh pemilik. Tambahkan juga komentar di kode:
+```typescript
+// TODO: Ganti dengan testimoni asli dari peserta demo/beta AIGYPT.
+// Format yang baik: masalah spesifik, plus hasil terukur, plus nama dan peran.
+```
+
+Styling card: glassmorphism, tanda kutip besar dekoratif (ungu muted) di pojok, nama dan peran di bawah dengan border-top hairline tipis.
+
+---
+
+## REVISI — SECTION KEANGGOTAAN (Reposisi jadi "Perpustakaan")
+
+Ganti framing dari "akses materi 6 sesi" menjadi "perpustakaan solusi AI yang terus bertumbuh". Update copy section Keanggotaan yang sudah ada:
+
+```
+Label (mono): LEBIH DARI SEKADAR KELAS
+
+Headline: Sebuah Perpustakaan yang Terus Bertumbuh
+
+Sub: Saat kamu bergabung, kamu tidak hanya mendapat satu kelas.
+Kamu mendapat akses ke perpustakaan solusi yang terus berkembang,
+setiap masalah masisir, setiap jawabannya.
+
+Angka konkret (tampilkan sebagai stat grid, 4 kolom):
+50+ PROMPT SIAP PAKAI
+6 SESI MENDALAM
+12 STUDI KASUS NYATA
+5 JALUR APLIKASI YANG BISA KAMU BANGUN
+
+Paragraf pendukung:
+Setiap prompt sudah diuji untuk konteks nyata — bahasa Arab akademik,
+organisasi mahasiswa, bisnis dengan modal terbatas, hingga konten yang
+benar-benar dilihat orang. Kamu tidak mulai dari nol. Kamu mulai dari
+apa yang sudah terbukti bekerja.
+```
+
+Catatan: angka 50+ prompt, 12 studi kasus, dan seterusnya adalah estimasi berdasarkan kekayaan materi 6 sesi yang sudah ada. Sesuaikan dengan jumlah aktual jika pemilik website menghitung ulang dari materi yang sudah dibuat.
+
+Pertahankan dua tier (Mandiri dan Kelas) yang sudah ada, tapi tambahkan baris kecil di bawah masing-masing:
+```
+Tier Mandiri tambahan: "Akses penuh perpustakaan, belajar sesuai waktumu."
+Tier Kelas tambahan: "Semua itu, plus dibimbing langsung menerapkannya."
+```
+
+---
+
+## PENGUATAN PSIKOLOGIS, UPDATE DI SECTION YANG SUDAH ADA
+
+### Di Section Hero, tambahkan baris kecil di bawah urgency block:
+```
+ANGKATAN PERTAMA · JADILAH YANG LEBIH DULU MENGUASAINYA
+```
+
+### Di Section Kelas Batch 1, tambahkan paragraf kecil sebelum tombol CTA:
+```
+Headline kecil: Mengapa Bergabung Sekarang Lebih Berarti
+
+Paragraf:
+Batch 1 bukan sekadar angkatan pertama. Ini kesempatan untuk menjadi
+salah satu yang lebih dulu menguasai keterampilan yang akan semakin
+penting setiap harinya. Sementara yang lain masih ragu memulai,
+kamu sudah selangkah di depan.
+```
+
+### Di Section CTA Penutup, perkuat dengan framing risk-reversal:
+```
+Tambahkan baris kecil di atas tombol utama (mono):
+KEPUTUSAN UNTUK MULAI SELALU LEBIH RINGAN DARI PENYESALAN UNTUK MENUNDA
+```
+
+### Tambahan kecil di Section FAQ, satu pertanyaan baru:
+```
+Bagaimana jika saya merasa belum siap?
+Justru itu alasan terbaik untuk mulai sekarang. AIGYPT dirancang
+dari nol — tidak ada prasyarat selain kemauan untuk belajar.
+Yang menunggu "siap" biasanya menunggu selamanya.
+```
+
+---
+
+## DETAIL ANIMASI TAMBAHAN
+
+1. Tab Showcase: transisi konten antar tab dengan fade plus slight slide (Framer Motion AnimatePresence), durasi sekitar 250ms
+2. Kolom Sebelum/Sesudah: kolom "Dengan AI" punya subtle glow pulse di border untuk menarik perhatian
+3. Badge waktu: muncul dengan scale-in kecil setelah konten utama tampil, delay sekitar 150ms, terasa seperti stempel
+4. Grid ringkas showcase: stagger reveal saat scroll, tiap card muncul berurutan dengan delay kecil
+5. Card testimoni: hover halus, tanda kutip dekoratif punya opacity rendah yang sedikit menguat saat hover
+6. Stat grid di Keanggotaan: angka melakukan count-up animation singkat saat masuk viewport, dari 0 ke angka final, durasi sekitar 800ms
+7. Hormati prefers-reduced-motion di semua animasi baru
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia, panggilan "kamu"
+2. Pertahankan semua section dan desain yang sudah ada, ini penambahan bukan rebuild
+3. Vite plus React, env via import.meta.env.VITE_
+4. Data testimoni di file terpisah lib/testimonials.ts agar mudah diedit
+5. Tidak ada gambar eksternal, gunakan ikon Lucide, CSS, gradient
+6. Tidak ada localStorage atau sessionStorage kecuali yang sudah ada untuk announcement bar
+7. Fully responsive, tab showcase di mobile menjadi accordion atau swipeable
+8. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Landing page AIGYPT yang sudah ada, diperkaya dengan: section showcase before-after yang konkret dan interaktif, section testimoni dengan placeholder yang mudah diedit, reposisi keanggotaan jadi perpustakaan yang bertumbuh dengan angka-angka konkret, dan sentuhan psikologis (kelangkaan, jadi pelopor, risk-reversal) yang terintegrasi halus di section yang sudah ada. Tetap dark luxury, konsisten, siap deploy ke Vercel.
