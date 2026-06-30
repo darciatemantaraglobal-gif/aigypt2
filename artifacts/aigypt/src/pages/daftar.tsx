@@ -189,7 +189,7 @@ export default function Daftar() {
     <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
       <Navbar />
 
-      <section className="relative overflow-hidden pt-28 pb-8 sm:pt-36 sm:pb-12">
+      <section className="relative overflow-hidden pt-20 pb-8 sm:pt-32 sm:pb-12">
         <motion.div
           className="absolute pointer-events-none"
           style={{
@@ -329,12 +329,11 @@ export default function Daftar() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.4 }}
-            className="relative"
+            className="relative p-5 sm:p-8"
             style={{
               background: "rgba(10,10,15,0.8)",
               border: "1px solid rgba(255,255,255,0.07)",
               borderRadius: "16px",
-              padding: "32px",
             }}
           >
             <div
@@ -360,10 +359,12 @@ export default function Daftar() {
                   onChange={handleChange}
                   placeholder="Nama kamu"
                   autoComplete="name"
-                  className="w-full px-4 py-3 text-sm text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
+                  className="w-full px-4 py-3 text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
                   style={{
                     background: "rgba(255,255,255,0.04)",
                     border: "1px solid rgba(255,255,255,0.08)",
+                    fontSize: "16px",
+                    minHeight: "48px",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
@@ -381,10 +382,12 @@ export default function Daftar() {
                   onChange={handleChange}
                   placeholder="email@kamu.com"
                   autoComplete="email"
-                  className="w-full px-4 py-3 text-sm text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
+                  className="w-full px-4 py-3 text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
                   style={{
                     background: "rgba(255,255,255,0.04)",
                     border: "1px solid rgba(255,255,255,0.08)",
+                    fontSize: "16px",
+                    minHeight: "48px",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
@@ -405,10 +408,12 @@ export default function Daftar() {
                   onChange={handleChange}
                   placeholder="08xxxxxxxxxx"
                   autoComplete="tel"
-                  className="w-full px-4 py-3 text-sm text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
+                  className="w-full px-4 py-3 text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
                   style={{
                     background: "rgba(255,255,255,0.04)",
                     border: "1px solid rgba(255,255,255,0.08)",
+                    fontSize: "16px",
+                    minHeight: "48px",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}

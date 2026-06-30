@@ -716,14 +716,14 @@ export default function KelasPage() {
               dengan tanganmu sendiri. Kelas transformatif yang dirancang
               khusus untuk masisir.
             </p>
-            <div className="flex gap-3 flex-wrap">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
-                className="flex items-center gap-2 text-base font-medium text-white transition-all duration-200"
+                className="flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 w-full sm:w-auto"
                 style={{
                   background: "#7C3AED",
                   borderRadius: "12px",
                   padding: "15px 28px",
-                  minHeight: "48px",
+                  minHeight: "52px",
                   boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
                 onClick={() => setLocation(`/kelas/${flagship.id}`)}
@@ -734,13 +734,13 @@ export default function KelasPage() {
                 Mulai Belajar
               </button>
               <button
-                className="flex items-center gap-2 text-base font-normal transition-all duration-200"
+                className="flex items-center justify-center gap-2 text-base font-normal transition-all duration-200 w-full sm:w-auto"
                 style={{
                   background: "rgba(255,255,255,0.1)",
                   border: "0px solid transparent",
                   borderRadius: "12px",
                   padding: "15px 28px",
-                  minHeight: "48px",
+                  minHeight: "52px",
                   color: "#FAFAFA",
                   backdropFilter: "blur(8px)",
                 }}

@@ -260,6 +260,25 @@
   }
 }
 
+/* ── Mobile global fixes ────────────────────────────────────────────────────── */
+html, body {
+  overflow-x: hidden;
+}
+
+@media (max-width: 639px) {
+  /* Reduce blur intensity on mobile for performance */
+  .hero-ambient-glow {
+    filter: blur(40px);
+    width: 340px;
+    height: 340px;
+  }
+
+  /* Ensure all touch targets are at least 44px */
+  button, a, [role="button"] {
+    min-height: 44px;
+  }
+}
+
 /* ── Footer ────────────────────────────────────────────────────────────────── */
 .footer-top-border {
   position: relative;

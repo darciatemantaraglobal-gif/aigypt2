@@ -70,7 +70,7 @@ export default function Login() {
                   placeholder="kamu@email.com"
                   className="w-full px-4 text-sm text-white placeholder-[#475569] focus:outline-none transition-colors"
                   style={{
-                    height: "40px",
+                    height: "48px",
                     background: "rgba(0,0,0,0.2)",
                     border: "1px solid rgba(255,255,255,0.1)",
                     borderRadius: "8px",
@@ -95,7 +95,7 @@ export default function Login() {
                     placeholder="AIGYPT-XXXXXX"
                     className="w-full px-4 pr-12 text-sm text-white placeholder-[#475569] font-mono tracking-widest focus:outline-none transition-colors"
                     style={{
-                      height: "40px",
+                      height: "48px",
                       background: "rgba(0,0,0,0.2)",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: "8px",

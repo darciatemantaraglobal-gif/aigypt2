@@ -1,0 +1,149 @@
+# Prompt — AIGYPT: Optimasi Mobile Menyeluruh (Native App Feel)
+
+Copy-paste prompt ini ke Replit Agent. Ini audit dan optimasi mobile menyeluruh untuk SELURUH halaman AIGYPT, publik maupun yang memerlukan login, agar ukuran, spacing, dan interaksi elemen terasa seperti aplikasi mobile native, bukan sekadar website yang menyusut di layar kecil.
+
+PENTING: Ini optimasi tampilan dan ukuran, BUKAN perubahan konten, struktur informasi, atau fungsi. Semua teks, data, dan logic tetap sama, yang dioptimasi adalah bagaimana semuanya disajikan di layar mobile.
+
+---
+
+## PRINSIP UTAMA: MOBILE NATIVE FEEL
+
+Tujuannya bukan sekadar elemen yang muat di layar kecil, tapi terasa seperti dirancang khusus untuk mobile sejak awal, proporsi yang pas, jarak sentuh yang nyaman, tipografi yang terbaca tanpa zoom, dan interaksi yang responsif terhadap sentuhan jari, bukan kursor mouse.
+
+---
+
+## STANDAR KONKRET YANG HARUS DITERAPKAN
+
+### 1. Touch Target (area yang bisa disentuh)
+- Semua elemen yang bisa diklik/disentuh (tombol, link, ikon interaktif, item navigasi) minimal berukuran 44x44px, ini standar minimum kenyamanan sentuh jari (mengikuti pedoman Apple HIG dan Material Design)
+- Beri jarak minimal 8px antar elemen yang bisa disentuh berdekatan, agar tidak salah pencet
+- Tombol CTA utama di mobile: tinggi minimal 48-52px, lebar mengikuti container dengan padding horizontal yang nyaman (bukan full-bleed mepet ke tepi layar)
+
+### 2. Tipografi Mobile
+- Body text minimum 16px di mobile, di bawah ini browser mobile (terutama Safari iOS) akan auto-zoom saat user tap input field, yang terasa mengganggu
+- Headline besar di desktop (misalnya 56-64px) harus diskalakan signifikan di mobile, biasanya ke kisaran 28-36px tergantung panjang teks, gunakan clamp() CSS untuk scaling yang halus antar breakpoint, bukan lompatan tiba-tiba
+- Line-height di mobile sedikit lebih lega dibanding desktop untuk keterbacaan di layar sempit (sekitar 1.5-1.6 untuk body text)
+- Letter-spacing pada label mono (yang di desktop memakai tracking lebar) sedikit dikurangi di mobile agar tidak memakan ruang horizontal berlebihan
+
+### 3. Spacing dan Padding
+- Padding horizontal halaman (jarak konten ke tepi layar) konsisten di seluruh halaman, sekitar 16-20px di mobile (bukan 24px+ seperti di desktop)
+- Jarak vertikal antar section di mobile dipadatkan dari desktop (section yang di desktop berjarak 120-160px, di mobile menjadi sekitar 64-80px), tetap ada napas tapi tidak membuat scroll mobile terasa berlebihan panjang
+- Card padding internal disesuaikan: card yang di desktop punya padding 32px, di mobile menjadi sekitar 20-24px
+
+### 4. Grid dan Layout
+- Grid card multi-kolom (persona, spektrum pembelajaran, showcase, dan lainnya) menjadi 1 kolom penuh di mobile (bukan dipaksa 2 kolom sempit yang membuat konten terlalu padat)
+- Untuk grid yang secara konten cocok 2 kolom kecil di mobile (misal stat grid angka), boleh tetap 2 kolom hanya jika kontennya pendek (angka plus label singkat), bukan card dengan banyak teks
+- Tabel (jika ada, misal di admin panel) menjadi scrollable horizontal di mobile dengan indikator visual bahwa bisa di-scroll, bukan dipaksa menyusut sehingga teks tidak terbaca
+
+### 5. Navigasi Mobile
+- Navbar di mobile: logo tetap terlihat jelas, menu lain disembunyikan ke dalam hamburger menu (sesuaikan dengan yang sudah ada, jika belum ada hamburger menu, tambahkan)
+- Sidebar (di halaman materi pembelajaran dan admin panel) menjadi drawer atau off-canvas yang bisa dibuka-tutup di mobile, bukan sidebar sempit yang dipaksa muat di samping konten
+- Bottom navigation bar (untuk navigasi step materi) tetap sticky di bawah layar dengan tinggi yang nyaman disentuh, tidak terlalu tipis
+
+### 6. Gambar dan Ikon
+- Ikon Lucide di mobile: ukuran disesuaikan turun sedikit dari desktop tapi tetap dalam rentang yang jelas terlihat (umumnya 20-24px untuk ikon dalam teks, 32-40px untuk ikon dekoratif dalam card)
+- Pastikan tidak ada ikon atau elemen visual yang terpotong di tepi layar akibat overflow yang tidak ditangani
+
+### 7. Form dan Input (halaman Daftar, Login, Admin)
+- Input field tinggi minimal 48px, dengan font minimal 16px (mencegah auto-zoom iOS Safari)
+- Label di atas input (bukan placeholder-only) agar tetap jelas konteksnya di layar kecil
+- Tombol submit form full-width di mobile dengan posisi yang mudah dijangkau ibu jari (biasanya bagian bawah form)
+- Dropdown/select menggunakan native mobile picker jika memungkinkan, bukan custom dropdown yang sulit dioperasikan dengan jari
+
+### 8. Modal dan Overlay
+- Modal (konfirmasi admin, detail kelas coming-soon, dan lainnya) di mobile menjadi full-screen atau hampir full-screen (bukan modal kecil mengambang di tengah layar sempit)
+- Tombol tutup modal mudah dijangkau, posisi konsisten (biasanya kanan atas dengan touch target memadai)
+
+### 9. Animasi di Mobile
+- Beberapa animasi yang berat di desktop (misalnya particle effects, glow yang kompleks) disederhanakan di mobile untuk menjaga performa, gunakan media query untuk mengurangi kompleksitas animasi pada layar kecil
+- Animasi scroll-reveal tetap berjalan tapi dengan durasi yang sedikit dipercepat agar tidak terasa lambat saat user scroll cepat dengan jari (perilaku scroll mobile berbeda dari mouse wheel)
+- Hover state (yang tidak relevan di mobile karena tidak ada cursor) digantikan dengan active/tap state yang memberikan feedback visual instan saat disentuh
+
+### 10. Halaman Materi Pembelajaran (Hybrid Slide plus Scroll)
+- Mode slide (concept step) di mobile: pastikan konten tetap terpusat dan tidak terpotong, dengan padding yang nyaman
+- Mode scroll (practice step) di mobile: card prompt dengan tombol copy harus mudah disentuh, teks prompt readable tanpa horizontal scroll
+- Navigasi dots indicator di bottom bar: ukuran dot diperbesar sedikit untuk mobile agar mudah disentuh tanpa salah pencet ke dot sebelah
+- Swipe gesture untuk pindah step harus responsif dan tidak konflik dengan scroll vertikal dalam practice step
+
+### 11. Dashboard dan Admin Panel
+- Stat card di dashboard admin: di mobile menjadi stack vertikal atau grid 2 kolom sederhana, dengan angka tetap menjadi fokus visual utama
+- Tabel member/kode/pesanan: scrollable horizontal dengan kolom-kolom prioritas (nama, status) tetap terlihat tanpa scroll, kolom sekunder bisa di-scroll
+- Sidebar admin menjadi collapsible/drawer di mobile
+
+---
+
+## IMPLEMENTASI TEKNIS
+
+### Breakpoint yang Digunakan (Tailwind default, pastikan konsisten)
+```
+sm: 640px   (mobile besar/phablet)
+md: 768px   (tablet)
+lg: 1024px  (desktop kecil)
+xl: 1280px  (desktop)
+```
+Fokus utama optimasi pada rentang di bawah 640px (mobile murni) dan 640-768px (mobile besar).
+
+### Gunakan CSS clamp() untuk Tipografi Responsif
+```css
+font-size: clamp(28px, 8vw, 64px);
+font-size: clamp(15px, 4vw, 17px);
+```
+Ini memberikan scaling yang halus antar ukuran layar, bukan lompatan tiba-tiba di breakpoint tertentu.
+
+### Audit Sistematis per Komponen
+Lakukan audit pada SETIAP komponen berikut dan sesuaikan dengan standar di atas:
+```
+components/Navbar.tsx
+components/Footer.tsx
+Hero section (di home.tsx)
+Grid persona
+Showcase tab/kartu before-after
+Testimonial card
+Pricing card/tier keanggotaan
+FAQ accordion
+Sesi card (kurikulum expand)
+Timeline section (4 pertemuan)
+Class card (katalog Netflix-style)
+Concept slide
+Practice panel
+Prompt card
+Materi sidebar
+Step navigation
+Admin sidebar
+Admin table
+Stat card
+pages/daftar.tsx (form pendaftaran)
+pages/login.tsx
+pages/sukses.tsx
+```
+
+---
+
+## TESTING CHECKLIST YANG HARUS DIPENUHI
+
+Setelah optimasi, pastikan:
+1. Tidak ada horizontal scroll yang tidak diinginkan di halaman manapun pada lebar 375px (ukuran iPhone SE/standar terkecil yang umum)
+2. Semua teks terbaca tanpa perlu zoom pada lebar 375px-414px (rentang iPhone umum)
+3. Semua tombol dan link bisa disentuh dengan nyaman tanpa salah pencet ke elemen tetangga
+4. Form input tidak men-trigger auto-zoom saat di-tap di Safari iOS
+5. Sidebar dan modal berfungsi dengan baik sebagai drawer/full-screen di mobile
+6. Halaman materi pembelajaran (slide+scroll) nyaman dinavigasi dengan swipe dan tap
+7. Tidak ada elemen yang terpotong, tumpang tindih, atau keluar dari viewport
+8. Animasi tetap halus tanpa membuat scroll terasa berat/patah-patah (jank)
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Tidak mengubah konten teks, struktur informasi, atau logic aplikasi
+2. Semua perubahan murni pada styling responsif (Tailwind responsive classes, CSS clamp, media query)
+3. Pertahankan design system dark luxury yang sudah ada (warna, font, prinsip visual)
+4. Pastikan perubahan tidak merusak tampilan desktop yang sudah baik, gunakan Tailwind responsive prefix (sm:, md:, lg:) dengan tepat agar styling mobile dan desktop tetap terpisah jelas
+5. npm run build harus sukses tanpa error
+6. Test pada breakpoint 375px, 414px, dan 768px sebagai patokan utama
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Seluruh halaman AIGYPT, publik maupun yang memerlukan login, terasa dioptimasi khusus untuk mobile: ukuran tombol dan teks proporsional untuk sentuhan jari, spacing yang padat namun tetap bernapas, navigasi yang mudah dijangkau ibu jari, form yang nyaman diisi tanpa auto-zoom mengganggu, dan keseluruhan pengalaman terasa seperti aplikasi mobile native, bukan website desktop yang sekadar menyusut.

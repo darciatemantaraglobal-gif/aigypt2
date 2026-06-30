@@ -1,0 +1,268 @@
+# Prompt — AIGYPT: Elemen Hidup yang Halus (Floating Dots + Sparkle + Cursor Glow)
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan tiga elemen dekoratif halus ke landing page AIGYPT agar halaman terasa hidup tanpa menjadi ramai atau mengganggu, floating dots tersebar di background section, sparkle mengambang di section terkait AI/showcase, dan cursor-aware glow di hero (desktop).
+
+PENTING: Ini elemen dekoratif tambahan, sangat subtle. Jangan ubah konten, layout, atau struktur yang sudah ada. Semua elemen ini murni dekorasi di background, tidak boleh mengganggu keterbacaan atau interaksi dengan konten utama.
+
+---
+
+## PRINSIP UTAMA
+
+Ketiga elemen ini harus terasa seperti detail yang nyaris tidak disadari secara sadar tapi membuat halaman terasa lebih hidup secara bawah sadar. Opacity rendah, gerakan lambat, ukuran kecil. Jika terlihat terlalu mencolok atau ramai, itu artinya terlalu berlebihan, kurangi intensitasnya.
+
+---
+
+## ELEMEN 1, FLOATING DOTS (di banyak section sebagai elemen dasar)
+
+### Deskripsi
+Titik-titik kecil berwarna ungu yang tersebar secara acak di background section, masing-masing bergerak naik-turun secara halus dan independen (tidak sinkron satu sama lain), dengan opacity yang berubah pelan.
+
+### Spesifikasi
+- Ukuran titik: 2-3px diameter
+- Warna: #A855F7 dengan opacity dasar rendah (0.2-0.4)
+- Jumlah per section: 5-8 titik, posisi tersebar acak (bukan grid rapi)
+- Animasi: setiap titik bergerak vertikal naik sekitar 8-12px lalu kembali, dengan opacity yang ikut naik-turun (0.2 ke 0.7), durasi berbeda-beda per titik (6-9 detik) dan delay berbeda-beda agar tidak terlihat serempak
+
+### Implementasi
+
+```tsx
+// components/FloatingDots.tsx
+interface FloatingDotsProps {
+  count?: number
+  className?: string
+}
+
+export function FloatingDots({ count = 6, className = '' }: FloatingDotsProps) {
+  const dots = Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: `${10 + Math.random() * 80}%`,
+    top: `${10 + Math.random() * 80}%`,
+    duration: 6 + Math.random() * 3,
+    delay: Math.random() * 2,
+  }))
+
+  return (
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`} aria-hidden="true">
+      {dots.map((dot) => (
+        <span
+          key={dot.id}
+          className="absolute w-[2.5px] h-[2.5px] rounded-full bg-[#A855F7]"
+          style={{
+            left: dot.left,
+            top: dot.top,
+            animation: `dotFloat ${dot.duration}s ease-in-out ${dot.delay}s infinite`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+```css
+@keyframes dotFloat {
+  0%, 100% { opacity: 0.2; transform: translateY(0); }
+  50% { opacity: 0.7; transform: translateY(-10px); }
+}
+```
+
+### Penempatan
+Tambahkan komponen FloatingDots sebagai layer background (dengan position relative pada container section) di section-section berikut, dengan jumlah dots disesuaikan ukuran section:
+```
+Hero section (count 8, area lebih luas)
+Section Visi/Manifesto (count 5)
+Section Spektrum Pembelajaran (count 6)
+Section Keanggotaan (count 5)
+Section CTA Penutup (count 6)
+```
+Tidak perlu di semua section, pilih section yang punya cukup ruang kosong di background agar dots terlihat natural, bukan section yang sudah padat dengan card/grid.
+
+---
+
+## ELEMEN 2, SPARKLE MENGAMBANG (khusus section terkait AI/showcase)
+
+### Deskripsi
+Ikon sparkle kecil (gunakan ikon Lucide Sparkles) yang mengambang pelan dengan sedikit rotasi, memberi kesan magis/kecerdasan yang relevan dengan tema AI.
+
+### Spesifikasi
+- Ukuran: 12-16px
+- Warna: #A855F7 dengan opacity 0.4-0.5 sebagai kondisi dasar (naik ke 0.8 saat puncak animasi)
+- Jumlah per section: 2-3 sparkle saja (lebih sedikit dari floating dots, karena lebih mencolok bentuknya)
+- Animasi: mengambang naik-turun (sekitar 8px) dengan sedikit rotasi (0 ke 15 derajat), durasi 5-6.5 detik, delay berbeda per sparkle
+
+### Implementasi
+
+```tsx
+// components/FloatingSparkles.tsx
+import { Sparkles } from 'lucide-react'
+
+interface SparkleConfig {
+  left: string
+  top: string
+  duration: number
+  delay: number
+  size: number
+}
+
+interface FloatingSparklesProps {
+  configs: SparkleConfig[]
+  className?: string
+}
+
+export function FloatingSparkles({ configs, className = '' }: FloatingSparklesProps) {
+  return (
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`} aria-hidden="true">
+      {configs.map((cfg, i) => (
+        <Sparkles
+          key={i}
+          size={cfg.size}
+          className="absolute text-[#A855F7] opacity-50"
+          style={{
+            left: cfg.left,
+            top: cfg.top,
+            animation: `sparkleFloat ${cfg.duration}s ease-in-out ${cfg.delay}s infinite`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+```css
+@keyframes sparkleFloat {
+  0%, 100% { opacity: 0.3; transform: translateY(0) rotate(0deg); }
+  50% { opacity: 0.8; transform: translateY(-8px) rotate(15deg); }
+}
+```
+
+### Penempatan
+Tambahkan 2-3 sparkle dengan posisi yang ditentukan manual (bukan acak, agar tidak menimpa konten penting) di section-section berikut:
+```
+Section Showcase "Lihat Apa yang Bisa Kamu Hasilkan" (2 sparkle, posisi di sudut-sudut kosong sekitar tab/grid)
+Section Hero (1-2 sparkle, posisi di sekitar headline, jangan menimpa teks)
+Section Galeri Karya (2 sparkle, di antara card placeholder)
+```
+Posisi setiap sparkle harus dipilih dengan hati-hati agar berada di ruang kosong, tidak tumpang tindih dengan teks atau tombol.
+
+---
+
+## ELEMEN 3, CURSOR-AWARE GLOW (khusus hero, desktop only)
+
+### Deskripsi
+Sorotan cahaya ungu lembut yang mengikuti pergerakan kursor mouse di dalam area hero section, memberi kesan interaktif dan hidup. Hanya aktif di desktop (disabled di mobile/touch device karena tidak relevan tanpa cursor).
+
+### Spesifikasi
+- Ukuran glow: sekitar 300-400px diameter
+- Warna: radial gradient dari rgba(124, 58, 237, 0.15) di pusat ke transparan
+- Mengikuti posisi kursor dengan sedikit delay/easing (tidak instan mengikuti, agar terasa halus seperti cahaya yang menyusul)
+- Opacity rendah agar tidak mendominasi, ini aksen tambahan, bukan elemen utama (elemen utama tetap ambient glow statis yang sudah dibuat sebelumnya di belakang headline)
+
+### Implementasi
+
+```tsx
+// hooks/useCursorGlow.ts
+import { useEffect, useRef, useState } from 'react'
+
+export function useCursorGlow(containerRef: React.RefObject<HTMLElement>) {
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isActive, setIsActive] = useState(false)
+  const rafRef = useRef<number>()
+
+  useEffect(() => {
+    const isTouchDevice = window.matchMedia('(hover: none)').matches
+    if (isTouchDevice) return
+
+    const container = containerRef.current
+    if (!container) return
+
+    let targetX = 0
+    let targetY = 0
+    let currentX = 0
+    let currentY = 0
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect()
+      targetX = e.clientX - rect.left
+      targetY = e.clientY - rect.top
+      setIsActive(true)
+    }
+
+    const handleMouseLeave = () => setIsActive(false)
+
+    const animate = () => {
+      currentX += (targetX - currentX) * 0.08
+      currentY += (targetY - currentY) * 0.08
+      setPosition({ x: currentX, y: currentY })
+      rafRef.current = requestAnimationFrame(animate)
+    }
+
+    container.addEventListener('mousemove', handleMouseMove)
+    container.addEventListener('mouseleave', handleMouseLeave)
+    rafRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      container.removeEventListener('mousemove', handleMouseMove)
+      container.removeEventListener('mouseleave', handleMouseLeave)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [containerRef])
+
+  return { position, isActive }
+}
+```
+
+```tsx
+import { useRef } from 'react'
+import { useCursorGlow } from '@/hooks/useCursorGlow'
+
+function HeroSection() {
+  const heroRef = useRef<HTMLElement>(null)
+  const { position, isActive } = useCursorGlow(heroRef)
+
+  return (
+    <section ref={heroRef} className="hero-section relative overflow-hidden">
+      <div className="hero-ambient-glow" />
+
+      <div
+        className="hidden md:block absolute pointer-events-none rounded-full"
+        style={{
+          width: '350px',
+          height: '350px',
+          left: position.x - 175,
+          top: position.y - 175,
+          background: 'radial-gradient(circle, rgba(124, 58, 237, 0.15), transparent 70%)',
+          filter: 'blur(40px)',
+          opacity: isActive ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          zIndex: 0,
+        }}
+      />
+    </section>
+  )
+}
+```
+
+### Catatan Penting
+- Gunakan requestAnimationFrame dengan easing (bukan langsung set posisi dari event mouse) agar gerakannya halus, terasa seperti cahaya yang menyusul kursor, bukan menempel kaku
+- Wajib disabled di touch device menggunakan media query (hover: none), jangan render elemen ini sama sekali di mobile (gunakan className hidden md:block sebagai pengaman tambahan)
+- Opacity fade-in/fade-out saat mouse masuk/keluar area hero agar transisinya halus, tidak muncul-hilang tiba-tiba
+- Tetap di belakang konten (z-index rendah) dan pointer-events none agar tidak mengganggu interaksi tombol
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Ketiga elemen ini wajib memiliki pointer-events none agar tidak mengganggu interaksi klik pada elemen lain
+2. Ketiga elemen ini wajib memiliki aria-hidden true karena murni dekoratif, tidak ada informasi yang hilang bagi pembaca layar
+3. Floating dots dan sparkle: hormati prefers-reduced-motion, jika aktif, tampilkan elemen secara statis (opacity tetap di nilai tengah, tanpa animasi) atau sembunyikan total jika lebih sederhana
+4. Cursor glow: otomatis tidak aktif di touch device, dan hormati prefers-reduced-motion dengan tidak menampilkan glow sama sekali jika preferensi ini aktif
+5. Semua animasi menggunakan transform dan opacity saja untuk performa optimal
+6. Tidak ada elemen yang menutupi atau tumpang tindih dengan teks, tombol, atau elemen interaktif lain
+7. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Landing page AIGYPT memiliki tiga lapisan kehidupan yang sangat halus: floating dots ungu kecil yang mengambang pelan di beberapa section, sparkle yang mengambang dengan rotasi halus khusus di section terkait AI dan showcase, serta cursor glow yang mengikuti gerakan mouse di hero (desktop only). Semuanya subtle, tidak mengganggu keterbacaan, tidak membuat halaman terasa ramai, namun memberi kesan halaman yang hidup dan premium.

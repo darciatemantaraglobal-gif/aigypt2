@@ -842,30 +842,30 @@ export default function Home() {
             </span>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-4 mb-16">
-            <Link href="/daftar">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-16 w-full max-w-sm sm:max-w-none mx-auto">
+            <Link href="/daftar" className="w-full sm:w-auto">
               <span
-                className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
+                className="flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer w-full sm:w-auto"
                 style={{
                   background: "#7C3AED",
                   borderRadius: "12px",
                   padding: "15px 24px",
-                  minHeight: "48px",
+                  minHeight: "52px",
                   boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
               >
                 Daftar Batch 1 Sekarang <IconArrow />
               </span>
             </Link>
-            <Link href="/kurikulum">
+            <Link href="/kurikulum" className="w-full sm:w-auto">
               <span
-                className="inline-flex items-center gap-2 text-base font-normal cursor-pointer transition-all duration-200 hover:text-white"
+                className="flex items-center justify-center gap-2 text-base font-normal cursor-pointer transition-all duration-200 hover:text-white w-full sm:w-auto"
                 style={{
                   border: "1px solid rgba(255,255,255,0.1)",
                   color: "#A1A1AA",
                   borderRadius: "12px",
                   padding: "15px 24px",
-                  minHeight: "48px",
+                  minHeight: "52px",
                 }}
               >
                 Jelajahi Kurikulum
@@ -1022,7 +1022,7 @@ export default function Home() {
           </Reveal>
 
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-12"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-16 gap-y-10 sm:gap-y-12"
             initial="hidden"
             whileInView="visible"
             viewport={viewportConfig}
@@ -1103,8 +1103,8 @@ export default function Home() {
                 style={{ background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.5), transparent)" }}
               />
 
-              <div className="p-8 sm:p-12">
-                <div className="flex flex-wrap items-start justify-between gap-6 mb-8">
+              <div className="p-6 sm:p-12">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-8">
                   <div>
                     <span
                       className="font-mono text-xs tracking-widest px-3 py-1 rounded-full mb-4 inline-block"
@@ -1161,15 +1161,15 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4">
-                  <Link href="/daftar">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                  <Link href="/daftar" className="w-full sm:w-auto">
                     <span
-                      className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
+                      className="flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer w-full sm:w-auto"
                       style={{
                         background: "#7C3AED",
                         borderRadius: "12px",
                         padding: "15px 24px",
-                        minHeight: "48px",
+                        minHeight: "52px",
                         boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                       }}
                     >

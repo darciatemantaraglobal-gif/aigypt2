@@ -132,12 +132,11 @@ export default function Sukses() {
             initial={{ opacity: 0, y: 32, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative text-center"
+            className="relative text-center px-5 py-8 sm:px-8 sm:py-10"
             style={{
               background: "rgba(10,10,15,0.9)",
               border: "1px solid rgba(255,255,255,0.07)",
               borderRadius: "20px",
-              padding: "40px 32px 36px",
             }}
           >
             <div
