@@ -1,0 +1,114 @@
+# Prompt — AIGYPT: Cahaya Ungu Ambient di Belakang Hero Section
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan efek cahaya ungu bulat yang menyala lembut (ambient glow) di belakang headline hero section landing page AIGYPT.
+
+PENTING: Ini penambahan visual pada elemen yang sudah ada. Jangan ubah konten, struktur, atau layout hero, hanya tambahkan elemen dekoratif berupa cahaya di background.
+
+---
+
+## PROMPT
+
+Tambahkan efek cahaya ungu ambient berbentuk bulat dengan blur lembut di belakang headline pada hero section landing page AIGYPT. Cahaya ini diposisikan di tengah, di belakang teks headline, menciptakan kesan elegan dan premium, seolah ada sumber cahaya alami yang menyinari teks dari belakang.
+
+---
+
+## SPESIFIKASI VISUAL
+
+- Bentuk: lingkaran besar dengan radial gradient ungu, blur tinggi agar tepinya menyebar lembut tanpa garis tegas
+- Posisi: di tengah hero section, secara visual berada tepat di belakang blok headline (baik secara horizontal maupun vertikal), sehingga cahaya seolah memancar dari balik teks
+- Warna: gradient dari ungu (#7C3AED) di pusat, memudar ke transparan di tepi
+- Ukuran: cukup besar agar terasa megah, namun tidak sampai mendominasi seluruh layar atau membuat teks sulit dibaca
+- Animasi: bernapas perlahan, membesar dan mengecil secara halus dengan perubahan opacity, looping terus-menerus, memberi kesan hidup tanpa terasa berlebihan
+
+---
+
+## IMPLEMENTASI
+
+Tambahkan elemen glow ini sebagai layer absolute di belakang konten hero (z-index lebih rendah dari teks dan tombol), menggunakan CSS berikut:
+
+```css
+.hero-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  max-width: 70vw;
+  max-height: 70vw;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.35) 0%,
+    rgba(124, 58, 237, 0.15) 35%,
+    rgba(124, 58, 237, 0.05) 55%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: heroGlowBreathe 6s ease-in-out infinite;
+}
+
+@keyframes heroGlowBreathe {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+```
+
+Struktur JSX: pastikan elemen glow ditempatkan sebagai sibling pertama di dalam container hero (sebelum konten headline), dengan container hero memiliki position relative agar glow ter-posisikan dengan benar relatif terhadap section:
+
+```tsx
+<section className="hero-section" style={{ position: 'relative', overflow: 'hidden' }}>
+  <div className="hero-ambient-glow" />
+
+  <div style={{ position: 'relative', zIndex: 1 }}>
+    {/* konten hero yang sudah ada: eyebrow, headline, sub-headline, CTA, dst */}
+  </div>
+</section>
+```
+
+---
+
+## CATATAN PENTING
+
+1. Tidak mengganggu keterbacaan: glow ini harus berada di belakang teks (z-index lebih rendah), bukan menimpa teks. Opacity dan intensitas warna dijaga agar tidak membuat kontras teks terhadap background berkurang.
+2. Pointer-events none: pastikan elemen glow tidak mengganggu interaksi klik pada tombol atau elemen lain di hero, tambahkan pointer-events none seperti pada kode di atas.
+3. Tidak menyebabkan overflow horizontal: pastikan container hero memiliki overflow hidden agar glow yang berukuran besar tidak menyebabkan scroll horizontal yang tidak diinginkan, terutama di layar kecil.
+4. Responsif: gunakan max-width dan max-height dalam satuan viewport (seperti pada kode di atas) agar ukuran glow menyesuaikan dengan baik di mobile, tidak terlalu besar dan mendominasi layar kecil.
+5. Hormati prefers-reduced-motion: jika preferensi ini aktif, animasi bernapas dihentikan, namun glow tetap ditampilkan secara statis (tidak dihilangkan total) agar estetika tetap terjaga:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .hero-ambient-glow {
+    animation: none;
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+```
+
+6. Performa: animasi hanya menggunakan transform dan opacity (bukan mengubah width/height langsung), sehingga ringan dan tidak menyebabkan repaint berat di browser.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Hanya menyentuh hero section, tidak mengubah section lain
+2. Tidak ada gambar eksternal, murni CSS gradient dan blur
+3. Tidak mengganggu keterbacaan teks atau fungsi tombol CTA
+4. Mendukung prefers-reduced-motion
+5. Fully responsive, tidak menyebabkan overflow di layar kecil
+6. npm run build harus sukses tanpa error
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Hero section landing page AIGYPT memiliki cahaya ungu bulat dengan blur lembut yang bersinar di belakang headline, bernapas perlahan secara terus-menerus, memberi kesan elegan dan premium tanpa mengganggu keterbacaan teks atau performa halaman.

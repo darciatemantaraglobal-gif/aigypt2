@@ -761,7 +761,10 @@ export default function Home() {
 
       {/* ══ SECTION 1: HERO ══ */}
       <section className="relative overflow-hidden pt-[80px] pb-[80px] sm:pt-[100px] sm:pb-[100px]">
-        {/* Breathing glow */}
+        {/* Centered ambient glow — pulses behind headline */}
+        <div className="hero-ambient-glow" />
+
+        {/* Wide elliptical haze */}
         <motion.div
           className="absolute pointer-events-none"
           style={{

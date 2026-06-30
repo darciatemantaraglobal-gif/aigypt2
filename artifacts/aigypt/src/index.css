@@ -217,6 +217,49 @@
   }
 }
 
+/* ── Hero ambient glow ─────────────────────────────────────────────────────── */
+.hero-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  max-width: 70vw;
+  max-height: 70vw;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.35) 0%,
+    rgba(124, 58, 237, 0.15) 35%,
+    rgba(124, 58, 237, 0.05) 55%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: heroGlowBreathe 6s ease-in-out infinite;
+}
+
+@keyframes heroGlowBreathe {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ambient-glow {
+    animation: none;
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 /* ── Footer ────────────────────────────────────────────────────────────────── */
 .footer-top-border {
   position: relative;
