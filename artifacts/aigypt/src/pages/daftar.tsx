@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { validateCoupon } from "@/lib/coupons";
 
 declare global {
   interface Window {
@@ -38,6 +39,15 @@ function IconArrow() {
   );
 }
 
+function IconSpin() {
+  return (
+    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+      <path d="M12 2a10 10 0 0 1 10 10" />
+    </svg>
+  );
+}
+
 const tiers = [
   {
     id: "mandiri",
@@ -68,8 +78,12 @@ const tiers = [
   },
 ];
 
+function formatRp(n: number) {
+  return "Rp " + n.toLocaleString("id-ID");
+}
+
 export default function Daftar() {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
   const defaultType = searchParams.get("type") === "mandiri" ? "mandiri" : "kelas";
 
@@ -79,6 +93,11 @@ export default function Daftar() {
   const [error, setError] = useState("");
   const [snapReady, setSnapReady] = useState(false);
   const scriptRef = useRef<HTMLScriptElement | null>(null);
+
+  const [couponInput, setCouponInput] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountAmount: number } | null>(null);
 
   useEffect(() => {
     const isProduction = import.meta.env.VITE_MIDTRANS_IS_PRODUCTION === "true";
@@ -109,6 +128,17 @@ export default function Daftar() {
     };
   }, []);
 
+  useEffect(() => {
+    if (appliedCoupon && appliedCoupon.code) {
+      const validation = validateCoupon(appliedCoupon.code, selectedType);
+      if (!validation.valid) {
+        setAppliedCoupon(null);
+        setCouponInput("");
+        setCouponError("Kupon tidak berlaku untuk paket ini");
+      }
+    }
+  }, [selectedType, appliedCoupon]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     if (error) setError("");
@@ -132,6 +162,54 @@ export default function Daftar() {
     return true;
   };
 
+  const handleApplyCoupon = async () => {
+    const code = couponInput.trim().toUpperCase();
+    if (!code) return;
+
+    setCouponError("");
+    setCouponLoading(true);
+
+    const clientValidation = validateCoupon(code, selectedType);
+    if (!clientValidation.valid) {
+      setCouponError(clientValidation.error ?? "Kode kupon tidak valid");
+      setCouponLoading(false);
+      return;
+    }
+
+    if (!form.email.trim()) {
+      setCouponError("Isi email terlebih dahulu sebelum menerapkan kupon");
+      setCouponLoading(false);
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setCouponError("Format email tidak valid");
+      setCouponLoading(false);
+      return;
+    }
+
+    try {
+      const apiBase = import.meta.env.VITE_API_URL ?? "/api";
+      const res = await fetch(`${apiBase}/coupons/check`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, email: form.email.trim().toLowerCase(), memberType: selectedType }),
+      });
+      const data = await res.json() as { valid: boolean; error?: string; coupon?: { discountAmount: number } };
+      if (!data.valid) {
+        setCouponError(data.error ?? "Kode kupon tidak valid");
+      } else {
+        setAppliedCoupon({ code, discountAmount: data.coupon?.discountAmount ?? clientValidation.coupon!.discountAmount });
+        setCouponError("");
+      }
+    } catch {
+      setCouponError("Gagal memvalidasi kupon. Coba lagi.");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
   const handleQris = () => {
     setError("");
     if (!validateForm()) return;
@@ -141,6 +219,10 @@ export default function Daftar() {
       email: form.email.trim().toLowerCase(),
       phone: form.phone.trim(),
     });
+    if (appliedCoupon) {
+      params.set("couponCode", appliedCoupon.code);
+      params.set("discountAmount", String(appliedCoupon.discountAmount));
+    }
     setLocation(`/daftar/pembayaran?${params.toString()}`);
   };
 
@@ -215,6 +297,17 @@ export default function Daftar() {
     }
   };
 
+  const PRICES: Record<string, number> = { mandiri: 250000, kelas: 350000 };
+  const basePrice = PRICES[selectedType] ?? 350000;
+  const finalPrice = appliedCoupon ? Math.max(0, basePrice - appliedCoupon.discountAmount) : basePrice;
+
+  const inputBaseStyle: React.CSSProperties = {
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    fontSize: "16px",
+    minHeight: "48px",
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
       <Navbar />
@@ -282,22 +375,22 @@ export default function Daftar() {
           >
             {tiers.map((tier) => {
               const isSelected = selectedType === tier.id;
+              const tierBasePrice = PRICES[tier.id] ?? 350000;
+              const tierFinalPrice = (appliedCoupon && tier.id === "kelas")
+                ? Math.max(0, tierBasePrice - appliedCoupon.discountAmount)
+                : tierBasePrice;
+              const hasDiscount = tier.id === "kelas" && appliedCoupon;
+
               return (
                 <div
                   key={tier.id}
                   onClick={() => setSelectedType(tier.id as "mandiri" | "kelas")}
                   className="relative cursor-pointer transition-all duration-200"
                   style={{
-                    background: isSelected
-                      ? "rgba(20,12,36,0.95)"
-                      : "rgba(10,10,15,0.7)",
-                    border: isSelected
-                      ? "1px solid rgba(124,58,237,0.5)"
-                      : "1px solid rgba(255,255,255,0.06)",
+                    background: isSelected ? "rgba(20,12,36,0.95)" : "rgba(10,10,15,0.7)",
+                    border: isSelected ? "1px solid rgba(124,58,237,0.5)" : "1px solid rgba(255,255,255,0.06)",
                     borderRadius: "14px",
-                    boxShadow: isSelected
-                      ? "0px 0px 24px rgba(124,58,237,0.15)"
-                      : "none",
+                    boxShadow: isSelected ? "0px 0px 24px rgba(124,58,237,0.15)" : "none",
                     padding: "20px 20px 18px",
                   }}
                 >
@@ -308,10 +401,44 @@ export default function Daftar() {
                     />
                   )}
 
+                  {tier.id === "kelas" && (
+                    <div className="mb-3 flex items-center gap-2 flex-wrap">
+                      <span
+                        className="font-mono text-xs px-2 py-0.5 rounded-full"
+                        style={{
+                          background: "rgba(124,58,237,0.15)",
+                          color: "#A855F7",
+                          border: "1px solid rgba(124,58,237,0.3)",
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        GUNAKAN KODE AIGYPT26 · HEMAT Rp 51.000
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="font-display font-semibold text-white text-lg mb-1">{tier.name}</h3>
                       <p className="text-sm" style={{ color: "#71717A" }}>{tier.desc}</p>
+                      <div className="mt-2 flex items-center gap-2">
+                        {hasDiscount && (
+                          <span className="font-mono text-xs line-through" style={{ color: "#52525B" }}>
+                            {formatRp(tierBasePrice)}
+                          </span>
+                        )}
+                        <span className="font-mono font-bold text-sm" style={{ color: hasDiscount ? "#A855F7" : "#A1A1AA" }}>
+                          {formatRp(tierFinalPrice)}
+                        </span>
+                        {hasDiscount && (
+                          <span className="font-mono text-xs px-1.5 py-0.5 rounded" style={{ background: "rgba(124,58,237,0.15)", color: "#A855F7" }}>
+                            -{formatRp(appliedCoupon!.discountAmount)}
+                          </span>
+                        )}
+                        {!hasDiscount && (
+                          <span className="text-xs" style={{ color: "#52525B" }}>sekali bayar</span>
+                        )}
+                      </div>
                     </div>
                     <div className="flex flex-col items-end gap-2 ml-3">
                       <span
@@ -370,88 +497,143 @@ export default function Daftar() {
               className="absolute top-0 left-0 right-0 h-px"
               style={{ background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.3), transparent)", borderRadius: "16px 16px 0 0" }}
             />
-            <p
-              className="font-mono text-xs tracking-widest mb-6"
-              style={{ color: "#7C3AED", letterSpacing: "0.15em" }}
-            >
+            <p className="font-mono text-xs tracking-widest mb-6" style={{ color: "#7C3AED", letterSpacing: "0.15em" }}>
               DATA PENDAFTARAN
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>
-                  Nama Lengkap
-                </label>
+                <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>Nama Lengkap</label>
                 <input
-                  type="text"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Nama kamu"
-                  autoComplete="name"
+                  type="text" name="name" value={form.name} onChange={handleChange}
+                  placeholder="Nama kamu" autoComplete="name"
                   className="w-full px-4 py-3 text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    fontSize: "16px",
-                    minHeight: "48px",
-                  }}
+                  style={inputBaseStyle}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>
-                  Email Aktif
-                </label>
+                <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>Email Aktif</label>
                 <input
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="email@kamu.com"
-                  autoComplete="email"
+                  type="email" name="email" value={form.email} onChange={handleChange}
+                  placeholder="email@kamu.com" autoComplete="email"
                   className="w-full px-4 py-3 text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    fontSize: "16px",
-                    minHeight: "48px",
-                  }}
+                  style={inputBaseStyle}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                 />
-                <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>
-                  Gunakan email yang sama saat login nanti
-                </p>
+                <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Gunakan email yang sama saat login nanti</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>
-                  Nomor WhatsApp
-                </label>
+                <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>Nomor WhatsApp</label>
                 <input
-                  type="tel"
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  placeholder="08xxxxxxxxxx"
-                  autoComplete="tel"
+                  type="tel" name="phone" value={form.phone} onChange={handleChange}
+                  placeholder="08xxxxxxxxxx" autoComplete="tel"
                   className="w-full px-4 py-3 text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    fontSize: "16px",
-                    minHeight: "48px",
-                  }}
+                  style={inputBaseStyle}
                   onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
                   onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                 />
-                <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>
-                  Kode akses akan dikirimkan ke WhatsApp ini setelah pembayaran
-                </p>
+                <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Kode akses akan dikirimkan ke WhatsApp ini setelah pembayaran</p>
               </div>
+
+              {/* Coupon field */}
+              <div>
+                <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>
+                  Punya kode kupon? <span className="font-normal" style={{ color: "#52525B" }}>(opsional)</span>
+                </label>
+                {appliedCoupon ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center justify-between px-4 py-3 rounded-xl"
+                    style={{ background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.3)" }}
+                  >
+                    <div>
+                      <p className="text-sm font-medium" style={{ color: "#A855F7" }}>
+                        Kupon <span className="font-mono">{appliedCoupon.code}</span> diterapkan
+                      </p>
+                      <p className="text-xs mt-0.5" style={{ color: "#7C3AED" }}>
+                        Potongan {formatRp(appliedCoupon.discountAmount)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => { setAppliedCoupon(null); setCouponInput(""); setCouponError(""); }}
+                      className="text-xs px-2.5 py-1 rounded-lg transition-colors"
+                      style={{ color: "#52525B", border: "1px solid rgba(255,255,255,0.08)" }}
+                    >
+                      Hapus
+                    </button>
+                  </motion.div>
+                ) : (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponInput}
+                      onChange={(e) => {
+                        setCouponInput(e.target.value.toUpperCase());
+                        if (couponError) setCouponError("");
+                      }}
+                      placeholder="Masukkan kode kupon"
+                      className="flex-1 px-4 py-3 text-white rounded-xl outline-none transition-all duration-200 placeholder:text-zinc-600 font-mono uppercase"
+                      style={{ ...inputBaseStyle, letterSpacing: "0.05em" }}
+                      onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
+                      onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleApplyCoupon(); } }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleApplyCoupon}
+                      disabled={couponLoading || !couponInput.trim()}
+                      className="px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                      style={{
+                        background: "rgba(124,58,237,0.15)",
+                        border: "1px solid rgba(124,58,237,0.3)",
+                        color: "#A855F7",
+                      }}
+                    >
+                      {couponLoading ? <IconSpin /> : "Terapkan"}
+                    </button>
+                  </div>
+                )}
+                {couponError && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-xs mt-2"
+                    style={{ color: "#F87171" }}
+                  >
+                    {couponError}
+                  </motion.p>
+                )}
+              </div>
+
+              {/* Price summary if coupon applied */}
+              {appliedCoupon && selectedType === "kelas" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="px-4 py-3 rounded-xl text-sm space-y-1.5"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                >
+                  <div className="flex justify-between" style={{ color: "#71717A" }}>
+                    <span>Harga {selectedType === "kelas" ? "Member Kelas" : "Member Mandiri"}</span>
+                    <span className="font-mono">{formatRp(basePrice)}</span>
+                  </div>
+                  <div className="flex justify-between" style={{ color: "#A855F7" }}>
+                    <span>Kupon {appliedCoupon.code}</span>
+                    <span className="font-mono">- {formatRp(appliedCoupon.discountAmount)}</span>
+                  </div>
+                  <div className="flex justify-between font-semibold pt-1" style={{ color: "#FAFAFA", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                    <span>Total yang dibayar</span>
+                    <span className="font-mono" style={{ color: "#A855F7" }}>{formatRp(finalPrice)}</span>
+                  </div>
+                </motion.div>
+              )}
 
               {error && (
                 <motion.div
@@ -478,13 +660,7 @@ export default function Daftar() {
                   }}
                 >
                   {loading ? (
-                    <>
-                      <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
-                        <path d="M12 2a10 10 0 0 1 10 10" />
-                      </svg>
-                      Memproses...
-                    </>
+                    <><IconSpin />Memproses...</>
                   ) : (
                     <>Bayar via Midtrans <IconArrow /></>
                   )}
@@ -517,9 +693,7 @@ export default function Daftar() {
 
                 <p className="text-center text-xs pt-1" style={{ color: "#52525B" }}>
                   Dengan mendaftar, kamu menyetujui syarat & ketentuan AIGYPT.{" "}
-                  <Link href="/">
-                    <span className="underline cursor-pointer" style={{ color: "#71717A" }}>Kembali ke beranda</span>
-                  </Link>
+                  <Link href="/"><span className="underline cursor-pointer" style={{ color: "#71717A" }}>Kembali ke beranda</span></Link>
                 </p>
               </div>
             </form>

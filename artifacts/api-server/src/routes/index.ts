@@ -5,6 +5,7 @@ import progressRouter from "./progress";
 import adminRouter from "./admin";
 import midtransRouter from "./midtrans";
 import qrisRouter from "./qris";
+import couponsRouter from "./coupons";
 
 const router: IRouter = Router();
 
@@ -13,6 +14,7 @@ router.use(progressRouter);
 router.use(adminRouter);
 router.use(midtransRouter);
 router.use(qrisRouter);
+router.use(couponsRouter);
 router.use(healthRouter);
 
 export default router;

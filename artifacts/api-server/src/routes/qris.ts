@@ -1,5 +1,7 @@
 import { Router } from "express";
-import { db, ordersTable } from "@workspace/db";
+import { db, ordersTable, couponUsageTable } from "@workspace/db";
+import { eq, and } from "drizzle-orm";
+import { validateCoupon } from "../lib/coupons";
 
 const router = Router();
 
@@ -34,8 +36,12 @@ router.options("/qris/confirm", (_req, res) => {
 });
 
 router.post("/qris/confirm", async (req, res) => {
-  const { name, email, phone, memberType } = req.body as {
-    name?: string; email?: string; phone?: string; memberType?: string;
+  const { name, email, phone, memberType, couponCode } = req.body as {
+    name?: string;
+    email?: string;
+    phone?: string;
+    memberType?: string;
+    couponCode?: string;
   };
 
   if (!name || !email || !phone || !memberType) {
@@ -55,6 +61,37 @@ router.post("/qris/confirm", async (req, res) => {
   }
 
   const grossAmount = memberType === "kelas" ? PRICE_KELAS : PRICE_MANDIRI;
+  const normalizedEmail = email.toLowerCase();
+
+  let appliedCouponCode: string | null = null;
+  let discountAmount = 0;
+  let finalAmount = grossAmount;
+
+  if (couponCode && couponCode.trim()) {
+    const codeUpper = couponCode.trim().toUpperCase();
+
+    const couponValidation = validateCoupon(codeUpper, memberType as "kelas" | "mandiri");
+    if (!couponValidation.valid || !couponValidation.coupon) {
+      res.status(400).json({ error: couponValidation.error ?? "Kode kupon tidak valid" });
+      return;
+    }
+
+    const alreadyUsed = await db
+      .select({ id: couponUsageTable.id })
+      .from(couponUsageTable)
+      .where(and(eq(couponUsageTable.couponCode, codeUpper), eq(couponUsageTable.email, normalizedEmail)))
+      .limit(1);
+
+    if (alreadyUsed.length > 0) {
+      res.status(400).json({ error: "Kupon ini sudah pernah kamu gunakan" });
+      return;
+    }
+
+    appliedCouponCode = codeUpper;
+    discountAmount = couponValidation.coupon.discountAmount;
+    finalAmount = Math.max(0, grossAmount - discountAmount);
+  }
+
   const orderId = generateOrderId();
   const normalizedPhone = phone.replace(/^\+62/, "0").replace(/^62/, "0").replace(/\D/g, "");
   const memberLabel = memberType === "kelas" ? "Member Kelas - Batch 1" : "Member Mandiri - Batch 1";
@@ -63,30 +100,49 @@ router.post("/qris/confirm", async (req, res) => {
     await db.insert(ordersTable).values({
       orderId,
       name,
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       phone: normalizedPhone,
       memberType,
       batchNumber: BATCH_NUMBER,
       grossAmount,
+      couponCode: appliedCouponCode,
+      discountAmount,
+      finalAmount,
       status: "pending_qris",
       snapToken: null,
     });
 
+    if (appliedCouponCode) {
+      try {
+        await db.insert(couponUsageTable).values({
+          couponCode: appliedCouponCode,
+          email: normalizedEmail,
+          orderId,
+          discountAmount,
+        });
+      } catch (err) {
+        console.error("[QRIS Coupon] Gagal catat usage:", err);
+      }
+    }
+
     if (ADMIN_WA_NUMBER) {
-      const rpAmount = `Rp ${grossAmount.toLocaleString("id-ID")}`;
+      const rpFinal = `Rp ${finalAmount.toLocaleString("id-ID")}`;
+      const couponInfo = appliedCouponCode
+        ? `\nKupon: ${appliedCouponCode} (-Rp ${discountAmount.toLocaleString("id-ID")})`
+        : "";
       const adminMsg =
         `[AIGYPT QRIS] Konfirmasi Pembayaran Baru\n\n` +
         `Nama: ${name}\n` +
         `Email: ${email}\n` +
         `WhatsApp: ${normalizedPhone}\n` +
-        `Paket: ${memberLabel}\n` +
-        `Nominal: ${rpAmount}\n` +
+        `Paket: ${memberLabel}${couponInfo}\n` +
+        `Nominal: ${rpFinal}\n` +
         `Order ID: ${orderId}\n\n` +
         `Mohon verifikasi transfer QRIS Temantiket dan kirimkan kode akses ke peserta.`;
       await sendWhatsApp(ADMIN_WA_NUMBER, adminMsg);
     }
 
-    res.json({ orderId, status: "pending_qris" });
+    res.json({ orderId, status: "pending_qris", finalAmount, discountAmount, couponCode: appliedCouponCode });
   } catch (err) {
     console.error("[QRIS] Error:", err);
     res.status(500).json({ error: "Gagal menyimpan konfirmasi. Coba lagi." });

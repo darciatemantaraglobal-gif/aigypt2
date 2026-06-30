@@ -61,6 +61,9 @@ export const ordersTable = pgTable("orders", {
   memberType: varchar("member_type", { length: 20 }).notNull(),
   batchNumber: integer("batch_number"),
   grossAmount: integer("gross_amount").notNull(),
+  couponCode: varchar("coupon_code", { length: 50 }),
+  discountAmount: integer("discount_amount").default(0),
+  finalAmount: integer("final_amount"),
   status: varchar("status", { length: 20 }).notNull().default("pending"),
   snapToken: varchar("snap_token", { length: 255 }),
   accessCode: varchar("access_code", { length: 20 }),
@@ -72,3 +75,18 @@ export const ordersTable = pgTable("orders", {
 export const insertOrderSchema = createInsertSchema(ordersTable).omit({ id: true, createdAt: true });
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type Order = typeof ordersTable.$inferSelect;
+
+export const couponUsageTable = pgTable("coupon_usage", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  couponCode: varchar("coupon_code", { length: 50 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  orderId: varchar("order_id", { length: 100 }),
+  discountAmount: integer("discount_amount").notNull(),
+  usedAt: timestamp("used_at", { withTimezone: true }).defaultNow(),
+}, (table) => [
+  uniqueIndex("coupon_usage_unique_idx").on(table.couponCode, table.email),
+]);
+
+export const insertCouponUsageSchema = createInsertSchema(couponUsageTable).omit({ id: true, usedAt: true });
+export type InsertCouponUsage = z.infer<typeof insertCouponUsageSchema>;
+export type CouponUsage = typeof couponUsageTable.$inferSelect;

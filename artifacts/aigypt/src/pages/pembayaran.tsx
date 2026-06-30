@@ -51,7 +51,10 @@ function IconWhatsApp() {
 
 export default function Pembayaran() {
   const [, navigate] = useLocation();
-  const [params, setParams] = useState({ name: "", email: "", phone: "", type: "kelas" });
+  const [params, setParams] = useState({
+    name: "", email: "", phone: "", type: "kelas",
+    couponCode: "", discountAmount: 0,
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [confirmed, setConfirmed] = useState(false);
@@ -59,15 +62,21 @@ export default function Pembayaran() {
 
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
+    const discount = parseInt(sp.get("discountAmount") ?? "0", 10);
     setParams({
       name: sp.get("name") ?? "",
       email: sp.get("email") ?? "",
       phone: sp.get("phone") ?? "",
       type: sp.get("type") === "mandiri" ? "mandiri" : "kelas",
+      couponCode: sp.get("couponCode") ?? "",
+      discountAmount: isNaN(discount) ? 0 : discount,
     });
   }, []);
 
-  const price = PRICE[params.type] ?? 350000;
+  const basePrice = PRICE[params.type] ?? 350000;
+  const finalPrice = params.couponCode && params.discountAmount > 0
+    ? Math.max(0, basePrice - params.discountAmount)
+    : basePrice;
   const memberLabel = params.type === "kelas" ? "Member Kelas — Batch 1" : "Member Mandiri";
 
   async function handleConfirm() {
@@ -75,22 +84,24 @@ export default function Pembayaran() {
     setFallbackWaLink("");
     setLoading(true);
 
-    // Open WA window synchronously during click event to avoid popup blocker
     const waWindow = window.open("", "_blank");
 
     try {
       const apiBase = import.meta.env.VITE_API_URL ?? "/api";
+      const body: Record<string, unknown> = {
+        name: params.name,
+        email: params.email,
+        phone: params.phone,
+        memberType: params.type,
+      };
+      if (params.couponCode) body.couponCode = params.couponCode;
+
       const res = await fetch(`${apiBase}/qris/confirm`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: params.name,
-          email: params.email,
-          phone: params.phone,
-          memberType: params.type,
-        }),
+        body: JSON.stringify(body),
       });
-      const data = await res.json() as { orderId?: string; error?: string };
+      const data = await res.json() as { orderId?: string; error?: string; finalAmount?: number; discountAmount?: number; couponCode?: string };
       if (!res.ok || !data.orderId) {
         setError(data.error ?? "Gagal memproses konfirmasi. Coba lagi.");
         setLoading(false);
@@ -102,12 +113,21 @@ export default function Pembayaran() {
 
       const waNumber = import.meta.env.VITE_WA_NUMBER;
       const memberTypeLabel = params.type === "kelas" ? "Member Kelas" : "Member Mandiri";
+      const actualFinal = data.finalAmount ?? finalPrice;
+      const actualCoupon = data.couponCode ?? params.couponCode;
+      const actualDiscount = data.discountAmount ?? params.discountAmount;
+
+      const couponLine = actualCoupon && actualDiscount > 0
+        ? `Kupon: ${actualCoupon} (-${formatRp(actualDiscount)})\n`
+        : "";
+
       const confirmationMessage =
         `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 1.\n\n` +
         `Nama: ${params.name}\n` +
         `Email: ${params.email}\n` +
         `Paket: ${memberTypeLabel}\n` +
-        `Jumlah: ${formatRp(price)}\n` +
+        `${couponLine}` +
+        `Jumlah: ${formatRp(actualFinal)}\n` +
         `Order ID: ${data.orderId}\n\n` +
         `Mohon dikonfirmasi ya. Terima kasih!`;
 
@@ -117,7 +137,6 @@ export default function Pembayaran() {
       if (waWindow) {
         waWindow.location.href = waLink;
       } else {
-        // Popup was blocked — show fallback link
         setFallbackWaLink(waLink);
       }
 
@@ -130,6 +149,7 @@ export default function Pembayaran() {
   }
 
   const missingData = !params.name || !params.email || !params.phone;
+  const hasCoupon = !!(params.couponCode && params.discountAmount > 0);
 
   return (
     <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
@@ -149,7 +169,6 @@ export default function Pembayaran() {
         />
 
         <div className="relative max-w-xl mx-auto px-5 sm:px-8">
-          {/* Back */}
           <div className="mb-6">
             <Link href="/daftar">
               <span className="inline-flex items-center gap-1.5 text-sm cursor-pointer transition-colors" style={{ color: "#52525B" }}
@@ -184,18 +203,40 @@ export default function Pembayaran() {
               className="mb-6 px-5 py-4 rounded-2xl"
               style={{ background: "rgba(10,10,15,0.8)", border: "1px solid rgba(255,255,255,0.07)" }}
             >
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.3), transparent)", borderRadius: "16px 16px 0 0" }} />
               <p className="font-mono text-xs tracking-widest mb-3" style={{ color: "#52525B", letterSpacing: "0.12em" }}>RINGKASAN PESANAN</p>
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-white">{memberLabel}</p>
-                  {params.name && <p className="text-xs mt-0.5" style={{ color: "#71717A" }}>{params.name}</p>}
+              {hasCoupon ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white">{memberLabel}</p>
+                      {params.name && <p className="text-xs mt-0.5" style={{ color: "#71717A" }}>{params.name}</p>}
+                    </div>
+                    <p className="font-mono text-sm line-through" style={{ color: "#52525B" }}>{formatRp(basePrice)}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm" style={{ color: "#A855F7" }}>Kupon <span className="font-mono">{params.couponCode}</span></p>
+                    <p className="font-mono text-sm" style={{ color: "#A855F7" }}>- {formatRp(params.discountAmount)}</p>
+                  </div>
+                  <div className="flex items-center justify-between pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                    <p className="text-sm font-semibold text-white">Total yang harus dibayar</p>
+                    <div className="text-right">
+                      <p className="font-mono font-bold text-xl" style={{ color: "#A855F7", letterSpacing: "-0.01em" }}>{formatRp(finalPrice)}</p>
+                      <p className="text-xs mt-0.5" style={{ color: "#52525B" }}>sekali bayar</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="font-mono font-bold text-xl" style={{ color: "#A855F7", letterSpacing: "-0.01em" }}>{formatRp(price)}</p>
-                  <p className="text-xs mt-0.5" style={{ color: "#52525B" }}>sekali bayar</p>
+              ) : (
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-white">{memberLabel}</p>
+                    {params.name && <p className="text-xs mt-0.5" style={{ color: "#71717A" }}>{params.name}</p>}
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="font-mono font-bold text-xl" style={{ color: "#A855F7", letterSpacing: "-0.01em" }}>{formatRp(finalPrice)}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "#52525B" }}>sekali bayar</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* QRIS Card */}
@@ -205,7 +246,6 @@ export default function Pembayaran() {
             >
               <div className="px-5 pt-5 pb-3 text-center">
                 <p className="font-mono text-xs tracking-widest mb-4" style={{ color: "#52525B", letterSpacing: "0.12em" }}>SCAN QRIS DI BAWAH</p>
-                {/* QR Image */}
                 <div className="flex justify-center mb-4">
                   <div className="rounded-2xl overflow-hidden" style={{ background: "white", padding: 12, display: "inline-block" }}>
                     <img
@@ -215,20 +255,16 @@ export default function Pembayaran() {
                     />
                   </div>
                 </div>
-                {/* Merchant info */}
                 <div className="space-y-0.5">
                   <p className="font-mono text-xs" style={{ color: "#52525B" }}>Merchant: <span style={{ color: "#71717A" }}>TEMANTIKET</span></p>
                   <p className="font-mono text-xs" style={{ color: "#52525B" }}>NMID: <span style={{ color: "#71717A" }}>ID1025414983672</span></p>
                 </div>
               </div>
 
-              {/* Amber warning — nominal manual */}
+              {/* Amber warning */}
               <div
                 className="mx-5 mb-5 px-4 py-4 rounded-xl"
-                style={{
-                  background: "rgba(245,158,11,0.07)",
-                  border: "1px solid rgba(245,158,11,0.3)",
-                }}
+                style={{ background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.3)" }}
               >
                 <div className="flex items-start gap-3 mb-3">
                   <IconWarn />
@@ -244,8 +280,13 @@ export default function Pembayaran() {
                   style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)" }}
                 >
                   <p className="font-mono font-bold" style={{ fontSize: "clamp(1.4rem, 5vw, 2rem)", color: "#FBBF24", letterSpacing: "-0.01em" }}>
-                    {formatRp(price)}
+                    {formatRp(finalPrice)}
                   </p>
+                  {hasCoupon && (
+                    <p className="text-xs mt-1" style={{ color: "#A1A1AA" }}>
+                      (setelah diskon kupon {params.couponCode})
+                    </p>
+                  )}
                 </div>
                 <p className="text-xs leading-relaxed" style={{ color: "#A1A1AA" }}>
                   Pastikan nominal yang kamu masukkan <strong style={{ color: "#F59E0B" }}>PERSIS sama</strong> dengan jumlah di atas, agar verifikasi pembayaran berjalan lancar.
@@ -259,7 +300,7 @@ export default function Pembayaran() {
                   {[
                     "Buka aplikasi e-wallet atau mobile banking kamu",
                     "Scan kode QRIS di atas",
-                    `Masukkan nominal secara manual: ${formatRp(price)} (lihat peringatan di atas)`,
+                    `Masukkan nominal secara manual: ${formatRp(finalPrice)} (lihat peringatan di atas)`,
                     "Periksa kembali nominal sebelum konfirmasi pembayaran di aplikasimu",
                     "Setelah transfer berhasil, klik tombol konfirmasi di bawah",
                   ].map((step, i) => (
@@ -323,7 +364,6 @@ export default function Pembayaran() {
                   pembayaran langsung ke admin AIGYPT.
                 </p>
 
-                {/* Fallback if popup was blocked */}
                 {fallbackWaLink && (
                   <motion.div
                     initial={{ opacity: 0, y: 6 }}

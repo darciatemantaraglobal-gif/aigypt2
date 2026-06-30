@@ -1399,6 +1399,22 @@ export default function Home() {
                     {tier.tag}
                   </span>
                 </div>
+                {tier.highlight && (
+                  <div className="mb-3">
+                    <span
+                      className="font-mono text-xs px-2.5 py-1 rounded-full"
+                      style={{
+                        background: "rgba(124,58,237,0.12)",
+                        color: "#A855F7",
+                        border: "1px solid rgba(124,58,237,0.3)",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      GUNAKAN KODE AIGYPT26 · HEMAT Rp 51.000
+                    </span>
+                    <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Berlaku hingga 6 Juli 2026 untuk pendaftaran Batch 1</p>
+                  </div>
+                )}
                 <p className="text-xs mb-5 pb-4" style={{ color: "#7C3AED", borderBottom: "1px solid rgba(124,58,237,0.1)", fontStyle: "italic" }}>
                   {tier.subDesc}
                 </p>
