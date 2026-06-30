@@ -823,10 +823,10 @@ export default function Home() {
           >
             Kuasai Kecerdasan
             <br />
-            <span style={{ color: "#A855F7" }}>Buatan.</span>{" "}
-            <span style={{ color: "rgba(250,250,250,0.85)" }}>Ciptakan</span>
+            Buatan.{" "}
+            <span style={{ color: "#A855F7" }}>Ciptakan</span>
             <br />
-            <span style={{ color: "rgba(250,250,250,0.85)" }}>Sesuatu yang Nyata.</span>
+            <span style={{ color: "#A855F7" }}>Sesuatu yang Nyata.</span>
             <motion.span
               style={{ color: "#A855F7", fontWeight: 300, marginLeft: "4px", display: "inline-block" }}
               animate={{ opacity: [1, 1, 0, 0] }}
