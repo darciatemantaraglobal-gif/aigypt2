@@ -12,115 +12,115 @@ const sessions = [
   {
     num: "01",
     title: "AI Itu Bukan Sulap, Tapi Hampir",
-    essence: "Membangun fondasi mental dan memahami lanskap kecerdasan buatan.",
+    essence: "Bukan sekadar kenalan dengan tools, ini titik di mana kamu berhenti takut dan mulai melihat AI sebagai sesuatu yang bisa kamu kendalikan.",
     mastery: [
-      "Memahami cara kerja AI tanpa istilah teknis yang membingungkan",
-      "Mengenali perbedaan ChatGPT, Claude, dan Gemini — kapan memakai yang mana",
-      "Menyaksikan langsung: satu masalah, tiga AI, tiga hasil berbeda",
-      "Menyadari mengapa cara bertanya menentukan segalanya",
+      "Memahami cara kerja AI tanpa istilah teknis yang membingungkan, sehingga kamu tidak lagi merasa ini bukan duniaku",
+      "Mengenali ChatGPT, Claude, dan Gemini — dan kapan masing-masing benar-benar relevan untuk dunia akademik Al-Azhar",
+      "Menyaksikan langsung satu masalah masisir, dijawab tiga AI berbeda, dan belajar membaca mana yang paling bisa dipercaya",
+      "Menyadari bahwa cara kamu bertanya hari ini akan menentukan seberapa jauh kamu bisa melangkah di lima sesi berikutnya",
     ],
     tools: ["ChatGPT", "Claude", "Gemini"],
-    mission: "Ajukan satu masalah nyata pada dua AI berbeda. Amati perbedaannya.",
+    mission: "Ajukan satu masalah nyata yang kamu hadapi minggu ini — entah soal kuliah, organisasi, atau maisyah — pada dua AI berbeda. Amati mana yang benar-benar memahami konteksmu.",
   },
   {
     num: "02",
     title: "Seni Berdialog dengan Kecerdasan",
-    essence: "Menguasai prompting — keterampilan yang membedakan amatir dan ahli.",
+    essence: "Ini bukan sekadar teknik. Ini keterampilan yang memisahkan masisir yang pernah coba AI dengan masisir yang benar-benar menguasainya.",
     mastery: [
-      "Formula menyusun perintah yang tajam dan menghasilkan output berkualitas",
-      "Mengubah pertanyaan biasa menjadi instruksi yang presisi",
-      "Teknik bertanya bertahap untuk hasil yang kompleks",
-      "Membangun koleksi prompt pribadimu yang bisa dipakai berulang",
+      "Formula menyusun perintah yang tajam, sehingga AI memahami konteksmu sebagai mahasiswa Al-Azhar — bukan jawaban generik untuk orang asing",
+      "Mengubah pertanyaan biasa menjadi instruksi presisi yang menghasilkan jawaban setara hasil diskusi dengan senior",
+      "Teknik bertanya bertahap untuk menyelesaikan hal kompleks, seperti menyusun argumen makalah yang berlapis",
+      "Membangun koleksi prompt pribadimu sendiri — aset yang akan terus kamu pakai jauh setelah AIGYPT selesai",
     ],
     tools: ["Claude", "ChatGPT"],
-    mission: "Susun tiga perintah presisi untuk tiga kebutuhanmu.",
+    mission: "Susun tiga perintah presisi untuk tiga kebutuhanmu yang paling mendesak sebagai masisir minggu ini.",
   },
   {
     num: "03",
     title: "Asisten untuk Ilmu dan Amanah",
-    essence: "Menerapkan AI pada keperluan akademik dan organisasi.",
+    essence: "Di sinilah AI berhenti jadi mainan dan mulai jadi rekan kerja — untuk ilmu yang kamu tuntut, dan amanah organisasi yang kamu emban.",
     mastery: [
-      "Menulis dan menyempurnakan karya ilmiah dengan bantuan AI",
-      "Memahami referensi kompleks lebih cepat dan lebih mendalam",
-      "Merangkum sumber panjang dan menemukan celah penelitian",
-      "Menyusun proposal, notulensi, dan laporan secara efisien",
+      "Menulis dan menyempurnakan makalah berbahasa Arab fusha — bahasa yang jauh berbeda dari ammiyah yang kamu dengar tiap hari di Kairo",
+      "Menerjemah dan memahami kitab turats yang rumit, tanpa harus bolak-balik membuka kamus berjam-jam",
+      "Merangkum jurnal panjang dan menemukan celah penelitian untuk skripsimu",
+      "Menyusun proposal, notulensi, dan laporan organisasi yang biasanya menyita waktu kepanitiaanmu berhari-hari",
     ],
     tools: ["Claude", "NotebookLM", "TurboScribe", "DeepL"],
-    mission: "Selesaikan satu tugas akademik atau organisasi nyata dengan AI.",
+    mission: "Selesaikan satu tugas akademik atau amanah organisasi nyata minggu ini dengan AI. Rasakan sendiri berapa jam yang kamu selamatkan.",
   },
   {
     num: "04",
     title: "Kecerdasan yang Menghasilkan",
-    essence: "Memanfaatkan AI untuk bisnis dan karya kreatif.",
+    essence: "Maisyah di perantauan tidak harus selalu soal kerja keras tanpa henti. Di sini kamu belajar bekerja dengan kecerdasan.",
     mastery: [
-      "Meriset produk dan pasar dengan lebih cermat dan cepat",
-      "Menulis copywriting yang benar-benar menjual",
-      "Merancang kalender konten dan naskah dalam hitungan menit",
-      "Mengubah satu konten menjadi banyak format untuk banyak kanal",
+      "Meriset produk dan peluang usaha yang realistis dijalankan masisir, dengan modal dan waktu yang terbatas",
+      "Menulis copywriting yang benar-benar menjual — bukan sekadar caption yang dilewatkan begitu saja",
+      "Merancang kalender konten dan naskah dalam hitungan menit, untuk membangun nama di tengah kesibukan kuliah",
+      "Mengubah satu konten menjadi banyak format, sehingga usahamu terlihat di mana-mana tanpa kerja berkali lipat",
     ],
     tools: ["Claude", "Canva AI", "CapCut AI"],
-    mission: "Ciptakan satu konten atau materi promosi dengan AI, dari ide hingga visual.",
+    mission: "Ciptakan satu konten atau materi promosi dengan AI, dari ide hingga visual jadi.",
   },
   {
     num: "05",
     title: "Tangan yang Mencipta",
-    essence: "Membangun aplikasi dan solusi nyata melalui vibe coding.",
+    essence: "Inilah puncaknya — momen kamu berhenti hanya memakai aplikasi buatan orang lain, dan mulai membangun aplikasimu sendiri.",
     mastery: [
-      "Memahami vibe coding — membangun software tanpa menjadi programmer",
-      "Menciptakan aplikasi web dari sekadar deskripsi",
-      "Menghasilkan skrip otomatis untuk tugas yang berulang",
-      "Merangkai alur kerja otomatis yang berjalan sendiri",
+      "Memahami vibe coding — cara membangun perangkat lunak tanpa harus menjadi programmer",
+      "Menciptakan aplikasi web nyata dari sekadar deskripsi masalah yang kamu hadapi sehari-hari",
+      "Menghasilkan skrip otomatis untuk tugas administratif organisasi yang berulang setiap periode kepengurusan",
+      "Merangkai alur kerja otomatis yang bekerja sendiri, bahkan saat kamu sedang fokus talaqqi atau ujian",
     ],
     tools: ["Lovable", "Bolt", "v0", "Replit", "n8n"],
-    mission: "Rumuskan satu masalah nyata dan solusi yang kamu bayangkan.",
+    mission: "Rumuskan satu masalah nyata di lingkunganmu — kekeluargaan, kampus, atau usahamu — dan solusi yang kamu bayangkan. Ini benih karya yang akan kamu bangun.",
   },
   {
     num: "06",
     title: "Pembuktian",
-    essence: "Demo Day — mempersembahkan karya yang lahir dari perjalananmu.",
+    essence: "Demo Day. Bukan ujian, tapi momen kamu menunjukkan bahwa transformasi ini nyata — dan bisa dilihat, dipakai, dan dirasakan orang lain.",
     mastery: [
-      "Mempresentasikan solusi: dari masalah, proses, hingga hasil nyata",
-      "Menerima dan memberi umpan balik yang membangun",
-      "Mendokumentasikan karyamu sebagai portofolio pertama",
-      "Merancang langkah selanjutnya untuk mengembangkan solusimu",
+      "Mempresentasikan solusi: dari masalah yang kamu alami, proses membangunnya, hingga hasil yang bisa langsung dipakai",
+      "Menerima dan memberi umpan balik yang membangun dari sesama masisir yang menjalani perjalanan yang sama",
+      "Mendokumentasikan karyamu sebagai portofolio pertama — bukti nyata yang bisa kamu tunjukkan, bukan sekadar sertifikat kursus",
+      "Merancang langkah selanjutnya, termasuk bagaimana karyamu bisa terus dipakai dan dikembangkan setelah AIGYPT selesai",
     ],
-    tools: ["Seluruh tools yang telah kamu kuasai"],
-    mission: "Dokumentasikan karyamu — ini menjadi bukti nyata kemampuanmu.",
+    tools: ["Seluruh tools yang telah kamu kuasai sepanjang enam sesi"],
+    mission: "Dokumentasikan karyamu. Ini bukan tugas terakhir — ini adalah bukti bahwa kamu pulang dari perantauan membawa lebih dari yang kamu bayangkan.",
   },
 ];
 
 const phases = [
-  { num: "01", label: "FONDASI", desc: "Memahami lanskap kecerdasan buatan dengan jernih" },
-  { num: "02", label: "KETERAMPILAN", desc: "Menguasai seni berdialog dengan AI" },
-  { num: "03", label: "PENERAPAN", desc: "Menjadikan AI asisten untuk kerja nyata" },
-  { num: "04", label: "PRODUKSI", desc: "Mengubah AI menjadi mesin yang menghasilkan" },
-  { num: "05", label: "PENCIPTAAN", desc: "Membangun solusi nyata dengan tanganmu sendiri" },
+  { num: "01", label: "FONDASI", desc: "Dari takut dan asal pakai, menjadi memahami AI sebagai alat yang tunduk pada siapa yang mengerti cara memerintahnya" },
+  { num: "02", label: "KETERAMPILAN", desc: "Dari bertanya asal-asalan, menjadi menguasai cara berdialog dengan AI yang menghasilkan jawaban setajam yang kamu butuhkan" },
+  { num: "03", label: "PENERAPAN", desc: "Dari kewalahan oleh tugas dan amanah, menjadi punya asisten yang memahami beratnya menjadi mahasiswa sekaligus pengurus organisasi" },
+  { num: "04", label: "PRODUKSI", desc: "Dari sekadar bertahan secara finansial, menjadi punya kemampuan menghasilkan nilai — baik untuk diri sendiri maupun sesama masisir" },
+  { num: "05", label: "PENCIPTAAN", desc: "Dari pengguna aplikasi orang lain, menjadi pencipta solusi yang lahir dari masalahmu sendiri — dan bisa dipakai orang lain juga" },
 ];
 
 const upcomingClasses = [
   {
     title: "Bahasa Arab Akademik dengan AI",
     tag: "Akademik",
-    desc: "Taklukkan makalah, muthala'ah, dan teks akademik dengan AI sebagai asisten linguistikmu.",
-    points: ["Penulisan makalah Arab otomatis", "Terjemahan & pemahaman referensi kompleks", "Riset dan anotasi teks"],
+    desc: "Untuk masisir yang ingin makalah, muthala'ah, dan kitab turats tidak lagi menjadi beban — AI sebagai asisten linguistik yang memahami bahasa fusha.",
+    points: ["Penulisan makalah Arab fusha yang terstruktur", "Terjemahan & pemahaman kitab turats kompleks", "Riset dan anotasi referensi akademik"],
   },
   {
     title: "Bangun Penghidupan dengan AI",
     tag: "Bisnis",
-    desc: "Ubah keterampilan dan potensimu menjadi sumber penghasilan yang berkelanjutan.",
-    points: ["Identifikasi peluang pasar", "Produk digital dari keahlianmu", "Sistem otomasi penghasilan"],
+    desc: "Maisyah di perantauan tidak harus soal kerja keras tanpa arah. Ubah keahlianmu menjadi sumber penghasilan yang bisa berjalan di sela-sela kuliah.",
+    points: ["Identifikasi peluang usaha yang realistis untuk masisir", "Produk digital dari keahlian yang kamu miliki", "Sistem penghasilan yang berjalan otomatis"],
   },
   {
     title: "Vibe Coding: Dari Nol ke Aplikasi",
     tag: "Teknologi",
-    desc: "Bangun software yang berguna dan nyata tanpa perlu menjadi programmer.",
-    points: ["Aplikasi web dari deskripsi teks", "Otomasi tugas berulang", "Deploy produk pertamamu"],
+    desc: "Bangun perangkat lunak yang berguna dan nyata — untuk kekeluargaan, komunitas, atau dirimu sendiri — tanpa perlu menjadi programmer.",
+    points: ["Aplikasi web dari sekadar deskripsi masalah", "Otomasi tugas administratif organisasi", "Deploy dan bagikan produk pertamamu"],
   },
   {
-    title: "Konten & Dakwah Digital dengan AI",
+    title: "Konten dan Dakwah Digital dengan AI",
     tag: "Konten",
-    desc: "Sebarkan kebaikan dan ilmu dengan kecerdasan buatan sebagai alat produksimu.",
-    points: ["Produksi konten masif & konsisten", "Naskah yang menyentuh dan berkualitas", "Strategi kanal digital"],
+    desc: "Sebarkan ilmu dan kebaikan dengan jangkauan yang jauh lebih luas — AI sebagai alat produksi konten yang konsisten dan bermakna.",
+    points: ["Produksi konten masif yang tetap berkualitas", "Naskah yang menyentuh dan sesuai konteks dakwah", "Strategi membangun kanal digital yang tahan lama"],
   },
 ];
 
@@ -430,17 +430,19 @@ export default function Kurikulum() {
             className="font-display font-semibold leading-tight mb-8"
             style={{ fontSize: "clamp(2.25rem, 6vw, 4.5rem)", letterSpacing: "-0.02em" }}
           >
-            Peta Perjalanan
+            Bukan Sekadar Belajar AI.
             <br />
-            <span style={{ color: "#A855F7" }}>Enam Minggu</span>
+            <span style={{ color: "#A855F7" }}>Ini Tentang Menjadi Pencipta.</span>
           </motion.h1>
           <motion.p
             variants={fadeUp}
             className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-8"
             style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            Dari fondasi kecerdasan buatan hingga membangun solusi nyata —
-            inilah seluruh perjalanan yang menunggumu di Batch 1.
+            Enam minggu yang dirancang bukan untuk membuatmu tahu lebih banyak
+            tentang kecerdasan buatan, tapi untuk mengubah caramu memandang
+            setiap masalah yang kamu hadapi sebagai masisir. Dari yang dulu
+            hanya bisa menunggu solusi, menjadi yang menciptakannya sendiri.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-col items-center gap-3">
             <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 DIMULAI 5 JULI 2026 · PENDAFTARAN MASIH DIBUKA</p>
@@ -467,17 +469,28 @@ export default function Kurikulum() {
           >
             Kami tidak mengajarkan teknologi.
             <br />
-            <span style={{ color: "#A855F7" }}>Kami mengajarkan cara memecahkan masalah.</span>
+            <span style={{ color: "#A855F7" }}>Kami mengajarkan cara menjadi orang yang dicari.</span>
           </motion.h2>
-          <motion.p
-            variants={fadeUp}
-            className="text-base leading-[1.9]"
-            style={{ color: "#71717A", fontWeight: 300 }}
-          >
-            Setiap sesi dibangun di atas sesi sebelumnya — dari memahami, menguasai, menerapkan,
-            hingga mencipta. Tujuannya bukan sekadar membuatmu bisa memakai AI, tapi mampu
-            membangun solusi nyata dari masalah yang kamu pahami betul.
-          </motion.p>
+          <motion.div variants={fadeUp} className="space-y-5 text-left max-w-2xl mx-auto">
+            <p className="text-base leading-[1.9]" style={{ color: "#71717A", fontWeight: 300 }}>
+              Hampir setiap masisir pernah merasakannya — stuck di depan kitab yang susah dipahami,
+              kewalahan jadi panitia, atau bingung mencari penghasilan tambahan di tengah keterbatasan.
+              AIGYPT dimulai dari satu keyakinan sederhana: masalah-masalah ini bukan karena kamu kurang
+              mampu, tapi karena belum punya alat yang tepat.
+            </p>
+            <p className="text-base leading-[1.9]" style={{ color: "#71717A", fontWeight: 300 }}>
+              Setiap sesi dirancang bertahap — dari memahami, menguasai, menerapkan, hingga mencipta.
+              Tapi yang membedakan AIGYPT bukan hanya kurva belajarnya. Saat satu masisir menguasai ini,
+              organisasi yang ia ikuti jadi lebih efisien, adik tingkat yang ia bimbing ikut terbantu,
+              dan keluarga di tanah air melihat hasil nyata dari perantauannya.
+            </p>
+            <p className="text-base leading-[1.9]" style={{ color: "#71717A", fontWeight: 300 }}>
+              Ini bukan kurikulum AI yang diterjemahkan dari materi Barat. Setiap contoh lahir dari
+              realita yang kamu jalani — talaqqi dengan masyaikh, bahasa Arab fusha yang jauh berbeda
+              dari ammiyah pasar, dinamika organisasi kekeluargaan, dan tekanan maisyah yang nyata
+              di tengah nilai tukar yang naik turun.
+            </p>
+          </motion.div>
         </Reveal>
       </section>
 
@@ -491,7 +504,7 @@ export default function Kurikulum() {
               className="font-display font-semibold"
               style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", letterSpacing: "-0.01em" }}
             >
-              Lima fase perjalanan menuju penciptaan
+              Lima Pergeseran yang Akan Terjadi pada Dirimu
             </motion.h2>
           </Reveal>
           <PhaseArc />
@@ -502,7 +515,7 @@ export default function Kurikulum() {
       <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-4">
-            <SectionLabel>TERSEDIA SEKARANG</SectionLabel>
+            <SectionLabel>ENAM SESI YANG DIKURASI DARI REALITA MASISIR</SectionLabel>
           </Reveal>
 
           {/* Kelas header */}
@@ -549,7 +562,69 @@ export default function Kurikulum() {
         </div>
       </section>
 
-      {/* ══ SECTION 5: KELAS MENDATANG ══ */}
+      {/* ══ SECTION 5: TIMELINE BATCH 1 ══ */}
+      <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <div className="max-w-5xl mx-auto px-6 sm:px-10">
+          <Reveal className="mb-12">
+            <SectionLabel>RITME ENAM MINGGU BATCH 1</SectionLabel>
+            <motion.h2
+              variants={fadeUp}
+              className="font-display font-semibold"
+              style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", letterSpacing: "-0.01em" }}
+            >
+              Satu Sesi, Satu Minggu, Satu Pergeseran
+            </motion.h2>
+          </Reveal>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={containerStagger}
+          >
+            {[
+              { week: "Minggu 1", date: "5 Juli", phase: "Fondasi" },
+              { week: "Minggu 2", date: "12 Juli", phase: "Keterampilan" },
+              { week: "Minggu 3", date: "19 Juli", phase: "Penerapan" },
+              { week: "Minggu 4", date: "26 Juli", phase: "Produksi" },
+              { week: "Minggu 5", date: "2 Agustus", phase: "Penciptaan" },
+              { week: "Minggu 6", date: "9 Agustus", phase: "Pembuktian" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                variants={cardItem}
+                className="flex items-center gap-4 rounded-xl px-5 py-4"
+                style={{ background: "rgba(10,10,15,0.7)", border: "1px solid rgba(255,255,255,0.05)" }}
+              >
+                <div
+                  className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-mono text-xs font-bold"
+                  style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }}
+                >
+                  {i + 1}
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] mb-0.5" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>
+                    {item.week} · {item.date}
+                  </p>
+                  <p className="text-sm font-medium text-white">{item.phase}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.p
+            className="mt-6 font-mono text-xs text-center tracking-widest"
+            style={{ color: "#3F3F46", letterSpacing: "0.15em" }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={viewportConfig}
+            transition={{ delay: 0.6 }}
+          >
+            JADWAL MENTORING LIVE DIKONFIRMASI SETELAH PENDAFTARAN
+          </motion.p>
+        </div>
+      </section>
+
+      {/* ══ SECTION 6: KELAS MENDATANG ══ */}
       <section className="py-16 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-12">
@@ -559,11 +634,11 @@ export default function Kurikulum() {
               className="font-display font-semibold mb-4"
               style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", letterSpacing: "-0.015em" }}
             >
-              Perjalanan Ini{" "}
-              <span style={{ color: "#A855F7" }}>Terus Berlanjut</span>
+              Perjalanan Ini Tidak{" "}
+              <span style={{ color: "#A855F7" }}>Berhenti di Kamu</span>
             </motion.h2>
-            <motion.p variants={fadeUp} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
-              KELAS BARU TERUS DIKEMBANGKAN
+            <motion.p variants={fadeUp} className="text-sm leading-relaxed max-w-xl" style={{ color: "#71717A" }}>
+              Setiap masisir yang menguasai ini akan membuka jalan bagi yang berikutnya — inilah kelas-kelas yang akan menyusul.
             </motion.p>
           </Reveal>
 
@@ -612,7 +687,7 @@ export default function Kurikulum() {
         </div>
       </section>
 
-      {/* ══ SECTION 6: CTA ══ */}
+      {/* ══ SECTION 7: CTA ══ */}
       <section className="relative py-24 sm:py-36 overflow-hidden" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div
           className="absolute inset-0 pointer-events-none"
@@ -627,8 +702,9 @@ export default function Kurikulum() {
             className="font-display font-semibold leading-tight mb-6"
             style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.015em" }}
           >
-            Perjalananmu dimulai{" "}
-            <span style={{ color: "#A855F7" }}>5 Juli.</span>
+            Kamu datang ke Mesir untuk berubah.
+            <br />
+            <span style={{ color: "#A855F7" }}>Biarkan ini jadi bagian dari perubahan itu.</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}

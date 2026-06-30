@@ -1,0 +1,287 @@
+# Prompt — AIGYPT Kurikulum: Tulis Ulang Total Konten (Selaras dengan Visi)
+
+Copy-paste prompt ini ke Replit Agent. Ini menulis ulang TOTAL konten halaman kurikulum (rute /kurikulum), bukan perubahan layout. Format baris sesi yang bisa di-expand DIPERTAHANKAN karena sudah bagus. Yang berubah adalah seluruh copy/teks agar benar-benar mencerminkan visi AIGYPT: transformasi personal dari pengguna menjadi pencipta, dampak komunitas masisir yang saling mengangkat, dan konteks spesifik kehidupan Mesir/Al-Azhar, bukan teks generik tentang belajar AI.
+
+PENTING: Pertahankan struktur, layout, dan format expand yang sudah ada. Ini penggantian teks/konten secara menyeluruh, bukan rebuild layout.
+
+---
+
+## BENANG MERAH YANG HARUS TERASA DI SETIAP SECTION
+
+1. Transformasi personal: setiap bagian harus menunjukkan perjalanan dari sekadar memakai AI menjadi mencipta dengan AI, bukan daftar fitur, tapi sebuah pergeseran identitas.
+2. Dampak komunitas: kurikulum ini bukan untuk individu yang belajar sendirian, ada nuansa bahwa kemampuan ini akan mengangkat lingkungan sekitarnya (organisasi, sesama mahasiswa, keluarga di tanah air).
+3. Konteks Mesir/Al-Azhar yang spesifik: hindari kalimat generik seperti "belajar untuk kehidupan sehari-hari". Selalu jangkarkan ke realita konkret: kitab turats, talaqqi, organisasi kekeluargaan, maisyah di perantauan, dinamika Al-Azhar, kehidupan Kairo.
+
+---
+
+## KONTEN BARU, HALAMAN KURIKULUM
+
+### SECTION 1 — HERO
+
+```
+Eyebrow (mono): KURIKULUM AIGYPT · BATCH 1
+
+Headline:
+Bukan Sekadar Belajar AI.
+Ini Tentang Menjadi Pencipta.
+
+Sub-headline:
+Enam minggu yang dirancang bukan untuk membuatmu tahu lebih banyak
+tentang kecerdasan buatan, tapi untuk mengubah caramu memandang
+setiap masalah yang kamu hadapi sebagai masisir. Dari yang dulu
+hanya bisa menunggu solusi, menjadi yang menciptakannya sendiri.
+
+Urgency bar (kecil):
+BATCH 1 DIMULAI 5 JULI 2026 · PENDAFTARAN MASIH DIBUKA
+[Daftar Sekarang →]
+```
+
+---
+
+### SECTION 2 — FILOSOFI (diperkuat dengan tiga benang merah)
+
+```
+Label (mono): PRINSIP DI BALIK KURIKULUM
+
+Pernyataan:
+Kami tidak mengajarkan teknologi.
+Kami mengajarkan cara menjadi orang yang dicari.
+
+Paragraf 1 (transformasi personal):
+Hampir setiap masisir pernah merasakannya, stuck di depan kitab
+yang susah dipahami, kewalahan jadi panitia, atau bingung mencari
+penghasilan tambahan di tengah keterbatasan. AIGYPT dimulai dari
+satu keyakinan sederhana: masalah-masalah ini bukan karena kamu
+kurang mampu, tapi karena belum punya alat yang tepat.
+
+Paragraf 2 (dampak komunitas):
+Setiap sesi dirancang bertahap, dari memahami, menguasai,
+menerapkan, hingga mencipta. Tapi yang membedakan AIGYPT bukan
+hanya kurva belajarnya. Saat satu masisir menguasai ini, organisasi
+yang ia ikuti jadi lebih efisien, adik tingkat yang ia bimbing
+ikut terbantu, dan keluarga di tanah air melihat hasil nyata dari
+perantauannya.
+
+Paragraf 3 (konteks Mesir/Al-Azhar):
+Ini bukan kurikulum AI yang diterjemahkan dari materi Barat.
+Setiap contoh lahir dari realita yang kamu jalani, talaqqi
+dengan masyaikh, bahasa Arab fusha yang jauh berbeda dari
+ammiyah pasar, dinamika organisasi kekeluargaan, dan tekanan
+maisyah yang nyata di tengah nilai tukar yang naik turun.
+```
+
+---
+
+### SECTION 3 — ALUR TRANSFORMASI (Arc, diperkuat narasi)
+
+```
+Label (mono): ALUR TRANSFORMASI
+
+Headline kecil di atas arc:
+Lima Pergeseran yang Akan Terjadi pada Dirimu
+
+01 FONDASI
+Dari takut dan asal pakai, menjadi memahami AI sebagai alat yang
+tunduk pada siapa yang mengerti cara memerintahnya.
+
+02 KETERAMPILAN
+Dari bertanya asal-asalan, menjadi menguasai cara berdialog dengan
+AI yang menghasilkan jawaban setajam yang kamu butuhkan.
+
+03 PENERAPAN
+Dari kewalahan oleh tugas dan amanah, menjadi punya asisten yang
+memahami beratnya menjadi mahasiswa sekaligus pengurus organisasi.
+
+04 PRODUKSI
+Dari sekadar bertahan secara finansial, menjadi punya kemampuan
+menghasilkan nilai, baik untuk diri sendiri maupun sesama masisir.
+
+05 PENCIPTAAN
+Dari pengguna aplikasi orang lain, menjadi pencipta solusi yang
+lahir dari masalahmu sendiri, dan bisa dipakai orang lain juga.
+```
+
+---
+
+### SECTION 4 — ENAM SESI (PERTAHANKAN FORMAT EXPAND, GANTI ISI TEKS)
+
+```
+Label (mono): ENAM SESI YANG DIKURASI DARI REALITA MASISIR
+
+Headline: Kurikulum
+```
+
+Format baris tetap sama (nomor besar plus judul plus esensi plus expand untuk detail). Ganti isi teks setiap sesi menjadi versi berikut:
+
+---
+
+SESI 01, AI Itu Bukan Sulap, Tapi Hampir
+
+Esensi: Bukan sekadar kenalan dengan tools, ini titik di mana kamu berhenti takut dan mulai melihat AI sebagai sesuatu yang bisa kamu kendalikan.
+
+Yang akan kamu kuasai:
+- Memahami cara kerja AI tanpa istilah teknis yang membingungkan, sehingga kamu tidak lagi merasa ini bukan duniaku
+- Mengenali ChatGPT, Claude, dan Gemini, dan kapan masing-masing benar-benar relevan untuk dunia akademik Al-Azhar
+- Menyaksikan langsung satu masalah masisir, dijawab tiga AI berbeda, dan belajar membaca mana yang paling bisa dipercaya
+- Menyadari bahwa cara kamu bertanya hari ini akan menentukan seberapa jauh kamu bisa melangkah di lima sesi berikutnya
+
+Tools: ChatGPT, Claude, Gemini
+
+Misi minggu ini: Ajukan satu masalah nyata yang kamu hadapi minggu ini, entah soal kuliah, organisasi, atau maisyah, pada dua AI berbeda. Amati mana yang benar-benar memahami konteksmu.
+
+---
+
+SESI 02, Seni Berdialog dengan Kecerdasan
+
+Esensi: Ini bukan sekadar teknik. Ini keterampilan yang memisahkan masisir yang pernah coba AI dengan masisir yang benar-benar menguasainya.
+
+Yang akan kamu kuasai:
+- Formula menyusun perintah yang tajam, sehingga AI memahami konteksmu sebagai mahasiswa Al-Azhar, bukan jawaban generik untuk orang asing
+- Mengubah pertanyaan biasa menjadi instruksi presisi yang menghasilkan jawaban setara hasil diskusi dengan senior
+- Teknik bertanya bertahap untuk menyelesaikan hal kompleks, seperti menyusun argumen makalah yang berlapis
+- Membangun koleksi prompt pribadimu sendiri, aset yang akan terus kamu pakai jauh setelah AIGYPT selesai
+
+Tools: Claude, ChatGPT
+
+Misi minggu ini: Susun tiga perintah presisi untuk tiga kebutuhanmu yang paling mendesak sebagai masisir minggu ini.
+
+---
+
+SESI 03, Asisten untuk Ilmu dan Amanah
+
+Esensi: Di sinilah AI berhenti jadi mainan dan mulai jadi rekan kerja, untuk ilmu yang kamu tuntut, dan amanah organisasi yang kamu emban.
+
+Yang akan kamu kuasai:
+- Menulis dan menyempurnakan makalah berbahasa Arab fusha, bahasa yang jauh berbeda dari ammiyah yang kamu dengar tiap hari di Kairo
+- Menerjemah dan memahami kitab turats yang rumit, tanpa harus bolak-balik membuka kamus berjam-jam
+- Merangkum jurnal panjang dan menemukan celah penelitian untuk skripsimu
+- Menyusun proposal, notulensi, dan laporan organisasi yang biasanya menyita waktu kepanitiaanmu berhari-hari
+
+Tools: Claude, NotebookLM, TurboScribe, DeepL
+
+Misi minggu ini: Selesaikan satu tugas akademik atau amanah organisasi nyata minggu ini dengan AI. Rasakan sendiri berapa jam yang kamu selamatkan.
+
+---
+
+SESI 04, Kecerdasan yang Menghasilkan
+
+Esensi: Maisyah di perantauan tidak harus selalu soal kerja keras tanpa henti. Di sini kamu belajar bekerja dengan kecerdasan.
+
+Yang akan kamu kuasai:
+- Meriset produk dan peluang usaha yang realistis dijalankan masisir, dengan modal dan waktu yang terbatas
+- Menulis copywriting yang benar-benar menjual, bukan sekadar caption yang dilewatkan begitu saja
+- Merancang kalender konten dan naskah dalam hitungan menit, untuk membangun nama di tengah kesibukan kuliah
+- Mengubah satu konten menjadi banyak format, sehingga usahamu terlihat di mana-mana tanpa kerja berkali lipat
+
+Tools: Claude, Canva AI, CapCut AI
+
+Misi minggu ini: Ciptakan satu konten atau materi promosi dengan AI, dari ide hingga visual jadi.
+
+---
+
+SESI 05, Tangan yang Mencipta
+
+Esensi: Inilah puncaknya, momen kamu berhenti hanya memakai aplikasi buatan orang lain, dan mulai membangun aplikasimu sendiri.
+
+Yang akan kamu kuasai:
+- Memahami vibe coding, cara membangun perangkat lunak tanpa harus menjadi programmer
+- Menciptakan aplikasi web nyata dari sekadar deskripsi masalah yang kamu hadapi sehari-hari
+- Menghasilkan skrip otomatis untuk tugas administratif organisasi yang berulang setiap periode kepengurusan
+- Merangkai alur kerja otomatis yang bekerja sendiri, bahkan saat kamu sedang fokus talaqqi atau ujian
+
+Tools: Lovable, Bolt, v0, Replit, n8n
+
+Misi minggu ini: Rumuskan satu masalah nyata di lingkunganmu, kekeluargaan, kampus, atau usahamu, dan solusi yang kamu bayangkan. Ini benih karya yang akan kamu bangun.
+
+---
+
+SESI 06, Pembuktian
+
+Esensi: Demo Day. Bukan ujian, tapi momen kamu menunjukkan bahwa transformasi ini nyata, dan bisa dilihat, dipakai, dan dirasakan orang lain.
+
+Yang akan kamu kuasai:
+- Mempresentasikan solusi: dari masalah yang kamu alami, proses membangunnya, hingga hasil yang bisa langsung dipakai
+- Menerima dan memberi umpan balik yang membangun dari sesama masisir yang menjalani perjalanan yang sama
+- Mendokumentasikan karyamu sebagai portofolio pertama, bukti nyata yang bisa kamu tunjukkan, bukan sekadar sertifikat kursus
+- Merancang langkah selanjutnya, termasuk bagaimana karyamu bisa terus dipakai dan dikembangkan setelah AIGYPT selesai
+
+Tools: Seluruh tools yang telah kamu kuasai sepanjang enam sesi
+
+Misi minggu ini: Dokumentasikan karyamu. Ini bukan tugas terakhir, ini adalah bukti bahwa kamu pulang dari perantauan membawa lebih dari yang kamu bayangkan.
+
+---
+
+### SECTION 5 — TIMELINE BATCH 1 (perkuat sedikit framing)
+
+```
+Label (mono): RITME ENAM MINGGU BATCH 1
+
+Headline: Satu Sesi, Satu Minggu, Satu Pergeseran
+
+Minggu 1 5 Juli, Fondasi
+Minggu 2 12 Juli, Keterampilan
+Minggu 3 19 Juli, Penerapan
+Minggu 4 26 Juli, Produksi
+Minggu 5 2 Agustus, Penciptaan
+Minggu 6 9 Agustus, Pembuktian
+
+Catatan kecil: JADWAL MENTORING LIVE DIKONFIRMASI SETELAH PENDAFTARAN
+```
+
+---
+
+### SECTION 6 — KELAS MENDATANG (perkuat narasi komunitas)
+
+```
+Label (mono): SETELAH BATCH 1
+
+Headline: Perjalanan Ini Tidak Berhenti di Kamu
+
+Sub kecil (baru, satu kalimat, tentang dampak komunitas):
+Setiap masisir yang menguasai ini akan membuka jalan bagi
+yang berikutnya, inilah kelas-kelas yang akan menyusul.
+
+- Bahasa Arab Akademik dengan AI
+- Bangun Penghidupan dengan AI
+- Vibe Coding: Dari Nol ke Aplikasi
+- Konten dan Dakwah Digital dengan AI
+```
+
+---
+
+### SECTION 7 — CTA PENUTUP
+
+```
+Pernyataan:
+Kamu datang ke Mesir untuk berubah.
+Biarkan ini jadi bagian dari perubahan itu.
+
+Sub: Daftarkan dirimu sebelum kuota terpenuhi.
+
+Tombol: Daftar Batch 1 Sekarang, Hubungi Kami via WhatsApp
+```
+
+---
+
+## YANG TIDAK BOLEH DIUBAH
+
+1. Struktur dan urutan section yang sudah ada
+2. Format baris sesi yang bisa di-expand (interaksi, animasi, styling tetap sama)
+3. Design system dark luxury (warna, font, layout)
+4. Semua link dan navigasi yang sudah berfungsi
+5. Komponen visual lain (timeline, garis penghubung, dan sebagainya), hanya teksnya yang diganti
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Semua teks Bahasa Indonesia, panggilan "kamu"
+2. Ganti konten di tempat yang sesuai (kemungkinan ada di file data terpisah seperti lib/kurikulumContent.ts atau langsung di komponen halaman, sesuaikan dengan struktur yang sudah ada)
+3. Pastikan tidak ada teks lama yang tersisa atau tercampur dengan teks baru
+4. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Halaman kurikulum dengan konten yang benar-benar mencerminkan visi AIGYPT, setiap kalimat membawa nuansa transformasi personal (dari pengguna jadi pencipta), dampak komunitas (saling mengangkat sesama masisir), dan konteks spesifik kehidupan Mesir/Al-Azhar (kitab turats, talaqqi, organisasi kekeluargaan, maisyah perantauan). Layout dan format expand tetap sama seperti sebelumnya, hanya substansi kontennya yang naik kelas.
