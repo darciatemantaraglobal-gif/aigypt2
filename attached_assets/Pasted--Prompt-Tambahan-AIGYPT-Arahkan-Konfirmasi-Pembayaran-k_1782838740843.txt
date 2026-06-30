@@ -1,0 +1,104 @@
+# Prompt Tambahan — AIGYPT: Arahkan Konfirmasi Pembayaran ke WhatsApp Admin
+
+Copy-paste prompt ini ke Replit Agent SETELAH prompt "Halaman Pendaftaran dengan Pembayaran QRIS" dan prompt crop QRIS. Ini mengubah perilaku tombol "Saya Sudah Bayar" di halaman /daftar/pembayaran agar mengarahkan peserta langsung membuka WhatsApp untuk konfirmasi manual ke admin, bukan hanya update status diam-diam.
+
+PENTING: Ini perubahan pada interaksi tombol konfirmasi yang sudah dirancang sebelumnya. Pastikan nomor WhatsApp tetap diambil dari environment variable, JANGAN di-hardcode di kode.
+
+---
+
+## PROMPT
+
+Ubah perilaku tombol "Saya Sudah Bayar" di halaman pembayaran QRIS (/daftar/pembayaran) agar selain menyimpan status pendaftaran, juga langsung membuka WhatsApp peserta menuju nomor admin dengan pesan konfirmasi yang sudah terisi otomatis (pre-filled).
+
+### Environment Variable
+
+Pastikan nomor WhatsApp admin sudah tersedia sebagai environment variable (jika belum ada dari implementasi sebelumnya, tambahkan):
+```
+VITE_WA_NUMBER=6281311506025
+```
+Format: tanpa tanda plus, tanpa spasi, diawali kode negara 62. Nomor TIDAK BOLEH di-hardcode di kode mana pun, selalu diambil dari import.meta.env.VITE_WA_NUMBER.
+
+### Logic Baru Saat Tombol "Saya Sudah Bayar" Diklik
+
+1. Update status pendaftaran di database (orders set status menjadi menunggu_konfirmasi) seperti yang sudah dirancang sebelumnya
+2. Jika ada upload bukti pembayaran, tetap simpan ke Supabase Storage seperti sebelumnya
+3. Kirim notifikasi WhatsApp ke admin via Fonnte API sebagai notifikasi otomatis di belakang layar, seperti yang sudah dirancang
+4. BARU: Susun pesan konfirmasi yang sudah terisi data peserta, lalu buka tab atau window baru menuju link WhatsApp dengan pesan tersebut, agar peserta sendiri yang mengirim pesan konfirmasi secara langsung ke admin (bukan hanya notifikasi otomatis sistem)
+5. Setelah link WhatsApp terbuka, redirect halaman peserta ke /daftar/menunggu
+
+### Format Pesan Pre-filled untuk Peserta
+
+```typescript
+const confirmationMessage = `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 1.
+
+Nama: ${nama}
+Email: ${email}
+Paket: ${memberType === 'kelas' ? 'Member Kelas' : 'Member Mandiri'}
+Jumlah: Rp ${nominal.toLocaleString('id-ID')}
+Order ID: ${orderId}
+
+Mohon dikonfirmasi ya. Terima kasih!`
+
+const waNumber = import.meta.env.VITE_WA_NUMBER
+const encodedMessage = encodeURIComponent(confirmationMessage)
+const waLink = `https://wa.me/${waNumber}?text=${encodedMessage}`
+
+window.open(waLink, '_blank')
+```
+
+### Update Tampilan Halaman Pembayaran
+
+Update copy tombol dan teks di sekitarnya agar jelas bahwa peserta akan diarahkan ke WhatsApp:
+
+```
+Tombol utama (besar, filled ungu, glow, dengan ikon WhatsApp di sebelah teks):
+Konfirmasi via WhatsApp
+
+Teks kecil di bawah tombol (sekunder):
+Kamu akan diarahkan ke WhatsApp untuk mengirim konfirmasi
+pembayaran langsung ke admin AIGYPT.
+```
+
+### Update Halaman Menunggu Konfirmasi (/daftar/menunggu)
+
+Sesuaikan copy agar konsisten dengan alur baru ini:
+
+```
+Headline: Terima Kasih! Konfirmasimu Sudah Terkirim
+
+Sub: Pesan konfirmasi pembayaranmu sudah terkirim ke WhatsApp admin AIGYPT.
+Kode aksesmu akan dikirimkan kembali via WhatsApp dalam waktu maksimal
+beberapa jam setelah pembayaran terverifikasi.
+
+Catatan kecil:
+Belum menerima balasan? Kirim ulang pesan konfirmasimu atau
+hubungi kami langsung via WhatsApp.
+
+Tombol sekunder: Hubungi WhatsApp Lagi (link wa.me yang sama, tanpa pesan pre-filled kali ini, untuk follow-up)
+
+Tombol utama: Kembali ke Beranda
+```
+
+---
+
+## CATATAN PENTING
+
+1. Jika peserta menutup tab WhatsApp tanpa mengirim pesan (misalnya berubah pikiran atau salah klik), status di database tetap tersimpan sebagai menunggu_konfirmasi, sehingga admin tetap bisa melihat pendaftaran tersebut di /admin/orders meskipun pesan WhatsApp manual dari peserta belum terkirim. Notifikasi otomatis dari sistem (langkah 3) tetap menjadi jaring pengaman utama bagi admin.
+2. Pastikan window.open dengan target _blank berfungsi baik di mobile browser (Safari iOS dan Chrome Android), pastikan tidak diblokir sebagai pop-up karena dipicu langsung dari klik tombol (bukan dari proses asinkron yang tertunda), karena browser mobile biasanya hanya mengizinkan window.open jika dipicu langsung dari interaksi pengguna.
+3. Sediakan fallback: jika window.open gagal terbuka (misal diblokir browser), tampilkan tombol/link manual yang bisa diklik peserta sebagai alternatif, jangan biarkan peserta stuck tanpa cara melanjutkan.
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Nomor WhatsApp admin selalu diambil dari import.meta.env.VITE_WA_NUMBER, tidak pernah di-hardcode
+2. Pesan WhatsApp ter-encode dengan benar (encodeURIComponent) agar karakter khusus dan baris baru tidak rusak saat membuka link
+3. Tetap pertahankan notifikasi otomatis ke admin via Fonnte sebagai jaring pengaman, terlepas dari apakah peserta benar-benar mengirim pesan WhatsApp manual atau tidak
+4. Semua teks Bahasa Indonesia, panggilan "kamu"
+5. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Tombol "Saya Sudah Bayar" di halaman pembayaran berubah menjadi "Konfirmasi via WhatsApp", yang saat diklik membuka WhatsApp peserta menuju nomor admin AIGYPT dengan pesan konfirmasi pembayaran yang sudah otomatis terisi data lengkap (nama, email, paket, jumlah, order ID), sambil tetap menyimpan status pendaftaran dan mengirim notifikasi otomatis ke admin sebagai jaring pengaman.

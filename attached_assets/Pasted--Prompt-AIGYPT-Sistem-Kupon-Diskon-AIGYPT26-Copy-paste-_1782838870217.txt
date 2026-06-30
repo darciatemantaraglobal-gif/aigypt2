@@ -1,0 +1,263 @@
+# Prompt — AIGYPT: Sistem Kupon Diskon "AIGYPT26"
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan sistem kupon diskon ke flow pendaftaran AIGYPT, kode kupon "AIGYPT26" memberikan potongan Rp 51.000 khusus untuk Member Kelas Batch 1, sekali pakai per email, berlaku sampai 6 Juli 2026.
+
+PENTING: Ini penambahan fitur pada flow pendaftaran QRIS yang sudah ada (rute /daftar dan /daftar/pembayaran). Jangan ubah struktur flow yang sudah berjalan, hanya tambahkan logic kupon di dalamnya.
+
+---
+
+## ATURAN KUPON AIGYPT26
+
+```
+Kode: AIGYPT26
+Potongan: Rp 51.000 (potongan tetap/flat, bukan persentase)
+Berlaku untuk: HANYA Member Kelas (Batch 1), tidak berlaku untuk Member Mandiri
+Batas pemakaian: 1 kali per email (tidak bisa dipakai ulang oleh email yang sama)
+Berlaku sampai: 6 Juli 2026, 23:59 WIB (setelah itu otomatis tidak berlaku)
+```
+
+---
+
+## LANGKAH 1 — Tabel Database Baru
+
+Tambahkan tabel baru di Supabase untuk tracking penggunaan kupon:
+
+```sql
+CREATE TABLE coupon_usage (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  coupon_code VARCHAR(50) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  order_id VARCHAR(100) REFERENCES orders(order_id),
+  discount_amount INTEGER NOT NULL,
+  used_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(coupon_code, email)
+);
+
+ALTER TABLE coupon_usage ENABLE ROW LEVEL SECURITY;
+```
+
+UNIQUE(coupon_code, email) memastikan satu email tidak bisa memakai kupon yang sama dua kali, divalidasi di level database, bukan hanya di frontend.
+
+Tambahkan juga kolom pada tabel orders yang sudah ada untuk mencatat diskon yang diterapkan:
+```sql
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS coupon_code VARCHAR(50);
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS discount_amount INTEGER DEFAULT 0;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS final_amount INTEGER;
+```
+
+final_amount adalah nominal setelah dikurangi diskon, ini yang ditampilkan sebagai jumlah yang harus dibayar di halaman QRIS.
+
+---
+
+## LANGKAH 2 — Konfigurasi Kupon (Sumber Kebenaran Tunggal)
+
+Buat file konfigurasi kupon agar aturan kupon mudah dikelola di satu tempat:
+
+```typescript
+// lib/coupons.ts
+export interface Coupon {
+  code: string
+  discountAmount: number
+  applicableTo: 'kelas' | 'mandiri' | 'all'
+  validUntil: string
+  description: string
+}
+
+export const ACTIVE_COUPONS: Coupon[] = [
+  {
+    code: 'AIGYPT26',
+    discountAmount: 51000,
+    applicableTo: 'kelas',
+    validUntil: '2026-07-06T23:59:59+07:00',
+    description: 'Diskon spesial pendaftaran Batch 1'
+  }
+]
+
+export function validateCoupon(
+  code: string,
+  memberType: 'kelas' | 'mandiri'
+): { valid: boolean; coupon?: Coupon; error?: string } {
+  const coupon = ACTIVE_COUPONS.find(
+    (c) => c.code.toUpperCase() === code.trim().toUpperCase()
+  )
+
+  if (!coupon) {
+    return { valid: false, error: 'Kode kupon tidak ditemukan' }
+  }
+
+  const now = new Date()
+  const expiry = new Date(coupon.validUntil)
+  if (now > expiry) {
+    return { valid: false, error: 'Kode kupon sudah tidak berlaku' }
+  }
+
+  if (coupon.applicableTo !== 'all' && coupon.applicableTo !== memberType) {
+    return {
+      valid: false,
+      error: 'Kupon ini hanya berlaku untuk Member Kelas'
+    }
+  }
+
+  return { valid: true, coupon }
+}
+```
+
+---
+
+## LANGKAH 3 — Input Kupon di Form Pendaftaran (/daftar)
+
+Tambahkan field kupon di form pendaftaran yang sudah ada, ditempatkan setelah pilihan paket (Member Mandiri / Member Kelas):
+
+```
+Label: Punya kode kupon? (opsional)
+
+Input text (uppercase otomatis) plus tombol kecil "Terapkan"
+
+Jika kupon valid (muncul setelah klik Terapkan):
+Kupon AIGYPT26 diterapkan, Potongan Rp 51.000
+
+Jika kupon tidak valid:
+Tampilkan pesan error sesuai validasi, misal "Kupon ini hanya berlaku untuk Member Kelas"
+```
+
+### Logic Validasi Kupon (Client-side, untuk UX cepat)
+
+Saat tombol "Terapkan" diklik:
+1. Panggil fungsi validateCoupon(code, selectedMemberType) dari lib/coupons.ts
+2. Jika valid secara aturan umum, lakukan pengecekan tambahan ke server (karena pengecekan sudah pernah dipakai email ini atau belum butuh akses database) via API route baru api/coupons/check.ts
+3. Tampilkan hasil validasi (sukses dengan nominal diskon, atau pesan error spesifik)
+
+### API Route Baru, Cek Pemakaian Kupon
+
+```typescript
+// api/coupons/check.ts
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const { code, email } = req.body
+
+  if (!code || !email) {
+    return res.status(400).json({ valid: false, error: 'Data tidak lengkap' })
+  }
+
+  const { data: existingUsage } = await supabase
+    .from('coupon_usage')
+    .select('id')
+    .eq('coupon_code', code.toUpperCase())
+    .eq('email', email.toLowerCase())
+    .single()
+
+  if (existingUsage) {
+    return res.status(200).json({
+      valid: false,
+      error: 'Kupon ini sudah pernah kamu gunakan'
+    })
+  }
+
+  return res.status(200).json({ valid: true })
+}
+```
+
+### Update Logic Saat Form Disubmit
+
+Jika kupon diterapkan dan valid (lolos pengecekan client-side dan server-side):
+1. Hitung finalAmount = baseAmount dikurangi discountAmount
+2. Simpan coupon_code, discount_amount, dan final_amount ke tabel orders saat membuat order baru
+3. Catat penggunaan ke tabel coupon_usage (coupon_code, email, order_id, discount_amount)
+
+PENTING: Lakukan validasi kupon SEKALI LAGI di server (bukan hanya mengandalkan validasi client-side) sebelum menyimpan order, untuk mencegah manipulasi nominal dari sisi client. Validasi akhir ini sebaiknya terjadi di API route yang menangani pembuatan order (api/orders/create.ts atau sejenisnya sesuai struktur yang sudah ada untuk flow QRIS).
+
+---
+
+## LANGKAH 4 — Update Halaman Pembayaran QRIS (/daftar/pembayaran)
+
+Jika order memiliki kupon yang diterapkan, tampilkan rincian harga secara transparan:
+
+```
+Ringkasan Pembayaran:
+
+Harga Member Kelas        Rp [harga normal]
+Kupon AIGYPT26             - Rp 51.000
+Total yang harus dibayar  Rp [harga normal dikurangi 51.000]
+```
+
+Pastikan nominal yang ditampilkan besar dan jelas (sesuai catatan sebelumnya soal QRIS statis) adalah final_amount (setelah diskon), BUKAN harga normal, karena ini yang harus benar-benar ditransfer peserta.
+
+Update juga pesan konfirmasi WhatsApp yang dikirim peserta (dari implementasi sebelumnya) agar menyertakan info kupon jika digunakan:
+
+```typescript
+const confirmationMessage = `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 1.
+
+Nama: ${nama}
+Email: ${email}
+Paket: Member Kelas
+${couponCode ? `Kupon: ${couponCode} (-Rp ${discountAmount.toLocaleString('id-ID')})` : ''}
+Jumlah: Rp ${finalAmount.toLocaleString('id-ID')}
+Order ID: ${orderId}
+
+Mohon dikonfirmasi ya. Terima kasih!`
+```
+
+---
+
+## LANGKAH 5 — Update Admin Panel (/admin/orders)
+
+Pada tabel daftar pesanan, tampilkan informasi kupon jika ada:
+```
+Tambahkan kolom kecil "Kupon" di tabel orders yang menampilkan kode kupon
+(jika ada) atau strip jika tidak menggunakan kupon.
+
+Saat admin klik detail/expand pesanan, tampilkan rincian:
+Harga Normal: Rp [base amount]
+Diskon (AIGYPT26): -Rp 51.000
+Total Diterima: Rp [final amount]
+```
+
+Ini membantu admin saat verifikasi mutasi, admin tahu nominal yang seharusnya masuk adalah nominal setelah diskon, bukan harga normal.
+
+---
+
+## LANGKAH 6 — Promosikan Kupon di Landing Page (Opsional tapi Direkomendasikan)
+
+Tambahkan badge kecil di section Keanggotaan pada card "Member Kelas" untuk mempromosikan kupon:
+
+```
+Badge kecil di atas harga card Member Kelas:
+GUNAKAN KODE AIGYPT26, HEMAT RP 51.000
+
+Styling: pill kecil dengan background ungu gelap, border ungu,
+teks mono, posisi di atas nominal harga.
+```
+
+Tambahkan juga catatan kecil di bawah badge:
+```
+Berlaku hingga 6 Juli 2026 untuk pendaftaran Batch 1
+```
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Validasi kupon WAJIB dilakukan di server (bukan hanya client) sebelum order final dibuat, untuk mencegah manipulasi nominal
+2. Constraint UNIQUE di database (coupon_code, email) menjadi pengaman utama terhadap pemakaian ganda, jangan hanya mengandalkan pengecekan di kode aplikasi
+3. Tanggal kedaluwarsa kupon dibandingkan menggunakan timezone yang konsisten (WIB, UTC+7)
+4. Semua teks Bahasa Indonesia, panggilan "kamu"
+5. Pesan error kupon jelas dan spesifik (kupon tidak ditemukan, sudah kedaluwarsa, tidak berlaku untuk paket ini, atau sudah pernah dipakai), bukan pesan generik
+6. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Sistem kupon "AIGYPT26" terintegrasi penuh ke flow pendaftaran: peserta bisa memasukkan kode kupon di form, sistem memvalidasi (paket yang sesuai, belum kedaluwarsa, belum pernah dipakai email tersebut) baik di client maupun server, nominal di halaman QRIS otomatis terpotong Rp 51.000 dengan rincian transparan, dan admin bisa melihat informasi kupon di setiap pesanan untuk verifikasi pembayaran yang akurat.
