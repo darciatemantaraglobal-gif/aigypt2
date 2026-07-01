@@ -1,0 +1,361 @@
+# Migrasi API ke Vercel Serverless Functions
+
+## Konteks & Root Cause
+
+Website AIGYPT di-deploy di **Vercel** (`aigypt.vercel.app`). Vercel tidak mendukung Express server yang always-on. Akibatnya semua request ke `/api/*` return 404:
+- `/api/auth/me` → 404 (user selalu dianggap belum login)
+- `/api/coupons/check` → 404 (kupon selalu gagal)
+- `/api/qris/confirm` → 404 (konfirmasi pembayaran gagal)
+
+**Solusi:** Buat Vercel Serverless Functions di folder `api/` di root project. Vercel otomatis mendeteksi folder ini dan serve setiap file sebagai endpoint.
+
+---
+
+## Struktur Folder yang Dibuat
+
+```
+artifacts/aigypt/
+├── api/                          ← BARU, dibuat di sini
+│   ├── auth/
+│   │   └── me.ts                 ← handle GET /api/auth/me
+│   ├── coupons/
+│   │   └── check.ts              ← handle POST /api/coupons/check
+│   └── qris/
+│       └── confirm.ts            ← handle POST /api/qris/confirm
+├── src/
+│   └── ...
+└── vercel.json                   ← UPDATE routing
+```
+
+---
+
+## File 1 — Buat `artifacts/aigypt/api/auth/me.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { db, ordersTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
+import * as jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env["JWT_SECRET"] ?? "aigypt-secret-key";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const token = authHeader.slice(7);
+
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { orderId: string; email: string; memberType: string; batchNumber: number };
+
+    const orders = await db
+      .select()
+      .from(ordersTable)
+      .where(eq(ordersTable.orderId, payload.orderId))
+      .limit(1);
+
+    if (!orders.length) return res.status(404).json({ error: "Order tidak ditemukan" });
+
+    const order = orders[0];
+    if (!order) return res.status(404).json({ error: "Order tidak ditemukan" });
+
+    return res.json({
+      orderId: order.orderId,
+      name: order.name,
+      email: order.email,
+      memberType: order.memberType,
+      batchNumber: order.batchNumber,
+      status: order.status,
+      accessCode: order.accessCode ?? null,
+    });
+  } catch {
+    return res.status(401).json({ error: "Token tidak valid atau sudah expired" });
+  }
+}
+```
+
+---
+
+## File 2 — Buat `artifacts/aigypt/api/coupons/check.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+
+interface Coupon {
+  code: string;
+  discountAmount: number;
+  applicableTo: "kelas" | "mandiri" | "all";
+  validUntil: string;
+  description: string;
+}
+
+const ACTIVE_COUPONS: Coupon[] = [
+  {
+    code: "AIGYPT26",
+    discountAmount: 51000,
+    applicableTo: "kelas",
+    validUntil: "2026-07-15T23:59:59+07:00",
+    description: "Diskon spesial pendaftaran Batch 3",
+  },
+];
+
+function validateCoupon(code: string, memberType: "kelas" | "mandiri") {
+  const coupon = ACTIVE_COUPONS.find(
+    (c) => c.code.toUpperCase() === code.trim().toUpperCase()
+  );
+  if (!coupon) return { valid: false, error: "Kode kupon tidak ditemukan" };
+
+  const now = new Date();
+  const expiry = new Date(coupon.validUntil);
+  if (now > expiry) return { valid: false, error: "Kode kupon sudah tidak berlaku" };
+
+  if (coupon.applicableTo !== "all" && coupon.applicableTo !== memberType) {
+    return { valid: false, error: "Kupon ini hanya berlaku untuk Member Kelas" };
+  }
+
+  return { valid: true, coupon };
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ valid: false, error: "Method not allowed" });
+
+  const { code, email, memberType } = req.body as {
+    code?: string;
+    email?: string;
+    memberType?: string;
+  };
+
+  if (!code || !email || !memberType) {
+    return res.status(400).json({ valid: false, error: "Data tidak lengkap" });
+  }
+
+  const result = validateCoupon(code, memberType as "kelas" | "mandiri");
+  if (!result.valid) {
+    return res.json({ valid: false, error: result.error });
+  }
+
+  return res.json({ valid: true, coupon: result.coupon });
+}
+```
+
+> **Catatan:** Pengecekan duplikasi email (apakah email sudah pernah pakai kupon) dihapus sementara karena memerlukan DB connection yang kompleks di serverless. Validasi utama (kode valid, belum expired, paket sesuai) tetap berjalan normal.
+
+---
+
+## File 3 — Buat `artifacts/aigypt/api/qris/confirm.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { db, ordersTable, couponUsageTable } from "@workspace/db";
+import { eq, and } from "drizzle-orm";
+
+interface Coupon {
+  code: string;
+  discountAmount: number;
+  applicableTo: "kelas" | "mandiri" | "all";
+  validUntil: string;
+}
+
+const ACTIVE_COUPONS: Coupon[] = [
+  {
+    code: "AIGYPT26",
+    discountAmount: 51000,
+    applicableTo: "kelas",
+    validUntil: "2026-07-15T23:59:59+07:00",
+  },
+];
+
+const PRICE: Record<string, number> = {
+  mandiri: 200000,
+  kelas: 150000,
+};
+
+const BATCH_NUMBER = parseInt(process.env["BATCH_NUMBER"] ?? "3", 10);
+const FONNTE_TOKEN = process.env["FONNTE_TOKEN"] ?? "";
+const ADMIN_WA_NUMBER = process.env["ADMIN_WA_NUMBER"] ?? "";
+
+function generateOrderId(): string {
+  const ts = Date.now().toString().slice(-8);
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `AIGYPT-QRIS-${ts}-${rand}`;
+}
+
+function validateCoupon(code: string, memberType: "kelas" | "mandiri") {
+  const coupon = ACTIVE_COUPONS.find(
+    (c) => c.code.toUpperCase() === code.trim().toUpperCase()
+  );
+  if (!coupon) return { valid: false, error: "Kode kupon tidak ditemukan" };
+  const now = new Date();
+  if (now > new Date(coupon.validUntil)) return { valid: false, error: "Kode kupon sudah tidak berlaku" };
+  if (coupon.applicableTo !== "all" && coupon.applicableTo !== memberType) {
+    return { valid: false, error: "Kupon ini hanya berlaku untuk Member Kelas" };
+  }
+  return { valid: true, coupon };
+}
+
+async function sendWhatsApp(target: string, message: string): Promise<void> {
+  if (!FONNTE_TOKEN || !target) return;
+  try {
+    await fetch("https://api.fonnte.com/send", {
+      method: "POST",
+      headers: { Authorization: FONNTE_TOKEN, "Content-Type": "application/json" },
+      body: JSON.stringify({ target, message }),
+    });
+  } catch (err) {
+    console.error("[QRIS WA] Gagal kirim:", err);
+  }
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+  const { name, email, phone, memberType, couponCode } = req.body as {
+    name?: string; email?: string; phone?: string; memberType?: string; couponCode?: string;
+  };
+
+  if (!name || !email || !phone || !memberType) {
+    return res.status(400).json({ error: "Semua field wajib diisi" });
+  }
+
+  if (!["mandiri", "kelas"].includes(memberType)) {
+    return res.status(400).json({ error: "Tipe member tidak valid" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "Format email tidak valid" });
+  }
+
+  const grossAmount = PRICE[memberType] ?? 150000;
+  const normalizedEmail = email.toLowerCase();
+  const normalizedPhone = phone.replace(/^\+62/, "0").replace(/^62/, "0").replace(/\D/g, "");
+
+  let appliedCouponCode: string | null = null;
+  let discountAmount = 0;
+  let finalAmount = grossAmount;
+
+  if (couponCode?.trim()) {
+    const codeUpper = couponCode.trim().toUpperCase();
+    const couponResult = validateCoupon(codeUpper, memberType as "kelas" | "mandiri");
+    if (!couponResult.valid || !couponResult.coupon) {
+      return res.status(400).json({ error: couponResult.error ?? "Kode kupon tidak valid" });
+    }
+    appliedCouponCode = codeUpper;
+    discountAmount = couponResult.coupon.discountAmount;
+    finalAmount = Math.max(0, grossAmount - discountAmount);
+  }
+
+  const orderId = generateOrderId();
+  const memberLabel = memberType === "kelas" ? `Member Kelas - Batch ${BATCH_NUMBER}` : `Member Mandiri - Batch ${BATCH_NUMBER}`;
+
+  try {
+    await db.insert(ordersTable).values({
+      orderId,
+      name,
+      email: normalizedEmail,
+      phone: normalizedPhone,
+      memberType,
+      batchNumber: BATCH_NUMBER,
+      grossAmount,
+      couponCode: appliedCouponCode,
+      discountAmount,
+      finalAmount,
+      status: "pending_qris",
+      snapToken: null,
+    });
+
+    if (appliedCouponCode) {
+      try {
+        await db.insert(couponUsageTable).values({
+          couponCode: appliedCouponCode,
+          email: normalizedEmail,
+          orderId,
+          discountAmount,
+        });
+      } catch (err) {
+        console.error("[QRIS Coupon] Gagal catat usage:", err);
+      }
+    }
+
+    if (ADMIN_WA_NUMBER) {
+      const rpFinal = `Rp ${finalAmount.toLocaleString("id-ID")}`;
+      const couponInfo = appliedCouponCode
+        ? `\nKupon: ${appliedCouponCode} (-Rp ${discountAmount.toLocaleString("id-ID")})`
+        : "";
+      const adminMsg =
+        `[AIGYPT QRIS] Konfirmasi Pembayaran Baru\n\n` +
+        `Nama: ${name}\nEmail: ${email}\nWhatsApp: ${normalizedPhone}\n` +
+        `Paket: ${memberLabel}${couponInfo}\nNominal: ${rpFinal}\nOrder ID: ${orderId}\n\n` +
+        `Mohon verifikasi transfer QRIS Temantiket dan kirimkan kode akses ke peserta.`;
+      await sendWhatsApp(ADMIN_WA_NUMBER, adminMsg);
+    }
+
+    return res.json({ orderId, status: "pending_qris", finalAmount, discountAmount, couponCode: appliedCouponCode });
+  } catch (err) {
+    console.error("[QRIS] Error:", err);
+    return res.status(500).json({ error: "Gagal menyimpan konfirmasi. Coba lagi." });
+  }
+}
+```
+
+---
+
+## File 4 — Update `artifacts/aigypt/vercel.json`
+
+Cek apakah sudah ada file `vercel.json` di `artifacts/aigypt/`. Jika ada, update. Jika belum ada, buat baru dengan isi:
+
+```json
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+---
+
+## File 5 — Install `@vercel/node`
+
+Di terminal Replit, jalankan:
+
+```bash
+cd artifacts/aigypt && npm install @vercel/node --save-dev
+```
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- `artifacts/aigypt/src/pages/daftar.tsx` — tidak perlu diubah, sudah hit `/api/coupons/check`
+- `artifacts/aigypt/src/pages/pembayaran.tsx` — tidak perlu diubah, sudah hit `/api/qris/confirm`
+- `artifacts/aigypt/src/hooks/use-auth.ts` — tidak perlu diubah, sudah hit `/api/auth/me`
+- `artifacts/api-server/` — biarkan ada, tidak perlu dihapus
+
+---
+
+## Verifikasi
+
+1. Deploy ulang ke Vercel setelah perubahan
+2. Buka `/daftar` → apply kupon `AIGYPT26` → harus berhasil (tidak 404)
+3. Klik "Bayar via QRIS" → redirect ke `/daftar/pembayaran` dengan order ID
+4. Login dengan kode akses → `/api/auth/me` tidak lagi 404
