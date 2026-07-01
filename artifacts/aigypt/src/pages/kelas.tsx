@@ -508,7 +508,7 @@ export default function KelasPage() {
                 {available.length} KELAS
               </span>
             </div>
-            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
+            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
               {available.map((kelas) => (
                 <KelasCard key={kelas.id} kelas={kelas} onDetail={setModalKelas} />
               ))}
@@ -530,7 +530,7 @@ export default function KelasPage() {
                 {comingSoon.length} KELAS
               </span>
             </div>
-            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
+            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
               {comingSoon.map((kelas) => (
                 <KelasCard key={kelas.id} kelas={kelas} onDetail={setModalKelas} />
               ))}
@@ -553,7 +553,7 @@ export default function KelasPage() {
               </span>
             </div>
             {byPersona.length > 0 ? (
-              <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
+              <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
                 {byPersona.map((kelas) => (
                   <KelasCard key={kelas.id} kelas={kelas} onDetail={setModalKelas} />
                 ))}
