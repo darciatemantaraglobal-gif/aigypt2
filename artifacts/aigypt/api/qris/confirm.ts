@@ -1,6 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db, ordersTable, couponUsageTable } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { neon } from "@neondatabase/serverless";
 
 interface Coupon {
   code: string;
@@ -18,12 +17,8 @@ const ACTIVE_COUPONS: Coupon[] = [
   },
 ];
 
-const PRICE: Record<string, number> = {
-  mandiri: 200000,
-  kelas: 150000,
-};
-
-const BATCH_NUMBER = parseInt(process.env["BATCH_NUMBER"] ?? "3", 10);
+const PRICE: Record<string, number> = { mandiri: 200000, kelas: 150000 };
+const BATCH_NUMBER = 3;
 const FONNTE_TOKEN = process.env["FONNTE_TOKEN"] ?? "";
 const ADMIN_WA_NUMBER = process.env["ADMIN_WA_NUMBER"] ?? "";
 
@@ -34,16 +29,13 @@ function generateOrderId(): string {
 }
 
 function validateCoupon(code: string, memberType: "kelas" | "mandiri") {
-  const coupon = ACTIVE_COUPONS.find(
-    (c) => c.code.toUpperCase() === code.trim().toUpperCase()
-  );
-  if (!coupon) return { valid: false, error: "Kode kupon tidak ditemukan" };
-  const now = new Date();
-  if (now > new Date(coupon.validUntil)) return { valid: false, error: "Kode kupon sudah tidak berlaku" };
+  const coupon = ACTIVE_COUPONS.find((c) => c.code.toUpperCase() === code.trim().toUpperCase());
+  if (!coupon) return { valid: false as const, error: "Kode kupon tidak ditemukan" };
+  if (new Date() > new Date(coupon.validUntil)) return { valid: false as const, error: "Kode kupon sudah tidak berlaku" };
   if (coupon.applicableTo !== "all" && coupon.applicableTo !== memberType) {
-    return { valid: false, error: "Kupon ini hanya berlaku untuk Member Kelas" };
+    return { valid: false as const, error: "Kupon ini hanya berlaku untuk Member Kelas" };
   }
-  return { valid: true, coupon };
+  return { valid: true as const, coupon };
 }
 
 async function sendWhatsApp(target: string, message: string): Promise<void> {
@@ -55,15 +47,11 @@ async function sendWhatsApp(target: string, message: string): Promise<void> {
       body: JSON.stringify({ target, message }),
     });
   } catch (err) {
-    console.error("[QRIS WA] Gagal kirim:", err);
+    console.error("[WA] Gagal kirim:", err);
   }
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
   if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -74,13 +62,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!name || !email || !phone || !memberType) {
     return res.status(400).json({ error: "Semua field wajib diisi" });
   }
-
   if (!["mandiri", "kelas"].includes(memberType)) {
     return res.status(400).json({ error: "Tipe member tidak valid" });
   }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: "Format email tidak valid" });
   }
 
@@ -94,32 +79,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (couponCode?.trim()) {
     const codeUpper = couponCode.trim().toUpperCase();
-    const couponResult = validateCoupon(codeUpper, memberType as "kelas" | "mandiri");
-    if (!couponResult.valid || !couponResult.coupon) {
-      return res.status(400).json({ error: couponResult.error ?? "Kode kupon tidak valid" });
+    const result = validateCoupon(codeUpper, memberType as "kelas" | "mandiri");
+    if (!result.valid || !result.coupon) {
+      return res.status(400).json({ error: result.error ?? "Kode kupon tidak valid" });
     }
-
-    // Cek apakah email sudah pernah pakai kupon ini
-    try {
-      const alreadyUsed = await db
-        .select({ id: couponUsageTable.id })
-        .from(couponUsageTable)
-        .where(and(
-          eq(couponUsageTable.couponCode, codeUpper),
-          eq(couponUsageTable.email, normalizedEmail)
-        ))
-        .limit(1);
-
-      if (alreadyUsed.length > 0) {
-        return res.status(400).json({ error: "Kupon ini sudah pernah kamu gunakan" });
-      }
-    } catch (err) {
-      // DB unreachable — skip duplicate check, lanjut dengan kupon
-      console.warn("[QRIS] Gagal cek duplikasi kupon:", (err as Error)?.message);
-    }
-
     appliedCouponCode = codeUpper;
-    discountAmount = couponResult.coupon.discountAmount;
+    discountAmount = result.coupon.discountAmount;
     finalAmount = Math.max(0, grossAmount - discountAmount);
   }
 
@@ -129,31 +94,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     : `Member Mandiri - Batch ${BATCH_NUMBER}`;
 
   try {
-    await db.insert(ordersTable).values({
-      orderId,
-      name,
-      email: normalizedEmail,
-      phone: normalizedPhone,
-      memberType,
-      batchNumber: BATCH_NUMBER,
-      grossAmount,
-      couponCode: appliedCouponCode,
-      discountAmount,
-      finalAmount,
-      status: "pending_qris",
-      snapToken: null,
-    });
+    const sql = neon(process.env["DATABASE_URL"]!);
+
+    await sql`
+      INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, gross_amount, coupon_code, discount_amount, final_amount, status)
+      VALUES (${orderId}, ${name}, ${normalizedEmail}, ${normalizedPhone}, ${memberType}, ${BATCH_NUMBER}, ${grossAmount}, ${appliedCouponCode}, ${discountAmount}, ${finalAmount}, 'pending_qris')
+    `;
 
     if (appliedCouponCode) {
       try {
-        await db.insert(couponUsageTable).values({
-          couponCode: appliedCouponCode,
-          email: normalizedEmail,
-          orderId,
-          discountAmount,
-        });
+        await sql`
+          INSERT INTO coupon_usage (coupon_code, email, order_id, discount_amount)
+          VALUES (${appliedCouponCode}, ${normalizedEmail}, ${orderId}, ${discountAmount})
+        `;
       } catch (err) {
-        console.error("[QRIS Coupon] Gagal catat usage:", err);
+        console.error("[Coupon Usage] Gagal catat:", err);
       }
     }
 
@@ -162,17 +117,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const couponInfo = appliedCouponCode
         ? `\nKupon: ${appliedCouponCode} (-Rp ${discountAmount.toLocaleString("id-ID")})`
         : "";
-      const adminMsg =
-        `[AIGYPT QRIS] Konfirmasi Pembayaran Baru\n\n` +
-        `Nama: ${name}\nEmail: ${email}\nWhatsApp: ${normalizedPhone}\n` +
-        `Paket: ${memberLabel}${couponInfo}\nNominal: ${rpFinal}\nOrder ID: ${orderId}\n\n` +
-        `Mohon verifikasi transfer QRIS Temantiket dan kirimkan kode akses ke peserta.`;
-      await sendWhatsApp(ADMIN_WA_NUMBER, adminMsg);
+      await sendWhatsApp(
+        ADMIN_WA_NUMBER,
+        `[AIGYPT QRIS] Order Baru\n\nNama: ${name}\nEmail: ${email}\nWA: ${normalizedPhone}\nPaket: ${memberLabel}${couponInfo}\nNominal: ${rpFinal}\nOrder ID: ${orderId}\n\nMohon verifikasi dan kirim kode akses.`
+      );
     }
 
     return res.json({ orderId, status: "pending_qris", finalAmount, discountAmount, couponCode: appliedCouponCode });
   } catch (err) {
     console.error("[QRIS] Error:", err);
-    return res.status(500).json({ error: "Gagal menyimpan konfirmasi. Coba lagi." });
+    return res.status(500).json({ error: "Gagal menyimpan order. Coba lagi." });
   }
 }

@@ -1,10 +1,11 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db, accessCodesTable, membersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { neon } from "@neondatabase/serverless";
 import { SignJWT } from "jose";
 
 const SESSION_COOKIE = "aigypt_session";
 const EXPIRY_DAYS = 30;
+const PREVIEW_CODE = process.env["PREVIEW_CODE"]?.trim().toUpperCase();
+const MASTER_ACCESS_CODE = process.env["MASTER_ACCESS_CODE"]?.trim();
 
 const sessionSecretEnv = process.env["SESSION_SECRET"];
 if (!sessionSecretEnv) {
@@ -13,9 +14,6 @@ if (!sessionSecretEnv) {
 const SECRET = new TextEncoder().encode(
   sessionSecretEnv ?? "fallback-not-for-production"
 );
-
-const PREVIEW_CODE = process.env["PREVIEW_CODE"]?.trim().toUpperCase();
-const MASTER_ACCESS_CODE = process.env["MASTER_ACCESS_CODE"]?.trim();
 
 async function createSessionToken(payload: {
   email: string;
@@ -50,94 +48,76 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!email || !code) {
     return res.status(400).json({ error: "Email dan kode akses wajib diisi" });
   }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: "Format email tidak valid" });
   }
 
   const trimmedCode = code.trim();
   const upperCode = trimmedCode.toUpperCase();
 
-  // MASTER CODE — akses penuh, berkali-kali, tidak sentuh DB
+  // MASTER CODE
   if (MASTER_ACCESS_CODE && trimmedCode === MASTER_ACCESS_CODE) {
-    const token = await createSessionToken({
-      email: email.toLowerCase(),
-      memberType: "kelas",
-      batchNumber: 1,
-      name: "Admin",
-      isAdminMode: true,
-    });
+    const token = await createSessionToken({ email: email.toLowerCase(), memberType: "kelas", batchNumber: 1, name: "Admin", isAdminMode: true });
     res.setHeader("Set-Cookie", setCookieHeader(token));
     return res.json({ success: true, memberType: "kelas", batchNumber: 1, name: "Admin", isAdminMode: true });
   }
 
+  // PREVIEW CODE
   if (PREVIEW_CODE && upperCode === PREVIEW_CODE) {
-    const token = await createSessionToken({
-      email: email.toLowerCase(),
-      memberType: "kelas",
-      batchNumber: 1,
-      name: "Preview",
-    });
+    const token = await createSessionToken({ email: email.toLowerCase(), memberType: "kelas", batchNumber: 1, name: "Preview" });
     res.setHeader("Set-Cookie", setCookieHeader(token));
     return res.json({ success: true, memberType: "kelas", batchNumber: 1, name: "Preview" });
   }
 
-  const [accessCode] = await db
-    .select()
-    .from(accessCodesTable)
-    .where(eq(accessCodesTable.code, upperCode));
+  const sql = neon(process.env["DATABASE_URL"]!);
 
-  if (!accessCode) {
+  const accessCodes = await sql`
+    SELECT code, type, batch_number, is_used, used_by_email, expires_at
+    FROM access_codes WHERE code = ${upperCode} LIMIT 1
+  `;
+
+  if (!accessCodes.length) {
     return res.status(401).json({ error: "Kode akses tidak ditemukan" });
   }
 
-  if (accessCode.isUsed && accessCode.usedByEmail !== email.toLowerCase()) {
+  const accessCode = accessCodes[0]!;
+  const normalizedEmail = email.toLowerCase();
+
+  if (accessCode["is_used"] && accessCode["used_by_email"] !== normalizedEmail) {
     return res.status(401).json({ error: "Kode akses sudah digunakan oleh email lain" });
   }
-
-  if (accessCode.expiresAt && accessCode.expiresAt < new Date()) {
+  if (accessCode["expires_at"] && new Date(accessCode["expires_at"] as string) < new Date()) {
     return res.status(401).json({ error: "Kode akses sudah kadaluarsa" });
   }
 
-  const normalizedEmail = email.toLowerCase();
+  await sql`
+    UPDATE access_codes SET is_used = true, used_by_email = ${normalizedEmail}, used_at = NOW()
+    WHERE code = ${upperCode}
+  `;
 
-  await db
-    .update(accessCodesTable)
-    .set({ isUsed: true, usedByEmail: normalizedEmail, usedAt: new Date() })
-    .where(eq(accessCodesTable.code, upperCode));
+  await sql`
+    INSERT INTO members (email, access_code, member_type, batch_number, last_login)
+    VALUES (${normalizedEmail}, ${upperCode}, ${accessCode["type"]}, ${accessCode["batch_number"]}, NOW())
+    ON CONFLICT (email) DO UPDATE SET last_login = NOW()
+  `;
 
-  await db
-    .insert(membersTable)
-    .values({
-      email: normalizedEmail,
-      accessCode: upperCode,
-      memberType: accessCode.type,
-      batchNumber: accessCode.batchNumber,
-      lastLogin: new Date(),
-    })
-    .onConflictDoUpdate({
-      target: membersTable.email,
-      set: { lastLogin: new Date() },
-    });
-
-  const [member] = await db
-    .select()
-    .from(membersTable)
-    .where(eq(membersTable.email, normalizedEmail));
+  const members = await sql`
+    SELECT name FROM members WHERE email = ${normalizedEmail} LIMIT 1
+  `;
+  const memberName = (members[0]?.["name"] as string | null) ?? null;
 
   const token = await createSessionToken({
     email: normalizedEmail,
-    memberType: accessCode.type,
-    batchNumber: accessCode.batchNumber ?? null,
-    name: member?.name ?? null,
+    memberType: accessCode["type"] as string,
+    batchNumber: accessCode["batch_number"] as number ?? null,
+    name: memberName,
   });
 
   res.setHeader("Set-Cookie", setCookieHeader(token));
   return res.json({
     success: true,
-    memberType: accessCode.type,
-    batchNumber: accessCode.batchNumber ?? null,
-    name: member?.name ?? null,
+    memberType: accessCode["type"],
+    batchNumber: accessCode["batch_number"] ?? null,
+    name: memberName,
   });
 }

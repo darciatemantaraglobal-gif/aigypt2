@@ -1,10 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { db, membersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { neon } from "@neondatabase/serverless";
 import { jwtVerify } from "jose";
 
 const SESSION_COOKIE = "aigypt_session";
-const EXPIRY_DAYS = 30;
+const PREVIEW_CODE = process.env["PREVIEW_CODE"]?.trim().toUpperCase();
 
 const sessionSecretEnv = process.env["SESSION_SECRET"];
 if (!sessionSecretEnv) {
@@ -13,23 +12,6 @@ if (!sessionSecretEnv) {
 const SECRET = new TextEncoder().encode(
   sessionSecretEnv ?? "fallback-not-for-production"
 );
-
-const PREVIEW_CODE = process.env["PREVIEW_CODE"]?.trim().toUpperCase();
-
-async function verifySessionToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, SECRET);
-    return payload as {
-      email: string;
-      memberType: string;
-      batchNumber: number | null;
-      name: string | null;
-      isAdminMode?: boolean;
-    };
-  } catch {
-    return null;
-  }
-}
 
 function parseCookie(cookieHeader: string | undefined, name: string): string | undefined {
   if (!cookieHeader) return undefined;
@@ -46,19 +28,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
-  const cookieHeader = req.headers.cookie;
-  const token = parseCookie(cookieHeader, SESSION_COOKIE);
+  const token = parseCookie(req.headers.cookie, SESSION_COOKIE);
+  if (!token) return res.status(401).json({ error: "Tidak terautentikasi" });
 
-  if (!token) {
-    return res.status(401).json({ error: "Tidak terautentikasi" });
-  }
-
-  const payload = await verifySessionToken(token);
-  if (!payload) {
+  let payload: { email: string; memberType: string; batchNumber: number | null; name: string | null; isAdminMode?: boolean };
+  try {
+    const { payload: p } = await jwtVerify(token, SECRET);
+    payload = p as typeof payload;
+  } catch {
     return res.status(401).json({ error: "Sesi tidak valid atau sudah kadaluarsa" });
   }
 
-  // Admin mode atau preview mode — kembalikan dari JWT langsung tanpa sentuh DB
+  // Admin/preview — kembalikan dari JWT langsung
   if (payload.isAdminMode || PREVIEW_CODE) {
     return res.json({
       email: payload.email,
@@ -69,20 +50,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  const [member] = await db
-    .select()
-    .from(membersTable)
-    .where(eq(membersTable.email, payload.email));
+  const sql = neon(process.env["DATABASE_URL"]!);
+  const rows = await sql`
+    SELECT email, name, member_type, batch_number
+    FROM members WHERE email = ${payload.email} LIMIT 1
+  `;
 
-  if (!member) {
-    return res.status(401).json({ error: "Member tidak ditemukan" });
-  }
+  if (!rows.length) return res.status(401).json({ error: "Member tidak ditemukan" });
 
+  const member = rows[0]!;
   return res.json({
-    email: member.email,
-    name: member.name ?? null,
-    memberType: member.memberType,
-    batchNumber: member.batchNumber ?? null,
+    email: member["email"],
+    name: member["name"] ?? null,
+    memberType: member["member_type"],
+    batchNumber: member["batch_number"] ?? null,
     isAdminMode: false,
   });
 }

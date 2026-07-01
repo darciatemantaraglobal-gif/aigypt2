@@ -1,0 +1,10 @@
+{
+  "name": "aigypt-api",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "drizzle-orm": "^0.41.0",
+    "jose": "^6.2.3"
+  }
+}
