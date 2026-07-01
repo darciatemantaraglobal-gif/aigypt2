@@ -130,52 +130,23 @@ export default function Daftar() {
     return true;
   };
 
-  const handleApplyCoupon = async () => {
+  const handleApplyCoupon = () => {
     const code = couponInput.trim().toUpperCase();
     if (!code) return;
 
     setCouponError("");
     setCouponLoading(true);
 
-    const clientValidation = validateCoupon(code, selectedType);
-    if (!clientValidation.valid) {
-      setCouponError(clientValidation.error ?? "Kode kupon tidak valid");
+    const result = validateCoupon(code, selectedType);
+    if (!result.valid || !result.coupon) {
+      setCouponError(result.error ?? "Kode kupon tidak valid");
       setCouponLoading(false);
       return;
     }
 
-    if (!form.email.trim()) {
-      setCouponError("Isi email terlebih dahulu sebelum menerapkan kupon");
-      setCouponLoading(false);
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      setCouponError("Format email tidak valid");
-      setCouponLoading(false);
-      return;
-    }
-
-    try {
-      const apiBase = import.meta.env.VITE_API_URL ?? "/api";
-      const res = await fetch(`${apiBase}/coupons/check`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, email: form.email.trim().toLowerCase(), memberType: selectedType }),
-      });
-      const data = await res.json() as { valid: boolean; error?: string; coupon?: { discountAmount: number } };
-      if (!data.valid) {
-        setCouponError(data.error ?? "Kode kupon tidak valid");
-      } else {
-        setAppliedCoupon({ code, discountAmount: data.coupon?.discountAmount ?? clientValidation.coupon!.discountAmount });
-        setCouponError("");
-      }
-    } catch {
-      setCouponError("Gagal memvalidasi kupon. Coba lagi.");
-    } finally {
-      setCouponLoading(false);
-    }
+    setAppliedCoupon({ code, discountAmount: result.coupon.discountAmount });
+    setCouponError("");
+    setCouponLoading(false);
   };
 
   const handleQris = () => {

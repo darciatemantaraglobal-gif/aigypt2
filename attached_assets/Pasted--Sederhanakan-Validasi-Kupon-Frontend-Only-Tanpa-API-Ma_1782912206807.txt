@@ -1,0 +1,106 @@
+# Sederhanakan Validasi Kupon — Frontend Only, Tanpa API
+
+## Masalah
+
+Flow validasi kupon sekarang hit `/api/coupons/check` di server. Kalau server bermasalah → kupon selalu gagal. Padahal kupon `AIGYPT26` itu cuma string hardcoded dengan diskon Rp 51.000 — tidak butuh database, tidak butuh server.
+
+## Solusi
+
+Hapus API call di `handleApplyCoupon`, ganti dengan validasi langsung dari `coupons.ts` yang sudah ada di frontend.
+
+---
+
+## File yang Diubah: `artifacts/aigypt/src/pages/daftar.tsx`
+
+Cari fungsi `handleApplyCoupon`. Sekarang isinya seperti ini (ada `fetch` ke server):
+
+```tsx
+const handleApplyCoupon = async () => {
+  const code = couponInput.trim().toUpperCase();
+  if (!code) return;
+
+  setCouponError("");
+  setCouponLoading(true);
+
+  const clientValidation = validateCoupon(code, selectedType);
+  if (!clientValidation.valid) {
+    setCouponError(clientValidation.error ?? "Kode kupon tidak valid");
+    setCouponLoading(false);
+    return;
+  }
+
+  if (!form.email.trim()) {
+    setCouponError("Isi email terlebih dahulu sebelum menerapkan kupon");
+    setCouponLoading(false);
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.email)) {
+    setCouponError("Format email tidak valid");
+    setCouponLoading(false);
+    return;
+  }
+
+  try {
+    const apiBase = import.meta.env.VITE_API_URL ?? "/api";
+    const res = await fetch(`${apiBase}/coupons/check`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, email: form.email.trim().toLowerCase(), memberType: selectedType }),
+    });
+    const data = await res.json() as { valid: boolean; error?: string; coupon?: { discountAmount: number } };
+    if (!data.valid) {
+      setCouponError(data.error ?? "Kode kupon tidak valid");
+    } else {
+      setAppliedCoupon({ code, discountAmount: data.coupon?.discountAmount ?? clientValidation.coupon!.discountAmount });
+      setCouponError("");
+    }
+  } catch {
+    setCouponError("Gagal memvalidasi kupon. Coba lagi.");
+  } finally {
+    setCouponLoading(false);
+  }
+};
+```
+
+**Ganti seluruh fungsi tersebut** dengan versi berikut yang tidak hit server sama sekali:
+
+```tsx
+const handleApplyCoupon = () => {
+  const code = couponInput.trim().toUpperCase();
+  if (!code) return;
+
+  setCouponError("");
+  setCouponLoading(true);
+
+  const result = validateCoupon(code, selectedType);
+  if (!result.valid || !result.coupon) {
+    setCouponError(result.error ?? "Kode kupon tidak valid");
+    setCouponLoading(false);
+    return;
+  }
+
+  setAppliedCoupon({ code, discountAmount: result.coupon.discountAmount });
+  setCouponError("");
+  setCouponLoading(false);
+};
+```
+
+Fungsi tidak perlu `async` lagi karena tidak ada network request.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Import `validateCoupon` dari `@/lib/coupons` — tetap dipakai
+- State `couponInput`, `couponLoading`, `couponError`, `appliedCoupon` — tidak berubah
+- Tampilan UI kupon — tidak berubah
+- File lain apapun
+- `handleQris` — tidak disentuh
+
+---
+
+## Hasil Akhir
+
+User ketik `AIGYPT26` → klik Terapkan → harga langsung berubah dari Rp 150.000 ke Rp 99.000. Tidak ada network request, tidak bisa gagal karena server.
