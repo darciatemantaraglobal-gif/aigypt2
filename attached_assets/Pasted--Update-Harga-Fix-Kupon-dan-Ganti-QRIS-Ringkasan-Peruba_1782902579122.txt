@@ -1,0 +1,207 @@
+# Update Harga, Fix Kupon, dan Ganti QRIS
+
+## Ringkasan Perubahan
+
+1. Harga baru: **Member Kelas Rp 150.000** | **Member Mandiri Rp 200.000**
+2. Kupon `AIGYPT26`: diskon tetap **Rp 51.000** (harga kelas jadi **Rp 99.000** setelah diskon)
+3. Perpanjang masa berlaku kupon hingga **15 Juli 2026**
+4. Ganti file QRIS ke `QRIXS.png`
+
+---
+
+## File 1: `artifacts/aigypt/src/lib/coupons.ts`
+
+Ganti seluruh isi file dengan:
+
+```ts
+export interface Coupon {
+  code: string;
+  discountAmount: number;
+  applicableTo: "kelas" | "mandiri" | "all";
+  validUntil: string;
+  description: string;
+}
+
+export const ACTIVE_COUPONS: Coupon[] = [
+  {
+    code: "AIGYPT26",
+    discountAmount: 51000,
+    applicableTo: "kelas",
+    validUntil: "2026-07-15T23:59:59+07:00",
+    description: "Diskon spesial pendaftaran Batch 1",
+  },
+];
+
+export function validateCoupon(
+  code: string,
+  memberType: "kelas" | "mandiri"
+): { valid: boolean; coupon?: Coupon; error?: string } {
+  const coupon = ACTIVE_COUPONS.find(
+    (c) => c.code.toUpperCase() === code.trim().toUpperCase()
+  );
+
+  if (!coupon) {
+    return { valid: false, error: "Kode kupon tidak ditemukan" };
+  }
+
+  const now = new Date();
+  const expiry = new Date(coupon.validUntil);
+  if (now > expiry) {
+    return { valid: false, error: "Kode kupon sudah tidak berlaku" };
+  }
+
+  if (coupon.applicableTo !== "all" && coupon.applicableTo !== memberType) {
+    return {
+      valid: false,
+      error: "Kupon ini hanya berlaku untuk Member Kelas",
+    };
+  }
+
+  return { valid: true, coupon };
+}
+```
+
+**Yang berubah:** `validUntil` diperpanjang dari `2026-07-06` → `2026-07-15`.
+
+---
+
+## File 2: `artifacts/aigypt/src/pages/pembayaran.tsx`
+
+### 2a. Update konstanta harga
+
+Cari:
+```ts
+const PRICE: Record<string, number> = {
+  mandiri: 250000,
+  kelas: 350000,
+};
+```
+
+Ganti dengan:
+```ts
+const PRICE: Record<string, number> = {
+  mandiri: 200000,
+  kelas: 150000,
+};
+```
+
+### 2b. Update fallback harga
+
+Cari semua kemunculan `?? 350000` di file ini (ada 1 kemunculan):
+```ts
+const basePrice = PRICE[params.type] ?? 350000;
+```
+Ganti dengan:
+```ts
+const basePrice = PRICE[params.type] ?? 150000;
+```
+
+### 2c. Ganti file QRIS
+
+Cari baris import QRIS di bagian atas file:
+```ts
+import qrisImg from "@/assets/qris-payment.png";
+```
+
+Ganti dengan:
+```ts
+import qrisImg from "@/assets/QRIXS.png";
+```
+
+---
+
+## File 3: `artifacts/aigypt/src/pages/daftar.tsx`
+
+### 3a. Update konstanta harga
+
+Cari (ada di dalam fungsi komponen):
+```ts
+const PRICES: Record<string, number> = { mandiri: 250000, kelas: 350000 };
+```
+
+Ganti dengan:
+```ts
+const PRICES: Record<string, number> = { mandiri: 200000, kelas: 150000 };
+```
+
+### 3b. Update fallback harga (ada 2 kemunculan)
+
+Cari semua `?? 350000` di file ini dan ganti menjadi `?? 150000`.
+
+### 3c. Update teks promo kupon di kartu Kelas
+
+Cari:
+```tsx
+GUNAKAN KODE AIGYPT26 · HEMAT Rp 51.000
+```
+
+Teks ini muncul **2 kali** di file ini. Biarkan teksnya sama (tidak perlu diubah), diskon masih 51.000.
+
+---
+
+## File 4: `artifacts/aigypt/src/pages/home.tsx`
+
+### 4a. Update teks promo kupon
+
+Cari:
+```tsx
+GUNAKAN KODE AIGYPT26 · HEMAT Rp 51.000
+```
+
+Biarkan sama, tidak perlu diubah.
+
+### 4b. Update teks masa berlaku kupon
+
+Cari:
+```tsx
+Berlaku hingga 6 Juli 2026 untuk pendaftaran Batch 1
+```
+
+Ganti dengan:
+```tsx
+Berlaku hingga 15 Juli 2026 untuk pendaftaran Batch 1
+```
+
+---
+
+## File 5: `artifacts/aigypt/src/assets/` — Upload QRIS Baru
+
+Upload file `QRIXS.png` ke folder `artifacts/aigypt/src/assets/QRIXS.png`.
+
+File ini menggantikan gambar QRIS lama. Import di `pembayaran.tsx` sudah diupdate di langkah 2c di atas untuk mengarah ke file baru ini.
+
+**Jangan hapus** `qris-payment.png` yang lama untuk jaga-jaga.
+
+---
+
+## File 6: `artifacts/api-server/src/lib/coupons.ts` *(jika ada)*
+
+Jika ada file `coupons.ts` di dalam `api-server/src/lib/`, terapkan perubahan yang sama seperti File 1 — perpanjang `validUntil` ke `2026-07-15T23:59:59+07:00`.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Logic `validateCoupon` tidak berubah
+- Semua field lain di QRIS card (NMID, nama merchant, dll) tidak berubah
+- Flow pembayaran, submit order, dan konfirmasi tidak berubah
+- File lain di luar yang disebutkan
+
+---
+
+## Ringkasan Harga Setelah Update
+
+| Paket | Harga Normal | Dengan Kupon AIGYPT26 |
+|---|---|---|
+| Member Kelas | Rp 150.000 | Rp 99.000 |
+| Member Mandiri | Rp 200.000 | — (kupon tidak berlaku) |
+
+---
+
+## Verifikasi
+
+1. Buka `/daftar` → kartu Kelas tampilkan **Rp 150.000**, Mandiri **Rp 200.000**
+2. Masukkan kupon `AIGYPT26` pada paket Kelas → harga berubah jadi **Rp 99.000**
+3. Masukkan kupon `AIGYPT26` pada paket Mandiri → muncul error "Kupon ini hanya berlaku untuk Member Kelas"
+4. Lanjut ke halaman pembayaran → gambar QRIS tampil (gambar baru)
+5. Nominal yang ditampilkan sesuai harga yang dipilih
