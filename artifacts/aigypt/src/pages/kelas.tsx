@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { Navbar } from "@/components/Navbar";
@@ -11,11 +11,8 @@ function KelasGradientCover({
   size = "card",
 }: {
   kelas: KelasItem;
-  size?: "card" | "hero" | "modal";
+  size?: "card" | "modal";
 }) {
-  const isHero = size === "hero";
-  const isModal = size === "modal";
-
   return (
     <div
       className="absolute inset-0 overflow-hidden"
@@ -33,51 +30,28 @@ function KelasGradientCover({
       <div
         className="absolute"
         style={{
-          bottom: isHero ? "20%" : "10%",
+          bottom: "10%",
           left: "50%",
           transform: "translateX(-50%)",
-          width: isHero ? "80%" : "70%",
-          height: isHero ? "60%" : "50%",
+          width: "70%",
+          height: "50%",
           background: `radial-gradient(ellipse at center, ${kelas.accentColor}22 0%, transparent 70%)`,
           filter: "blur(24px)",
         }}
       />
-      {/* Extra ambient softening layer for hero (counters solid gradient) */}
-      {isHero && (
-        <>
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(to bottom, rgba(6,6,8,0.45) 0%, transparent 50%)",
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              top: "10%",
-              right: "15%",
-              width: "45%",
-              height: "55%",
-              background: `radial-gradient(ellipse at center, ${kelas.accentColor}18 0%, transparent 70%)`,
-              filter: "blur(48px)",
-            }}
-          />
-        </>
-      )}
-      {/* Icon — small and subtle for hero, decorative for card/modal */}
+      {/* Decorative icon */}
       <div
         className="absolute"
         style={{
-          top: isHero ? "18%" : "22%",
-          right: isHero ? "12%" : "auto",
-          left: isHero ? "auto" : "50%",
-          transform: isHero ? "none" : "translate(-50%, -50%)",
-          opacity: isHero ? 0.3 : 0.2,
+          top: size === "modal" ? "22%" : "18%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          opacity: 0.18,
         }}
       >
         <svg
-          width={isHero ? 20 : isModal ? 120 : 80}
-          height={isHero ? 20 : isModal ? 120 : 80}
+          width={size === "modal" ? 120 : 72}
+          height={size === "modal" ? 120 : 72}
           viewBox="0 0 24 24"
           fill="none"
           stroke={kelas.accentColor}
@@ -93,14 +67,14 @@ function KelasGradientCover({
         className="absolute bottom-0 left-0 right-0"
         style={{
           height: "65%",
-          background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%)",
         }}
       />
     </div>
   );
 }
 
-// ─── Class Card ───────────────────────────────────────────────────────────────
+// ─── Kelas Card (Portrait — Komik Style) ──────────────────────────────────────
 
 function KelasCard({
   kelas,
@@ -110,58 +84,43 @@ function KelasCard({
   onDetail: (k: KelasItem) => void;
 }) {
   const [hovered, setHovered] = useState(false);
-  const [tapExpanded, setTapExpanded] = useState(false);
   const [, setLocation] = useLocation();
-  const isAvailable = kelas.status === "available";
-
-  // On touch devices, first tap shows the overlay; second tap or explicit button navigates
-  const handleClick = () => {
-    if (window.matchMedia("(hover: none)").matches) {
-      // Touch device: toggle detail overlay so buttons are accessible
-      setTapExpanded((prev) => !prev);
-    } else {
-      // Pointer device: navigate directly (hover overlay already shows buttons)
-      if (isAvailable) {
-        setLocation(`/kelas/${kelas.id}`);
-      } else {
-        onDetail(kelas);
-      }
-    }
-  };
-
-  const showOverlay = hovered || tapExpanded;
+  const isAvailable = kelas.status === "available" || kelas.status === "new";
 
   return (
     <motion.div
-      className="relative flex-shrink-0 cursor-pointer select-none"
-      style={{ width: "clamp(180px, 22vw, 260px)", aspectRatio: "2/3" }}
-      whileHover={{ scale: 1.04, y: -6, zIndex: 10 }}
-      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      className="relative cursor-pointer select-none group"
+      style={{ aspectRatio: "2/3" }}
+      whileHover={{ scale: 1.03, y: -4, zIndex: 10 }}
+      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      onClick={handleClick}
+      onClick={() => {
+        if (isAvailable) setLocation(`/kelas/${kelas.id}`);
+        else onDetail(kelas);
+      }}
     >
       {/* Cover */}
       <div
         className="relative w-full h-full overflow-hidden"
         style={{
-          borderRadius: "12px",
+          borderRadius: "10px",
           border: "1px solid rgba(255,255,255,0.06)",
           boxShadow: hovered
-            ? `0px 16px 32px rgba(0,0,0,0.5), 0 0 0 1px ${kelas.accentColor}33`
-            : "0px 4px 12px rgba(0,0,0,0.3)",
-          transition: "box-shadow 0.25s ease",
+            ? `0px 20px 40px rgba(0,0,0,0.6), 0 0 0 1px ${kelas.accentColor}44`
+            : "0px 4px 16px rgba(0,0,0,0.4)",
+          transition: "box-shadow 0.22s ease",
         }}
       >
         <KelasGradientCover kelas={kelas} size="card" />
 
         {/* Status badge */}
-        <div className="absolute top-3 left-3 z-10">
+        <div className="absolute top-2.5 left-2.5 z-10">
           {kelas.status === "available" && (
             <span
-              className="font-mono text-[10px] tracking-widest px-2 py-0.5 rounded-full"
+              className="font-mono text-[9px] tracking-widest px-2 py-0.5 rounded-full"
               style={{
-                background: "rgba(124,58,237,0.8)",
+                background: "rgba(124,58,237,0.85)",
                 color: "#FAFAFA",
                 border: "1px solid rgba(168,85,247,0.5)",
               }}
@@ -171,64 +130,52 @@ function KelasCard({
           )}
           {kelas.status === "new" && (
             <span
-              className="font-mono text-[10px] tracking-widest px-2 py-0.5 rounded-full flex items-center gap-1"
+              className="font-mono text-[9px] tracking-widest px-2 py-0.5 rounded-full flex items-center gap-1"
               style={{
                 background: "rgba(52,211,153,0.2)",
                 color: "#34D399",
                 border: "1px solid rgba(52,211,153,0.4)",
               }}
             >
-              <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse"
-                style={{ background: "#34D399" }}
-              />
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#34D399" }} />
               BARU
             </span>
           )}
           {kelas.status === "coming-soon" && (
             <span
-              className="font-mono text-[10px] tracking-widest px-2 py-0.5 rounded-full"
+              className="font-mono text-[9px] tracking-widest px-2 py-0.5 rounded-full"
               style={{
                 background: "rgba(30,30,46,0.9)",
-                color: "#71717A",
-                border: "1px solid rgba(255,255,255,0.08)",
+                color: "#52525B",
+                border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
-              SEGERA HADIR
+              SEGERA
             </span>
           )}
         </div>
 
-        {/* Level badge */}
-        <div className="absolute top-3 right-3 z-10">
+        {/* Level badge top-right */}
+        <div className="absolute top-2.5 right-2.5 z-10">
           <span
-            className="font-mono text-[10px] tracking-widest px-2 py-0.5 rounded-full"
+            className="font-mono text-[9px] tracking-widest px-2 py-0.5 rounded-full"
             style={{
-              background: "rgba(0,0,0,0.6)",
-              color: "#A1A1AA",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(0,0,0,0.55)",
+              color: "#71717A",
+              border: "1px solid rgba(255,255,255,0.07)",
             }}
           >
             {kelas.level}
           </span>
         </div>
 
-        {/* Coming-soon lock overlay */}
+        {/* Coming-soon lock */}
         {kelas.status === "coming-soon" && (
           <div
             className="absolute inset-0 z-10 flex items-center justify-center"
-            style={{ background: "rgba(0,0,0,0.35)" }}
+            style={{ background: "rgba(0,0,0,0.32)" }}
           >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(255,255,255,0.25)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0110 0v4" />
             </svg>
@@ -238,87 +185,64 @@ function KelasCard({
         {/* Bottom info */}
         <div className="absolute bottom-0 left-0 right-0 z-10 p-3">
           <p
-            className="font-display font-semibold text-white leading-tight text-sm mb-1"
-            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.8)" }}
+            className="font-display font-semibold text-white leading-tight mb-1"
+            style={{ fontSize: "0.8rem", textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}
           >
             {kelas.title}
           </p>
-          <p className="font-mono text-[10px]" style={{ color: "#71717A" }}>
+          <p className="font-mono text-[9px]" style={{ color: "#52525B" }}>
             {kelas.sesiCount} SESI · {kelas.duration.replace("/sesi", "/SESI")}
           </p>
         </div>
 
-        {/* Hover / tap overlay */}
+        {/* Hover overlay */}
         <AnimatePresence>
-          {showOverlay && (
+          {hovered && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="absolute inset-0 z-20 flex flex-col justify-end p-4"
+              transition={{ duration: 0.15 }}
+              className="absolute inset-0 z-20 flex flex-col justify-end p-3"
               style={{
-                background:
-                  "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%)",
+                background: "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.1) 100%)",
               }}
             >
-              <p className="text-xs leading-relaxed mb-3" style={{ color: "#D4D4D8" }}>
+              <p className="text-[11px] leading-relaxed mb-3" style={{ color: "#D4D4D8" }}>
                 {kelas.tagline}
               </p>
-              <div className="flex gap-2">
-                {isAvailable ? (
-                  <>
-                    <button
-                      className="flex-1 flex items-center justify-center gap-1.5 text-sm font-medium text-white transition-colors"
-                      style={{ background: "#7C3AED", borderRadius: "8px", padding: "8px 12px", minHeight: "36px", boxShadow: "0px 2px 4px rgba(0,0,0,0.2)" }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setLocation(`/kelas/${kelas.id}`);
-                      }}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M5 3l14 9-14 9V3z" />
-                      </svg>
-                      Mulai
-                    </button>
-                    <button
-                      className="px-3 text-sm font-normal transition-colors"
-                      style={{
-                        background: "rgba(255,255,255,0.1)",
-                        color: "#FAFAFA",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        borderRadius: "8px",
-                        padding: "8px 12px",
-                        minHeight: "36px",
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDetail(kelas);
-                      }}
-                    >
-                      Detail
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className="flex-1 text-sm font-normal transition-colors"
-                    style={{
-                      background: "rgba(255,255,255,0.08)",
-                      color: "#A1A1AA",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "8px",
-                      padding: "8px 12px",
-                      minHeight: "36px",
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDetail(kelas);
-                    }}
-                  >
-                    Beri Tahu Saya
-                  </button>
-                )}
-              </div>
+              {isAvailable ? (
+                <button
+                  className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-white"
+                  style={{
+                    background: "#7C3AED",
+                    borderRadius: "7px",
+                    padding: "8px 10px",
+                    minHeight: "34px",
+                  }}
+                  onClick={(e) => { e.stopPropagation(); setLocation(`/kelas/${kelas.id}`); }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M5 3l14 9-14 9V3z" />
+                  </svg>
+                  Mulai
+                </button>
+              ) : (
+                <button
+                  className="w-full text-xs font-normal"
+                  style={{
+                    background: "rgba(255,255,255,0.07)",
+                    color: "#71717A",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: "7px",
+                    padding: "8px 10px",
+                    minHeight: "34px",
+                  }}
+                  onClick={(e) => { e.stopPropagation(); onDetail(kelas); }}
+                >
+                  Beri Tahu Saya
+                </button>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -327,145 +251,11 @@ function KelasCard({
   );
 }
 
-// ─── Horizontal Row ───────────────────────────────────────────────────────────
-
-function KelasRow({
-  title,
-  items,
-  onDetail,
-}: {
-  title: string;
-  items: KelasItem[];
-  onDetail: (k: KelasItem) => void;
-}) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isHoveringRow, setIsHoveringRow] = useState(false);
-
-  const updateArrows = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 8);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
-  }, []);
-
-  useEffect(() => {
-    updateArrows();
-  }, [updateArrows]);
-
-  const scroll = (dir: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const amount = el.clientWidth * 0.7;
-    el.scrollBy({ left: dir === "right" ? amount : -amount, behavior: "smooth" });
-  };
-
-  if (items.length === 0) return null;
-
-  return (
-    <div
-      className="relative"
-      onMouseEnter={() => setIsHoveringRow(true)}
-      onMouseLeave={() => setIsHoveringRow(false)}
-    >
-      <p
-        className="font-display font-semibold text-white mb-4 px-6 sm:px-10"
-        style={{ fontSize: "1.05rem" }}
-      >
-        {title}
-      </p>
-
-      <div className="relative">
-        {/* Left arrow */}
-        <AnimatePresence>
-          {isHoveringRow && canScrollLeft && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="absolute left-0 top-0 bottom-0 z-20 flex items-center justify-center w-12"
-              style={{ background: "linear-gradient(to right, rgba(6,6,8,0.9), transparent)" }}
-              onClick={() => scroll("left")}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FAFAFA"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </motion.button>
-          )}
-        </AnimatePresence>
-
-        {/* Right arrow */}
-        <AnimatePresence>
-          {isHoveringRow && canScrollRight && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="absolute right-0 top-0 bottom-0 z-20 flex items-center justify-center w-12"
-              style={{ background: "linear-gradient(to left, rgba(6,6,8,0.9), transparent)" }}
-              onClick={() => scroll("right")}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#FAFAFA"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </motion.button>
-          )}
-        </AnimatePresence>
-
-        {/* Scroll container */}
-        <div
-          ref={scrollRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth"
-          style={{
-            scrollbarWidth: "none",
-            paddingLeft: "clamp(1.5rem, 2.5vw, 2.5rem)",
-            paddingRight: "clamp(1.5rem, 2.5vw, 2.5rem)",
-          }}
-          onScroll={updateArrows}
-        >
-          {items.map((kelas) => (
-            <KelasCard key={kelas.id} kelas={kelas} onDetail={onDetail} />
-          ))}
-          {/* Trailing spacer to peek next */}
-          <div className="flex-shrink-0 w-4" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Detail Modal ─────────────────────────────────────────────────────────────
 
-function DetailModal({
-  kelas,
-  onClose,
-}: {
-  kelas: KelasItem;
-  onClose: () => void;
-}) {
+function DetailModal({ kelas, onClose }: { kelas: KelasItem; onClose: () => void }) {
   const [, setLocation] = useLocation();
-  const isAvailable = kelas.status === "available";
+  const isAvailable = kelas.status === "available" || kelas.status === "new";
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -481,14 +271,11 @@ function DetailModal({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0"
         style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(12px)" }}
         onClick={onClose}
       />
-
-      {/* Modal panel — full-screen on mobile, card on desktop */}
       <motion.div
         className="relative w-full sm:max-w-lg overflow-hidden"
         style={{
@@ -498,41 +285,25 @@ function DetailModal({
           boxShadow: "0px 16px 32px rgba(0,0,0,0.5)",
           maxHeight: "92vh",
           overflowY: "auto",
-          borderBottomLeftRadius: "12px",
-          borderBottomRightRadius: "12px",
         }}
         initial={{ opacity: 0, scale: 0.94, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 8 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Cover */}
         <div className="relative w-full" style={{ height: "200px" }}>
           <KelasGradientCover kelas={kelas} size="modal" />
           <div
             className="absolute inset-0 flex items-end p-6"
-            style={{
-              background: "linear-gradient(to top, rgba(16,16,24,1) 0%, transparent 60%)",
-            }}
+            style={{ background: "linear-gradient(to top, rgba(16,16,24,1) 0%, transparent 60%)" }}
           >
-            <div>
-              <span
-                className="font-mono text-xs tracking-widest"
-                style={{ color: kelas.accentColor }}
-              >
-                {kelas.status === "available" ? "TERSEDIA" : "SEGERA HADIR"}
-              </span>
-            </div>
+            <span className="font-mono text-xs tracking-widest" style={{ color: kelas.accentColor }}>
+              {kelas.status === "available" ? "TERSEDIA" : "SEGERA HADIR"}
+            </span>
           </div>
-          {/* Close */}
           <button
-            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center transition-colors"
-            style={{
-              background: "rgba(255,255,255,0.1)",
-              border: "0px solid transparent",
-              borderRadius: "14px",
-              color: "#A1A1AA",
-            }}
+            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center"
+            style={{ background: "rgba(255,255,255,0.1)", borderRadius: "14px", color: "#A1A1AA" }}
             onClick={onClose}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -541,12 +312,8 @@ function DetailModal({
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6">
-          <h2
-            className="font-display font-semibold text-white leading-tight mb-2"
-            style={{ fontSize: "1.25rem" }}
-          >
+          <h2 className="font-display font-semibold text-white leading-tight mb-2" style={{ fontSize: "1.25rem" }}>
             {kelas.title}
           </h2>
           <p className="font-mono text-xs mb-4" style={{ color: "#52525B" }}>
@@ -555,29 +322,14 @@ function DetailModal({
           <p className="text-sm leading-relaxed mb-6" style={{ color: "#A1A1AA" }}>
             {kelas.description}
           </p>
-
-          {/* What you learn */}
           <div className="mb-6">
-            <p
-              className="font-mono text-xs tracking-widest mb-3"
-              style={{ color: "#52525B", letterSpacing: "0.12em" }}
-            >
+            <p className="font-mono text-xs tracking-widest mb-3" style={{ color: "#52525B", letterSpacing: "0.12em" }}>
               YANG AKAN KAMU PELAJARI
             </p>
             <ul className="space-y-2">
               {kelas.whatYouLearn.map((item, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm" style={{ color: "#D4D4D8" }}>
-                  <svg
-                    className="flex-shrink-0 mt-0.5"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={kelas.accentColor}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+                  <svg className="flex-shrink-0 mt-0.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={kelas.accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
                   {item}
@@ -585,20 +337,10 @@ function DetailModal({
               ))}
             </ul>
           </div>
-
-          {/* Actions */}
           {isAvailable ? (
             <button
-              className="w-full text-base font-medium text-white transition-all duration-200 flex items-center justify-center"
-              style={{
-                background: "#7C3AED",
-                borderRadius: "12px",
-                padding: "15px 24px",
-                minHeight: "48px",
-                boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
-              }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#6D28D9")}
-              onMouseLeave={e => (e.currentTarget.style.background = "#7C3AED")}
+              className="w-full text-base font-medium text-white flex items-center justify-center"
+              style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 24px", minHeight: "48px" }}
               onClick={() => { setLocation(`/kelas/${kelas.id}`); onClose(); }}
             >
               Mulai Belajar
@@ -633,12 +375,9 @@ function DetailModal({
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function KelasPage() {
-  const [, setLocation] = useLocation();
   const [activePersona, setActivePersona] = useState("Semua");
   const [modalKelas, setModalKelas] = useState<KelasItem | null>(null);
   const [navSolid, setNavSolid] = useState(false);
-
-  const flagship = kelasList.find((k) => k.status === "available") ?? kelasList[0];
 
   const available = kelasList.filter((k) => k.status === "available" || k.status === "new");
   const comingSoon = kelasList.filter((k) => k.status === "coming-soon");
@@ -648,16 +387,16 @@ export default function KelasPage() {
       ? kelasList
       : kelasList.filter((k) => k.personas.includes(activePersona));
 
-  // Scroll-triggered nav
   useEffect(() => {
-    const onScroll = () => setNavSolid(window.scrollY > 80);
+    const onScroll = () => setNavSolid(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
-      {/* ── Sticky nav (transparent → solid) ── */}
+
+      {/* ── Sticky nav ── */}
       <div
         className="sticky top-0 z-40 transition-all duration-300"
         style={{
@@ -668,196 +407,169 @@ export default function KelasPage() {
       >
         <Navbar />
       </div>
-      {/* Offset so page starts behind the navbar */}
-      <div style={{ marginTop: "-64px" }} />
 
-      {/* ── HERO — FEATURED ── */}
-      <section
-        className="relative overflow-hidden flex items-end"
-        style={{ minHeight: "72vh", paddingBottom: "5rem" }}
-      >
-        {/* Background */}
-        <div className="absolute inset-0">
-          <KelasGradientCover kelas={flagship} size="hero" />
-          {/* Breathing glow animation */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            animate={{ opacity: [0.6, 1, 0.6] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              background:
-                "radial-gradient(ellipse 60% 50% at 30% 60%, rgba(124,58,237,0.12) 0%, transparent 60%)",
-            }}
-          />
-          {/* Bottom fade to page bg */}
-          <div
-            className="absolute bottom-0 left-0 right-0"
-            style={{
-              height: "45%",
-              background:
-                "linear-gradient(to top, #060608 0%, transparent 100%)",
-            }}
-          />
-        </div>
+      {/* ── HERO — Centered, seperti landing page ── */}
+      <section className="relative overflow-hidden pt-20 pb-16 sm:pt-28 sm:pb-20">
+        {/* Dot grid background */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20"
+          style={{
+            backgroundImage: "radial-gradient(rgba(124,58,237,0.2) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        {/* Ambient glow */}
+        <motion.div
+          className="absolute pointer-events-none"
+          style={{
+            top: "-10%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "70vw",
+            height: "60vh",
+            background: "radial-gradient(ellipse at center, rgba(124,58,237,0.13) 0%, transparent 65%)",
+            filter: "blur(60px)",
+          }}
+          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.04, 1] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        />
 
-        {/* Content */}
-        <div className="relative max-w-5xl mx-auto px-6 sm:px-10 w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        {/* Content — rata tengah */}
+        <motion.div
+          className="relative max-w-3xl mx-auto px-6 sm:px-10 text-center"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p
+            className="font-mono text-xs tracking-widest mb-6"
+            style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
           >
-            <p
-              className="font-mono tracking-widest mb-6"
-              style={{ color: "#A855F7", letterSpacing: "0.1em", fontSize: "12px", fontWeight: 600 }}
-            >
-              AIGYPT · KELAS & PROGRAM
-            </p>
-            <h1
-              className="font-display font-semibold mb-6"
-              style={{
-                fontSize: "clamp(2rem, 6vw, 3.5rem)",
-                letterSpacing: "-0.02em",
-                lineHeight: 1.1,
-                maxWidth: "600px",
-              }}
-            >
-              Kuasai AI,{" "}
-              <br />
-              <span style={{ color: "#A855F7" }}>mulai dari mana kamu berada.</span>
-            </h1>
-            <p
-              className="mb-10"
-              style={{ color: "#A1A1AA", fontWeight: 400, fontSize: "17px", lineHeight: 1.7, maxWidth: "560px" }}
-            >
-              Program belajar AI yang dirancang khusus untuk masisir. Dari pemula
-              hingga membangun produk nyata, pilih jalur yang sesuai dengan tujuanmu.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <button
-                className="flex items-center justify-center gap-2 text-base font-semibold text-white transition-all duration-200 w-full sm:w-auto"
-                style={{
-                  background: "#7C3AED",
-                  borderRadius: "10px",
-                  padding: "14px 28px",
-                  minHeight: "52px",
-                  boxShadow: "0 0 24px rgba(124,58,237,0.4), 0px 4px 12px rgba(0,0,0,0.3)",
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "#6D28D9";
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 32px rgba(124,58,237,0.6), 0px 6px 16px rgba(0,0,0,0.4)";
-                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "#7C3AED";
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 24px rgba(124,58,237,0.4), 0px 4px 12px rgba(0,0,0,0.3)";
-                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
-                }}
-                onClick={() => {
-                  const el = document.getElementById("katalog-kelas");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 6h16M4 12h16M4 18h7" />
-                </svg>
-                Jelajahi Kelas
-              </button>
-              <button
-                className="flex items-center justify-center gap-2 text-base font-semibold transition-all duration-200 w-full sm:w-auto"
-                style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: "10px",
-                  padding: "14px 28px",
-                  minHeight: "52px",
-                  color: "#FAFAFA",
-                  backdropFilter: "blur(8px)",
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.07)";
-                  (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(124,58,237,0.4)";
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.03)";
-                  (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(255,255,255,0.1)";
-                }}
-                onClick={() => setLocation("/kurikulum")}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-                </svg>
-                Lihat Kurikulum
-              </button>
-            </div>
-          </motion.div>
-        </div>
+            AIGYPT · KELAS & PROGRAM
+          </p>
+          <h1
+            className="font-display font-semibold leading-[1.08] mb-5"
+            style={{ fontSize: "clamp(2.2rem, 5.5vw, 3.8rem)", letterSpacing: "-0.025em" }}
+          >
+            Kuasai AI,{" "}
+            <span style={{ color: "#A855F7" }}>mulai dari mana kamu berada.</span>
+          </h1>
+          <p
+            className="text-base leading-relaxed max-w-xl mx-auto mb-10"
+            style={{ color: "#A1A1AA", fontWeight: 300 }}
+          >
+            Program belajar AI yang dirancang khusus untuk masisir. Dari pemula
+            hingga membangun produk nyata, pilih jalur yang sesuai dengan tujuanmu.
+          </p>
+
+          {/* Stats row */}
+          <div className="inline-flex flex-wrap items-center justify-center gap-6 mb-2">
+            {[`${kelasList.length} KELAS`, `${available.length} TERSEDIA`, "BAHASA INDONESIA"].map((t) => (
+              <span key={t} className="font-mono text-xs tracking-widest" style={{ color: "#3F3F46", letterSpacing: "0.15em" }}>
+                {t}
+              </span>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
-      {/* ── NETFLIX ROWS ── */}
-      <section id="katalog-kelas" className="pb-20 space-y-12">
-        <KelasRow
-          title="Tersedia Sekarang"
-          items={available}
-          onDetail={setModalKelas}
-        />
+      {/* ── KATALOG — Comic Grid ── */}
+      <section id="katalog-kelas" className="max-w-6xl mx-auto px-6 sm:px-10 pb-24">
 
-        <KelasRow
-          title="Segera Hadir"
-          items={comingSoon}
-          onDetail={setModalKelas}
-        />
+        {/* ── Filter Persona ── */}
+        <div className="flex items-center gap-2 flex-wrap mb-10">
+          {personas.map((p) => (
+            <button
+              key={p}
+              onClick={() => setActivePersona(p)}
+              className="font-mono text-xs px-3 py-1.5 rounded-full transition-all duration-200"
+              style={{
+                background: activePersona === p ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.04)",
+                color: activePersona === p ? "#FAFAFA" : "#52525B",
+                border: activePersona === p ? "1px solid rgba(168,85,247,0.5)" : "1px solid rgba(255,255,255,0.06)",
+              }}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
 
-        {/* ── Persona filter + row ── */}
-        <div>
-          <div className="flex items-center justify-between mb-4 px-6 sm:px-10 flex-wrap gap-3">
-            <p className="font-display font-semibold text-white" style={{ fontSize: "1.05rem" }}>
-              Pilih Berdasarkan Jalurmu
-            </p>
-            <div className="flex gap-2 flex-wrap">
-              {personas.map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setActivePersona(p)}
-                  className="font-mono text-xs px-3 py-1.5 rounded-full transition-all duration-200"
-                  style={{
-                    background: activePersona === p ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.05)",
-                    color: activePersona === p ? "#FAFAFA" : "#71717A",
-                    border: activePersona === p ? "1px solid rgba(168,85,247,0.5)" : "1px solid rgba(255,255,255,0.07)",
-                    borderRadius: "100px",
-                  }}
-                >
-                  {p}
-                </button>
+        {/* ── Grid Tersedia ── */}
+        {available.length > 0 && activePersona === "Semua" && (
+          <div className="mb-14">
+            <div className="flex items-center gap-3 mb-5">
+              <p className="font-display font-semibold text-white" style={{ fontSize: "1rem" }}>
+                Tersedia Sekarang
+              </p>
+              <span
+                className="font-mono text-[10px] tracking-widest px-2 py-0.5 rounded-full"
+                style={{ background: "rgba(124,58,237,0.2)", color: "#A855F7", border: "1px solid rgba(168,85,247,0.3)" }}
+              >
+                {available.length} KELAS
+              </span>
+            </div>
+            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
+              {available.map((kelas) => (
+                <KelasCard key={kelas.id} kelas={kelas} onDetail={setModalKelas} />
               ))}
             </div>
           </div>
+        )}
 
-          <div
-            className="flex gap-3 overflow-x-auto"
-            style={{
-              scrollbarWidth: "none",
-              paddingLeft: "clamp(1.5rem, 2.5vw, 2.5rem)",
-              paddingRight: "clamp(1.5rem, 2.5vw, 2.5rem)",
-            }}
-          >
-            {byPersona.length > 0 ? (
-              byPersona.map((kelas) => (
+        {/* ── Grid Segera Hadir ── */}
+        {comingSoon.length > 0 && activePersona === "Semua" && (
+          <div className="mb-14">
+            <div className="flex items-center gap-3 mb-5">
+              <p className="font-display font-semibold" style={{ fontSize: "1rem", color: "#52525B" }}>
+                Segera Hadir
+              </p>
+              <span
+                className="font-mono text-[10px] tracking-widest px-2 py-0.5 rounded-full"
+                style={{ background: "rgba(255,255,255,0.04)", color: "#3F3F46", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                {comingSoon.length} KELAS
+              </span>
+            </div>
+            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
+              {comingSoon.map((kelas) => (
                 <KelasCard key={kelas.id} kelas={kelas} onDetail={setModalKelas} />
-              ))
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Grid Filter Persona ── */}
+        {activePersona !== "Semua" && (
+          <div>
+            <div className="flex items-center gap-3 mb-5">
+              <p className="font-display font-semibold text-white" style={{ fontSize: "1rem" }}>
+                Jalur: {activePersona}
+              </p>
+              <span
+                className="font-mono text-[10px] tracking-widest px-2 py-0.5 rounded-full"
+                style={{ background: "rgba(255,255,255,0.04)", color: "#52525B", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                {byPersona.length} KELAS
+              </span>
+            </div>
+            {byPersona.length > 0 ? (
+              <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
+                {byPersona.map((kelas) => (
+                  <KelasCard key={kelas.id} kelas={kelas} onDetail={setModalKelas} />
+                ))}
+              </div>
             ) : (
               <div
-                className="flex-1 flex items-center justify-center py-16 rounded-xl"
+                className="flex items-center justify-center py-20 rounded-xl"
                 style={{ border: "1px solid rgba(255,255,255,0.05)" }}
               >
-                <p className="font-mono text-xs" style={{ color: "#52525B" }}>
+                <p className="font-mono text-xs" style={{ color: "#3F3F46" }}>
                   Belum ada kelas untuk jalur ini
                 </p>
               </div>
             )}
-            <div className="flex-shrink-0 w-4" />
           </div>
-        </div>
+        )}
       </section>
 
       {/* ── DETAIL MODAL ── */}
