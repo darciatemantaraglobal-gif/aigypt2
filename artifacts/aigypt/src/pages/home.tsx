@@ -850,7 +850,7 @@ export default function Home() {
             className="batch-urgency-card inline-flex flex-col items-center gap-1 mb-4 px-5 py-3 rounded-xl"
             style={{ background: "rgba(124,58,237,0.1)" }}
           >
-            <span className="font-mono text-xs font-bold tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 · PENDAFTARAN DIBUKA</span>
+            <span className="font-mono text-xs font-bold tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 3 · PENDAFTARAN DIBUKA</span>
             <span className="font-mono text-xs" style={{ color: "#71717A" }}>Pertemuan pertama: 6 Juli 2026 · Tempat sangat terbatas</span>
           </motion.div>
 
@@ -873,7 +873,7 @@ export default function Home() {
                   boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
               >
-                Daftar Batch 1 Sekarang <IconArrow />
+                Daftar Batch 3 Sekarang <IconArrow />
               </span>
             </Link>
             <Link href="/kurikulum" className="w-full sm:w-auto">
@@ -1160,7 +1160,7 @@ export default function Home() {
                 </div>
 
                 <div className="mb-6 flex flex-wrap gap-3">
-                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 1: PENDAFTARAN DIBUKA</span>
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 3: PENDAFTARAN DIBUKA</span>
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Pertemuan pertama: 6 Juli 2026</span>
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Kuota terbatas per batch</span>
                 </div>
@@ -1176,7 +1176,7 @@ export default function Home() {
                 >
                   <p className="font-display font-semibold text-white text-sm mb-2">Mengapa Bergabung Sekarang Lebih Berarti</p>
                   <p className="text-sm leading-[1.8]" style={{ color: "#71717A" }}>
-                    Batch 1 bukan sekadar angkatan pertama. Ini kesempatan untuk menjadi salah satu yang lebih dulu menguasai keterampilan yang akan semakin penting setiap harinya. Sementara yang lain masih ragu memulai, kamu sudah selangkah di depan.
+                    Batch 3 adalah kesempatan untuk menguasai keterampilan yang akan semakin penting setiap harinya. Bergabunglah bersama komunitas yang sudah membuktikannya.
                   </p>
                 </div>
 
@@ -1192,7 +1192,7 @@ export default function Home() {
                         boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                       }}
                     >
-                      Daftar Batch 1 Sekarang <IconArrow />
+                      Daftar Batch 3 Sekarang <IconArrow />
                     </span>
                   </Link>
                   <Link href="/kurikulum">
@@ -1351,17 +1351,17 @@ export default function Home() {
               },
               {
                 name: "Kelas",
-                tag: "BATCH 1 · DIBUKA",
+                tag: "BATCH 3 · DIBUKA",
                 desc: "Untuk yang ingin bimbingan penuh dan komunitas.",
                 subDesc: "Semua itu, plus dibimbing langsung menerapkannya.",
                 features: [
                   "Semua yang ada di Member Mandiri",
                   "4 pertemuan live bersama mentor (6, 8, 11, 13 Juli 2026)",
                   "Bimbingan dan feedback langsung",
-                  "Komunitas eksklusif Batch 1",
+                  "Komunitas eksklusif Batch 3",
                   "Sertifikat penyelesaian",
                 ],
-                cta: "Daftar Batch 1 Sekarang",
+                cta: "Daftar Batch 3 Sekarang",
                 memberType: "kelas",
                 highlight: true,
               },
@@ -1412,7 +1412,7 @@ export default function Home() {
                     >
                       GUNAKAN KODE AIGYPT26 · HEMAT Rp 51.000
                     </span>
-                    <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Berlaku hingga 15 Juli 2026 untuk pendaftaran Batch 1</p>
+                    <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Berlaku hingga 15 Juli 2026 untuk pendaftaran Batch 3</p>
                   </div>
                 )}
                 <p className="text-xs mb-5 pb-4" style={{ color: "#7C3AED", borderBottom: "1px solid rgba(124,58,237,0.1)", fontStyle: "italic" }}>
@@ -1481,7 +1481,7 @@ export default function Home() {
             className="text-base sm:text-lg mb-10"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Pertemuan pertama Batch 1 pada 6 Juli 2026. Tempat sangat terbatas.
+            Pertemuan pertama Batch 3 pada 6 Juli 2026. Tempat sangat terbatas.
           </motion.p>
           {/* Risk-reversal */}
           <motion.p
@@ -1503,7 +1503,7 @@ export default function Home() {
                   boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
                 }}
               >
-                Daftar Batch 1 Sekarang <IconArrow />
+                Daftar Batch 3 Sekarang <IconArrow />
               </span>
             </Link>
             <a

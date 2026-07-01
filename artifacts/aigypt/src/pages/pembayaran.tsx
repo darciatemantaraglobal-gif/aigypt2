@@ -77,7 +77,7 @@ export default function Pembayaran() {
   const finalPrice = params.couponCode && params.discountAmount > 0
     ? Math.max(0, basePrice - params.discountAmount)
     : basePrice;
-  const memberLabel = params.type === "kelas" ? "Member Kelas — Batch 1" : "Member Mandiri";
+  const memberLabel = params.type === "kelas" ? "Member Kelas — Batch 3" : "Member Mandiri";
 
   async function handleConfirm() {
     setError("");
@@ -122,7 +122,7 @@ export default function Pembayaran() {
         : "";
 
       const confirmationMessage =
-        `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 1.\n\n` +
+        `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 3.\n\n` +
         `Nama: ${params.name}\n` +
         `Email: ${params.email}\n` +
         `Paket: ${memberTypeLabel}\n` +

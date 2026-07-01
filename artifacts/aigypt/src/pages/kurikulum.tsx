@@ -424,7 +424,7 @@ export default function Kurikulum() {
         />
 
         <Reveal className="relative max-w-5xl mx-auto px-6 sm:px-10 text-center">
-          <SectionLabel>KURIKULUM AIGYPT · BATCH 1</SectionLabel>
+          <SectionLabel>KURIKULUM AIGYPT · BATCH 3</SectionLabel>
           <motion.h1
             variants={fadeUp}
             className="font-display font-semibold leading-tight mb-8"
@@ -445,7 +445,7 @@ export default function Kurikulum() {
             hanya bisa menunggu solusi, menjadi yang menciptakannya sendiri.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-col items-center gap-3">
-            <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 · PENDAFTARAN DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026</p>
+            <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 3 · PENDAFTARAN DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026</p>
             <Link href="/daftar">
               <span
                 className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
@@ -562,11 +562,11 @@ export default function Kurikulum() {
         </div>
       </section>
 
-      {/* ══ SECTION 5: TIMELINE BATCH 1 ══ */}
+      {/* ══ SECTION 5: TIMELINE BATCH 3 ══ */}
       <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-6">
-            <SectionLabel>JADWAL PERTEMUAN LIVE BATCH 1</SectionLabel>
+            <SectionLabel>JADWAL PERTEMUAN LIVE BATCH 3</SectionLabel>
             <motion.h2
               variants={fadeUp}
               className="font-display font-semibold mb-4"
@@ -632,7 +632,7 @@ export default function Kurikulum() {
       <section className="py-16 sm:py-28" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-12">
-            <SectionLabel>SETELAH BATCH 1</SectionLabel>
+            <SectionLabel>SETELAH BATCH 3</SectionLabel>
             <motion.h2
               variants={fadeUp}
               className="font-display font-semibold mb-4"
@@ -723,7 +723,7 @@ export default function Kurikulum() {
                 className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
                 style={{ background: "#7C3AED", borderRadius: "12px", padding: "15px 28px", minHeight: "48px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}
               >
-                Daftar Batch 1 Sekarang
+                Daftar Batch 3 Sekarang
               </span>
             </Link>
             <a

@@ -65,13 +65,13 @@ const tiers = [
   {
     id: "kelas",
     name: "Member Kelas",
-    tag: "BATCH 1 · DIBUKA",
+    tag: "BATCH 3 · DIBUKA",
     desc: "Bimbingan penuh, komunitas aktif, dan sertifikat.",
     features: [
       "Semua yang ada di Member Mandiri",
       "4 pertemuan live bersama mentor (6, 8, 11, 13 Juli 2026)",
       "Bimbingan dan feedback langsung",
-      "Komunitas eksklusif Batch 1",
+      "Komunitas eksklusif Batch 3",
       "Sertifikat penyelesaian",
     ],
     highlight: true,
@@ -347,7 +347,7 @@ export default function Daftar() {
               className="font-mono text-xs tracking-widest mb-6"
               style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
             >
-              PENDAFTARAN · BATCH 1
+              PENDAFTARAN · BATCH 3
             </motion.p>
             <motion.h1
               variants={fadeUp}
@@ -363,7 +363,7 @@ export default function Daftar() {
               className="text-base leading-relaxed max-w-xl mx-auto"
               style={{ color: "#71717A", fontWeight: 300 }}
             >
-              Pertemuan pertama Batch 1 pada 6 Juli 2026. Kuota sangat terbatas. Amankan tempatmu sekarang.
+              Pertemuan pertama Batch 3 pada 6 Juli 2026. Kuota sangat terbatas. Amankan tempatmu sekarang.
             </motion.p>
           </motion.div>
 

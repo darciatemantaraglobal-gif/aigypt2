@@ -1,0 +1,120 @@
+# Ganti Semua "Batch 1" → "Batch 3"
+
+## Konteks
+
+Seluruh referensi ke "Batch 1" di website AIGYPT perlu diganti ke "Batch 3". Ada 9 file yang terdampak. Lakukan find & replace secara teliti di setiap file.
+
+---
+
+## Aturan Global
+
+| Teks Lama | Ganti Dengan |
+|---|---|
+| `Batch 1` | `Batch 3` |
+| `BATCH 1` | `BATCH 3` |
+| `batch 1` | `batch 3` |
+| `angkatan pertama` | `angkatan ketiga` |
+| `batchNumber: "1"` | `batchNumber: "3"` |
+
+---
+
+## File 1: `artifacts/aigypt/src/components/Navbar.tsx`
+
+Ganti semua kemunculan (ada 4):
+- `PENDAFTARAN BATCH 1 DIBUKA` → `PENDAFTARAN BATCH 3 DIBUKA`
+- `BATCH 1` (di badge navbar) → `BATCH 3`
+
+---
+
+## File 2: `artifacts/aigypt/src/components/Footer.tsx`
+
+Ganti (1 kemunculan):
+- `Batch 1: Dibuka` → `Batch 3: Dibuka`
+
+---
+
+## File 3: `artifacts/aigypt/src/lib/coupons.ts`
+
+Ganti (1 kemunculan):
+- `"Diskon spesial pendaftaran Batch 1"` → `"Diskon spesial pendaftaran Batch 3"`
+
+---
+
+## File 4: `artifacts/aigypt/src/pages/home.tsx`
+
+Ganti semua kemunculan (ada 10):
+
+```
+BATCH 1 · PENDAFTARAN DIBUKA        →  BATCH 3 · PENDAFTARAN DIBUKA
+Daftar Batch 1 Sekarang             →  Daftar Batch 3 Sekarang
+BATCH 1: PENDAFTARAN DIBUKA         →  BATCH 3: PENDAFTARAN DIBUKA
+Batch 1 bukan sekadar angkatan pertama. Ini kesempatan untuk menjadi salah satu yang lebih dulu menguasai keterampilan yang akan semakin penting setiap harinya. Sementara yang lain masih ragu memulai, kamu sudah selangkah di depan.
+→
+Batch 3 adalah kesempatan untuk menguasai keterampilan yang akan semakin penting setiap harinya. Bergabunglah bersama komunitas yang sudah membuktikannya.
+BATCH 1 · DIBUKA                    →  BATCH 3 · DIBUKA
+Komunitas eksklusif Batch 1         →  Komunitas eksklusif Batch 3
+untuk pendaftaran Batch 1           →  untuk pendaftaran Batch 3
+Pertemuan pertama Batch 1 pada 6 Juli 2026. Tempat sangat terbatas.
+→
+Pertemuan pertama Batch 3 pada 6 Juli 2026. Tempat sangat terbatas.
+```
+
+---
+
+## File 5: `artifacts/aigypt/src/pages/daftar.tsx`
+
+Ganti semua kemunculan (ada 4):
+- `BATCH 1 · DIBUKA` → `BATCH 3 · DIBUKA`
+- `Komunitas eksklusif Batch 1` → `Komunitas eksklusif Batch 3`
+- `PENDAFTARAN · BATCH 1` → `PENDAFTARAN · BATCH 3`
+- `Pertemuan pertama Batch 1 pada 6 Juli 2026. Kuota sangat terbatas. Amankan tempatmu sekarang.` → `Pertemuan pertama Batch 3 pada 6 Juli 2026. Kuota sangat terbatas. Amankan tempatmu sekarang.`
+
+---
+
+## File 6: `artifacts/aigypt/src/pages/pembayaran.tsx`
+
+Ganti semua kemunculan (ada 2):
+- `"Member Kelas — Batch 1"` → `"Member Kelas — Batch 3"`
+- `pendaftaran Batch 1` → `pendaftaran Batch 3`
+
+---
+
+## File 7: `artifacts/aigypt/src/pages/kurikulum.tsx`
+
+Ganti semua kemunculan (ada 5):
+- `KURIKULUM AIGYPT · BATCH 1` → `KURIKULUM AIGYPT · BATCH 3`
+- `BATCH 1 · PENDAFTARAN DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026` → `BATCH 3 · PENDAFTARAN DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026`
+- `JADWAL PERTEMUAN LIVE BATCH 1` → `JADWAL PERTEMUAN LIVE BATCH 3`
+- `SETELAH BATCH 1` → `SETELAH BATCH 3`
+- `Daftar Batch 1 Sekarang` → `Daftar Batch 3 Sekarang`
+
+---
+
+## File 8: `artifacts/aigypt/src/pages/admin/orders.tsx`
+
+Ganti (2 kemunculan di default form value):
+```ts
+batchNumber: "1"
+```
+→
+```ts
+batchNumber: "3"
+```
+
+Ada 2 baris yang perlu diubah — satu di `useState` awal dan satu di `setForm` reset.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Jangan ubah logika, fungsi, atau struktur komponen apapun
+- Jangan ubah nama variabel seperti `batchNumber` (hanya nilainya yang diganti)
+- Jangan ubah tanggal-tanggal (6, 8, 11, 13 Juli 2026 tetap sama)
+- Jangan ubah file selain 8 file yang disebutkan
+- Jangan ubah teks yang tidak mengandung "Batch 1" / "BATCH 1"
+
+---
+
+## Verifikasi
+
+Setelah selesai, jalankan search untuk `Batch 1` dan `BATCH 1` di seluruh folder `src`. Pastikan hasilnya nol — tidak ada sisa kemunculan di teks user-facing maupun di value string.

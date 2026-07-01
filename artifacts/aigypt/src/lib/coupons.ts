@@ -12,7 +12,7 @@ export const ACTIVE_COUPONS: Coupon[] = [
     discountAmount: 51000,
     applicableTo: "kelas",
     validUntil: "2026-07-15T23:59:59+07:00",
-    description: "Diskon spesial pendaftaran Batch 1",
+    description: "Diskon spesial pendaftaran Batch 3",
   },
 ];
 

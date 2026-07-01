@@ -33,7 +33,7 @@ export default function AdminOrders() {
   const [filterType, setFilterType] = useState("all");
 
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", memberType: "mandiri", batchNumber: "1", amount: "", status: "paid" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", memberType: "mandiri", batchNumber: "3", amount: "", status: "paid" });
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
   const [lastCreated, setLastCreated] = useState<{ orderId: string; accessCode: string | null; name: string; email: string; phone: string; memberType: string } | null>(null);
@@ -73,7 +73,7 @@ export default function AdminOrders() {
       if (!r.ok) { setFormError(d.error ?? "Gagal menyimpan"); return; }
       setLastCreated({ orderId: d.orderId!, accessCode: d.accessCode ?? null, name: form.name, email: form.email, phone: form.phone, memberType: form.memberType });
       showToast("Pesanan dicatat!");
-      setForm({ name: "", email: "", phone: "", memberType: "mandiri", batchNumber: "1", amount: "", status: "paid" });
+      setForm({ name: "", email: "", phone: "", memberType: "mandiri", batchNumber: "3", amount: "", status: "paid" });
       fetchOrders();
     } finally { setSubmitting(false); }
   };

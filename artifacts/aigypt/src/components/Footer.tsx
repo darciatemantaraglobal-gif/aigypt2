@@ -138,7 +138,7 @@ export function Footer() {
                   <Link href="/daftar">
                     <span className="text-sm text-[#A1A1AA] hover:text-[#A855F7] transition-colors duration-200 hover:translate-x-0.5 inline-flex items-center transform transition-transform">
                       <StatusDot />
-                      Batch 1: Dibuka
+                      Batch 3: Dibuka
                     </span>
                   </Link>
                 </motion.div>
