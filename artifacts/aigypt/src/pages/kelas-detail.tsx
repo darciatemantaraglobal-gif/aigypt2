@@ -119,15 +119,6 @@ function KelasHeroCover({ kelas }: { kelas: KelasItem }) {
           filter: "blur(32px)",
         }}
       />
-      <svg
-        className="absolute"
-        style={{ top: "25%", left: "50%", transform: "translate(-50%, -50%)", opacity: 0.12 }}
-        width="200" height="200" viewBox="0 0 24 24"
-        fill="none" stroke={kelas.accentColor} strokeWidth="0.6"
-        strokeLinecap="round" strokeLinejoin="round"
-      >
-        <path d={kelas.iconPath} />
-      </svg>
       <div
         className="absolute bottom-0 left-0 right-0"
         style={{ height: "60%", background: "linear-gradient(to top, #060608 0%, transparent 100%)" }}

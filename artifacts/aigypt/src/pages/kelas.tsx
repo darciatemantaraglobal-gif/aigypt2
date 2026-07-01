@@ -39,29 +39,6 @@ function KelasGradientCover({
           filter: "blur(24px)",
         }}
       />
-      {/* Decorative icon */}
-      <div
-        className="absolute"
-        style={{
-          top: size === "modal" ? "22%" : "18%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          opacity: 0.18,
-        }}
-      >
-        <svg
-          width={size === "modal" ? 120 : 72}
-          height={size === "modal" ? 120 : 72}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={kelas.accentColor}
-          strokeWidth="0.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d={kelas.iconPath} />
-        </svg>
-      </div>
       {/* Bottom gradient fade */}
       <div
         className="absolute bottom-0 left-0 right-0"
