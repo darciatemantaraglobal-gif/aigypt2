@@ -94,19 +94,22 @@ export default function Pembayaran() {
       const memberTypeLabel = params.type === "kelas" ? "Member Kelas" : "Member Mandiri";
 
       const couponLine = params.couponCode && params.discountAmount > 0
-        ? `Kupon: ${params.couponCode} (-${formatRp(params.discountAmount)})\n`
+        ? `• Kupon: ${params.couponCode} (hemat ${formatRp(params.discountAmount)})\n`
         : "";
 
       const confirmationMessage =
-        `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 3.\n\n` +
-        `Nama: ${params.name}\n` +
-        `Email: ${params.email}\n` +
-        `WhatsApp: ${params.phone}\n` +
-        `Paket: ${memberTypeLabel}\n` +
+        `Halo AIGYPT 👋\n\n` +
+        `Saya mau konfirmasi pembayaran pendaftaran Batch 3.\n\n` +
+        `📋 *Detail Pendaftaran*\n` +
+        `• Nama: ${params.name}\n` +
+        `• Email: ${params.email}\n` +
+        `• WhatsApp: ${params.phone}\n` +
+        `• Paket: ${memberTypeLabel}\n\n` +
+        `💳 *Detail Pembayaran*\n` +
+        `• Nominal: *${formatRp(finalPrice)}*\n` +
         `${couponLine}` +
-        `Jumlah: ${formatRp(finalPrice)}\n` +
-        `Order ID: ${orderId}\n\n` +
-        `Mohon dikonfirmasi ya. Terima kasih!`;
+        `• Order ID: ${orderId}\n\n` +
+        `Bukti transfer sudah saya kirim. Mohon dikonfirmasi ya, terima kasih 🙏`;
 
       const encodedMessage = encodeURIComponent(confirmationMessage);
       const waLink = `https://wa.me/${waNumber}?text=${encodedMessage}`;
