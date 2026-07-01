@@ -1,0 +1,73 @@
+# Fix Kupon AIGYPT26 Gagal Divalidasi
+
+## Root Cause
+
+Ada **dua file `coupons.ts`** yang harus selalu sinkron:
+1. `artifacts/aigypt/src/lib/coupons.ts` — dipakai frontend (validasi client-side)
+2. `artifacts/api-server/src/lib/coupons.ts` — dipakai backend (validasi server-side via `/api/coupons/check`)
+
+Kupon gagal karena **kedua file ini masih pakai `validUntil: "2026-07-06T23:59:59+07:00"`** yang sudah melewati batas waktu, dan/atau file server belum diupdate mengikuti perubahan frontend sebelumnya.
+
+---
+
+## Perbaikan — Update KEDUA File Sekaligus
+
+### File 1: `artifacts/aigypt/src/lib/coupons.ts`
+
+Ganti seluruh array `ACTIVE_COUPONS`:
+
+```ts
+export const ACTIVE_COUPONS: Coupon[] = [
+  {
+    code: "AIGYPT26",
+    discountAmount: 51000,
+    applicableTo: "kelas",
+    validUntil: "2026-07-15T23:59:59+07:00",
+    description: "Diskon spesial pendaftaran Batch 3",
+  },
+];
+```
+
+### File 2: `artifacts/api-server/src/lib/coupons.ts`
+
+Ganti seluruh array `ACTIVE_COUPONS` dengan **persis sama**:
+
+```ts
+export const ACTIVE_COUPONS: Coupon[] = [
+  {
+    code: "AIGYPT26",
+    discountAmount: 51000,
+    applicableTo: "kelas",
+    validUntil: "2026-07-15T23:59:59+07:00",
+    description: "Diskon spesial pendaftaran Batch 3",
+  },
+];
+```
+
+---
+
+## Yang Berubah
+
+| Field | Sebelum | Sesudah |
+|---|---|---|
+| `validUntil` | `2026-07-06T23:59:59+07:00` | `2026-07-15T23:59:59+07:00` |
+| `description` | `Diskon spesial pendaftaran Batch 1` | `Diskon spesial pendaftaran Batch 3` |
+
+Semua field lain (`code`, `discountAmount`, `applicableTo`) tidak berubah.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Fungsi `validateCoupon` di kedua file — jangan disentuh
+- Route handler di `artifacts/api-server/src/routes/coupons.ts` — jangan disentuh
+- File lain apapun
+
+---
+
+## Verifikasi
+
+1. Buka `/daftar`, pilih paket **Kelas**
+2. Isi email dulu (wajib diisi sebelum apply kupon)
+3. Masukkan kode `AIGYPT26` → harga berubah dari Rp 150.000 menjadi **Rp 99.000**
+4. Coba masukkan `AIGYPT26` di paket **Mandiri** → muncul error "Kupon ini hanya berlaku untuk Member Kelas"
