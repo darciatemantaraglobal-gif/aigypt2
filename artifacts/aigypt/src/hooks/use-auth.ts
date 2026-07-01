@@ -8,8 +8,9 @@ export function useAuth() {
   });
 
   const isAuthenticated = !!user && !error;
+  const isAdminMode = !!(user as any)?.isAdminMode;
 
-  return { user, isLoading, isAuthenticated, error };
+  return { user, isLoading, isAuthenticated, error, isAdminMode };
 }
 
 export function useLogoutAction() {

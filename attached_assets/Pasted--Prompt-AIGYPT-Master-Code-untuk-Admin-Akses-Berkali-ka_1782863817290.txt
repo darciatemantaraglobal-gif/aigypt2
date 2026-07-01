@@ -1,0 +1,179 @@
+# Prompt — AIGYPT: Master Code untuk Admin (Akses Berkali-kali)
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan satu "master code" yang bisa dipakai berkali-kali oleh admin dengan email apapun, memberikan akses penuh ke semua materi, ditandai sebagai mode admin/testing agar mudah dibedakan dari peserta asli.
+
+PENTING: Ini penambahan pada sistem login yang sudah ada (rute /login). Jangan ubah logic login kode peserta biasa yang sudah berjalan, hanya tambahkan jalur khusus untuk master code.
+
+---
+
+## KONSEP
+
+Saat ini, login peserta menggunakan email plus kode akses yang bersifat sekali pakai (sudah dipakai berarti tidak bisa dipakai lagi). Tambahkan SATU master code khusus yang:
+1. Bisa dipakai berkali-kali (tidak pernah habis atau ditandai terpakai)
+2. Bisa digunakan dengan email apapun
+3. Memberikan akses penuh ke semua materi (setara Member Kelas)
+4. Menandai sesi tersebut sebagai mode admin/testing agar mudah dibedakan dari peserta asli
+
+---
+
+## KEAMANAN, Wajib Diterapkan
+
+Master code ini sensitif. Jika bocor, siapa pun bisa mengakses seluruh materi premium tanpa membayar. Karena itu:
+
+1. Master code disimpan HANYA di environment variable, tidak pernah di-hardcode di kode dan tidak disimpan di database
+2. Master code harus berupa string panjang yang sulit ditebak, bukan kata sederhana seperti "ADMIN123". Contoh format yang baik: kombinasi acak huruf besar, kecil, dan angka minimal 24 karakter
+3. Validasi master code dilakukan di server (API route), bukan di frontend, agar nilainya tidak pernah terekspos ke browser
+4. Bisa di-rotate kapan saja: jika admin curiga master code bocor, cukup ubah nilai environment variable, dan master code lama otomatis tidak berlaku lagi
+
+### Environment Variable Baru
+
+```
+MASTER_ACCESS_CODE=GANTI_DENGAN_STRING_ACAK_PANJANG_MINIMAL_24_KARAKTER
+```
+
+Master code ini diakses HANYA dari sisi server (process.env.MASTER_ACCESS_CODE), tidak pernah menggunakan prefix VITE_ (karena VITE_ akan ter-bundle ke frontend dan terekspos di browser).
+
+---
+
+## IMPLEMENTASI
+
+### API Route Login, Tambahkan Pengecekan Master Code
+
+Pada API route yang menangani validasi login (kemungkinan api/auth/login.ts atau api/verify-access.ts sesuai struktur yang sudah ada), tambahkan pengecekan master code SEBELUM pengecekan kode peserta biasa:
+
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node'
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const { email, accessCode } = req.body
+
+  if (!email || !accessCode) {
+    return res.status(400).json({ error: 'Email dan kode akses wajib diisi' })
+  }
+
+  // PENGECEKAN MASTER CODE (admin/testing)
+  const masterCode = process.env.MASTER_ACCESS_CODE
+  if (masterCode && accessCode.trim() === masterCode) {
+    // Master code valid, beri akses penuh, tandai sebagai mode admin
+    // TIDAK menandai kode sebagai terpakai (bisa dipakai berkali-kali)
+    // TIDAK menyimpan ke tabel members sebagai peserta asli
+
+    const sessionToken = await createSessionToken({
+      email: email.toLowerCase(),
+      memberType: 'kelas',
+      isAdminMode: true,
+    })
+
+    res.setHeader(
+      'Set-Cookie',
+      `aigypt_session=${sessionToken}; Path=/; Max-Age=86400; HttpOnly; Secure; SameSite=Lax`
+    )
+
+    return res.status(200).json({
+      success: true,
+      isAdminMode: true,
+      memberType: 'kelas'
+    })
+  }
+
+  // PENGECEKAN KODE PESERTA BIASA (logic yang sudah ada)
+  // biarkan logic validasi kode peserta yang sudah berjalan tetap di sini
+}
+```
+
+Sesuaikan nama fungsi createSessionToken dan struktur session dengan yang sudah dipakai di aplikasi. Yang penting: tambahkan field isAdminMode true ke dalam payload session saat master code digunakan.
+
+### Penanda Mode Admin di Session
+
+Pastikan field isAdminMode ikut tersimpan dalam session token (JWT atau mekanisme session yang dipakai), agar bisa dibaca di seluruh aplikasi setelah login.
+
+---
+
+## TANDA VISUAL "MODE ADMIN/TESTING"
+
+Setelah login dengan master code, tampilkan penanda visual yang jelas di seluruh halaman yang memerlukan login (dashboard, halaman materi), agar admin selalu sadar sedang dalam mode testing dan tidak tertukar dengan pengalaman peserta asli.
+
+### Banner Mode Admin
+
+Tambahkan banner kecil sticky di bagian atas layar (di bawah navbar) yang muncul HANYA saat isAdminMode true:
+
+```tsx
+{isAdminMode && (
+  <div className="admin-mode-banner">
+    <span className="admin-mode-dot" />
+    MODE ADMIN / TESTING — Akses penuh aktif. Ini bukan sesi peserta.
+  </div>
+)}
+```
+
+```css
+.admin-mode-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background: rgba(168, 85, 247, 0.12);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  color: #C084FC;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-align: center;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.admin-mode-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #A855F7;
+  animation: adminDotPulse 1.8s ease-in-out infinite;
+}
+@keyframes adminDotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+```
+
+Banner ini memberi sinyal jelas bahwa sesi sedang dalam mode admin, sehingga tidak ada kebingungan antara testing dan pengalaman peserta sebenarnya.
+
+---
+
+## CATATAN PENTING
+
+1. Saat master code digunakan, JANGAN menyimpan email tersebut ke tabel members sebagai peserta asli, dan JANGAN menandai kode apa pun sebagai terpakai di tabel access_codes. Master code bersifat sepenuhnya terpisah dari sistem kode peserta.
+2. Progress belajar saat mode admin: pertimbangkan apakah progress mode admin perlu disimpan atau tidak. Rekomendasi: progress mode admin boleh disimpan dengan penanda khusus (atau menggunakan email admin yang konsisten), TAPI jangan sampai mencampuri data progress peserta asli. Cara paling sederhana: gunakan key progress yang diberi prefix admin_ saat isAdminMode true, agar terpisah dari data peserta.
+3. Master code TIDAK boleh muncul di mana pun di frontend, log, atau pesan error. Jika kode salah, tampilkan pesan error yang sama dengan kode peserta biasa ("Kode akses tidak valid atau sudah digunakan"), JANGAN beri petunjuk bahwa ada master code.
+4. Pastikan master code dibandingkan dengan aman (gunakan perbandingan string yang konsisten, dan trim spasi di input agar tidak gagal karena spasi tak sengaja).
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. Master code HANYA dari process.env.MASTER_ACCESS_CODE, tanpa prefix VITE_, tidak pernah di-hardcode
+2. Validasi master code hanya di server, tidak pernah di frontend
+3. Field isAdminMode tersimpan di session dan bisa dibaca untuk menampilkan banner
+4. Tidak mengganggu atau mengubah logic login kode peserta biasa yang sudah ada
+5. Tidak mencampuri data peserta asli (members, access_codes, progress)
+6. Semua teks Bahasa Indonesia
+7. npm run build harus sukses
+
+---
+
+## SETELAH SELESAI, Beri Saya Instruksi
+
+Berikan instruksi cara mengatur MASTER_ACCESS_CODE di Replit Secrets dan Vercel Environment Variables, beserta saran cara membuat string acak yang aman (misalnya menggunakan perintah terminal atau generator).
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Satu master code yang disimpan aman di environment variable, bisa dipakai berkali-kali oleh admin dengan email apapun untuk mengakses seluruh materi setara Member Kelas, dengan banner "Mode Admin/Testing" yang jelas terlihat saat aktif, tanpa mengganggu sistem kode peserta biasa dan tanpa mencampuri data peserta asli.

@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useGetProgress, getGetProgressQueryKey } from "@workspace/api-client-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { AdminBanner } from "@/components/AdminBanner";
 
 const sessions = [
   { num: 1, title: "AI Itu Bukan Sulap, Tapi Hampir" },
@@ -40,7 +41,7 @@ function ProgressCircle({ num, status }: { num: number; status: "completed" | "c
 }
 
 export default function Dashboard() {
-  const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { user, isLoading: authLoading, isAuthenticated, isAdminMode } = useAuth();
   const [, setLocation] = useLocation();
   const { data: progress, isLoading: progressLoading } = useGetProgress({
     query: { queryKey: getGetProgressQueryKey(), enabled: isAuthenticated },
@@ -79,6 +80,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen" style={{ background: "#0A0A0F" }}>
+      <AdminBanner isAdminMode={isAdminMode} />
       <Navbar />
       <div
         className="absolute inset-0 pointer-events-none"

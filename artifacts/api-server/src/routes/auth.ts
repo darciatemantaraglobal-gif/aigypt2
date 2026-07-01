@@ -24,6 +24,7 @@ export async function createSessionToken(payload: {
   memberType: string;
   batchNumber: number | null;
   name: string | null;
+  isAdminMode?: boolean;
 }) {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
@@ -40,6 +41,7 @@ export async function verifySessionToken(token: string) {
       memberType: string;
       batchNumber: number | null;
       name: string | null;
+      isAdminMode?: boolean;
     };
   } catch {
     return null;
@@ -47,6 +49,7 @@ export async function verifySessionToken(token: string) {
 }
 
 const PREVIEW_CODE = process.env["PREVIEW_CODE"]?.trim().toUpperCase();
+const MASTER_ACCESS_CODE = process.env["MASTER_ACCESS_CODE"]?.trim();
 
 router.post("/auth/login", async (req, res) => {
   const { email, code } = req.body as { email?: string; code?: string };
@@ -62,7 +65,27 @@ router.post("/auth/login", async (req, res) => {
     return;
   }
 
-  const upperCode = code.toUpperCase().trim();
+  const trimmedCode = code.trim();
+  const upperCode = trimmedCode.toUpperCase();
+
+  // MASTER CODE — akses penuh, berkali-kali, tidak sentuh DB
+  if (MASTER_ACCESS_CODE && trimmedCode === MASTER_ACCESS_CODE) {
+    const token = await createSessionToken({
+      email: email.toLowerCase(),
+      memberType: "kelas",
+      batchNumber: 1,
+      name: "Admin",
+      isAdminMode: true,
+    });
+    res.cookie(SESSION_COOKIE, token, {
+      httpOnly: true,
+      secure: process.env["NODE_ENV"] === "production",
+      sameSite: "lax",
+      maxAge: EXPIRY_DAYS * 24 * 60 * 60 * 1000,
+    });
+    res.json({ success: true, memberType: "kelas", batchNumber: 1, name: "Admin", isAdminMode: true });
+    return;
+  }
 
   if (PREVIEW_CODE && upperCode === PREVIEW_CODE) {
     const token = await createSessionToken({
@@ -171,12 +194,14 @@ router.get("/auth/me", async (req, res) => {
     return;
   }
 
-  if (PREVIEW_CODE) {
+  // Admin mode atau preview mode — kembalikan dari JWT langsung tanpa sentuh DB
+  if (payload.isAdminMode || PREVIEW_CODE) {
     res.json({
       email: payload.email,
       name: payload.name ?? null,
       memberType: payload.memberType,
       batchNumber: payload.batchNumber ?? null,
+      isAdminMode: payload.isAdminMode ?? false,
     });
     return;
   }
@@ -196,6 +221,7 @@ router.get("/auth/me", async (req, res) => {
     name: member.name ?? null,
     memberType: member.memberType,
     batchNumber: member.batchNumber ?? null,
+    isAdminMode: false,
   });
 });
 

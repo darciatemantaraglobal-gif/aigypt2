@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation, useParams, Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { AdminBanner } from "@/components/AdminBanner";
 import {
   useGetProgress,
   useMarkComplete,
@@ -570,7 +571,7 @@ function Sidebar({
 export default function MateriPage() {
   const params = useParams<{ kelasId: string; sesi: string }>();
   const [, setLocation] = useLocation();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, isAdminMode } = useAuth();
   const queryClient = useQueryClient();
 
   const kelasId = params.kelasId || "maksimalkan-ai";
@@ -765,6 +766,7 @@ export default function MateriPage() {
       className="h-screen flex flex-col overflow-hidden"
       style={{ background: "#0A0A0F" }}
     >
+      <AdminBanner isAdminMode={isAdminMode} />
       {/* ── TOP BAR ── */}
       <div className="flex-shrink-0 flex items-center h-12 border-b border-[#1E1E2E] bg-[#0D0D14] px-3 gap-3 z-30">
         {/* Hamburger (mobile) */}
