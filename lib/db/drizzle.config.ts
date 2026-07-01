@@ -1,9 +1,9 @@
 import { defineConfig } from "drizzle-kit";
 import path from "path";
 
-const dbUrl = process.env.SUPABASE_DATABASE_URL;
+const dbUrl = process.env.DATABASE_URL;
 if (!dbUrl) {
-  throw new Error("SUPABASE_DATABASE_URL, masukkan connection string Supabase kamu");
+  throw new Error("DATABASE_URL is required");
 }
 
 export default defineConfig({

@@ -1,0 +1,1 @@
+- [AIGYPT setup](aigypt-setup.md) — DB migrated Supabase→Replit PG; PORT must be explicit in workflow commands; admin needs ADMIN_PASSWORD secret.
