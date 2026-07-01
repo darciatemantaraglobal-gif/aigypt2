@@ -1,0 +1,144 @@
+# Fix Auth Guard — User Sudah Login Tapi Diredirect ke /login
+
+## Konteks & Root Cause
+
+Di aplikasi AIGYPT, ada bug kritis: user yang sudah punya session valid (cookie `aigypt_session` JWT 30 hari) tetap diredirect ke `/login` ketika mengakses halaman `/kelas/:kelasId`.
+
+**Kenapa terjadi?** Ini race condition di React rendering:
+
+1. User buka `/kelas/maksimalkan-ai`
+2. `KelasDetailPage` langsung render
+3. `useAuth()` memanggil `useGetMe()` — ini async, belum dapat response dari server
+4. Saat render pertama: `isLoading = true`, `isAuthenticated = false`, `user = undefined`
+5. Guard di kelas-detail TIDAK cek `authLoading` sebelum redirect
+6. Akibatnya: `!isAuthenticated` langsung `true` → `setLocation("/login")` dipanggil saat masih loading
+7. User dilempar ke login padahal sessionnya valid
+
+**Perbandingan antar halaman:**
+
+| Halaman | Guard | Status |
+|---|---|---|
+| `dashboard.tsx` | `useEffect` dengan `if (!authLoading && !isAuthenticated)` | ✅ Benar |
+| `materi/index.tsx` | `useEffect` dengan `if (!authLoading && !isAuthenticated)` | ✅ Benar |
+| `kelas-detail.tsx` | `if (!isAuthenticated)` tanpa cek `authLoading` | ❌ Bug |
+
+---
+
+## Yang Perlu Diubah
+
+### File: `artifacts/aigypt/src/pages/kelas-detail.tsx`
+
+**Hanya satu perubahan di file ini. Jangan ubah file lain apapun.**
+
+Cari blok kode berikut (ada di dalam fungsi `KelasDetailPage`, tepat setelah blok `if (authLoading) { ... }`):
+
+```tsx
+if (!isAuthenticated) {
+  setLocation("/login");
+  return null;
+}
+```
+
+Ganti seluruh blok itu menjadi:
+
+```tsx
+if (!authLoading && !isAuthenticated) {
+  setLocation("/login");
+  return null;
+}
+```
+
+---
+
+## Konteks Lengkap — Kode Sebelum dan Sesudah
+
+Untuk memastikan edit di tempat yang tepat, ini konteks lengkap area yang diubah:
+
+**SEBELUM:**
+
+```tsx
+export default function KelasDetailPage() {
+  const params = useParams<{ kelasId: string }>();
+  const [, setLocation] = useLocation();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
+  // ... (kode lain tidak berubah) ...
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#060608" }}>
+        <svg className="animate-spin w-8 h-8 text-[#7C3AED]" viewBox="0 0 24 24" fill="none">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {       // <-- INI YANG SALAH
+    setLocation("/login");
+    return null;
+  }
+```
+
+**SESUDAH:**
+
+```tsx
+export default function KelasDetailPage() {
+  const params = useParams<{ kelasId: string }>();
+  const [, setLocation] = useLocation();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
+  // ... (kode lain tidak berubah) ...
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#060608" }}>
+        <svg className="animate-spin w-8 h-8 text-[#7C3AED]" viewBox="0 0 24 24" fill="none">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+      </div>
+    );
+  }
+
+  if (!authLoading && !isAuthenticated) {   // <-- YANG BENAR
+    setLocation("/login");
+    return null;
+  }
+```
+
+---
+
+## Urutan Guard yang Benar
+
+Setelah edit, pastikan urutan guard di `KelasDetailPage` adalah persis seperti ini dari atas ke bawah:
+
+1. `if (authLoading)` → tampilkan spinner
+2. `if (!authLoading && !isAuthenticated)` → redirect ke `/login`
+3. `if (!kelas)` → tampilkan 404
+4. Render halaman normal
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Jangan ubah `dashboard.tsx` — guard-nya sudah benar
+- Jangan ubah `materi/index.tsx` — guard-nya sudah benar
+- Jangan ubah `use-auth.ts`
+- Jangan ubah `App.tsx`
+- Jangan install package baru
+- Jangan ubah logic apapun selain satu baris guard di `kelas-detail.tsx`
+
+---
+
+## Test Case untuk Verifikasi Manual
+
+Setelah fix diterapkan, behavior yang benar adalah:
+
+| Skenario | Expected |
+|---|---|
+| User belum login, buka `/kelas/maksimalkan-ai` | Redirect ke `/login` ✓ |
+| User sudah login, buka `/kelas/maksimalkan-ai` | Halaman kelas tampil normal ✓ |
+| User sudah login, refresh halaman `/kelas/maksimalkan-ai` | Spinner sebentar lalu halaman kelas tampil ✓ |
+| User sudah login, buka `/kelas/id-tidak-ada` | Halaman 404 tampil ✓ |

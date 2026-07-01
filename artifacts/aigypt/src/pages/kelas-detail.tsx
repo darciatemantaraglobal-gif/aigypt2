@@ -352,7 +352,7 @@ export default function KelasDetailPage() {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!authLoading && !isAuthenticated) {
     setLocation("/login");
     return null;
   }
