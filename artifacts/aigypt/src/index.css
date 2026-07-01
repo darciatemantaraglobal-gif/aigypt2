@@ -306,21 +306,6 @@ html, body {
   50%       { opacity: 0.3; }
 }
 
-@keyframes workspaceFloat {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
-}
-
-.workspace-float {
-  animation: workspaceFloat 7s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .workspace-float {
-    animation: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   [class*="animate-[dotBlink"] {
     animation: none;

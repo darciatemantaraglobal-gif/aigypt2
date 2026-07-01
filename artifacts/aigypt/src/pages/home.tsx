@@ -749,316 +749,6 @@ function StatItem({ value, suffix, label, inView }: { value: number; suffix: str
   );
 }
 
-// ─── AI Workspace (Hero right panel) ─────────────────────────────────────────
-
-const workspaceExamples = [
-  {
-    prompt: '"Buat 3 caption Instagram premium untuk bisnis parfum lokal..."',
-    lines: [
-      "1. \"Satu tetes, sejuta kesan — bukan sekadar wangi.\"",
-      "2. \"Aroma yang berbicara saat kamu diam.\"",
-      "3. \"Jadilah yang paling dikenang di setiap ruangan.\"",
-    ],
-    badge: "1.8 dtk",
-  },
-  {
-    prompt: '"Ringkas metodologi skripsi ini jadi satu paragraf padat..."',
-    lines: [
-      "Penelitian ini menggunakan pendekatan kualitatif",
-      "dengan studi kasus pada 3 subjek utama.",
-      "Data dikumpulkan melalui wawancara mendalam...",
-    ],
-    badge: "2.3 dtk",
-  },
-  {
-    prompt: '"Buatkan proposal seminar untuk 200 mahasiswa beserta RAB..."',
-    lines: [
-      "PROPOSAL: SEMINAR KEPEMIMPINAN MUDA 2026",
-      "I. Latar Belakang — Di era transformasi digital...",
-      "II. Target & Tujuan — Membangun kapasitas...",
-    ],
-    badge: "3.1 dtk",
-  },
-];
-
-function AIWorkspace() {
-  const prefersReduced = useReducedMotion();
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [showResp, setShowResp] = useState(false);
-
-  useEffect(() => {
-    if (prefersReduced) { setShowResp(true); return; }
-    setShowResp(false);
-    const t1 = setTimeout(() => setShowResp(true), 900);
-    const t2 = setTimeout(() => setActiveIdx(i => (i + 1) % workspaceExamples.length), 4800);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [activeIdx, prefersReduced]);
-
-  const ex = workspaceExamples[activeIdx];
-
-  return (
-    <div className="relative select-none" aria-hidden="true">
-      {/* Ambient glow behind panel */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          inset: "-60px",
-          background: "radial-gradient(ellipse at 55% 45%, rgba(124,58,237,0.22) 0%, transparent 65%)",
-          filter: "blur(40px)",
-          zIndex: 0,
-        }}
-      />
-
-      {/* ── Main glass panel ── */}
-      <motion.div
-        className={prefersReduced ? "" : "workspace-float"}
-        initial={prefersReduced ? false : { opacity: 0, y: 28, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
-        style={{
-          position: "relative",
-          zIndex: 1,
-          background: "linear-gradient(155deg, rgba(22,14,40,0.96) 0%, rgba(12,8,22,0.98) 100%)",
-          border: "1px solid rgba(124,58,237,0.22)",
-          borderRadius: 20,
-          backdropFilter: "blur(24px)",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.07) inset, 0 1px 0 rgba(255,255,255,0.06) inset",
-          overflow: "hidden",
-        }}
-      >
-        {/* Top accent line */}
-        <div style={{ height: 1, background: "linear-gradient(90deg, transparent 5%, rgba(168,85,247,0.7) 50%, transparent 95%)" }} />
-
-        {/* Window chrome */}
-        <div
-          className="flex items-center gap-2.5 px-4 py-3"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.15)" }}
-        >
-          <div className="flex gap-1.5">
-            {(["rgba(255,95,87,0.7)", "rgba(255,189,46,0.7)", "rgba(40,200,64,0.7)"] as string[]).map((bg, i) => (
-              <div key={i} className="w-2.5 h-2.5 rounded-full" style={{ background: bg }} />
-            ))}
-          </div>
-          <div className="flex-1 flex justify-center">
-            <span className="font-mono" style={{ fontSize: 11, color: "#3F3F46", letterSpacing: "0.1em" }}>AIGYPT Studio</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <motion.div
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: "#34D399" }}
-              animate={prefersReduced ? {} : { opacity: [1, 0.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-            <span className="font-mono" style={{ fontSize: 10, color: "#3F3F46" }}>Live</span>
-          </div>
-        </div>
-
-        {/* Prompt + Response */}
-        <div className="px-4 pt-4 pb-2">
-          {/* Prompt card */}
-          <div
-            className="p-3 rounded-xl mb-3"
-            style={{ background: "rgba(124,58,237,0.07)", border: "1px solid rgba(124,58,237,0.18)" }}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <div
-                className="w-5 h-5 rounded-full flex items-center justify-center"
-                style={{ background: "rgba(124,58,237,0.2)", flexShrink: 0 }}
-              >
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2.5">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
-                </svg>
-              </div>
-              <span className="font-mono" style={{ fontSize: 10, color: "#7C3AED", letterSpacing: "0.1em" }}>KAMU</span>
-            </div>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={`p-${activeIdx}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="text-xs leading-relaxed"
-                style={{ color: "#94A3B8" }}
-              >
-                {ex.prompt}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-
-          {/* Response card */}
-          <div
-            className="p-3 rounded-xl"
-            style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-          >
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-5 h-5 rounded-full flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg, #7C3AED, #A855F7)", flexShrink: 0 }}
-                >
-                  <svg width="8" height="8" viewBox="0 0 24 24" fill="white">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                  </svg>
-                </div>
-                <span className="font-mono" style={{ fontSize: 10, color: "#A855F7", letterSpacing: "0.1em" }}>AIGYPT AI</span>
-              </div>
-              <AnimatePresence>
-                {showResp && (
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="font-mono px-2 py-0.5 rounded-full"
-                    style={{ fontSize: 10, background: "rgba(16,185,129,0.1)", color: "#34D399", border: "1px solid rgba(16,185,129,0.2)" }}
-                  >
-                    ⚡ {ex.badge}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <AnimatePresence mode="wait">
-              {showResp ? (
-                <motion.div
-                  key={`r-${activeIdx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {ex.lines.map((line, i) => (
-                    <motion.p
-                      key={i}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.1, duration: 0.3 }}
-                      className="text-xs leading-relaxed"
-                      style={{ color: "#E2E8F0", marginBottom: i < ex.lines.length - 1 ? 3 : 0 }}
-                    >
-                      {line}
-                    </motion.p>
-                  ))}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key={`typing-${activeIdx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex items-center gap-1.5 py-1"
-                >
-                  {[0, 1, 2].map(i => (
-                    <motion.div
-                      key={i}
-                      className="w-1.5 h-1.5 rounded-full"
-                      style={{ background: "#7C3AED" }}
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-                    />
-                  ))}
-                  <span className="font-mono" style={{ fontSize: 10, color: "#3F3F46" }}>AI sedang menulis...</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Stat widgets */}
-        <div className="grid grid-cols-3 gap-2 px-4 py-3">
-          {[
-            { v: "6", l: "SESI MATERI" },
-            { v: "50+", l: "PROMPT SIAP" },
-            { v: "4", l: "PERTEMUAN LIVE" },
-          ].map((s, i) => (
-            <div
-              key={i}
-              className="py-2 px-1 rounded-lg text-center"
-              style={{ background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.1)" }}
-            >
-              <p className="font-mono font-bold text-sm leading-none mb-1" style={{ color: "#A855F7" }}>{s.v}</p>
-              <p className="font-mono leading-snug" style={{ color: "#52525B", fontSize: 9, letterSpacing: "0.06em" }}>{s.l}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Status bar */}
-        <div
-          className="flex items-center gap-2 px-4 py-2.5"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(0,0,0,0.2)" }}
-        >
-          <motion.div
-            className="w-1.5 h-1.5 rounded-full"
-            style={{ background: "#34D399" }}
-            animate={prefersReduced ? {} : { opacity: [1, 0.4, 1] }}
-            transition={{ duration: 2.5, repeat: Infinity }}
-          />
-          <span className="font-mono" style={{ fontSize: 10, color: "#52525B" }}>Model aktif · Batch 1 · 6 Juli 2026</span>
-          <div className="flex-1" />
-          <span className="font-mono" style={{ fontSize: 10, color: "#3F3F46" }}>AIGYPT · 2026</span>
-        </div>
-      </motion.div>
-
-      {/* Floating badge: top-right */}
-      <motion.div
-        initial={prefersReduced ? false : { opacity: 0, x: 16 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.8, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
-        className="absolute -top-3 -right-3 hidden xl:flex items-center gap-2"
-        style={{
-          background: "rgba(10,8,20,0.93)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 10,
-          backdropFilter: "blur(12px)",
-          padding: "7px 11px",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.5)",
-          zIndex: 3,
-        }}
-      >
-        <motion.div
-          className="w-1.5 h-1.5 rounded-full"
-          style={{ background: "#34D399" }}
-          animate={prefersReduced ? {} : { opacity: [1, 0.3, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <span className="font-mono" style={{ fontSize: 10, color: "#71717A" }}>Batch 1 · Terbuka</span>
-      </motion.div>
-
-      {/* Floating badge: bottom-left */}
-      <motion.div
-        initial={prefersReduced ? false : { opacity: 0, y: 12, x: -12 }}
-        animate={{ opacity: 1, y: 0, x: 0 }}
-        transition={{ duration: 0.6, delay: 1.0, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
-        className="absolute -bottom-4 -left-4 hidden xl:block"
-        style={{
-          background: "rgba(10,8,20,0.93)",
-          border: "1px solid rgba(124,58,237,0.22)",
-          borderRadius: 12,
-          backdropFilter: "blur(16px)",
-          padding: "10px 14px",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
-          zIndex: 3,
-        }}
-      >
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center"
-            style={{ background: "rgba(124,58,237,0.15)", flexShrink: 0 }}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2" strokeLinecap="round">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </div>
-          <div>
-            <p className="font-mono text-xs font-bold text-white leading-none mb-0.5">Karya Pertamamu</p>
-            <p className="font-mono" style={{ fontSize: 10, color: "#52525B" }}>Aplikasi nyata hasil belajarmu</p>
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -1066,247 +756,153 @@ export default function Home() {
   const statInView = useInView(statRef, { once: true, margin: "-60px" });
   const heroRef = useRef<HTMLElement>(null);
   const { position: cursorPos, isActive: cursorActive } = useCursorGlow(heroRef);
-  const prefersReduced = useReducedMotion();
+
 
   return (
     <div className="min-h-screen" style={{ background: "#060608", color: "#FAFAFA" }}>
       <Navbar />
 
       {/* ══ SECTION 1: HERO ══ */}
-      <section
-        ref={heroRef}
-        className="relative overflow-hidden flex items-center"
-        style={{ minHeight: "88vh", paddingTop: "64px", paddingBottom: "80px" }}
-      >
-        {/* ── Background layers ── */}
-        <div className="hero-ambient-glow" style={{ left: "28%", top: "45%" }} />
+      <section ref={heroRef} className="relative overflow-hidden pt-[80px] pb-[80px] sm:pt-[100px] sm:pb-[100px]">
+        {/* Centered ambient glow — pulses behind headline */}
+        <div className="hero-ambient-glow" />
 
-        {/* Cursor-aware glow */}
+        {/* Cursor-aware glow — desktop only */}
         <div
           className="hidden md:block absolute pointer-events-none rounded-full"
           style={{
-            width: "440px",
-            height: "440px",
-            left: cursorPos.x - 220,
-            top: cursorPos.y - 220,
-            background: "radial-gradient(circle, rgba(124,58,237,0.13), transparent 70%)",
-            filter: "blur(50px)",
+            width: '350px',
+            height: '350px',
+            left: cursorPos.x - 175,
+            top: cursorPos.y - 175,
+            background: 'radial-gradient(circle, rgba(124,58,237,0.15), transparent 70%)',
+            filter: 'blur(40px)',
             opacity: cursorActive ? 1 : 0,
-            transition: "opacity 0.3s ease",
+            transition: 'opacity 0.3s ease',
             zIndex: 0,
           }}
         />
 
-        {/* Wide elliptical haze — shifted left for 2-col layout */}
+        {/* Wide elliptical haze */}
         <motion.div
           className="absolute pointer-events-none"
           style={{
-            top: "-10%",
-            left: "-5%",
-            width: "70vw",
-            height: "95vh",
-            background: "radial-gradient(ellipse at 35% 45%, rgba(124,58,237,0.13) 0%, transparent 62%)",
-            filter: "blur(70px)",
+            top: "-15%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "80vw",
+            height: "70vh",
+            background: "radial-gradient(ellipse at center, rgba(124,58,237,0.14) 0%, transparent 65%)",
+            filter: "blur(60px)",
           }}
-          animate={{ opacity: [0.65, 1, 0.65], scale: [1, 1.04, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.05, 1] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         />
-
-        {/* Right-side accent glow for workspace panel */}
-        <div
-          className="absolute right-0 top-0 bottom-0 pointer-events-none hidden lg:block"
-          style={{
-            width: "55%",
-            background: "radial-gradient(ellipse at 72% 50%, rgba(124,58,237,0.08) 0%, transparent 65%)",
-            filter: "blur(32px)",
-          }}
-        />
-
         {/* Dot grid */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-20"
           style={{
-            backgroundImage: "radial-gradient(rgba(124,58,237,0.18) 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(rgba(124,58,237,0.2) 1px, transparent 1px)",
             backgroundSize: "28px 28px",
-            opacity: 0.22,
           }}
         />
 
-        {/* ── Content grid ── */}
-        <div className="relative w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="grid grid-cols-1 lg:grid-cols-[45fr_55fr] gap-8 xl:gap-14 items-center">
+        <Reveal className="relative max-w-5xl mx-auto px-6 sm:px-10 text-center">
+          <motion.p
+            variants={fadeUp}
+            className="font-mono text-xs tracking-widest mb-8 inline-flex items-center gap-2"
+            style={{ color: "#7C3AED", letterSpacing: "0.2em" }}
+          >
+            PLATFORM PEMBELAJARAN AI UNTUK MAHASISWA INDONESIA DI MESIR
+          </motion.p>
 
-            {/* ── LEFT COLUMN ── */}
-            <Reveal delay={0}>
-              {/* Platform badge */}
-              <motion.div variants={fadeUp} className="mb-6">
-                <span
-                  className="inline-flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-full"
-                  style={{
-                    background: "rgba(124,58,237,0.1)",
-                    border: "1px solid rgba(124,58,237,0.25)",
-                    color: "#7C3AED",
-                    letterSpacing: "0.13em",
-                  }}
-                >
-                  <motion.span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: "#7C3AED", display: "inline-block", flexShrink: 0 }}
-                    animate={prefersReduced ? {} : { opacity: [1, 0.3, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                  PLATFORM AI · MASISIR · BATCH 1 DIBUKA
-                </span>
-              </motion.div>
-
-              {/* Headline */}
-              <motion.h1
-                variants={fadeUp}
-                className="font-display font-semibold leading-[1.05] mb-6"
-                style={{ fontSize: "clamp(2.6rem, 5vw, 4.5rem)", letterSpacing: "-0.03em" }}
-              >
-                Kuasai{" "}
-                <span
-                  style={{
-                    background: "linear-gradient(135deg, #C084FC 0%, #A855F7 45%, #8B5CF6 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  Kecerdasan
-                </span>
-                <br />
-                Buatan.{" "}
-                <span
-                  style={{
-                    background: "linear-gradient(135deg, #A855F7 0%, #C084FC 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  Ciptakan
-                </span>
-                <br />
-                Sesuatu yang Nyata.
-                <motion.span
-                  style={{ color: "#A855F7", fontWeight: 300, marginLeft: "4px", display: "inline-block" }}
-                  animate={{ opacity: [1, 1, 0, 0] }}
-                  transition={{ duration: 1.1, repeat: Infinity, ease: "linear", times: [0, 0.45, 0.5, 0.95] }}
-                >
-                  |
-                </motion.span>
-              </motion.h1>
-
-              {/* Description */}
-              <motion.p
-                variants={fadeUp}
-                className="text-base sm:text-lg leading-[1.8] mb-8"
-                style={{ color: "#A1A1AA", fontWeight: 300, maxWidth: "480px" }}
-              >
-                Platform yang mengajarkan cara memanfaatkan AI secara mendalam —
-                bukan sekadar menggunakannya, tapi menjadikannya alat untuk
-                menciptakan karya dan solusi nyata.
-              </motion.p>
-
-              {/* Urgency chip */}
-              <motion.div variants={fadeUp} className="mb-8">
-                <div
-                  className="batch-urgency-card inline-flex flex-col items-start gap-1 px-4 py-2.5 rounded-xl"
-                  style={{ background: "rgba(124,58,237,0.08)" }}
-                >
-                  <span className="font-mono text-xs font-bold" style={{ color: "#A855F7", letterSpacing: "0.12em" }}>
-                    BATCH 1 · PENDAFTARAN DIBUKA
-                  </span>
-                  <span className="font-mono text-xs" style={{ color: "#71717A" }}>
-                    Pertemuan pertama: 6 Juli 2026 · Tempat sangat terbatas
-                  </span>
-                </div>
-              </motion.div>
-
-              {/* CTA row */}
-              <motion.div
-                variants={fadeUp}
-                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-8"
-              >
-                <Link href="/daftar">
-                  <motion.span
-                    className="flex items-center justify-center gap-2 text-base font-medium text-white cursor-pointer"
-                    style={{
-                      background: "linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)",
-                      borderRadius: "12px",
-                      padding: "15px 28px",
-                      minHeight: "52px",
-                      boxShadow: "0 4px 20px rgba(124,58,237,0.4), 0 0 0 1px rgba(124,58,237,0.15)",
-                      display: "flex",
-                    }}
-                    whileHover={{
-                      y: -2,
-                      boxShadow: "0 8px 32px rgba(124,58,237,0.55), 0 0 0 1px rgba(168,85,247,0.35)",
-                    }}
-                    whileTap={{ scale: 0.98, y: 0 }}
-                    transition={{ duration: 0.18 }}
-                  >
-                    Daftar Batch 1 Sekarang <IconArrow />
-                  </motion.span>
-                </Link>
-                <Link href="/kurikulum">
-                  <motion.span
-                    className="flex items-center justify-center gap-2 text-base font-normal cursor-pointer"
-                    style={{
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      color: "#A1A1AA",
-                      borderRadius: "12px",
-                      padding: "15px 24px",
-                      minHeight: "52px",
-                      backdropFilter: "blur(8px)",
-                      background: "rgba(255,255,255,0.02)",
-                      display: "flex",
-                    }}
-                    whileHover={{
-                      borderColor: "rgba(124,58,237,0.4)",
-                      color: "#FFFFFF",
-                      background: "rgba(124,58,237,0.07)",
-                      y: -1,
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 0.18 }}
-                  >
-                    Jelajahi Kurikulum
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Trust row */}
-              <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-x-5 gap-y-2">
-                {[
-                  { v: "50+", l: "Prompt Siap Pakai" },
-                  { v: "6", l: "Sesi Mendalam" },
-                  { v: "4", l: "Pertemuan Live" },
-                  { v: "∞", l: "Akses Selamanya" },
-                ].map((s, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    {i > 0 && <div className="w-px h-3 hidden sm:block" style={{ background: "rgba(255,255,255,0.08)" }} />}
-                    <span className="font-mono font-bold text-sm" style={{ color: "#A855F7" }}>{s.v}</span>
-                    <span className="font-mono text-xs" style={{ color: "#52525B" }}>{s.l}</span>
-                  </div>
-                ))}
-              </motion.div>
-            </Reveal>
-
-            {/* ── RIGHT COLUMN: AI Workspace ── */}
-            <motion.div
-              className="hidden lg:block relative"
-              initial={prefersReduced ? false : { opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] }}
+          <motion.h1
+            variants={fadeUp}
+            className="font-display font-semibold leading-[1.05] mb-8"
+            style={{ fontSize: "clamp(2.75rem, 7vw, 5.5rem)", letterSpacing: "-0.025em" }}
+          >
+            Kuasai Kecerdasan
+            <br />
+            Buatan.{" "}
+            <span style={{ color: "#A855F7" }}>Ciptakan</span>
+            <br />
+            <span style={{ color: "#A855F7" }}>Sesuatu yang Nyata.</span>
+            <motion.span
+              style={{ color: "#A855F7", fontWeight: 300, marginLeft: "4px", display: "inline-block" }}
+              animate={{ opacity: [1, 1, 0, 0] }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: "linear", times: [0, 0.45, 0.5, 0.95] }}
             >
-              <AIWorkspace />
-            </motion.div>
-          </div>
-        </div>
+              |
+            </motion.span>
+          </motion.h1>
+
+          <motion.p
+            variants={fadeUp}
+            className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-8"
+            style={{ color: "#A1A1AA", fontWeight: 300 }}
+          >
+            AIGYPT adalah platform yang mengajarkan cara memanfaatkan AI secara mendalam,
+            bukan sekadar menggunakannya, tapi menjadikannya alat untuk menciptakan karya dan solusi nyata.
+          </motion.p>
+
+          <motion.div
+            variants={fadeUp}
+            className="batch-urgency-card inline-flex flex-col items-center gap-1 mb-4 px-5 py-3 rounded-xl"
+            style={{ background: "rgba(124,58,237,0.1)" }}
+          >
+            <span className="font-mono text-xs font-bold tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 1 · PENDAFTARAN DIBUKA</span>
+            <span className="font-mono text-xs" style={{ color: "#71717A" }}>Pertemuan pertama: 6 Juli 2026 · Tempat sangat terbatas</span>
+          </motion.div>
+
+          {/* Tambahan: Angkatan Pertama */}
+          <motion.div variants={fadeUp} className="mb-10">
+            <span className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.2em" }}>
+              ANGKATAN PERTAMA · JADILAH YANG LEBIH DULU MENGUASAINYA
+            </span>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-16 w-full max-w-sm sm:max-w-none mx-auto">
+            <Link href="/daftar" className="w-full sm:w-auto">
+              <span
+                className="flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer w-full sm:w-auto"
+                style={{
+                  background: "#7C3AED",
+                  borderRadius: "12px",
+                  padding: "15px 24px",
+                  minHeight: "52px",
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+                }}
+              >
+                Daftar Batch 1 Sekarang <IconArrow />
+              </span>
+            </Link>
+            <Link href="/kurikulum" className="w-full sm:w-auto">
+              <span
+                className="flex items-center justify-center gap-2 text-base font-normal cursor-pointer transition-all duration-200 hover:text-white w-full sm:w-auto"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#A1A1AA",
+                  borderRadius: "12px",
+                  padding: "15px 24px",
+                  minHeight: "52px",
+                }}
+              >
+                Jelajahi Kurikulum
+              </span>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            className="inline-flex flex-wrap items-center justify-center gap-6"
+          >
+            {["6 SESI MATERI", "4 PERTEMUAN LIVE", "HYBRID", "SEMUA LEVEL"].map((t) => (
+              <span key={t} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
+                {t}
+              </span>
+            ))}
+          </motion.div>
+        </Reveal>
       </section>
 
       {/* ══ SECTION 2: VISI / MANIFESTO ══ */}
