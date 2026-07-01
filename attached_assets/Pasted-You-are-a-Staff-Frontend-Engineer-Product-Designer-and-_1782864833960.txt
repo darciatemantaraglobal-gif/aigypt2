@@ -1,0 +1,644 @@
+You are a Staff Frontend Engineer, Product Designer, and Creative Director.
+
+Your responsibility is NOT to create a new landing page.
+
+Your responsibility is to elevate the existing landing page into a world-class premium AI product while preserving the current architecture.
+
+===========================================================
+PROJECT CONTEXT
+===========================================================
+
+Before making ANY changes, inspect the existing project.
+
+Understand:
+
+- folder structure
+- reusable UI components
+- Tailwind utilities
+- Framer Motion usage
+- animation helpers
+- existing design system
+- routing
+- data source
+- hooks
+- shared components
+
+Do NOT start coding immediately.
+
+Understand the project first.
+
+===========================================================
+FILES TO ANALYZE FIRST
+===========================================================
+
+Study these carefully before editing.
+
+- artifacts/aigypt/src/pages/home.tsx
+
+Also inspect every component imported by home.tsx.
+
+Especially identify:
+
+Navbar
+
+Footer
+
+Reveal
+
+SectionLabel
+
+CountUp
+
+animation utilities
+
+cursor glow hook
+
+shared UI components
+
+If an existing component can be reused,
+reuse it.
+
+Do NOT duplicate components.
+
+===========================================================
+PROJECT RULES
+===========================================================
+
+DO NOT
+
+• rewrite the application
+• replace the routing
+• remove animations
+• introduce unnecessary dependencies
+• duplicate existing logic
+• create inconsistent styles
+• break responsive layouts
+
+Instead:
+
+Refactor.
+
+Improve.
+
+Extract.
+
+Polish.
+
+===========================================================
+MISSION
+===========================================================
+
+The current homepage works.
+
+The codebase is already good.
+
+The design is the weak point.
+
+The homepage currently feels:
+
+left-heavy
+
+empty
+
+unfinished
+
+template-like
+
+The redesign must make the website feel like:
+
+OpenAI
+
+Linear
+
+Cursor
+
+Arc Browser
+
+Framer
+
+Vercel
+
+Apple
+
+Stripe
+
+NOT like:
+
+Udemy
+
+Coursera
+
+Bootstrap templates
+
+ThemeForest
+
+Generic SaaS template
+
+===========================================================
+DESIGN GOALS
+===========================================================
+
+When users open the page they should immediately think:
+
+"This is an AI company."
+
+NOT
+
+"This is an online course website."
+
+The experience should communicate:
+
+Premium
+
+Confident
+
+Minimal
+
+Expensive
+
+Modern
+
+Elegant
+
+Intelligent
+
+===========================================================
+LAYOUT RESTRUCTURE
+===========================================================
+
+The current hero is heavily left aligned.
+
+There is too much empty space.
+
+The right side contributes almost nothing.
+
+Completely rebalance the composition.
+
+Desktop layout:
+
+----------------------------------------------------
+
+45% LEFT
+
+55% RIGHT
+
+----------------------------------------------------
+
+LEFT
+
+• badge
+• title
+• highlighted keywords
+• description
+• metadata
+• CTA
+• secondary CTA
+• trust row
+
+RIGHT
+
+Premium AI Workspace
+
+===========================================================
+DO NOT USE IMAGES
+===========================================================
+
+The right side should NOT contain illustrations.
+
+The right side should NOT contain stock graphics.
+
+Build everything using HTML, CSS and Tailwind only.
+
+Use layered glass panels.
+
+===========================================================
+BUILD A PREMIUM AI WORKSPACE
+===========================================================
+
+Create a floating AI interface composed of multiple layers.
+
+Possible elements:
+
+Prompt window
+
+Chat panel
+
+Code generation
+
+Knowledge cards
+
+Automation workflow
+
+Analytics widgets
+
+Progress bars
+
+Agent status
+
+Typing indicator
+
+Execution timeline
+
+Floating command palette
+
+Gradient connection lines
+
+Blurred glass panels
+
+Depth
+
+Shadows
+
+Reflections
+
+Hover interactions
+
+The workspace should become the visual anchor of the page.
+
+===========================================================
+BACKGROUND REDESIGN
+===========================================================
+
+Current background feels flat.
+
+Create depth using multiple layers.
+
+Use:
+
+radial gradients
+
+soft ambient glow
+
+noise texture
+
+faint grid
+
+purple lighting
+
+blurred blobs
+
+breathing animation
+
+floating particles
+
+subtle parallax
+
+mouse interaction
+
+The page should never look empty.
+
+===========================================================
+TYPOGRAPHY
+===========================================================
+
+Improve hierarchy.
+
+Title should become dramatically stronger.
+
+Very large.
+
+Balanced.
+
+Readable.
+
+Modern.
+
+Highlight only important keywords using gradient.
+
+Improve:
+
+tracking
+
+leading
+
+line length
+
+spacing
+
+Do not make paragraphs too wide.
+
+===========================================================
+CTA SECTION
+===========================================================
+
+Primary button
+
+Gradient
+
+Glow
+
+Soft shadow
+
+Hover lift
+
+Press animation
+
+Secondary button
+
+Glass
+
+Border
+
+Blur
+
+Hover background
+
+Smooth transition
+
+Buttons should feel tactile.
+
+===========================================================
+TRUST ROW
+===========================================================
+
+Under the CTA add a premium trust row.
+
+Possible items:
+
+Students
+
+Projects built
+
+Hours of content
+
+Community
+
+Rating
+
+Keep it elegant.
+
+Small.
+
+Minimal.
+
+===========================================================
+HERO HEIGHT
+===========================================================
+
+Current hero occupies too much vertical space.
+
+Reduce height.
+
+Target:
+
+approximately 85vh.
+
+The next section should already be visible without excessive scrolling.
+
+===========================================================
+COURSE SECTION
+===========================================================
+
+Current course section starts too late.
+
+Move it upward.
+
+Allow it to overlap the hero slightly.
+
+Like modern SaaS landing pages.
+
+===========================================================
+
+Course cards should become premium.
+
+Include:
+
+status badge
+
+difficulty
+
+duration
+
+category
+
+beautiful thumbnail area
+
+glass
+
+gradient border
+
+hover lift
+
+soft glow
+
+animated border
+
+===========================================================
+SECTION FLOW
+===========================================================
+
+Avoid hard visual breaks.
+
+Blend sections together.
+
+Use:
+
+gradient transitions
+
+lighting
+
+blur
+
+depth
+
+===========================================================
+ANIMATION
+===========================================================
+
+Reuse existing Framer Motion utilities.
+
+Do NOT replace them.
+
+Enhance them.
+
+Use:
+
+fade
+
+stagger
+
+hover lift
+
+floating
+
+breathing
+
+parallax
+
+card tilt
+
+glow pulse
+
+cursor response
+
+Motion should feel luxurious.
+
+Never distracting.
+
+===========================================================
+RESPONSIVE
+===========================================================
+
+Desktop is priority.
+
+Tablet must be redesigned.
+
+Mobile should not simply stack everything.
+
+Recompose layouts intelligently.
+
+===========================================================
+PERFORMANCE
+===========================================================
+
+Animations should remain GPU accelerated.
+
+Prefer:
+
+transform
+
+opacity
+
+filter
+
+Avoid layout thrashing.
+
+Avoid expensive rerenders.
+
+Maintain excellent Lighthouse performance.
+
+===========================================================
+CODE REFACTOR
+===========================================================
+
+Do NOT keep everything inside home.tsx.
+
+Extract reusable components.
+
+Suggested structure:
+
+components/home/
+
+Hero.tsx
+
+HeroContent.tsx
+
+HeroWorkspace.tsx
+
+HeroBackground.tsx
+
+TrustIndicators.tsx
+
+CourseHighlight.tsx
+
+FloatingCard.tsx
+
+GradientBlob.tsx
+
+AmbientBackground.tsx
+
+Keep components clean.
+
+Small.
+
+Reusable.
+
+===========================================================
+DESIGN DETAILS
+===========================================================
+
+Spacing must follow an 8px rhythm.
+
+Corner radius must be consistent.
+
+Border opacity must be subtle.
+
+Glows must never overpower the interface.
+
+Glass panels should have believable blur.
+
+Hover elevation should be subtle.
+
+Icons should align perfectly.
+
+Nothing should feel random.
+
+===========================================================
+SELF REVIEW
+===========================================================
+
+After implementation, perform a complete polish pass.
+
+Check:
+
+spacing
+
+alignment
+
+responsive behavior
+
+animation timing
+
+consistency
+
+hover states
+
+typography
+
+depth
+
+lighting
+
+visual hierarchy
+
+Remove anything that feels unfinished.
+
+===========================================================
+QUALITY BAR
+===========================================================
+
+Do not stop when the page is "good".
+
+Keep refining until it feels like something shipped by:
+
+OpenAI
+
+Linear
+
+Vercel
+
+Cursor
+
+Framer
+
+Arc Browser
+
+Apple
+
+The final homepage should feel like a premium AI product first, and an education platform second.
+
+If any section still resembles a generic online course landing page, redesign it again before finishing.
+Tambahan yang menurut gue sangat penting untuk project lo
+
+Karena gue lihat project ini udah punya fondasi yang lumayan rapi, tambahkan instruksi berikut di bagian paling atas supaya Claude tidak asal mengacak-acak struktur yang sudah ada:
+
+Implementation Workflow
+
+Phase 1
+- Analyze the entire Home page.
+- Explain the current component hierarchy.
+- Identify reusable components.
+- Identify unnecessary duplication.
+- Produce a concise implementation plan.
+
+Phase 2
+- Refactor the page incrementally.
+- Keep commits logically grouped (or clearly separate changes if working in a single edit).
+- Preserve existing functionality and animations while improving the UI.
+
+Phase 3
+- Perform a design polish pass.
+- Fine-tune spacing, typography, shadows, gradients, animation timing, and responsive behavior.
+- Eliminate visual inconsistencies.
+
+Do not skip any phase.
