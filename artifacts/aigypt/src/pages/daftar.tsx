@@ -297,8 +297,8 @@ export default function Daftar() {
     }
   };
 
-  const PRICES: Record<string, number> = { mandiri: 250000, kelas: 350000 };
-  const basePrice = PRICES[selectedType] ?? 350000;
+  const PRICES: Record<string, number> = { mandiri: 200000, kelas: 150000 };
+  const basePrice = PRICES[selectedType] ?? 150000;
   const finalPrice = appliedCoupon ? Math.max(0, basePrice - appliedCoupon.discountAmount) : basePrice;
 
   const inputBaseStyle: React.CSSProperties = {
@@ -375,7 +375,7 @@ export default function Daftar() {
           >
             {tiers.map((tier) => {
               const isSelected = selectedType === tier.id;
-              const tierBasePrice = PRICES[tier.id] ?? 350000;
+              const tierBasePrice = PRICES[tier.id] ?? 150000;
               const tierFinalPrice = (appliedCoupon && tier.id === "kelas")
                 ? Math.max(0, tierBasePrice - appliedCoupon.discountAmount)
                 : tierBasePrice;

@@ -1412,7 +1412,7 @@ export default function Home() {
                     >
                       GUNAKAN KODE AIGYPT26 · HEMAT Rp 51.000
                     </span>
-                    <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Berlaku hingga 6 Juli 2026 untuk pendaftaran Batch 1</p>
+                    <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Berlaku hingga 15 Juli 2026 untuk pendaftaran Batch 1</p>
                   </div>
                 )}
                 <p className="text-xs mb-5 pb-4" style={{ color: "#7C3AED", borderBottom: "1px solid rgba(124,58,237,0.1)", fontStyle: "italic" }}>

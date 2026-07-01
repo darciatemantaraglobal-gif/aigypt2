@@ -11,7 +11,7 @@ export const ACTIVE_COUPONS: Coupon[] = [
     code: "AIGYPT26",
     discountAmount: 51000,
     applicableTo: "kelas",
-    validUntil: "2026-07-06T23:59:59+07:00",
+    validUntil: "2026-07-15T23:59:59+07:00",
     description: "Diskon spesial pendaftaran Batch 1",
   },
 ];

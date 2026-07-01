@@ -3,11 +3,11 @@ import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import qrisImg from "@/assets/qris-payment.png";
+import qrisImg from "@/assets/QRIXS.png";
 
 const PRICE: Record<string, number> = {
-  mandiri: 250000,
-  kelas: 350000,
+  mandiri: 200000,
+  kelas: 150000,
 };
 
 function formatRp(n: number) {
@@ -73,7 +73,7 @@ export default function Pembayaran() {
     });
   }, []);
 
-  const basePrice = PRICE[params.type] ?? 350000;
+  const basePrice = PRICE[params.type] ?? 150000;
   const finalPrice = params.couponCode && params.discountAmount > 0
     ? Math.max(0, basePrice - params.discountAmount)
     : basePrice;
