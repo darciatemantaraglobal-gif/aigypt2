@@ -4,7 +4,7 @@ import * as schema from "./schema";
 
 const { Pool } = pg;
 
-const dbUrl = process.env.DATABASE_URL;
+const dbUrl = process.env.SUPABASE_DATABASE_URL;
 
 let _pool: pg.Pool | null = null;
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
@@ -13,7 +13,7 @@ function getPool(): pg.Pool {
   if (!_pool) {
     if (!dbUrl) {
       throw new Error(
-        "DATABASE_URL must be set.",
+        "SUPABASE_DATABASE_URL must be set. Masukkan connection string Supabase kamu.",
       );
     }
     _pool = new Pool({ connectionString: dbUrl });
