@@ -637,11 +637,11 @@ balance antara kuliah, rapat, dan belajar mandiri. Saya punya kuliah
   },
 
   // ═══════════════════════════════════════════════════════
-  // SESI 3 — AI Jadi Asisten Akademik & Organisasi Lo
+  // SESI 3 — AI Jadi Asisten Akademik & Organisasimu
   // ═══════════════════════════════════════════════════════
   {
     sesiNumber: 3,
-    title: "AI Jadi Asisten Akademik & Organisasi Lo",
+    title: "AI Jadi Asisten Akademik & Organisasimu",
     subtitle: "Selesaikan tugas nyata lebih cepat dengan tools yang tepat",
     steps: [
       {
@@ -898,11 +898,11 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
   },
 
   // ═══════════════════════════════════════════════════════
-  // SESI 4 — AI Jadi Mesin Cuan Lo
+  // SESI 4 — AI Jadi Mesin Penghasil Cuan
   // ═══════════════════════════════════════════════════════
   {
     sesiNumber: 4,
-    title: "AI Jadi Mesin Cuan Lo",
+    title: "AI Jadi Mesin Penghasil Cuan",
     subtitle: "Riset pasar, copywriting, dan konten yang menghasilkan",
     steps: [
       {
@@ -1412,11 +1412,11 @@ Hasil yang bisa dilihat saat Demo Day: [...]`,
   },
 
   // ═══════════════════════════════════════════════════════
-  // SESI 6 — Ini Solusi Gue (Demo Day)
+  // SESI 6 — Ini Solusiku (Demo Day)
   // ═══════════════════════════════════════════════════════
   {
     sesiNumber: 6,
-    title: "Ini Solusi Gue",
+    title: "Ini Solusiku",
     subtitle: "Demo Day: presentasikan solusi nyata yang kamu bangun",
     steps: [
       {

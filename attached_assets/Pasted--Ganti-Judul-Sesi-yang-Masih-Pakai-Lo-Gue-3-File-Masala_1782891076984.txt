@@ -1,0 +1,158 @@
+# Ganti Judul Sesi yang Masih Pakai "Lo/Gue" — 3 File
+
+## Masalah
+
+Judul-judul sesi di halaman dashboard dan materi masih pakai bahasa gaul "lo" dan "gue" yang terlihat langsung oleh user:
+
+- "AI Jadi Asisten Akademik & Organisasi **Lo**"
+- "AI Jadi Mesin Cuan **Lo**"
+- "**Lo** Bisa Bikin Aplikasi Sendiri"
+- "Ini Solusi **Gue**"
+
+Judul-judul ini muncul di tiga file yang berbeda dan semuanya harus diganti secara konsisten.
+
+---
+
+## Judul Pengganti (Referensi)
+
+| Sesi | Judul Lama | Judul Baru |
+|---|---|---|
+| Sesi 3 | `AI Jadi Asisten Akademik & Organisasi Lo` | `AI Jadi Asisten Akademik & Organisasimu` |
+| Sesi 4 | `AI Jadi Mesin Cuan Lo` | `AI Jadi Mesin Penghasil Cuan` |
+| Sesi 5 | `Lo Bisa Bikin Aplikasi Sendiri` | `Kamu Bisa Membuat Aplikasi Sendiri` |
+| Sesi 6 | `Ini Solusi Gue` | `Ini Solusiku` |
+
+Sesi 1 dan 2 tidak perlu diubah judulnya karena sudah bersih.
+
+---
+
+## File 1: `artifacts/aigypt/src/lib/materiContent.ts`
+
+Cari dan ganti **4 baris title** berikut (hanya nilai string-nya, jangan ubah yang lain):
+
+```ts
+// Baris ~644
+title: "AI Jadi Asisten Akademik & Organisasi Lo",
+```
+→
+```ts
+title: "AI Jadi Asisten Akademik & Organisasimu",
+```
+
+```ts
+// Baris ~905
+title: "AI Jadi Mesin Cuan Lo",
+```
+→
+```ts
+title: "AI Jadi Mesin Penghasil Cuan",
+```
+
+```ts
+// Baris ~1160
+title: "Lo Bisa Bikin Aplikasi Sendiri",
+```
+→
+```ts
+title: "Kamu Bisa Membuat Aplikasi Sendiri",
+```
+
+```ts
+// Baris ~1419
+title: "Ini Solusi Gue",
+```
+→
+```ts
+title: "Ini Solusiku",
+```
+
+Juga update komentar di atasnya agar konsisten:
+
+```ts
+// SESI 3 — AI Jadi Asisten Akademik & Organisasi Lo
+```
+→
+```ts
+// SESI 3 — AI Jadi Asisten Akademik & Organisasimu
+```
+
+```ts
+// SESI 4 — AI Jadi Mesin Cuan Lo
+```
+→
+```ts
+// SESI 4 — AI Jadi Mesin Penghasil Cuan
+```
+
+```ts
+// SESI 5 — Lo Bisa Bikin Aplikasi Sendiri
+```
+→
+```ts
+// SESI 5 — Kamu Bisa Membuat Aplikasi Sendiri
+```
+
+```ts
+// SESI 6 — Ini Solusi Gue (Demo Day)
+```
+→
+```ts
+// SESI 6 — Ini Solusiku (Demo Day)
+```
+
+---
+
+## File 2: `artifacts/aigypt/src/pages/dashboard.tsx`
+
+Cari array sesi di bagian atas file (sekitar baris 10–16). Ganti judul yang bermasalah:
+
+```ts
+{ num: 3, title: "AI Jadi Asisten Akademik & Organisasi Lo" },
+{ num: 4, title: "AI Jadi Mesin Cuan Lo" },
+{ num: 5, title: "Lo Bisa Bikin Aplikasi Sendiri" },
+{ num: 6, title: "Ini Solusi Gue" },
+```
+
+Ganti menjadi:
+
+```ts
+{ num: 3, title: "AI Jadi Asisten Akademik & Organisasimu" },
+{ num: 4, title: "AI Jadi Mesin Penghasil Cuan" },
+{ num: 5, title: "Kamu Bisa Membuat Aplikasi Sendiri" },
+{ num: 6, title: "Ini Solusiku" },
+```
+
+---
+
+## File 3: `artifacts/aigypt/src/pages/materi/sesi-6.tsx`
+
+Di file ini ada teks narasi yang menyebut judul sesi secara eksplisit. Cari dan ganti:
+
+```tsx
+"Ini Solusi Gue"
+```
+→
+```tsx
+"Ini Solusiku"
+```
+
+(Bisa ada lebih dari satu kemunculan di file ini — ganti semua.)
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Judul Sesi 1 (`"AI Itu Bukan Sulap, Tapi Hampir"`) — sudah bersih
+- Judul Sesi 2 (`"Ngomong yang Bener, Dapet yang Bener"`) — biarkan apa adanya, ini gaya bahasa naratif bukan kata ganti
+- Konten materi di dalam sesi (paragraf, bullet point) — sudah ditangani di prompt terpisah
+- Nama variabel, fungsi, atau logika apapun
+- File lain selain 3 file yang disebutkan
+
+---
+
+## Verifikasi
+
+Setelah selesai, cek di browser:
+- Halaman `/dashboard` → card sesi 3–6 judulnya sudah benar
+- Halaman `/kelas/maksimalkan-ai` → daftar sesi di bawah sudah benar
+- Tidak ada lagi kata "Lo" atau "Gue" di judul manapun yang tampil ke user

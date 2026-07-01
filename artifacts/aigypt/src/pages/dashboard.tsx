@@ -9,10 +9,10 @@ import { AdminBanner } from "@/components/AdminBanner";
 const sessions = [
   { num: 1, title: "AI Itu Bukan Sulap, Tapi Hampir" },
   { num: 2, title: "Ngomong yang Bener, Dapet yang Bener" },
-  { num: 3, title: "AI Jadi Asisten Akademik & Organisasi Lo" },
-  { num: 4, title: "AI Jadi Mesin Cuan Lo" },
-  { num: 5, title: "Lo Bisa Bikin Aplikasi Sendiri" },
-  { num: 6, title: "Ini Solusi Gue" },
+  { num: 3, title: "AI Jadi Asisten Akademik & Organisasimu" },
+  { num: 4, title: "AI Jadi Mesin Penghasil Cuan" },
+  { num: 5, title: "Kamu Bisa Membuat Aplikasi Sendiri" },
+  { num: 6, title: "Ini Solusiku" },
 ];
 
 function ProgressCircle({ num, status }: { num: number; status: "completed" | "current" | "locked" }) {
