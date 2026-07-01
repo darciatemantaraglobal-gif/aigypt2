@@ -711,7 +711,7 @@ export default function KelasPage() {
               className="font-mono tracking-widest mb-6"
               style={{ color: "#A855F7", letterSpacing: "0.1em", fontSize: "12px", fontWeight: 600 }}
             >
-              KELAS UNGGULAN · TERSEDIA SEKARANG
+              AIGYPT · KELAS & PROGRAM
             </p>
             <h1
               className="font-display font-semibold mb-6"
@@ -722,23 +722,16 @@ export default function KelasPage() {
                 maxWidth: "600px",
               }}
             >
-              Maksimalkan AI untuk
+              Kuasai AI,{" "}
               <br />
-              <span style={{ color: "#A855F7" }}>Menghasilkan Solusimu</span>
+              <span style={{ color: "#A855F7" }}>mulai dari mana kamu berada.</span>
             </h1>
             <p
-              className="font-mono tracking-widest mb-5"
-              style={{ color: "#71717A", fontSize: "13px", letterSpacing: "0.05em" }}
-            >
-              6 SESI · 60 MENIT/SESI · SEMUA LEVEL · BAHASA INDONESIA
-            </p>
-            <p
               className="mb-10"
-              style={{ color: "#A1A1AA", fontWeight: 400, fontSize: "17px", lineHeight: 1.7, maxWidth: "600px" }}
+              style={{ color: "#A1A1AA", fontWeight: 400, fontSize: "17px", lineHeight: 1.7, maxWidth: "560px" }}
             >
-              Dari sekadar bertanya pada AI, hingga membangun aplikasi nyata
-              dengan tanganmu sendiri. Kelas transformatif yang dirancang
-              khusus untuk masisir.
+              Program belajar AI yang dirancang khusus untuk masisir. Dari pemula
+              hingga membangun produk nyata, pilih jalur yang sesuai dengan tujuanmu.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
@@ -760,12 +753,15 @@ export default function KelasPage() {
                   (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 24px rgba(124,58,237,0.4), 0px 4px 12px rgba(0,0,0,0.3)";
                   (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
                 }}
-                onClick={() => setLocation(`/kelas/${flagship.id}`)}
+                onClick={() => {
+                  const el = document.getElementById("katalog-kelas");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M5 3l14 9-14 9V3z" />
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 6h16M4 12h16M4 18h7" />
                 </svg>
-                Mulai Belajar
+                Jelajahi Kelas
               </button>
               <button
                 className="flex items-center justify-center gap-2 text-base font-semibold transition-all duration-200 w-full sm:w-auto"
@@ -786,13 +782,12 @@ export default function KelasPage() {
                   (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.03)";
                   (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(255,255,255,0.1)";
                 }}
-                onClick={() => setModalKelas(flagship)}
+                onClick={() => setLocation("/kurikulum")}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 16v-4M12 8h.01" />
+                  <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
-                Lihat Detail
+                Lihat Kurikulum
               </button>
             </div>
           </motion.div>
@@ -800,7 +795,7 @@ export default function KelasPage() {
       </section>
 
       {/* ── NETFLIX ROWS ── */}
-      <section className="pb-20 space-y-12">
+      <section id="katalog-kelas" className="pb-20 space-y-12">
         <KelasRow
           title="Tersedia Sekarang"
           items={available}
