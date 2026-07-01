@@ -1,0 +1,73 @@
+# Bypass API `/qris/confirm` — Langsung Buka WhatsApp
+
+## Masalah
+
+Tombol "Konfirmasi via WhatsApp" di `pembayaran.tsx` masih hit `/api/qris/confirm` di server. Server tidak tersedia → error "Terjadi kesalahan jaringan". Padahal yang dibutuhkan cuma: generate order ID sederhana lalu buka WA dengan pesan konfirmasi.
+
+---
+
+## File yang Diubah: `artifacts/aigypt/src/pages/pembayaran.tsx`
+
+Cari fungsi `handleConfirm` (sekitar baris 82). Ganti **seluruh fungsi** dengan versi berikut yang tidak hit server sama sekali:
+
+```tsx
+function handleConfirm() {
+  setError("");
+  setLoading(true);
+
+  const waWindow = window.open("", "_blank");
+
+  try {
+    const ts = Date.now().toString().slice(-8);
+    const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    const orderId = `AIGYPT-QRIS-${ts}-${rand}`;
+
+    const waNumber = "6281311506025";
+    const memberTypeLabel = params.type === "kelas" ? "Member Kelas" : "Member Mandiri";
+
+    const couponLine = params.couponCode && params.discountAmount > 0
+      ? `Kupon: ${params.couponCode} (-${formatRp(params.discountAmount)})\n`
+      : "";
+
+    const confirmationMessage =
+      `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 3.\n\n` +
+      `Nama: ${params.name}\n` +
+      `Email: ${params.email}\n` +
+      `WhatsApp: ${params.phone}\n` +
+      `Paket: ${memberTypeLabel}\n` +
+      `${couponLine}` +
+      `Jumlah: ${formatRp(finalPrice)}\n` +
+      `Order ID: ${orderId}\n\n` +
+      `Mohon dikonfirmasi ya. Terima kasih!`;
+
+    const encodedMessage = encodeURIComponent(confirmationMessage);
+    const waLink = `https://wa.me/${waNumber}?text=${encodedMessage}`;
+
+    setConfirmed(true);
+    setLoading(false);
+
+    if (waWindow) {
+      waWindow.location.href = waLink;
+    } else {
+      setFallbackWaLink(waLink);
+    }
+
+    navigate(`/sukses?order_id=${orderId}&transaction_status=pending_qris`);
+  } catch {
+    setError("Terjadi kesalahan. Coba lagi.");
+    setLoading(false);
+    if (waWindow) waWindow.close();
+  }
+}
+```
+
+Perhatikan: fungsi tidak lagi `async` karena tidak ada network request.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Tampilan UI halaman pembayaran — tidak berubah
+- QRIS image — tidak berubah
+- State `confirmed`, `loading`, `error`, `fallbackWaLink` — tidak berubah
+- File lain apapun

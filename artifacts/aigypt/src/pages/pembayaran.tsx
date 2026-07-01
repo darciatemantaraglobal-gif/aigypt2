@@ -79,60 +79,40 @@ export default function Pembayaran() {
     : basePrice;
   const memberLabel = params.type === "kelas" ? "Member Kelas — Batch 3" : "Member Mandiri";
 
-  async function handleConfirm() {
+  function handleConfirm() {
     setError("");
-    setFallbackWaLink("");
     setLoading(true);
 
     const waWindow = window.open("", "_blank");
 
     try {
-      const apiBase = import.meta.env.VITE_API_URL ?? "/api";
-      const body: Record<string, unknown> = {
-        name: params.name,
-        email: params.email,
-        phone: params.phone,
-        memberType: params.type,
-      };
-      if (params.couponCode) body.couponCode = params.couponCode;
+      const ts = Date.now().toString().slice(-8);
+      const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+      const orderId = `AIGYPT-QRIS-${ts}-${rand}`;
 
-      const res = await fetch(`${apiBase}/qris/confirm`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json() as { orderId?: string; error?: string; finalAmount?: number; discountAmount?: number; couponCode?: string };
-      if (!res.ok || !data.orderId) {
-        setError(data.error ?? "Gagal memproses konfirmasi. Coba lagi.");
-        setLoading(false);
-        if (waWindow) waWindow.close();
-        return;
-      }
-
-      setConfirmed(true);
-
-      const waNumber = import.meta.env.VITE_WA_NUMBER;
+      const waNumber = "6281311506025";
       const memberTypeLabel = params.type === "kelas" ? "Member Kelas" : "Member Mandiri";
-      const actualFinal = data.finalAmount ?? finalPrice;
-      const actualCoupon = data.couponCode ?? params.couponCode;
-      const actualDiscount = data.discountAmount ?? params.discountAmount;
 
-      const couponLine = actualCoupon && actualDiscount > 0
-        ? `Kupon: ${actualCoupon} (-${formatRp(actualDiscount)})\n`
+      const couponLine = params.couponCode && params.discountAmount > 0
+        ? `Kupon: ${params.couponCode} (-${formatRp(params.discountAmount)})\n`
         : "";
 
       const confirmationMessage =
         `Halo AIGYPT! Saya sudah melakukan pembayaran untuk pendaftaran Batch 3.\n\n` +
         `Nama: ${params.name}\n` +
         `Email: ${params.email}\n` +
+        `WhatsApp: ${params.phone}\n` +
         `Paket: ${memberTypeLabel}\n` +
         `${couponLine}` +
-        `Jumlah: ${formatRp(actualFinal)}\n` +
-        `Order ID: ${data.orderId}\n\n` +
+        `Jumlah: ${formatRp(finalPrice)}\n` +
+        `Order ID: ${orderId}\n\n` +
         `Mohon dikonfirmasi ya. Terima kasih!`;
 
       const encodedMessage = encodeURIComponent(confirmationMessage);
       const waLink = `https://wa.me/${waNumber}?text=${encodedMessage}`;
+
+      setConfirmed(true);
+      setLoading(false);
 
       if (waWindow) {
         waWindow.location.href = waLink;
@@ -140,9 +120,9 @@ export default function Pembayaran() {
         setFallbackWaLink(waLink);
       }
 
-      navigate(`/sukses?order_id=${data.orderId}&transaction_status=pending_qris`);
+      navigate(`/sukses?order_id=${orderId}&transaction_status=pending_qris`);
     } catch {
-      setError("Terjadi kesalahan jaringan. Periksa koneksi dan coba lagi.");
+      setError("Terjadi kesalahan. Coba lagi.");
       setLoading(false);
       if (waWindow) waWindow.close();
     }
