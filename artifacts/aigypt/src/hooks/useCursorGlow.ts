@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 export function useCursorGlow(containerRef: React.RefObject<HTMLElement | null>) {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isActive, setIsActive] = useState(false)
-  const rafRef = useRef<number>()
+  const rafRef = useRef<number | undefined>(undefined)
   const targetRef = useRef({ x: 0, y: 0 })
   const currentRef = useRef({ x: 0, y: 0 })
 
