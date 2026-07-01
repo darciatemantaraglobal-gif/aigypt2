@@ -16,10 +16,10 @@ export default function Sesi5() {
 
       <SectionHeading>Bagian 1: Apa Itu Vibe Coding?</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        Istilah "vibe coding" dipopulerkan oleh Andrej Karpathy (mantan Head of AI di Tesla, pendiri OpenAI). Konsepnya sederhana: <strong className="text-white">lo tidak perlu bisa coding untuk membuat software. Lo hanya perlu bisa mendeskripsikan apa yang lo mau.</strong>
+        Istilah "vibe coding" dipopulerkan oleh Andrej Karpathy (mantan Head of AI di Tesla, pendiri OpenAI). Konsepnya sederhana: <strong className="text-white">kamu tidak perlu bisa coding untuk membuat software. Lo hanya perlu bisa mendeskripsikan apa yang kamu mau.</strong>
       </p>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Analogi: dulu untuk punya rumah, lo harus bisa tukang batu sendiri. Sekarang lo bisa jadi arsitek yang mendeskripsikan bangunan ke tim kontraktor. Vibe coding = lo jadi arsitek, AI jadi kontraktornya.
+        Analogi: dulu untuk punya rumah, kamu harus bisa tukang batu sendiri. Sekarang kamu bisa jadi arsitek yang mendeskripsikan bangunan ke tim kontraktor. Vibe coding = kamu jadi arsitek, AI jadi kontraktornya.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -38,7 +38,7 @@ export default function Sesi5() {
             <li>→ Describe → generate → iterate</li>
             <li>→ Web app sederhana dalam hitungan jam</li>
             <li>→ Prototype ide dalam sehari</li>
-            <li>→ Lo kontrol penuh atas produk lo</li>
+            <li>→ Kamu memiliki kontrol penuh atas produkmu</li>
           </ul>
         </div>
       </div>
@@ -86,7 +86,7 @@ Ganti font heading menjadi serif yang lebih elegan.`}</PromptBlock>
 
       <SectionHeading>Bagian 4: Generate Script dengan Claude + Replit</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Untuk tugas yang berulang, lo bisa minta Claude generate script Python, lalu jalankan di Replit tanpa install apapun.
+        Untuk tugas yang berulang, kamu bisa minta Claude generate script Python, lalu jalankan di Replit tanpa install apapun.
       </p>
 
       <PromptBlock label="Prompt: Generate Script ke Claude">{`Saya adalah ketua divisi akademik PPMI. Saya punya daftar 150 anggota 
@@ -107,19 +107,19 @@ untuk orang yang belum pernah coding.`}</PromptBlock>
 2. Klik "Create Repl" → pilih Python
 3. Di panel kiri, klik "Shell" atau buka file main.py
 4. Copy-paste script dari Claude ke file main.py
-5. Upload file Excel lo ke Replit (drag & drop)
+5. Upload file Excel kamu ke Replit (drag & drop)
 6. Klik tombol "Run" (segitiga hijau)
 7. Download output file dari panel kiri Replit`}</PromptBlock>
 
       <SectionHeading>Bagian 5: Automation dengan n8n</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        n8n memungkinkan lo menghubungkan berbagai aplikasi tanpa kode, bayangkan seperti IFTTT tapi jauh lebih powerful.
+        n8n memungkinkan kamu menghubungkan berbagai aplikasi tanpa kode, bayangkan seperti IFTTT tapi jauh lebih powerful.
       </p>
 
       <div className="space-y-3 mb-4">
         {[
-          { title: "Auto-post konten ke semua platform", desc: "Setiap kali lo upload ke Google Drive → auto-post ke Instagram, Twitter, dan WhatsApp grup" },
-          { title: "Notifikasi order otomatis", desc: "Setiap ada pesan WA baru dari pelanggan → kirim email ke lo + catat di Google Sheets" },
+          { title: "Auto-post konten ke semua platform", desc: "Setiap kali kamu upload ke Google Drive → auto-post ke Instagram, Twitter, dan WhatsApp grup" },
+          { title: "Notifikasi order otomatis", desc: "Setiap ada pesan WA baru dari pelanggan → kirim email ke kamu + catat di Google Sheets" },
           { title: "Database anggota otomatis", desc: "Setiap ada yang isi Google Form → auto-kirim email konfirmasi + tambah ke spreadsheet member" },
           { title: "Jadwal posting konten", desc: "Buat konten sekarang, jadwalkan posting otomatis untuk minggu depan ke semua platform" },
         ].map((item) => (
@@ -147,14 +147,14 @@ orang non-teknis.`}</PromptBlock>
 
       <SectionHeading>Bagian 6: Tentukan Proyek Demo Day Lo</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Di Sesi 6, lo akan mempresentasikan solusi nyata yang dibuat dengan AI. Ini bukan harus sempurna. Yang penting nyata dan menyelesaikan masalah lo sendiri.
+        Di Sesi 6, kamu akan mempresentasikan solusi nyata yang dibuat dengan AI. Ini bukan harus sempurna. Yang penting nyata dan menyelesaikan masalah kamu sendiri.
       </p>
 
       <Table
         headers={["Level", "Contoh Solusi"]}
         rows={[
           ["Beginner", "Prompt library personal + dokumen panduan AI untuk rekan organisasi"],
-          ["Intermediate", "Website katalog produk untuk bisnis lo / website dokumentasi kegiatan"],
+          ["Intermediate", "Website katalog produk untuk bisnis kamu / website dokumentasi kegiatan"],
           ["Advanced", "Web app kecil untuk membantu workflow tim organisasi / automation n8n"],
           ["Expert", "Tools custom yang bisa dipakai komunitas masisir lain"],
         ]}
@@ -173,10 +173,10 @@ Hasil yang bisa dilihat saat Demo Day: [...]`}</PromptBlock>
       <TakeHomeBox>
         <p className="font-semibold text-white mb-3">Sebelum Sesi 6 (Demo Day):</p>
         <ol className="space-y-2 text-sm list-decimal pl-4">
-          <li>Selesaikan proyek lo, tidak harus sempurna, tapi harus bisa di-demo</li>
+          <li>Selesaikan proyekmu, tidak harus sempurna, tapi harus bisa di-demo</li>
           <li>Siapkan presentasi 5-7 menit: Masalah → Proses AI → Demo Hasil</li>
           <li>Screenshot atau rekam layar proses pembuatannya, ini bagian dari ceritanya</li>
-          <li>Pikirkan: bagaimana lo bisa kembangkan solusi ini lebih jauh setelah Demo Day?</li>
+          <li>Pikirkan: bagaimana kamu bisa kembangkan solusi ini lebih jauh setelah Demo Day?</li>
         </ol>
       </TakeHomeBox>
     </div>

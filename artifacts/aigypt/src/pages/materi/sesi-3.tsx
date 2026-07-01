@@ -164,7 +164,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
         <div className="space-y-3">
           <div>
             <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI A: Akademisi</p>
-            <p className="text-sm text-[#94A3B8]">Ambil satu paragraf teks Arab dari kitab yang sedang lo pelajari. Copy ke Claude dengan prompt review nahwu di atas. Perhatikan apa yang AI koreksi.</p>
+            <p className="text-sm text-[#94A3B8]">Ambil satu paragraf teks Arab dari kitab yang sedang kamu pelajari. Copy ke Claude dengan prompt review nahwu di atas. Perhatikan apa yang AI koreksi.</p>
           </div>
           <div>
             <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI B: Organisator</p>
@@ -172,7 +172,7 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
           </div>
           <div>
             <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI C: Skripsi/Thesis</p>
-            <p className="text-sm text-[#94A3B8]">Paste abstrak 2-3 jurnal relevan dengan skripsi lo ke Claude. Minta AI bantu analisis gap dan posisi penelitianmu.</p>
+            <p className="text-sm text-[#94A3B8]">Paste abstrak 2-3 jurnal relevan dengan skripsimu ke Claude. Minta AI bantu analisis gap dan posisi penelitianmu.</p>
           </div>
         </div>
       </LatihanBox>
@@ -181,8 +181,8 @@ Tolong ubah ini menjadi notulensi rapat formal dengan format:
         <p className="font-semibold text-white mb-3">Sebelum Sesi 4:</p>
         <ol className="space-y-2 text-sm list-decimal pl-4">
           <li>Selesaikan minimal satu tugas akademik atau organisasi nyata menggunakan AI</li>
-          <li>Catat: berapa lama biasanya lo kerjakan vs dengan AI? Berapa persen lebih cepat?</li>
-          <li>Catat juga: apa yang AI lakukan dengan baik, dan apa yang masih perlu lo perbaiki manual?</li>
+          <li>Catat: berapa lama biasanya kamu kerjakan vs dengan AI? Berapa persen lebih cepat?</li>
+          <li>Catat juga: apa yang AI lakukan dengan baik, dan apa yang masih perlu kamu perbaiki manual?</li>
         </ol>
       </TakeHomeBox>
     </div>

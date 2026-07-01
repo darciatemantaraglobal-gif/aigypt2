@@ -201,7 +201,7 @@ export default function Dashboard() {
           <div className="mt-8 border border-[#7C3AED]/30 p-5" style={{ background: "rgba(124,58,237,0.08)", borderRadius: "12px", boxShadow: "0px 4px 12px rgba(0,0,0,0.3)" }}>
             <p className="text-xs font-mono text-[#A855F7] uppercase tracking-wider mb-2">Info Batch {user.batchNumber}</p>
             <p className="text-sm text-[#94A3B8]">
-              Jadwal sesi live akan dikomunikasikan melalui grup WhatsApp batch lo. Pastikan lo sudah tergabung di grup alumni AIGYPT Batch {user.batchNumber}.
+              Jadwal sesi live akan dikomunikasikan melalui grup WhatsApp batch kamu. Pastikan kamu sudah tergabung di grup alumni AIGYPT Batch {user.batchNumber}.
             </p>
           </div>
         )}

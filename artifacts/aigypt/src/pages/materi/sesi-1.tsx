@@ -16,29 +16,29 @@ export default function Sesi1() {
 
       <SectionHeading>Bagian 1: Jujur Dulu, Lo Pakai AI Buat Apa?</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        Sebelum kita mulai, gue mau nanya jujur: <em>Lo selama ini pakai AI buat apa?</em>
+        Sebelum kita mulai, kita mulai dengan satu pertanyaan jujur: <em>Kamu selama ini pakai AI buat apa?</em>
       </p>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        Kemungkinan jawabannya: belum pernah sama sekali, cuma nanya-nanya random, copy-paste jawaban buat tugas, atau udah sering tapi hasilnya sering ga memuaskan. Apapun jawabannya, itu normal.
+        Kemungkinan jawabannya: belum pernah sama sekali, cuma nanya-nanya random, copy-paste jawaban buat tugas, atau sudah sering tapi hasilnya sering tidak memuaskan. Apapun jawabannya, itu normal.
       </p>
       <p className="text-sm text-[#94A3B8] leading-relaxed">
-        Yang paling banyak terjadi: orang pakai AI seperti pakai <strong className="text-white">mesin pencari</strong>, tanya satu kalimat pendek, dapat jawaban, selesai. Padahal AI itu jauh lebih dari itu. Analogi yang tepat: <strong className="text-white">AI itu bukan Google. AI itu asisten pribadi yang sangat pintar, dan lo yang harus jadi atasannya.</strong>
+        Yang paling banyak terjadi: orang pakai AI seperti pakai <strong className="text-white">mesin pencari</strong>, tanya satu kalimat pendek, dapat jawaban, selesai. Padahal AI itu jauh lebih dari itu. Analogi yang tepat: <strong className="text-white">AI itu bukan Google. AI itu asisten pribadi yang sangat pintar, dan kamu yang harus jadi atasannya.</strong>
       </p>
 
       <SectionHeading>Bagian 2: AI Itu Sebenarnya Apa?</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        AI seperti ChatGPT, Claude, dan Gemini adalah <strong className="text-white">Large Language Models (LLM)</strong>. Cara kerjanya sederhana: mereka membaca miliaran teks, belajar pola, lalu memprediksi kata demi kata yang paling relevan untuk menjawab pertanyaan lo.
+        AI seperti ChatGPT, Claude, dan Gemini adalah <strong className="text-white">Large Language Models (LLM)</strong>. Cara kerjanya sederhana: mereka membaca miliaran teks, belajar pola, lalu memprediksi kata demi kata yang paling relevan untuk menjawab pertanyaan kamu.
       </p>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Analogi masisir: bayangkan ada santri yang sudah khatam ribuan kitab, hafal jutaan hadits, baca semua buku yang pernah ada, dan sekarang lo bisa tanya apa saja kepadanya. Dia tidak selalu benar 100%, tapi dia sangat berpengetahuan.
+        Analogi masisir: bayangkan ada santri yang sudah khatam ribuan kitab, hafal jutaan hadits, baca semua buku yang pernah ada, dan sekarang kamu bisa tanya apa saja kepadanya. Dia tidak selalu benar 100%, tapi dia sangat berpengetahuan.
       </p>
 
       <Table
         headers={["Mitos", "Realita"]}
         rows={[
-          ["AI selalu benar", "AI bisa salah, lo harus tetap kritis"],
-          ["AI bisa baca pikiran", "AI hanya tau apa yang lo tulis kepadanya"],
-          ["AI bakal gantiin lo", "AI memperkuat kemampuan lo, bukan menggantikan"],
+          ["AI selalu benar", "AI bisa salah, kamu harus tetap kritis"],
+          ["AI bisa baca pikiran", "AI hanya tau apa yang kamu tulis kepadanya"],
+          ["AI bakal gantiin kamu", "AI memperkuat kemampuan kamu, bukan menggantikan"],
           ["AI itu ribet dan teknis", "Siapapun bisa pakai AI kalau tau caranya"],
           ["AI itu haram/tidak etis", "Tergantung cara pakainya: pisau bisa masak, bisa juga berbahaya"],
         ]}
@@ -113,7 +113,7 @@ Relevansinya dengan Kehidupan Modern". Tolong bantu saya
 membuat outline makalah yang kuat dengan 5 bab utama, 
 lengkap dengan sub-poin setiap bab.`}</PromptBlock>
       <p className="text-sm text-[#94A3B8] leading-relaxed">
-        Yang diamati: seberapa detail outline, apakah ada referensi kitab, apakah langsung dalam bahasa Arab, dan mana yang paling berguna untuk kebutuhan akademik Al-Azhar. Pelajaran utama: tidak ada AI yang "terbaik" secara absolut. Yang terbaik adalah yang cocok untuk tugas spesifik lo.
+        Yang diamati: seberapa detail outline, apakah ada referensi kitab, apakah langsung dalam bahasa Arab, dan mana yang paling berguna untuk kebutuhan akademik Al-Azhar. Pelajaran utama: tidak ada AI yang "terbaik" secara absolut. Yang terbaik adalah yang cocok untuk tugas spesifik kamu.
       </p>
 
       <SectionHeading>Bagian 5: Kenapa Prompt Itu Segalanya</SectionHeading>
@@ -156,17 +156,17 @@ Gunakan gaya akademik formal sesuai standar penulisan ilmiah Arab.`}</PromptBloc
 
       <LatihanBox title="Latihan 1: Kenali Dirimu (5 menit)">
         <ol className="space-y-2 text-sm list-decimal pl-4">
-          <li>Persona mana yang paling menggambarkan lo? (Akademisi / Organisator / Bisnisman / Kreator / Overwhelmed)</li>
-          <li>Apa satu masalah terbesar lo sebagai masisir yang paling sering bikin frustrasi?</li>
-          <li>Kalau masalah itu bisa diselesaikan dengan AI, hidup lo akan berubah seperti apa?</li>
+          <li>Persona mana yang paling menggambarkan kamu? (Akademisi / Organisator / Bisnisman / Kreator / Overwhelmed)</li>
+          <li>Apa satu masalah terbesar kamu sebagai masisir yang paling sering membuat frustrasi?</li>
+          <li>Kalau masalah itu bisa diselesaikan dengan AI, hidupmu akan berubah seperti apa?</li>
         </ol>
         <p className="text-xs text-[#94A3B8] mt-3">Simpan jawaban ini. Kita akan kembali ke sini di Sesi 6.</p>
       </LatihanBox>
 
       <LatihanBox title="Latihan 2: First Contact (15 menit)">
-        <p className="text-sm mb-3">Buka salah satu dari ChatGPT, Claude, atau Gemini. Ketik prompt berikut (sesuaikan dengan situasi lo):</p>
-        <PromptBlock>{`Saya adalah mahasiswa [jurusan lo] di Al-Azhar Kairo, semester [X].
-Masalah terbesar saya minggu ini adalah [masalah nyata lo].
+        <p className="text-sm mb-3">Buka salah satu dari ChatGPT, Claude, atau Gemini. Ketik prompt berikut (sesuaikan dengan situasimu):</p>
+        <PromptBlock>{`Saya adalah mahasiswa [jurusan kamu] di Al-Azhar Kairo, semester [X].
+Masalah terbesar saya minggu ini adalah [masalah nyata kamu].
 Tolong bantu saya dengan memberikan:
 1. Tiga cara konkret AI bisa membantu masalah ini
 2. Satu langkah pertama yang bisa saya lakukan sekarang`}</PromptBlock>
@@ -176,12 +176,12 @@ Tolong bantu saya dengan memberikan:
       <TakeHomeBox>
         <p className="font-semibold text-white mb-3">Sebelum Sesi 2, lakukan ini:</p>
         <ol className="space-y-2 text-sm list-decimal pl-4">
-          <li>Pilih satu masalah nyata yang lo hadapi minggu ini sebagai masisir</li>
+          <li>Pilih satu masalah nyata yang kamu hadapi minggu ini sebagai masisir</li>
           <li>Tanyakan ke dua AI berbeda (boleh pakai prompt bebas dulu)</li>
           <li>Screenshot atau catat hasilnya, mana yang lebih berguna, kenapa?</li>
           <li>Bawa ke Sesi 2, kita akan gunakan ini sebagai bahan belajar prompting</li>
         </ol>
-        <p className="text-xs text-[#94A3B8] mt-3">Tidak ada jawaban benar atau salah. Yang penting: lo sudah mulai berinteraksi dengan AI secara intentional.</p>
+        <p className="text-xs text-[#94A3B8] mt-3">Tidak ada jawaban benar atau salah. Yang penting: kamu sudah mulai berinteraksi dengan AI secara intentional.</p>
       </TakeHomeBox>
     </div>
   );

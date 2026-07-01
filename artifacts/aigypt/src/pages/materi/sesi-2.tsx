@@ -16,10 +16,10 @@ export default function Sesi2() {
 
       <SectionHeading>Bagian 1: Kenapa Prompt Itu Skill, Bukan Keberuntungan</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-3">
-        Ada misconception besar soal AI: <em>"AI itu pintar, jadi harusnya ngerti maksud gue walau gue nanya singkat."</em> Ini salah besar. AI tidak bisa membaca pikiran lo. AI hanya bisa merespons <strong className="text-white">apa yang lo tulis</strong>.
+        Ada misconception besar soal AI: <em>"AI itu pintar, jadi harusnya mengerti maksud saya walau gue nanya singkat."</em> Ini salah besar. AI tidak bisa membaca pikiran kamu. AI hanya bisa merespons <strong className="text-white">apa yang kamu tulis</strong>.
       </p>
       <p className="text-sm text-[#94A3B8] leading-relaxed">
-        Analogi: bayangkan lo datang ke dokter dan bilang <em>"Dok, saya sakit."</em> Dokter yang baik akan tanya balik. Tapi AI tidak selalu tanya balik. Kalau lo ga kasih informasi yang cukup, AI akan <strong className="text-white">menebak</strong>, dan tebakan itu sering meleset.
+        Analogi: bayangkan kamu datang ke dokter dan bilang <em>"Dok, saya sakit."</em> Dokter yang baik akan tanya balik. Tapi AI tidak selalu tanya balik. Kalau kamu tidak memberi informasi yang cukup, AI akan <strong className="text-white">menebak</strong>, dan tebakan itu sering meleset.
       </p>
 
       <SectionHeading>Bagian 2: Formula RCTFC</SectionHeading>
@@ -28,9 +28,9 @@ export default function Sesi2() {
         <div className="space-y-3">
           {[
             { letter: "R", name: "Role", desc: "Siapa AI ini dalam konteks ini? Kasih AI sebuah 'identitas' yang sesuai.", example: '"Kamu adalah dosen pembimbing skripsi yang berpengalaman di bidang fiqih kontemporer..."' },
-            { letter: "C", name: "Context", desc: "Apa situasi dan latar belakangnya? Ceritakan siapa lo, di mana, apa yang sedang terjadi.", example: '"Saya mahasiswa semester 4 Jurusan Tafsir di Fakultas Ushuluddin Al-Azhar Kairo..."' },
-            { letter: "T", name: "Task", desc: "Apa yang lo minta AI lakukan? Gunakan kata kerja spesifik: buatkan, analisis, rangkum, terjemahkan, ubah, bandingkan.", example: '"Buatkan outline 5 bab dengan masing-masing 3 sub-poin, lengkap dengan satu kalimat deskripsi..."' },
-            { letter: "F", name: "Format", desc: "Bagaimana lo mau output-nya disajikan? Bullet points, tabel, paragraf, bahasa tertentu, panjang tertentu.", example: '"Sajikan dalam format tabel dengan 3 kolom: Poin Utama, Penjelasan Singkat, Referensi Kitab..."' },
+            { letter: "C", name: "Context", desc: "Apa situasi dan latar belakangnya? Ceritakan siapa kamu, di mana, apa yang sedang terjadi.", example: '"Saya mahasiswa semester 4 Jurusan Tafsir di Fakultas Ushuluddin Al-Azhar Kairo..."' },
+            { letter: "T", name: "Task", desc: "Apa yang kamu minta AI lakukan? Gunakan kata kerja spesifik: buatkan, analisis, rangkum, terjemahkan, ubah, bandingkan.", example: '"Buatkan outline 5 bab dengan masing-masing 3 sub-poin, lengkap dengan satu kalimat deskripsi..."' },
+            { letter: "F", name: "Format", desc: "Bagaimana kamu ingin output-nya disajikan? Bullet points, tabel, paragraf, bahasa tertentu, panjang tertentu.", example: '"Sajikan dalam format tabel dengan 3 kolom: Poin Utama, Penjelasan Singkat, Referensi Kitab..."' },
             { letter: "C", name: "Constraint", desc: "Apa yang tidak boleh ada, atau batasan yang harus diikuti.", example: '"Jangan gunakan referensi di luar kitab klasik. Maksimal 300 kata per bagian."' },
           ].map((el) => (
             <div key={el.letter} className="rounded-lg border border-[#1E1E2E] bg-[#0A0A0F] p-4">
@@ -95,7 +95,7 @@ jangan ada biaya narasumber.`,
         },
         {
           persona: "Bisnisman",
-          bad: "bikin caption jualan baju",
+          bad: "membuat caption jualan baju",
           good: `[Role] Kamu adalah copywriter e-commerce yang spesialis 
 di fashion muslimah Indonesia.
 
@@ -195,9 +195,9 @@ balance antara kuliah, rapat, dan belajar mandiri. Saya punya kuliah
       <TakeHomeBox>
         <p className="font-semibold text-white mb-3">Sebelum Sesi 3:</p>
         <ol className="space-y-2 text-sm list-decimal pl-4">
-          <li>Buat 3 prompt RCTFC untuk 3 masalah berbeda dalam hidup lo sebagai masisir</li>
+          <li>Buat 3 prompt RCTFC untuk 3 masalah berbeda dalam hidupmu sebagai masisir</li>
           <li>Coba setiap prompt ke AI dan catat hasilnya</li>
-          <li>Simpan prompt yang hasilnya bagus ke prompt library pertama lo</li>
+          <li>Simpan prompt yang hasilnya bagus ke prompt library pertama kamu</li>
         </ol>
       </TakeHomeBox>
     </div>

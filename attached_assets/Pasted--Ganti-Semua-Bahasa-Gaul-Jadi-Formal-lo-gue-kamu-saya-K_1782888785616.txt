@@ -1,0 +1,208 @@
+# Ganti Semua Bahasa Gaul Jadi Formal — "lo/gue" → "kamu/saya"
+
+## Konteks
+
+Di seluruh teks user-facing website AIGYPT, banyak penggunaan bahasa gaul Jakarta seperti "lo", "gue", "kalo", "ga" yang perlu diganti ke bahasa yang lebih sopan dan inklusif: "kamu", "saya/kami", "kalau", "tidak/nggak".
+
+Total ada ~150 kemunculan tersebar di 10 file.
+
+---
+
+## Aturan Penggantian Global
+
+Terapkan aturan ini secara konsisten di **semua file yang disebutkan**:
+
+| Kata Asli | Ganti Dengan | Catatan |
+|---|---|---|
+| `lo` (kata ganti orang ke-2) | `kamu` | Hanya yang bermakna "kamu", bukan bagian kata lain |
+| `gue` | `saya` | Saat merujuk narrator/platform |
+| `kalo` | `kalau` | |
+| ` ga ` / `ga ` | `tidak` atau `nggak` | Sesuaikan konteks kalimat |
+| `udah` | `sudah` | |
+| `ngerti` | `mengerti` | |
+| `bikin` | `membuat` | Hanya di teks narasi, bukan di nama variabel/fungsi |
+| `buat lo` | `untuk kamu` | |
+| `buat gue` | `untuk saya` | |
+
+**PENTING:** Hanya ubah teks yang tampil ke user (string di dalam JSX, string konten, label). Jangan ubah nama variabel, nama fungsi, nama kelas CSS, komentar kode, atau logika apapun.
+
+---
+
+## File 1: `artifacts/aigypt/src/pages/dashboard.tsx`
+
+Cari dan ganti (1 kemunculan):
+
+```
+Jadwal sesi live akan dikomunikasikan melalui grup WhatsApp batch lo. Pastikan lo sudah tergabung di grup alumni AIGYPT Batch {user.batchNumber}.
+```
+
+Ganti dengan:
+
+```
+Jadwal sesi live akan dikomunikasikan melalui grup WhatsApp batch kamu. Pastikan kamu sudah tergabung di grup alumni AIGYPT Batch {user.batchNumber}.
+```
+
+---
+
+## File 2: `artifacts/aigypt/src/pages/toolbox.tsx`
+
+Cari dan ganti semua kemunculan berikut:
+
+| Teks Asli | Ganti Dengan |
+|---|---|
+| `AI tidak bisa baca pikiran lo` | `AI tidak bisa baca pikiran kamu` |
+| `asset yang lo butuhin` | `asset yang kamu butuhkan` |
+| `cocok dengan pencarian lo` | `cocok dengan pencarian kamu` |
+| `brand lo` | `brand kamu` |
+| `level dan tujuan lo` | `level dan tujuan kamu` |
+
+---
+
+## File 3: `artifacts/aigypt/src/pages/materi/index.tsx`
+
+Cari dan ganti (1 kemunculan):
+
+```
+Sesi ini lebih bagus dipelajari setelah sesi sebelumnya. Tapi kalau lo udah ngerti
+```
+
+Ganti dengan:
+
+```
+Sesi ini lebih bagus dipelajari setelah sesi sebelumnya. Tapi kalau kamu sudah mengerti
+```
+
+---
+
+## File 4: `artifacts/aigypt/src/pages/materi/sesi-1.tsx`
+
+Lakukan find & replace untuk semua kemunculan:
+
+- Semua `lo` → `kamu`
+- Semua `gue` → `saya`
+- `Lo selama ini pakai AI` → `Kamu selama ini pakai AI`
+- `gue mau nanya jujur` → `kita mulai dengan satu pertanyaan jujur`
+- `AI itu asisten pribadi yang sangat pintar, dan lo yang harus jadi atasannya` → `AI itu asisten pribadi yang sangat pintar, dan kamu yang harus jadi atasannya`
+- `menjawab pertanyaan lo` → `menjawab pertanyaan kamu`
+- `tugas spesifik lo` → `tugas spesifik kamu`
+- `menggambarkan lo` → `menggambarkan kamu`
+- `masalah terbesar lo` → `masalah terbesar kamu`
+- `hidup lo akan berubah` → `hidupmu akan berubah`
+- `situasi lo` → `situasimu`
+- `masalah yang lo hadapi` → `masalah yang kamu hadapi`
+- `lo sudah mulai` → `kamu sudah mulai`
+- `masalah nyata yang lo hadapi` → `masalah nyata yang kamu hadapi`
+- `[jurusan lo]` → `[jurusan kamu]`
+- `[masalah nyata lo]` → `[masalah nyata kamu]`
+
+---
+
+## File 5: `artifacts/aigypt/src/pages/materi/sesi-2.tsx`
+
+- `AI tidak bisa membaca pikiran lo` → `AI tidak bisa membaca pikiran kamu`
+- `apa yang lo tulis` → `apa yang kamu tulis`
+- `bayangkan lo datang ke dokter` → `bayangkan kamu datang ke dokter`
+- `Kalau lo ga kasih` → `Kalau kamu tidak memberi`
+- `prompt lo` → `prompt kamu`
+- `siapa lo` → `siapa kamu`
+- `apa yang lo minta` → `apa yang kamu minta`
+- `Bagaimana lo mau output-nya` → `Bagaimana kamu ingin output-nya`
+- `setiap kali lo dapat prompt` → `setiap kali kamu mendapat prompt`
+- `library lo` → `library kamu`
+- `hidup lo sebagai masisir` → `hidupmu sebagai masisir`
+- `prompt library pertama lo` → `prompt library pertama kamu`
+- `hasilnya bagus ke prompt library lo` → `hasilnya bagus ke prompt library kamu`
+- `Ganti bagian dalam` → `Ganti bagian dalam` *(tidak perlu diubah)*
+- `ngerti maksud gue` → `mengerti maksud saya`
+
+---
+
+## File 6: `artifacts/aigypt/src/pages/materi/sesi-3.tsx`
+
+- `kitab yang sedang lo pelajari` → `kitab yang sedang kamu pelajari`
+- `skripsi lo` → `skripsimu`
+- `biasanya lo kerjakan` → `biasanya kamu kerjakan`
+- `yang masih perlu lo perbaiki` → `yang masih perlu kamu perbaiki`
+
+---
+
+## File 7: `artifacts/aigypt/src/pages/materi/sesi-4.tsx`
+
+- `produk yang sedang atau akan lo jual` → `produk yang sedang atau akan kamu jual`
+- `niche lo` → `nichemu`
+- `konten yang sudah pernah lo buat` → `konten yang sudah pernah kamu buat`
+- `masalah apa yang mau lo selesaikan` → `masalah apa yang ingin kamu selesaikan`
+
+---
+
+## File 8: `artifacts/aigypt/src/pages/materi/sesi-5.tsx`
+
+- `lo tidak perlu bisa coding` → `kamu tidak perlu bisa coding`
+- `apa yang lo mau` → `apa yang kamu mau`
+- `Lo kontrol penuh` → `Kamu memiliki kontrol penuh`
+- `lo upload ke Google Drive` → `kamu upload ke Google Drive`
+- `kirim email ke lo` → `kirim email ke kamu`
+- `Selesaikan proyek lo` → `Selesaikan proyekmu`
+- `bagaimana lo bisa kembangkan` → `bagaimana kamu bisa kembangkan`
+
+---
+
+## File 9: `artifacts/aigypt/src/pages/materi/sesi-6.tsx`
+
+- `solusi nyata yang telah lo bangun` → `solusi nyata yang telah kamu bangun`
+- `Dokumentasikan perjalanan lo` → `Dokumentasikan perjalananmu`
+- `lo masuk dengan satu pertanyaan` → `kamu masuk dengan satu pertanyaan`
+- `AI sebenarnya bisa apa sih buat gue` → `AI sebenarnya bisa apa untuk saya`
+- `Perjalanan lo dalam 6 sesi` → `Perjalananmu dalam 6 sesi`
+- `prompt lo sekarang jauh lebih tajam` → `prompt kamu sekarang jauh lebih tajam`
+- `Lo mempresentasikan solusi lo` → `Kamu mempresentasikan solusimu`
+- `dokumentasikan solusi lo` → `dokumentasikan solusimu`
+- `aset yang bisa lo tunjukkan` → `aset yang bisa kamu tunjukkan`
+- `cara lo melihat AI` → `cara kamu melihat AI`
+- `yang akan lo terus kembangkan` → `yang akan kamu terus kembangkan`
+- `orang di sekitar lo` → `orang di sekitar kamu`
+- `yang perlu lo ajari` → `yang perlu kamu ajari`
+- `komitmen konkret yang akan lo lakukan` → `komitmen konkret yang akan kamu lakukan`
+
+---
+
+## File 10: `artifacts/aigypt/src/lib/materiContent.ts`
+
+File terbesar — 87 kemunculan. Terapkan find & replace global dengan aturan yang sama:
+
+Lakukan **find & replace** berikut secara berurutan di file ini:
+
+1. `" lo "` → `" kamu "` (dengan spasi di kedua sisi untuk menghindari false positive)
+2. `" lo.` → `" kamu.`
+3. `" lo,` → `" kamu,`
+4. `" lo:` → `" kamu:`
+5. `" lo'` → `" kamu'`
+6. `(lo ` → `(kamu `  
+7. `lo)` → `kamu)`
+8. `\nlo ` → `\nkamu `
+9. `gue` → `saya`
+10. `kalo` → `kalau`
+11. `" ga "` → `" tidak "`
+12. `"ga kasih` → `"tidak memberi`
+13. `ngerti` → `mengerti`
+14. `udah` → `sudah`
+
+Setelah replace global, baca ulang setiap kalimat yang diubah untuk memastikan tidak ada yang janggal secara tata bahasa.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Nama variabel, fungsi, tipe TypeScript (contoh: `setLocation`, `kelasId`, `setModalKelas`)
+- Class names Tailwind (contoh: `"text-[#94A3B8]"`)
+- Komentar kode (`// ...`)
+- Import statements
+- Logika kondisional apapun
+- Kata "lo" yang merupakan bagian dari kata lain (contoh: `"color"`, `"below"`, `"follow"`, `"overflow"`, `"dialog"`, `"boolean"`, `"modal"`)
+- Nama brand atau proper noun
+
+---
+
+## Verifikasi Setelah Selesai
+
+Jalankan search untuk `\blo\b` dan `\bgue\b` di semua file yang diubah. Pastikan tidak ada sisa kemunculan di teks user-facing.

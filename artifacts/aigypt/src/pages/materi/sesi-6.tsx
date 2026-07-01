@@ -8,27 +8,27 @@ export default function Sesi6() {
       <HighlightBox>
         <p className="text-xs font-mono text-[#A855F7] uppercase tracking-wider mb-2">Tujuan Sesi: Demo Day</p>
         <ul className="space-y-1 text-sm">
-          <li>Presentasikan solusi nyata yang telah lo bangun selama 5 sesi</li>
+          <li>Presentasikan solusi nyata yang telah kamu bangun selama 5 sesi</li>
           <li>Berikan dan terima feedback konstruktif antar sesama peserta</li>
           <li>Rancang next steps untuk mengembangkan solusi lebih jauh</li>
-          <li>Dokumentasikan perjalanan lo sebagai portofolio AI tools pertama</li>
+          <li>Dokumentasikan perjalananmu sebagai portofolio AI tools pertama</li>
         </ul>
       </HighlightBox>
 
-      <SectionHeading>Bagian 1: Selamat, Lo Sudah Jauh!</SectionHeading>
+      <SectionHeading>Bagian 1: Selamat, Kamu Sudah Jauh!</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Ingat Sesi 1, lo masuk dengan satu pertanyaan: <em>"AI sebenarnya bisa apa sih buat gue?"</em>
+        Ingat Sesi 1, kamu masuk dengan satu pertanyaan: <em>"AI sebenarnya bisa apa untuk saya?"</em>
       </p>
       <div className="rounded-xl border border-[#7C3AED]/40 bg-[#7C3AED]/10 p-5 mb-4">
         <p className="font-display font-semibold text-white mb-3">Perjalanan lo dalam 6 sesi:</p>
         <div className="space-y-2">
           {[
             { s: "S01", text: "Lo paham cara kerja AI dan beda ChatGPT, Claude, Gemini" },
-            { s: "S02", text: "Lo kuasai formula RCTFC, prompt lo sekarang jauh lebih tajam" },
+            { s: "S02", text: "Kamu kuasai formula RCTFC, prompt kamu sekarang jauh lebih tajam" },
             { s: "S03", text: "Lo bisa selesaikan tugas akademik dan organisasi lebih cepat" },
-            { s: "S04", text: "Lo tahu cara bikin copywriting dan konten yang efektif dengan AI" },
+            { s: "S04", text: "Kamu tahu cara membuat copywriting dan konten yang efektif dengan AI" },
             { s: "S05", text: "Lo membangun sesuatu yang nyata: produk, tools, atau otomasi" },
-            { s: "S06", text: "Lo mempresentasikan solusi lo ke komunitas hari ini" },
+            { s: "S06", text: "Kamu mempresentasikan solusimu ke komunitas hari ini" },
           ].map((item) => (
             <div key={item.s} className="flex items-start gap-3">
               <span className="font-mono text-xs text-[#7C3AED] font-bold w-8 flex-shrink-0 mt-0.5">{item.s}</span>
@@ -48,13 +48,13 @@ export default function Sesi6() {
           {
             num: "01",
             title: "Masalah (1 menit)",
-            desc: "Ceritakan masalah nyata yang lo hadapi. Bukan masalah abstrak, masalah yang lo sendiri rasakan. Buat audiens bisa merasakan frustrasi yang lo rasakan.",
+            desc: "Ceritakan masalah nyata yang kamu hadapi. Bukan masalah abstrak, masalah yang kamu sendiri rasakan. Buat audiens bisa merasakan frustrasi yang kamu rasakan.",
             example: '"Saya ketua divisi akademik PPMI. Setiap minggu saya harus kirim reminder iuran ke 150 orang, manual, satu-satu, via WA. Itu 3 jam kerja sia-sia setiap minggu."',
           },
           {
             num: "02",
             title: "Proses AI (2-3 menit)",
-            desc: "Tunjukkan journey lo: prompt yang lo pakai, tools yang lo pilih, iterasi yang lo lakukan, dan hal-hal yang tidak berjalan sesuai ekspektasi.",
+            desc: "Tunjukkan journey kamu: prompt yang kamu pakai, tools yang kamu pilih, iterasi yang kamu lakukan, dan hal-hal yang tidak berjalan sesuai ekspektasi.",
             example: '"Saya coba Lovable pertama kali, hasilnya 70% bagus. Lalu saya iterate dengan 5 prompt tambahan. Ini screenshot prosesnya..."',
           },
           {
@@ -109,7 +109,7 @@ export default function Sesi6() {
 
       <SectionHeading>Bagian 4: Dokumentasikan Solusi Lo</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Setelah Demo Day, dokumentasikan solusi lo sebagai <strong className="text-white">portofolio pertama</strong>. Ini aset yang bisa lo tunjukkan ke calon klien, employer, atau komunitas.
+        Setelah Demo Day, dokumentasikan solusimu sebagai <strong className="text-white">portofolio pertama</strong>. Ini aset yang bisa kamu tunjukkan ke calon klien, employer, atau komunitas.
       </p>
 
       <PromptBlock label="Prompt: Buat Dokumentasi Portofolio">{`Saya baru selesai membuat [NAMA SOLUSI], sebuah [DESKRIPSI 
@@ -138,7 +138,7 @@ tapi tetap personal.`}</PromptBlock>
           ["Organisator", "Automasi workflow paling berulang di organisasimu. Ajarkan tim cara pakai AI."],
           ["Bisnisman", "Scale konten dan riset pasar. Eksplorasi tools khusus e-commerce seperti Shopify AI."],
           ["Konten Kreator", "Bangun sistem konten yang sustainable. Eksplorasi AI video (Sora, Kling)."],
-          ["Semua", "Ikut komunitas alumni AIGYPT. Share apa yang lo buat. Terus iterate."],
+          ["Semua", "Ikut komunitas alumni AIGYPT. Share apa yang kamu buat. Terus iterate."],
         ]}
       />
 
@@ -152,10 +152,10 @@ tapi tetap personal.`}</PromptBlock>
       <LatihanBox title="Refleksi Akhir (5 menit)">
         <p className="text-sm mb-3">Sebelum sesi berakhir, jawab pertanyaan ini untuk diri sendiri:</p>
         <ol className="space-y-2 list-decimal pl-4 text-sm text-[#94A3B8]">
-          <li>Dibanding Sesi 1, apa yang paling berubah dari cara lo melihat AI?</li>
-          <li>Solusi mana yang akan lo terus kembangkan setelah AIGYPT?</li>
-          <li>Siapa satu orang di sekitar lo yang perlu lo ajari AI sekarang?</li>
-          <li>Apa komitmen konkret yang akan lo lakukan dalam 30 hari ke depan?</li>
+          <li>Dibanding Sesi 1, apa yang paling berubah dari cara kamu melihat AI?</li>
+          <li>Solusi mana yang akan kamu terus kembangkan setelah AIGYPT?</li>
+          <li>Siapa satu orang di sekitar kamu yang perlu kamu ajari AI sekarang?</li>
+          <li>Apa komitmen konkret yang akan kamu lakukan dalam 30 hari ke depan?</li>
         </ol>
       </LatihanBox>
 

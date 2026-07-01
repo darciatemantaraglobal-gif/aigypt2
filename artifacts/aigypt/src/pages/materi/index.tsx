@@ -307,7 +307,7 @@ function SkipModal({
           <h3 className="font-display font-semibold text-white">Sesi {sesiNum} Terkunci</h3>
         </div>
         <p className="text-sm text-[#94A3B8] mb-6 leading-relaxed">
-          Sesi ini lebih bagus dipelajari setelah sesi sebelumnya. Tapi kalau lo udah ngerti
+          Sesi ini lebih bagus dipelajari setelah sesi sebelumnya. Tapi kalau kamu sudah mengerti
           dasarnya, boleh lanjut.
         </p>
         <div className="flex gap-3">
@@ -365,8 +365,8 @@ function CompletionCelebration({
         </h3>
         <p className="text-sm text-[#94A3B8] mb-7 leading-relaxed">
           {hasNext
-            ? `Keren! Lo udah selesaikan Sesi ${sesiNum}. Lanjut ke Sesi ${sesiNum + 1}?`
-            : "Luar biasa! Lo sudah menyelesaikan semua 6 sesi AIGYPT. Lo sekarang adalah builder AI yang sesungguhnya."}
+            ? `Keren! Kamu sudah selesaikan Sesi ${sesiNum}. Lanjut ke Sesi ${sesiNum + 1}?`
+            : "Luar biasa! Kamu sudah menyelesaikan semua 6 sesi AIGYPT. Kamu sekarang adalah builder AI yang sesungguhnya."}
         </p>
 
         <div className="flex flex-col gap-3">

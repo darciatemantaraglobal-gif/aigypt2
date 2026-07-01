@@ -76,7 +76,7 @@ const workflow = [
 
 const goldenRules = [
   "Vibe coding bukan one-shot, bangun bertahap, satu fitur per sesi",
-  "Tulis PRD dulu sebelum prompting. AI tidak bisa baca pikiran lo",
+  "Tulis PRD dulu sebelum prompting. AI tidak bisa baca pikiran kamu",
   "Pakai DESIGN.md biar UI tidak generik dan AI konsisten",
   "Graduate workflow: prototype di Lovable/Bolt → serius di Cursor/Claude Code",
   "Pilih satu icon library, konsisten selamanya (Lucide untuk shadcn)",
@@ -213,7 +213,7 @@ export default function Toolbox() {
             Vibe Coding Toolbox
           </h1>
           <p className="text-[#94A3B8] text-base max-w-2xl mx-auto leading-relaxed mb-2">
-            Semua tools, workflow, dan asset yang lo butuhin untuk bikin solusi sendiri, di satu tempat.
+            Semua tools, workflow, dan asset yang kamu butuhkan untuk bikin solusi sendiri, di satu tempat.
           </p>
           <p className="text-[#94A3B8] text-sm max-w-xl mx-auto">
             Koleksi tools vibe coding terbaik 2026 yang dikurasi khusus untuk masisir, dari app builder untuk pemula sampai AI assistant untuk yang sudah serius.
@@ -317,7 +317,7 @@ export default function Toolbox() {
         <section className="mb-20">
           {filtered.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-[#94A3B8] text-sm">Tidak ada tools yang cocok dengan pencarian lo.</p>
+              <p className="text-[#94A3B8] text-sm">Tidak ada tools yang cocok dengan pencarian kamu.</p>
               <button
                 onClick={() => { setSearch(""); setActiveCategory(ALL_CATEGORIES); }}
                 className="mt-3 text-xs text-[#7C3AED] hover:text-[#A855F7] transition-colors font-mono"
@@ -356,7 +356,7 @@ export default function Toolbox() {
                 <p className="text-xs font-mono text-[#A855F7] uppercase tracking-wider mb-4">3 Cara Membuat DESIGN.md</p>
                 <div className="space-y-4">
                   {[
-                    { num: "01", title: "Biarkan AI menulisnya", desc: "Deskripsikan vibe dan brand lo, AI terjemahkan jadi sistem desain yang lengkap." },
+                    { num: "01", title: "Biarkan AI menulisnya", desc: "Deskripsikan vibe dan brand kamu, AI terjemahkan jadi sistem desain yang lengkap." },
                     { num: "02", title: "Ekstrak dari brand yang ada", desc: "Kasih URL atau logo, AI tarik palette, typography, dan tone-of-voice secara otomatis." },
                     { num: "03", title: "Tulis manual", desc: "Mulai dari warna dan typography, tambahkan aturan secara bertahap saat kebutuhan muncul." },
                   ].map((item) => (
@@ -413,7 +413,7 @@ export default function Toolbox() {
           <h2 className="font-display font-bold text-xl sm:text-2xl text-white mb-2 text-center">
             Stack Rekomendasi untuk Masisir
           </h2>
-          <p className="text-center text-[#94A3B8] text-sm mb-8">Pilih sesuai level dan tujuan lo.</p>
+          <p className="text-center text-[#94A3B8] text-sm mb-8">Pilih sesuai level dan tujuan kamu.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {stacks.map((stack) => (

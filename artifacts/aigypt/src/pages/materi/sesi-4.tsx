@@ -16,7 +16,7 @@ export default function Sesi4() {
 
       <SectionHeading>Bagian 1: Riset Produk & Kompetitor</SectionHeading>
       <p className="text-sm text-[#94A3B8] leading-relaxed mb-4">
-        Sebelum jual apapun, lo perlu tau pasar. AI bisa membantu lo riset 10x lebih cepat.
+        Sebelum jual apapun, kamu perlu tau pasar. AI bisa membantu kamu riset 10x lebih cepat.
       </p>
 
       <PromptBlock label="Prompt: Riset Pasar Produk">{`[Role] Kamu adalah analis bisnis yang spesialis di e-commerce 
@@ -122,7 +122,7 @@ terdistribusi merata di hari-hari dengan engagement tertinggi
       <PromptBlock label="Prompt: Script Video TikTok">{`Buatkan script video TikTok/Reels durasi 60 detik tentang [TOPIK].
 
 Format script:
-- Hook (3 detik pertama): kalimat pembuka yang bikin orang stop scrolling
+- Hook (3 detik pertama): kalimat pembuka yang membuat orang stop scrolling
 - Setup (5 detik): konteks singkat
 - Main content (40 detik): 3 poin utama dengan transisi natural
 - CTA (12 detik): ajakan yang spesifik dan mudah dilakukan
@@ -181,15 +181,15 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`}</PromptB
         <div className="space-y-3">
           <div>
             <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI A: Bisnisman</p>
-            <p className="text-sm text-[#94A3B8]">Ambil produk yang sedang atau akan lo jual. Buat 3 variasi caption menggunakan prompt AIDA di atas. Minta feedback dari Claude mana yang paling mungkin convert.</p>
+            <p className="text-sm text-[#94A3B8]">Ambil produk yang sedang atau akan kamu jual. Buat 3 variasi caption menggunakan prompt AIDA di atas. Minta feedback dari Claude mana yang paling mungkin convert.</p>
           </div>
           <div>
             <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI B: Konten Kreator</p>
-            <p className="text-sm text-[#94A3B8]">Buat content calendar 2 minggu untuk niche lo menggunakan prompt di atas. Lanjutkan dengan membuat script untuk 1 konten dari calendar tersebut.</p>
+            <p className="text-sm text-[#94A3B8]">Buat content calendar 2 minggu untuk nichemu menggunakan prompt di atas. Lanjutkan dengan membuat script untuk 1 konten dari calendar tersebut.</p>
           </div>
           <div>
             <p className="text-xs text-[#A855F7] font-mono mb-1">OPSI C: Repurpose Challenge</p>
-            <p className="text-sm text-[#94A3B8]">Ambil satu konten yang sudah pernah lo buat (caption, artikel, tweet, dll). Repurpose ke 3 format berbeda menggunakan prompt repurpose master.</p>
+            <p className="text-sm text-[#94A3B8]">Ambil satu konten yang sudah pernah kamu buat (caption, artikel, tweet, dll). Repurpose ke 3 format berbeda menggunakan prompt repurpose master.</p>
           </div>
         </div>
       </LatihanBox>
@@ -199,7 +199,7 @@ untuk setiap platform. Sertakan CTA yang berbeda untuk setiap format.`}</PromptB
         <ol className="space-y-2 text-sm list-decimal pl-4">
           <li>Buat satu konten lengkap dari A sampai Z dengan AI: ide → teks → visual (Canva AI)</li>
           <li>Kalau punya bisnis: buat 3 caption dan coba posting salah satunya</li>
-          <li>Mulai pikirkan: masalah apa yang mau lo selesaikan di Sesi 5 (vibe coding)?</li>
+          <li>Mulai pikirkan: masalah apa yang ingin kamu selesaikan di Sesi 5 (vibe coding)?</li>
         </ol>
       </TakeHomeBox>
     </div>
