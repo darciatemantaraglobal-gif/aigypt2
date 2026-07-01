@@ -1,22 +1,23 @@
 ---
 name: AIGYPT project setup
-description: Key decisions and gotchas from migrating AIGYPT from Supabase to Replit PostgreSQL and getting workflows running.
+description: Key decisions and gotchas for running the AIGYPT project on Replit.
 ---
 
-## DB migration
-Originally used `SUPABASE_DATABASE_URL`; migrated to Replit's built-in `DATABASE_URL` in `lib/db/drizzle.config.ts` and `lib/db/src/index.ts`. Non-runtime Supabase references (toolboxData.ts static URL, replit.md notes) are intentionally left as-is.
+## Database
+Proyek ini tetap menggunakan Supabase. `SUPABASE_DATABASE_URL` diset sebagai Replit Secret.
+DB client ada di `lib/db/src/index.ts` dan drizzle config di `lib/db/drizzle.config.ts`.
 
-**Why:** Replit's built-in PostgreSQL is preferred; Supabase account/keys not available in this environment.
+**Why:** User ingin tetap pakai Supabase, bukan Replit built-in PostgreSQL.
 
 ## Workflow PORT injection
-Artifact-managed workflows don't automatically inject `PORT` when configured via `configureWorkflow`. Must explicitly pass it in the command:
+Artifact-managed workflows tidak otomatis inject `PORT`. Harus eksplisit di command:
 - Frontend: `PORT=22064 pnpm --filter @workspace/aigypt run dev`
 - API: `PORT=8080 pnpm --filter @workspace/api-server run dev`
 
-**Why:** The artifact.toml `[services.env]` PORT only applies to Replit-managed artifact service workflows, not custom `configureWorkflow` calls.
+**Why:** `[services.env]` di artifact.toml hanya berlaku untuk Replit-managed workflow, bukan custom `configureWorkflow`.
 
 ## Admin panel
-`ADMIN_PASSWORD` env var must be set in Replit Secrets to enable admin API endpoints. Currently unset; server logs a warning on startup.
+`ADMIN_PASSWORD` env var harus diset di Replit Secrets untuk mengaktifkan admin API endpoints.
 
 ## Security note (pre-existing)
-`MASTER_ACCESS_CODE` and `PREVIEW_CODE` are stored in `.replit` `[userenv.shared]` — not in Secrets. This is a pre-existing pattern; treat as potentially exposed.
+`MASTER_ACCESS_CODE` dan `PREVIEW_CODE` tersimpan di `.replit` `[userenv.shared]` — bukan di Secrets.

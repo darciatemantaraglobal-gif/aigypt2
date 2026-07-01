@@ -32,7 +32,7 @@ An Indonesian online learning platform built on React + Express with PostgreSQL.
 
 ## Environment Variables
 
-- `DATABASE_URL` — Replit built-in PostgreSQL (auto-provisioned, no setup needed)
+- `SUPABASE_DATABASE_URL` — Connection string Supabase (Supabase Dashboard → Project Settings → Database → Connection string)
 - `SESSION_SECRET` — JWT/session signing secret
 - `VITE_WA_NUMBER` / `ADMIN_WA_NUMBER` — WhatsApp contact numbers (set in .replit)
 - `MIDTRANS_IS_PRODUCTION` / `VITE_MIDTRANS_IS_PRODUCTION` — Midtrans mode (set in .replit)
@@ -42,7 +42,7 @@ An Indonesian online learning platform built on React + Express with PostgreSQL.
 
 ## Architecture decisions
 
-- Originally used Supabase; migrated to Replit's built-in PostgreSQL. `DATABASE_URL` replaces `SUPABASE_DATABASE_URL` in `lib/db/`.
+- Database: Supabase PostgreSQL via `SUPABASE_DATABASE_URL`.
 - Drizzle ORM handles schema — run `pnpm --filter @workspace/db run push` after schema changes.
 
 ## User preferences
@@ -53,4 +53,4 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 - Workflows must explicitly pass `PORT` (not inherited from artifact.toml in custom workflow config): frontend uses `PORT=22064`, API uses `PORT=8080`.
 - `ADMIN_PASSWORD` env var must be set to enable admin endpoints.
-- Do not use `SUPABASE_DATABASE_URL` anywhere — the project now uses Replit's `DATABASE_URL`.
+- `SUPABASE_DATABASE_URL` harus diset sebagai Replit Secret agar API server bisa konek ke Supabase.

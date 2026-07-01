@@ -1,0 +1,83 @@
+# Hapus Decorative Icon (Sparkle) dari Semua Halaman
+
+## Masalah
+
+Ada icon dekoratif berbentuk sparkle/bintang yang muncul di hero cover halaman kelas detail dan di kartu-kartu katalog. Icon ini diambil dari field `iconPath` di `classesData.ts` dan dirender sebagai SVG transparan di atas gradient background.
+
+Icon ini perlu dihapus dari **semua tempat** yang merendernya.
+
+---
+
+## File 1: `artifacts/aigypt/src/pages/kelas-detail.tsx`
+
+Cari fungsi `KelasHeroCover`. Di dalamnya ada blok SVG dekoratif berikut, hapus seluruh elemen `<svg>...</svg>` ini:
+
+```tsx
+<svg
+  className="absolute"
+  style={{ top: "25%", left: "50%", transform: "translate(-50%, -50%)", opacity: 0.12 }}
+  width="200" height="200" viewBox="0 0 24 24"
+  fill="none" stroke={kelas.accentColor} strokeWidth="0.6"
+  strokeLinecap="round" strokeLinejoin="round"
+>
+  <path d={kelas.iconPath} />
+</svg>
+```
+
+Jangan ubah elemen lain di dalam `KelasHeroCover` (grain texture, radial glow, bottom gradient fade).
+
+---
+
+## File 2: `artifacts/aigypt/src/pages/kelas.tsx`
+
+Cari fungsi `KelasGradientCover`. Di dalamnya ada komentar `{/* Icon — small and subtle for hero, decorative for card/modal */}` diikuti blok `<div>` yang berisi SVG. Hapus seluruh blok `<div>` beserta `<svg>` di dalamnya:
+
+```tsx
+{/* Icon — small and subtle for hero, decorative for card/modal */}
+<div
+  className="absolute"
+  style={{
+    top: isHero ? "18%" : "22%",
+    right: isHero ? "12%" : "auto",
+    left: isHero ? "auto" : "50%",
+    transform: isHero ? "none" : "translate(-50%, -50%)",
+    opacity: isHero ? 0.3 : 0.2,
+  }}
+>
+  <svg
+    width={isHero ? 20 : isModal ? 120 : 80}
+    height={isHero ? 20 : isModal ? 120 : 80}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={kelas.accentColor}
+    strokeWidth="0.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d={kelas.iconPath} />
+  </svg>
+</div>
+```
+
+Jangan ubah elemen lain di dalam `KelasGradientCover`.
+
+---
+
+## Yang TIDAK Perlu Diubah
+
+- `classesData.ts` — field `iconPath` boleh tetap ada di data, tidak perlu dihapus
+- Grain texture (`backgroundImage` noise)
+- Radial glow (`radial-gradient`)
+- Bottom gradient fade
+- Badge status (TERSEDIA, BARU, SEGERA)
+- Semua logika dan komponen lainnya
+- File lain di luar 2 file yang disebutkan
+
+---
+
+## Verifikasi
+
+Setelah perubahan:
+- Buka halaman `/kelas` → kartu-kartu tidak ada icon sparkle di tengahnya
+- Buka `/kelas/maksimalkan-ai` → hero background hanya gradient + glow, tanpa icon besar transparan
+- Gradient dan efek ambient tetap terlihat normal
