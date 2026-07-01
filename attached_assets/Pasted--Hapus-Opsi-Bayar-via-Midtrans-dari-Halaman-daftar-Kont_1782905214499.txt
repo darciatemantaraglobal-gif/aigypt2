@@ -1,0 +1,195 @@
+# Hapus Opsi Bayar via Midtrans dari Halaman /daftar
+
+## Konteks
+
+Halaman `/daftar` saat ini punya dua tombol pembayaran: **Bayar via Midtrans** (primary) dan **Bayar via QRIS** (secondary). Midtrans perlu dihapus sementara — tinggalkan hanya QRIS.
+
+Semua perubahan hanya di satu file: `artifacts/aigypt/src/pages/daftar.tsx`.
+
+---
+
+## Perubahan 1 — Hapus useEffect Loader Script Midtrans
+
+Cari dan hapus seluruh blok `useEffect` berikut (dari baris pertama hingga `}, []);`):
+
+```tsx
+useEffect(() => {
+  const isProduction = import.meta.env.VITE_MIDTRANS_IS_PRODUCTION === "true";
+  const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY ?? "";
+  const snapUrl = isProduction
+    ? "https://app.midtrans.com/snap/snap.js"
+    : "https://app.sandbox.midtrans.com/snap/snap.js";
+
+  const existing = document.getElementById("midtrans-snap");
+  if (existing) {
+    setSnapReady(true);
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.id = "midtrans-snap";
+  script.src = snapUrl;
+  script.setAttribute("data-client-key", clientKey);
+  script.onload = () => setSnapReady(true);
+  script.onerror = () => console.error("[Snap] Gagal memuat Midtrans Snap.js");
+  document.head.appendChild(script);
+  scriptRef.current = script;
+
+  return () => {
+    if (scriptRef.current && document.head.contains(scriptRef.current)) {
+      document.head.removeChild(scriptRef.current);
+    }
+  };
+}, []);
+```
+
+---
+
+## Perubahan 2 — Hapus State dan Ref Midtrans
+
+Cari dan hapus 2 baris state/ref berikut:
+
+```tsx
+const [snapReady, setSnapReady] = useState(false);
+const scriptRef = useRef<HTMLScriptElement | null>(null);
+```
+
+---
+
+## Perubahan 3 — Hapus Fungsi handleMidtrans
+
+Cari dan hapus seluruh fungsi `handleMidtrans` (dari deklarasinya hingga kurung tutup terakhir `};`):
+
+```tsx
+const handleMidtrans = async () => {
+  ...
+  try {
+    const apiBase = import.meta.env.VITE_API_URL ?? "/api";
+    const res = await fetch(`${apiBase}/midtrans/create-transaction`, {
+    ...
+    window.snap.pay(data.snapToken, {
+    ...
+    });
+  } catch (err) {
+    ...
+  }
+};
+```
+
+Hapus seluruh fungsi ini dari awal `const handleMidtrans` sampai `};` penutupnya.
+
+---
+
+## Perubahan 4 — Hapus Tombol "Bayar via Midtrans" dan Divider "atau"
+
+Di dalam JSX, cari blok `<div className="pt-2 space-y-3">`. Di dalamnya ada:
+1. Tombol primary "Bayar via Midtrans" (`type="submit"`)
+2. Divider "atau"
+3. Tombol secondary "Bayar via QRIS" (`type="button"`)
+
+**Hapus hanya item 1 dan 2**, yaitu:
+
+```tsx
+<button
+  type="submit"
+  disabled={loading}
+  className="w-full inline-flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+  style={{
+    background: "#7C3AED",
+    borderRadius: "12px",
+    padding: "15px 24px",
+    minHeight: "52px",
+    boxShadow: "0px 4px 16px rgba(124,58,237,0.35)",
+  }}
+>
+  {loading ? (
+    <><IconSpin />Memproses...</>
+  ) : (
+    <>Bayar via Midtrans <IconArrow /></>
+  )}
+</button>
+
+<div className="flex items-center gap-3">
+  <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+  <span className="text-xs font-mono" style={{ color: "#3F3F46" }}>atau</span>
+  <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+</div>
+```
+
+**Pertahankan** tombol "Bayar via QRIS" dan teks syarat & ketentuan di bawahnya.
+
+Setelah dihapus, **ubah tombol QRIS** dari secondary menjadi primary (supaya jadi tombol utama):
+
+```tsx
+<button
+  type="button"
+  disabled={loading}
+  onClick={handleQris}
+  className="w-full inline-flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+  style={{
+    background: "#7C3AED",
+    borderRadius: "12px",
+    padding: "15px 24px",
+    minHeight: "52px",
+    color: "#FAFAFA",
+    boxShadow: "0px 4px 16px rgba(124,58,237,0.35)",
+  }}
+>
+  {loading ? (
+    <><IconSpin />Memproses...</>
+  ) : (
+    <>Bayar via QRIS <IconArrow /></>
+  )}
+</button>
+```
+
+---
+
+## Perubahan 5 — Update Trust Badges di Footer Form
+
+Cari baris:
+```tsx
+{["Pembayaran aman via Midtrans", "Kode akses via WhatsApp", "Akses selamanya"].map((t) => (
+```
+
+Ganti dengan:
+```tsx
+{["Pembayaran via QRIS · Temantiket", "Kode akses via WhatsApp", "Akses selamanya"].map((t) => (
+```
+
+---
+
+## Perubahan 6 — Hapus Import useRef (jika tidak dipakai lagi)
+
+Cari baris import yang mengandung `useRef`:
+```tsx
+import { useState, useEffect, useRef } from "react";
+```
+
+Ganti menjadi:
+```tsx
+import { useState, useEffect } from "react";
+```
+
+Jika `useRef` masih dipakai di tempat lain di file ini, biarkan saja.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Fungsi `handleQris` — tetap dipertahankan sepenuhnya
+- Fungsi `handleApplyCoupon` — tidak disentuh
+- Form input (nama, email, WhatsApp) — tidak disentuh
+- Logika validasi form — tidak disentuh
+- Halaman `/pembayaran` (`pembayaran.tsx`) — tidak disentuh
+- File lain apapun
+
+---
+
+## Verifikasi
+
+Setelah perubahan:
+1. Buka `/daftar` → hanya ada satu tombol: **Bayar via QRIS**
+2. Klik tombol → diarahkan ke halaman `/daftar/pembayaran` dengan QRIS
+3. Tidak ada error TypeScript terkait `snapReady`, `scriptRef`, atau `window.snap`
+4. Trust badges di bawah form sudah tidak menyebut Midtrans

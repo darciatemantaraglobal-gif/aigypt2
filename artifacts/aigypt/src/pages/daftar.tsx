@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
@@ -91,42 +91,10 @@ export default function Daftar() {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [snapReady, setSnapReady] = useState(false);
-  const scriptRef = useRef<HTMLScriptElement | null>(null);
-
   const [couponInput, setCouponInput] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponError, setCouponError] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountAmount: number } | null>(null);
-
-  useEffect(() => {
-    const isProduction = import.meta.env.VITE_MIDTRANS_IS_PRODUCTION === "true";
-    const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY ?? "";
-    const snapUrl = isProduction
-      ? "https://app.midtrans.com/snap/snap.js"
-      : "https://app.sandbox.midtrans.com/snap/snap.js";
-
-    const existing = document.getElementById("midtrans-snap");
-    if (existing) {
-      setSnapReady(true);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "midtrans-snap";
-    script.src = snapUrl;
-    script.setAttribute("data-client-key", clientKey);
-    script.onload = () => setSnapReady(true);
-    script.onerror = () => console.error("[Snap] Gagal memuat Midtrans Snap.js");
-    document.head.appendChild(script);
-    scriptRef.current = script;
-
-    return () => {
-      if (scriptRef.current && document.head.contains(scriptRef.current)) {
-        document.head.removeChild(scriptRef.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (appliedCoupon && appliedCoupon.code) {
@@ -226,76 +194,6 @@ export default function Daftar() {
     setLocation(`/daftar/pembayaran?${params.toString()}`);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
-      setError("Semua field wajib diisi.");
-      return;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      setError("Format email tidak valid.");
-      return;
-    }
-    const phoneClean = form.phone.replace(/\D/g, "");
-    if (phoneClean.length < 9 || phoneClean.length > 15) {
-      setError("Nomor WhatsApp tidak valid.");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const apiBase = import.meta.env.VITE_API_URL ?? "/api";
-      const res = await fetch(`${apiBase}/midtrans/create-transaction`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim().toLowerCase(),
-          phone: form.phone.trim(),
-          memberType: selectedType,
-        }),
-      });
-
-      const data = await res.json() as { snapToken?: string; orderId?: string; error?: string };
-
-      if (!res.ok || !data.snapToken) {
-        setError(data.error ?? "Gagal memulai pembayaran. Coba lagi.");
-        setLoading(false);
-        return;
-      }
-
-      if (!snapReady || typeof window.snap === "undefined") {
-        setError("Sistem pembayaran belum siap. Refresh halaman dan coba lagi.");
-        setLoading(false);
-        return;
-      }
-
-      setLoading(false);
-
-      window.snap.pay(data.snapToken, {
-        onSuccess: (result) => {
-          setLocation(`/sukses?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
-        },
-        onPending: (result) => {
-          setLocation(`/sukses?order_id=${result.order_id}&transaction_status=pending`);
-        },
-        onError: () => {
-          setLocation(`/sukses?status=error`);
-        },
-        onClose: () => {
-          setLoading(false);
-        },
-      });
-    } catch (err) {
-      console.error("[Daftar] Error:", err);
-      setError("Terjadi kesalahan jaringan. Periksa koneksi dan coba lagi.");
-      setLoading(false);
-    }
-  };
 
   const PRICES: Record<string, number> = { mandiri: 200000, kelas: 150000 };
   const basePrice = PRICES[selectedType] ?? 150000;
@@ -501,7 +399,7 @@ export default function Daftar() {
               DATA PENDAFTARAN
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2" style={{ color: "#A1A1AA" }}>Nama Lengkap</label>
                 <input
@@ -648,47 +546,24 @@ export default function Daftar() {
 
               <div className="pt-2 space-y-3">
                 <button
-                  type="submit"
+                  type="button"
                   disabled={loading}
+                  onClick={handleQris}
                   className="w-full inline-flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
                     background: "#7C3AED",
                     borderRadius: "12px",
                     padding: "15px 24px",
                     minHeight: "52px",
+                    color: "#FAFAFA",
                     boxShadow: "0px 4px 16px rgba(124,58,237,0.35)",
                   }}
                 >
                   {loading ? (
                     <><IconSpin />Memproses...</>
                   ) : (
-                    <>Bayar via Midtrans <IconArrow /></>
+                    <>Bayar via QRIS <IconArrow /></>
                   )}
-                </button>
-
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-                  <span className="text-xs font-mono" style={{ color: "#3F3F46" }}>atau</span>
-                  <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-                </div>
-
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={handleQris}
-                  className="w-full inline-flex items-center justify-center gap-2 text-base font-medium transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={{
-                    background: "transparent",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "12px",
-                    padding: "15px 24px",
-                    minHeight: "52px",
-                    color: "#A1A1AA",
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(124,58,237,0.4)"; e.currentTarget.style.color = "#FAFAFA"; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#A1A1AA"; }}
-                >
-                  Bayar via QRIS <IconArrow />
                 </button>
 
                 <p className="text-center text-xs pt-1" style={{ color: "#52525B" }}>
@@ -705,7 +580,7 @@ export default function Daftar() {
             transition={{ delay: 0.6 }}
             className="flex flex-wrap items-center justify-center gap-6 mt-8"
           >
-            {["Pembayaran aman via Midtrans", "Kode akses via WhatsApp", "Akses selamanya"].map((t) => (
+            {["Pembayaran via QRIS · Temantiket", "Kode akses via WhatsApp", "Akses selamanya"].map((t) => (
               <span key={t} className="font-mono text-xs tracking-widest flex items-center gap-2" style={{ color: "#3F3F46" }}>
                 <span style={{ color: "rgba(124,58,237,0.4)" }}>✓</span> {t}
               </span>
