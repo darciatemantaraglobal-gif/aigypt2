@@ -1,0 +1,686 @@
+# Port Semua API Admin ke Vercel Serverless Functions
+
+## Konteks
+
+Halaman admin panel (`/admin/login`, `/admin/orders`, `/admin/members`, `/admin/codes`) sudah ada di frontend, tapi API `/api/admin/*` masih di server Express lama (`api-server/src/routes/admin.ts`) yang **tidak bisa jalan di Vercel**. Semua endpoint admin perlu dibuat ulang sebagai Vercel serverless functions, mengikuti pola yang sama seperti `api/auth/login.ts`, `api/coupons/check.ts`, dan `api/qris/confirm.ts` yang sudah berhasil sebelumnya.
+
+**Penting:** Nama kolom database sudah dikonfirmasi dari Supabase — semua tabel (`access_codes`, `members`, `materi_progress`) pakai snake_case standar SESUAI schema, KECUALI tabel `orders` yang pakai kolom `amount` (bukan `gross_amount`), dan `access_codes` **tidak punya kolom `order_id`**.
+
+---
+
+## Langkah 1 — Buat Helper Bersama: `artifacts/aigypt/api/_lib/adminAuth.ts`
+
+Folder `_lib` (dengan underscore) tidak dianggap sebagai route oleh Vercel, aman untuk shared code.
+
+```ts
+import { jwtVerify, SignJWT } from "jose";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+
+const ADMIN_COOKIE = "aigypt_admin_session";
+const SESSION_HOURS = 8;
+
+function getSecret() {
+  const pw = process.env["ADMIN_PASSWORD"] ?? "";
+  const secretEnv = process.env["ADMIN_SESSION_SECRET"] ?? pw;
+  return new TextEncoder().encode(secretEnv);
+}
+
+export async function signAdminToken(): Promise<string> {
+  return new SignJWT({ role: "admin" })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime(`${SESSION_HOURS}h`)
+    .setIssuedAt()
+    .sign(getSecret());
+}
+
+function parseCookies(header?: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  if (!header) return out;
+  header.split(";").forEach((pair) => {
+    const idx = pair.indexOf("=");
+    if (idx === -1) return;
+    const k = pair.slice(0, idx).trim();
+    const v = pair.slice(idx + 1).trim();
+    out[k] = decodeURIComponent(v);
+  });
+  return out;
+}
+
+export async function verifyAdmin(req: VercelRequest): Promise<boolean> {
+  const cookies = parseCookies(req.headers.cookie);
+  const token = cookies[ADMIN_COOKIE];
+  if (!token) return false;
+  try {
+    const { payload } = await jwtVerify(token, getSecret());
+    return payload["role"] === "admin";
+  } catch {
+    return false;
+  }
+}
+
+export function setAdminCookie(res: VercelResponse, token: string) {
+  const isProd = process.env["VERCEL_ENV"] === "production";
+  res.setHeader(
+    "Set-Cookie",
+    `${ADMIN_COOKIE}=${token}; HttpOnly; Path=/; Max-Age=${SESSION_HOURS * 3600}; SameSite=Lax${isProd ? "; Secure" : ""}`
+  );
+}
+
+export function clearAdminCookie(res: VercelResponse) {
+  res.setHeader("Set-Cookie", `${ADMIN_COOKIE}=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax`);
+}
+```
+
+---
+
+## Langkah 2 — Auth Endpoints
+
+### `artifacts/aigypt/api/admin/login.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { signAdminToken, setAdminCookie } from "../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+  const ADMIN_PASSWORD = (process.env["ADMIN_PASSWORD"] ?? "").trim();
+  if (!ADMIN_PASSWORD) {
+    return res.status(503).json({ error: "ADMIN_PASSWORD belum dikonfigurasi" });
+  }
+
+  const { password } = req.body as { password?: string };
+  if (!password || password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Password salah" });
+  }
+
+  const token = await signAdminToken();
+  setAdminCookie(res, token);
+  return res.json({ success: true });
+}
+```
+
+### `artifacts/aigypt/api/admin/logout.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { clearAdminCookie } from "../_lib/adminAuth";
+
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  clearAdminCookie(res);
+  return res.json({ success: true });
+}
+```
+
+### `artifacts/aigypt/api/admin/verify.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { verifyAdmin } from "../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  const isAdmin = await verifyAdmin(req);
+  return res.status(isAdmin ? 200 : 401).json({ authenticated: isAdmin });
+}
+```
+
+---
+
+## Langkah 3 — Dashboard Stats
+
+### `artifacts/aigypt/api/admin/dashboard-stats.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+
+    const [totalMembers, unusedCodes, pendingOrders, paidOrders, recentOrders] = await Promise.all([
+      sql`SELECT COUNT(*)::int AS c FROM members`,
+      sql`SELECT COUNT(*)::int AS c FROM access_codes WHERE is_used = false`,
+      sql`SELECT COUNT(*)::int AS c FROM orders WHERE status = 'pending_qris'`,
+      sql`SELECT COUNT(*)::int AS c FROM orders WHERE status = 'paid'`,
+      sql`SELECT order_id, name, email, member_type, status, amount, created_at FROM orders ORDER BY created_at DESC LIMIT 5`,
+    ]);
+
+    return res.json({
+      totalMembers: totalMembers[0]?.["c"] ?? 0,
+      unusedCodes: unusedCodes[0]?.["c"] ?? 0,
+      pendingOrders: pendingOrders[0]?.["c"] ?? 0,
+      paidOrders: paidOrders[0]?.["c"] ?? 0,
+      recentOrders: recentOrders.map((o) => ({
+        orderId: o["order_id"],
+        name: o["name"],
+        email: o["email"],
+        memberType: o["member_type"],
+        status: o["status"],
+        grossAmount: o["amount"],
+        createdAt: o["created_at"],
+      })),
+    });
+  } catch (err) {
+    console.error("[Admin Dashboard] Error:", err);
+    return res.status(500).json({ error: "Gagal memuat statistik" });
+  }
+}
+```
+
+---
+
+## Langkah 4 — Access Codes
+
+### `artifacts/aigypt/api/admin/codes/generate.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../_lib/adminAuth";
+
+function generateCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "AIGYPT-";
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { type, batchNumber, count: countReq } = req.body as {
+    type?: string; batchNumber?: number; count?: number;
+  };
+  if (!type || !["mandiri", "kelas"].includes(type)) {
+    return res.status(400).json({ error: "Tipe harus 'mandiri' atau 'kelas'" });
+  }
+  const n = Number(countReq);
+  if (!n || n < 1 || n > 50) {
+    return res.status(400).json({ error: "Jumlah kode harus antara 1 dan 50" });
+  }
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    const batch = batchNumber ?? 3;
+    const codes: string[] = [];
+
+    for (let i = 0; i < n; i++) {
+      let code = "";
+      for (let attempt = 0; attempt < 20; attempt++) {
+        const candidate = generateCode();
+        const existing = await sql`SELECT id FROM access_codes WHERE code = ${candidate} LIMIT 1`;
+        if (existing.length === 0) { code = candidate; break; }
+      }
+      if (!code) break;
+      await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${code}, ${type}, ${batch}, false)`;
+      codes.push(code);
+    }
+    return res.json({ codes });
+  } catch (err) {
+    console.error("[Codes Generate] Error:", err);
+    return res.status(500).json({ error: "Gagal generate kode" });
+  }
+}
+```
+
+### `artifacts/aigypt/api/admin/codes/list.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { type, batch, status, search, page = "1" } = req.query as Record<string, string>;
+  const pageNum = Math.max(1, parseInt(page, 10) || 1);
+  const pageSize = 20;
+  const offset = (pageNum - 1) * pageSize;
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+
+    const whereClauses: string[] = [];
+    const vals: (string | number)[] = [];
+    let idx = 1;
+    if (type && type !== "all") { whereClauses.push(`type = $${idx++}`); vals.push(type); }
+    if (batch) { whereClauses.push(`batch_number = $${idx++}`); vals.push(parseInt(batch, 10)); }
+    if (status === "used") whereClauses.push(`is_used = true`);
+    if (status === "unused") whereClauses.push(`is_used = false`);
+    if (search) { whereClauses.push(`(code ILIKE $${idx} OR used_by_email ILIKE $${idx})`); vals.push(`%${search}%`); idx++; }
+
+    const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
+    const codes = await sql.query(
+      `SELECT * FROM access_codes ${whereSql} ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`,
+      vals
+    );
+    const totalRes = await sql.query(`SELECT COUNT(*)::int AS c FROM access_codes ${whereSql}`, vals);
+
+    return res.json({
+      codes: (codes as Record<string, unknown>[]).map((c) => ({
+        id: c["id"], code: c["code"], type: c["type"], batchNumber: c["batch_number"],
+        isUsed: c["is_used"], usedByEmail: c["used_by_email"], usedAt: c["used_at"],
+        createdAt: c["created_at"], orderId: null,
+      })),
+      total: (totalRes as Record<string, unknown>[])[0]?.["c"] ?? 0,
+      page: pageNum,
+      pageSize,
+    });
+  } catch (err) {
+    console.error("[Codes List] Error:", err);
+    return res.status(500).json({ error: "Gagal memuat kode" });
+  }
+}
+```
+
+### `artifacts/aigypt/api/admin/codes/[code].ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "DELETE") return res.status(405).json({ error: "Method not allowed" });
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { code } = req.query as { code?: string };
+  if (!code) return res.status(400).json({ error: "Kode tidak valid" });
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    const existing = await sql`SELECT is_used FROM access_codes WHERE code = ${code} LIMIT 1`;
+    if (!existing.length) return res.status(404).json({ error: "Kode tidak ditemukan" });
+    if (existing[0]!["is_used"]) return res.status(400).json({ error: "Kode yang sudah dipakai tidak bisa dihapus" });
+
+    await sql`DELETE FROM access_codes WHERE code = ${code}`;
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("[Codes Delete] Error:", err);
+    return res.status(500).json({ error: "Gagal menghapus kode" });
+  }
+}
+```
+
+---
+
+## Langkah 5 — Members
+
+### `artifacts/aigypt/api/admin/members/list.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { search, type, batch } = req.query as Record<string, string>;
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+
+    const whereClauses: string[] = [];
+    const vals: (string | number)[] = [];
+    let idx = 1;
+    if (type && type !== "all") { whereClauses.push(`member_type = $${idx++}`); vals.push(type); }
+    if (batch) { whereClauses.push(`batch_number = $${idx++}`); vals.push(parseInt(batch, 10)); }
+    if (search) { whereClauses.push(`(email ILIKE $${idx} OR name ILIKE $${idx})`); vals.push(`%${search}%`); idx++; }
+    const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
+    const members = await sql.query(`SELECT * FROM members ${whereSql} ORDER BY created_at DESC`, vals) as Record<string, unknown>[];
+
+    const emails = members.map((m) => m["email"] as string);
+    let progress: Record<string, unknown>[] = [];
+    if (emails.length > 0) {
+      progress = await sql.query(
+        `SELECT member_email, is_completed FROM materi_progress WHERE member_email = ANY($1)`,
+        [emails]
+      ) as Record<string, unknown>[];
+    }
+
+    const completedByEmail: Record<string, number> = {};
+    for (const p of progress) {
+      if (p["is_completed"]) {
+        const email = p["member_email"] as string;
+        completedByEmail[email] = (completedByEmail[email] ?? 0) + 1;
+      }
+    }
+
+    return res.json({
+      members: members.map((m) => ({
+        id: m["id"], email: m["email"], name: m["name"], memberType: m["member_type"],
+        batchNumber: m["batch_number"], accessCode: m["access_code"],
+        completedSessions: completedByEmail[m["email"] as string] ?? 0, totalSessions: 6,
+        createdAt: m["created_at"], lastLogin: m["last_login"],
+      })),
+    });
+  } catch (err) {
+    console.error("[Members List] Error:", err);
+    return res.status(500).json({ error: "Gagal memuat member" });
+  }
+}
+```
+
+### `artifacts/aigypt/api/admin/members/[email]/detail.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { email: emailParam } = req.query as { email?: string };
+  const email = decodeURIComponent(emailParam ?? "");
+  if (!email) return res.status(400).json({ error: "Email tidak valid" });
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    const members = await sql`SELECT * FROM members WHERE email = ${email} LIMIT 1`;
+    if (!members.length) return res.status(404).json({ error: "Member tidak ditemukan" });
+    const member = members[0]!;
+
+    const progress = await sql`
+      SELECT sesi_number, kelas_id, is_completed, current_step, was_skipped, completed_at
+      FROM materi_progress WHERE member_email = ${email} ORDER BY sesi_number
+    `;
+
+    return res.json({
+      member: {
+        id: member["id"], email: member["email"], name: member["name"], memberType: member["member_type"],
+        batchNumber: member["batch_number"], accessCode: member["access_code"],
+        createdAt: member["created_at"], lastLogin: member["last_login"],
+      },
+      progress: progress.map((p) => ({
+        sesiNumber: p["sesi_number"], kelasId: p["kelas_id"], isCompleted: p["is_completed"],
+        currentStep: p["current_step"], wasSkipped: p["was_skipped"], completedAt: p["completed_at"],
+      })),
+    });
+  } catch (err) {
+    console.error("[Member Detail] Error:", err);
+    return res.status(500).json({ error: "Gagal memuat detail member" });
+  }
+}
+```
+
+### `artifacts/aigypt/api/admin/members/[email]/reset-progress.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { email: emailParam } = req.query as { email?: string };
+  const email = decodeURIComponent(emailParam ?? "");
+  if (!email) return res.status(400).json({ error: "Email tidak valid" });
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    await sql`DELETE FROM materi_progress WHERE member_email = ${email}`;
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("[Reset Progress] Error:", err);
+    return res.status(500).json({ error: "Gagal reset progress" });
+  }
+}
+```
+
+---
+
+## Langkah 6 — Orders
+
+### `artifacts/aigypt/api/admin/orders/list.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { status, type } = req.query as Record<string, string>;
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    const whereClauses: string[] = [];
+    const vals: string[] = [];
+    let idx = 1;
+    if (status && status !== "all") { whereClauses.push(`status = $${idx++}`); vals.push(status); }
+    if (type && type !== "all") { whereClauses.push(`member_type = $${idx++}`); vals.push(type); }
+    const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
+    const orders = await sql.query(`SELECT * FROM orders ${whereSql} ORDER BY created_at DESC`, vals) as Record<string, unknown>[];
+
+    return res.json({
+      orders: orders.map((o) => ({
+        id: o["id"], orderId: o["order_id"], name: o["name"], email: o["email"], phone: o["phone"],
+        memberType: o["member_type"], batchNumber: o["batch_number"], grossAmount: o["amount"],
+        couponCode: o["coupon_code"], discountAmount: o["discount_amount"], finalAmount: o["final_amount"],
+        status: o["status"], accessCode: o["access_code"], paidAt: o["paid_at"], createdAt: o["created_at"],
+      })),
+    });
+  } catch (err) {
+    console.error("[Orders List] Error:", err);
+    return res.status(500).json({ error: "Gagal memuat order" });
+  }
+}
+```
+
+### `artifacts/aigypt/api/admin/orders/create.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../_lib/adminAuth";
+
+function generateCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "AIGYPT-";
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+function generateOrderId(): string {
+  const ts = Date.now().toString().slice(-8);
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `AIGYPT-${ts}-${rand}`;
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { name, email, phone, memberType, batchNumber, amount, status } = req.body as {
+    name?: string; email?: string; phone?: string; memberType?: string;
+    batchNumber?: number; amount?: number; status?: string;
+  };
+  if (!name || !email || !phone || !memberType || !amount) {
+    return res.status(400).json({ error: "Semua field wajib diisi" });
+  }
+  if (!["mandiri", "kelas"].includes(memberType)) {
+    return res.status(400).json({ error: "Tipe member tidak valid" });
+  }
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    const orderId = generateOrderId();
+    const normalizedEmail = email.toLowerCase();
+    const isPaid = status === "paid";
+    const batch = batchNumber ?? 3;
+    let accessCode: string | null = null;
+
+    if (isPaid) {
+      for (let attempt = 0; attempt < 20; attempt++) {
+        const candidate = generateCode();
+        const existing = await sql`SELECT id FROM access_codes WHERE code = ${candidate} LIMIT 1`;
+        if (existing.length === 0) { accessCode = candidate; break; }
+      }
+      if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses unik" });
+      await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
+
+      await sql`
+        INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, status, access_code, paid_at)
+        VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, 'paid', ${accessCode}, NOW())
+      `;
+    } else {
+      await sql`
+        INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, status)
+        VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, 'pending')
+      `;
+    }
+
+    return res.json({ success: true, orderId, accessCode });
+  } catch (err) {
+    console.error("[Orders Create] Error:", err);
+    return res.status(500).json({ error: "Gagal membuat order" });
+  }
+}
+```
+
+### `artifacts/aigypt/api/admin/orders/[orderId]/mark-paid.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../../_lib/adminAuth";
+
+function generateCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "AIGYPT-";
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { orderId } = req.query as { orderId?: string };
+  if (!orderId) return res.status(400).json({ error: "Order ID tidak valid" });
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    const orders = await sql`SELECT * FROM orders WHERE order_id = ${orderId} LIMIT 1`;
+    if (!orders.length) return res.status(404).json({ error: "Order tidak ditemukan" });
+    const order = orders[0]!;
+
+    if (order["status"] === "paid") {
+      return res.json({ success: true, accessCode: order["access_code"] });
+    }
+
+    let accessCode = "";
+    for (let attempt = 0; attempt < 20; attempt++) {
+      const candidate = generateCode();
+      const existing = await sql`SELECT id FROM access_codes WHERE code = ${candidate} LIMIT 1`;
+      if (existing.length === 0) { accessCode = candidate; break; }
+    }
+    if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses" });
+
+    await sql`
+      INSERT INTO access_codes (code, type, batch_number, is_used)
+      VALUES (${accessCode}, ${order["member_type"]}, ${order["batch_number"]}, false)
+    `;
+    await sql`
+      UPDATE orders SET status = 'paid', access_code = ${accessCode}, paid_at = NOW()
+      WHERE order_id = ${orderId}
+    `;
+
+    return res.json({ success: true, accessCode });
+  } catch (err) {
+    console.error("[Mark Paid] Error:", err);
+    return res.status(500).json({ error: "Gagal memproses pembayaran" });
+  }
+}
+```
+
+### `artifacts/aigypt/api/admin/orders/[orderId]/cancel.ts`
+
+```ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { neon } from "@neondatabase/serverless";
+import { verifyAdmin } from "../../../_lib/adminAuth";
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
+
+  const { orderId } = req.query as { orderId?: string };
+  if (!orderId) return res.status(400).json({ error: "Order ID tidak valid" });
+
+  try {
+    const sql = neon(process.env["DATABASE_URL"]!);
+    const orders = await sql`SELECT id FROM orders WHERE order_id = ${orderId} LIMIT 1`;
+    if (!orders.length) return res.status(404).json({ error: "Order tidak ditemukan" });
+
+    await sql`UPDATE orders SET status = 'cancelled' WHERE order_id = ${orderId}`;
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("[Cancel Order] Error:", err);
+    return res.status(500).json({ error: "Gagal membatalkan order" });
+  }
+}
+```
+
+---
+
+## Langkah 7 — Tambahkan Environment Variables di Vercel
+
+Buka **Vercel Dashboard → project AIGYPT → Settings → Environment Variables**, tambahkan:
+
+| Key | Value |
+|---|---|
+| `ADMIN_PASSWORD` | Password pilihan kamu untuk login admin panel, contoh: `aigypt-admin-2026` |
+| `ADMIN_SESSION_SECRET` | String random 32+ karakter, boleh generate baru terpisah dari `SESSION_SECRET` |
+
+Setelah ditambahkan, **Redeploy** project.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Semua file di `artifacts/aigypt/src/pages/admin/*.tsx` — sudah benar, tidak perlu diubah
+- `artifacts/aigypt/src/hooks/use-admin-auth.ts` — sudah benar
+- `artifacts/api-server/` — biarkan ada, tidak perlu dihapus
+- File lain di luar folder `artifacts/aigypt/api/admin/` dan `artifacts/aigypt/api/_lib/`
+
+---
+
+## Verifikasi
+
+1. Buka `aigypt.vercel.app/admin/login`
+2. Masukkan password sesuai `ADMIN_PASSWORD` yang di-set di Vercel
+3. Berhasil masuk ke `/admin` → dashboard menampilkan statistik (total member, kode belum dipakai, order pending/paid)
+4. Buka `/admin/orders` → order yang sudah masuk ke database (misalnya dari peserta yang sudah daftar) muncul di list
+5. Klik "Tandai Lunas" pada order pending → status berubah jadi "paid" dan kode akses ter-generate
+6. Buka `/admin/codes` → bisa generate kode akses baru dan lihat daftar kode
+7. Buka `/admin/members` → member yang sudah login pakai kode akses muncul di list
