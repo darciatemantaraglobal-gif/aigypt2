@@ -1,4 +1,12 @@
 import { useState, useRef, useEffect } from "react";
+import batch0Img1 from "@/assets/gallery/batch0-1.jpg";
+import batch0Img2 from "@/assets/gallery/batch0-2.jpg";
+import batch0Img3 from "@/assets/gallery/batch0-3.jpg";
+import batch0Img4 from "@/assets/gallery/batch0-4.jpg";
+import batch1Img1 from "@/assets/gallery/batch1-1.jpg";
+import batch1Img2 from "@/assets/gallery/batch1-2.jpg";
+import batch1Img3 from "@/assets/gallery/batch1-3.jpg";
+import batch1Img4 from "@/assets/gallery/batch1-4.jpg";
 import { Link } from "wouter";
 import { motion, useInView, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
@@ -749,6 +757,105 @@ function StatItem({ value, suffix, label, inView }: { value: number; suffix: str
   );
 }
 
+// ─── Gallery ──────────────────────────────────────────────────────────────────
+
+function GallerySection() {
+  const [activeBatch, setActiveBatch] = useState<"batch0" | "batch1">("batch1");
+
+  const galleries = {
+    batch0: [batch0Img1, batch0Img2, batch0Img3, batch0Img4],
+    batch1: [batch1Img1, batch1Img2, batch1Img3, batch1Img4],
+  };
+
+  const images = galleries[activeBatch];
+
+  return (
+    <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+      <div className="max-w-5xl mx-auto px-6 sm:px-10">
+        <Reveal className="text-center mb-10">
+          <SectionLabel>DOKUMENTASI KELAS</SectionLabel>
+          <motion.h2
+            variants={fadeUp}
+            className="font-display font-semibold mb-6"
+            style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)", letterSpacing: "-0.015em" }}
+          >
+            Momen dari{" "}
+            <span style={{ color: "#A855F7" }}>Batch Sebelumnya</span>
+          </motion.h2>
+          <motion.p
+            variants={fadeUp}
+            className="max-w-xl mx-auto"
+            style={{ color: "#A1A1AA", fontSize: "15px", lineHeight: 1.7 }}
+          >
+            Lihat langsung suasana belajar, antusiasme peserta, dan karya yang
+            dihasilkan dari Batch 0 dan Batch 1.
+          </motion.p>
+        </Reveal>
+
+        {/* Toggle Batch */}
+        <Reveal className="flex items-center justify-center gap-2 mb-8">
+          <button
+            onClick={() => setActiveBatch("batch0")}
+            className="font-mono text-xs px-4 py-2 rounded-full transition-all duration-200"
+            style={{
+              background: activeBatch === "batch0" ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.04)",
+              color: activeBatch === "batch0" ? "#FAFAFA" : "#71717A",
+              border: activeBatch === "batch0" ? "1px solid rgba(168,85,247,0.5)" : "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
+            BATCH 0
+          </button>
+          <button
+            onClick={() => setActiveBatch("batch1")}
+            className="font-mono text-xs px-4 py-2 rounded-full transition-all duration-200"
+            style={{
+              background: activeBatch === "batch1" ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.04)",
+              color: activeBatch === "batch1" ? "#FAFAFA" : "#71717A",
+              border: activeBatch === "batch1" ? "1px solid rgba(168,85,247,0.5)" : "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
+            BATCH 1
+          </button>
+        </Reveal>
+
+        {/* Gallery Grid */}
+        <motion.div
+          key={activeBatch}
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          variants={containerStagger}
+        >
+          {images.map((img, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              className="relative overflow-hidden group cursor-pointer"
+              style={{
+                aspectRatio: "1/1",
+                borderRadius: "12px",
+                border: "1px solid rgba(255,255,255,0.06)",
+              }}
+            >
+              <img
+                src={img}
+                alt={`Dokumentasi ${activeBatch === "batch0" ? "Batch 0" : "Batch 1"} AIGYPT foto ${i + 1}`}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: "rgba(124,58,237,0.15)" }}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -1443,6 +1550,8 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
+
+      <GallerySection />
 
       {/* ══ FAQ ══ */}
       <section className="py-[48px] sm:py-[80px]" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
