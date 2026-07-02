@@ -1,14 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../_lib/adminAuth";
+import { sql } from "../_lib/db";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
   if (!(await verifyAdmin(req))) return res.status(401).json({ error: "Unauthorized" });
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
-
     const [totalMembers, unusedCodes, pendingOrders, paidOrders, recentOrders] = await Promise.all([
       sql`SELECT COUNT(*)::int AS c FROM members`,
       sql`SELECT COUNT(*)::int AS c FROM access_codes WHERE is_used = false`,

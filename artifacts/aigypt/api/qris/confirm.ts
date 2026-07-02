@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
+import { sql } from "../_lib/db";
 
 interface Coupon {
   code: string;
@@ -94,8 +94,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     : `Member Mandiri - Batch ${BATCH_NUMBER}`;
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
-
     await sql`
       INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, coupon_code, discount_amount, final_amount, status)
       VALUES (${orderId}, ${name}, ${normalizedEmail}, ${normalizedPhone}, ${memberType}, ${BATCH_NUMBER}, ${grossAmount}, ${appliedCouponCode}, ${discountAmount}, ${finalAmount}, 'pending_qris')

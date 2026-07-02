@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../../_lib/adminAuth";
+import { sql } from "../../_lib/db";
 
 function generateCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -26,7 +26,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
     const batch = batchNumber ?? 3;
     const codes: string[] = [];
 

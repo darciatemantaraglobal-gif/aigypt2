@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { SignJWT } from "jose";
+import { sql } from "../_lib/db";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -12,7 +12,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
     const rows = await sql`
       SELECT order_id, name, email, member_type, batch_number, status, access_code
       FROM orders

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../../../_lib/adminAuth";
+import { sql } from "../../../_lib/db";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -11,7 +11,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!email) return res.status(400).json({ error: "Email tidak valid" });
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
     const members = await sql`SELECT * FROM members WHERE email = ${email} LIMIT 1`;
     if (!members.length) return res.status(404).json({ error: "Member tidak ditemukan" });
     const member = members[0]!;

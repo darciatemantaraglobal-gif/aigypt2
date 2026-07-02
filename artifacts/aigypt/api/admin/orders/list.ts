@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../../_lib/adminAuth";
+import { sql } from "../../_lib/db";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -9,7 +9,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { status, type } = req.query as Record<string, string>;
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
     const whereClauses: string[] = [];
     const vals: string[] = [];
     let idx = 1;
@@ -17,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (type && type !== "all") { whereClauses.push(`member_type = $${idx++}`); vals.push(type); }
     const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(" AND ")}` : "";
 
-    const orders = await sql.query(`SELECT * FROM orders ${whereSql} ORDER BY created_at DESC`, vals) as Record<string, unknown>[];
+    const orders = await sql.unsafe(`SELECT * FROM orders ${whereSql} ORDER BY created_at DESC`, vals) as unknown as Record<string, unknown>[];
 
     return res.json({
       orders: orders.map((o) => ({

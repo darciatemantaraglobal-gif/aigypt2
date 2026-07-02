@@ -1,0 +1,195 @@
+# Ganti Database Driver — Dari `@neondatabase/serverless` ke `postgres` (Kompatibel Supabase)
+
+## Root Cause
+
+`@neondatabase/serverless` bukan driver Postgres universal — package ini pakai HTTP proxy yang **khusus infrastruktur Neon**. Karena project ini pakai **Supabase**, semua fungsi yang pakai `neon(process.env.DATABASE_URL)` berpotensi gagal connect di production meskipun sudah lolos compile.
+
+Solusi: ganti ke package `postgres` (dari `porsager/postgres`), driver TCP standar yang kompatibel dengan Postgres manapun termasuk Supabase, dan didesain untuk serverless (lewat connection pooler).
+
+---
+
+## Langkah 1 — Ambil Connection Pooling String dari Supabase
+
+**Penting:** Untuk serverless (Vercel), jangan pakai direct connection string biasa. Pakai **Connection Pooling** (Transaction Mode, port 6543).
+
+1. Buka **Supabase Dashboard → project AIGYPT → Settings → Database**
+2. Scroll ke **Connection Pooling**
+3. Pastikan mode **Transaction** dipilih
+4. Copy connection string-nya, formatnya:
+   ```
+   postgresql://postgres.xxxxxxxxxxxx:[PASSWORD]@aws-0-xxxxx.pooler.supabase.com:6543/postgres
+   ```
+5. Update `DATABASE_URL` di **Vercel → Settings → Environment Variables** dengan string ini (ganti yang lama)
+
+---
+
+## Langkah 2 — Install Package `postgres`
+
+Di `artifacts/aigypt/package.json`, cari bagian `devDependencies` (tempat `@neondatabase/serverless` berada). Tambahkan:
+
+```json
+"postgres": "^3.4.5"
+```
+
+Boleh biarkan `@neondatabase/serverless` tetap ada di package.json (tidak perlu dihapus), cukup tidak dipakai lagi.
+
+Jalankan di terminal Replit:
+```bash
+cd artifacts/aigypt && pnpm install
+```
+
+---
+
+## Langkah 3 — Buat Shared DB Client: `artifacts/aigypt/api/_lib/db.ts`
+
+```ts
+import postgres from "postgres";
+
+const globalForDb = globalThis as unknown as { sql?: ReturnType<typeof postgres> };
+
+export const sql =
+  globalForDb.sql ??
+  postgres(process.env["DATABASE_URL"]!, {
+    prepare: false, // wajib false untuk Supabase pooler mode transaction
+    ssl: "require",
+  });
+
+if (process.env["NODE_ENV"] !== "production") {
+  globalForDb.sql = sql;
+}
+```
+
+---
+
+## Langkah 4 — Update Semua File yang Pakai `neon()`
+
+Untuk **setiap file** di bawah ini, lakukan 2 perubahan:
+
+**A.** Ganti baris import:
+```ts
+import { neon } from "@neondatabase/serverless";
+```
+menjadi (sesuaikan jumlah `../` dengan kedalaman folder):
+```ts
+import { sql } from "../_lib/db";
+```
+atau `"../../_lib/db"` untuk file yang lebih dalam (misal `admin/codes/list.ts` perlu `"../../_lib/db"`, `admin/members/[email]/detail.ts` perlu `"../../../_lib/db"`).
+
+**B.** Hapus baris deklarasi lokal:
+```ts
+const sql = neon(process.env["DATABASE_URL"]!);
+```
+(baris ini dihapus sepenuhnya karena `sql` sekarang sudah diimport langsung dari `_lib/db`)
+
+**Daftar file yang harus diupdate:**
+
+- `artifacts/aigypt/api/auth/login.ts`
+- `artifacts/aigypt/api/auth/me.ts`
+- `artifacts/aigypt/api/qris/confirm.ts`
+- `artifacts/aigypt/api/admin/dashboard-stats.ts`
+- `artifacts/aigypt/api/admin/codes/generate.ts`
+- `artifacts/aigypt/api/admin/codes/list.ts`
+- `artifacts/aigypt/api/admin/codes/[code].ts`
+- `artifacts/aigypt/api/admin/members/list.ts`
+- `artifacts/aigypt/api/admin/members/[email]/detail.ts`
+- `artifacts/aigypt/api/admin/members/[email]/reset-progress.ts`
+- `artifacts/aigypt/api/admin/orders/list.ts`
+- `artifacts/aigypt/api/admin/orders/create.ts`
+- `artifacts/aigypt/api/admin/orders/[orderId]/mark-paid.ts`
+- `artifacts/aigypt/api/admin/orders/[orderId]/cancel.ts`
+
+(`api/auth/logout.ts` dan `api/coupons/check.ts` tidak perlu diubah karena tidak pakai database)
+
+---
+
+## Langkah 5 — Fix Query Dinamis di 3 File Khusus
+
+Package `postgres` tidak mendukung `sql(queryText, params)` seperti Neon. Untuk query dinamis (dengan WHERE clause yang berubah-ubah), pakai `sql.unsafe(queryText, params)`.
+
+### `artifacts/aigypt/api/admin/codes/list.ts`
+
+Cari:
+```ts
+    const codes = await sql(
+      `SELECT * FROM access_codes ${whereSql} ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`,
+      vals
+    );
+    const totalRes = await sql(`SELECT COUNT(*)::int AS c FROM access_codes ${whereSql}`, vals);
+```
+
+Ganti menjadi:
+```ts
+    const codes = await sql.unsafe(
+      `SELECT * FROM access_codes ${whereSql} ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`,
+      vals
+    );
+    const totalRes = await sql.unsafe(`SELECT COUNT(*)::int AS c FROM access_codes ${whereSql}`, vals);
+```
+
+### `artifacts/aigypt/api/admin/members/list.ts`
+
+Cari:
+```ts
+    const members = await sql(`SELECT * FROM members ${whereSql} ORDER BY created_at DESC`, vals) as Record<string, unknown>[];
+
+    const emails = members.map((m) => m["email"] as string);
+    let progress: Record<string, unknown>[] = [];
+    if (emails.length > 0) {
+      progress = await sql(
+        `SELECT member_email, is_completed FROM materi_progress WHERE member_email = ANY($1)`,
+        [emails]
+      ) as Record<string, unknown>[];
+    }
+```
+
+Ganti menjadi:
+```ts
+    const members = await sql.unsafe(`SELECT * FROM members ${whereSql} ORDER BY created_at DESC`, vals) as unknown as Record<string, unknown>[];
+
+    const emails = members.map((m) => m["email"] as string);
+    let progress: Record<string, unknown>[] = [];
+    if (emails.length > 0) {
+      progress = await sql.unsafe(
+        `SELECT member_email, is_completed FROM materi_progress WHERE member_email = ANY($1)`,
+        [emails]
+      ) as unknown as Record<string, unknown>[];
+    }
+```
+
+### `artifacts/aigypt/api/admin/orders/list.ts`
+
+Cari:
+```ts
+    const orders = await sql(`SELECT * FROM orders ${whereSql} ORDER BY created_at DESC`, vals) as Record<string, unknown>[];
+```
+
+Ganti menjadi:
+```ts
+    const orders = await sql.unsafe(`SELECT * FROM orders ${whereSql} ORDER BY created_at DESC`, vals) as unknown as Record<string, unknown>[];
+```
+
+---
+
+## Langkah 6 — Sesuaikan Cara Akses Hasil Query
+
+Package `postgres` mengembalikan hasil query dengan cara akses yang sama seperti Neon (array of objects dengan key snake_case), jadi **tidak perlu ubah** kode yang mengakses `row["column_name"]` di semua file. Tidak ada perubahan lain diperlukan selain langkah di atas.
+
+---
+
+## Yang TIDAK Boleh Diubah
+
+- Semua logika bisnis (validasi, response JSON, dll) — tidak berubah
+- `api/_lib/adminAuth.ts` — tidak disentuh
+- `api/coupons/check.ts` — tidak pakai database, tidak disentuh
+- `api/auth/logout.ts` — tidak pakai database, tidak disentuh
+- File di luar folder `api/` — tidak disentuh
+
+---
+
+## Verifikasi
+
+1. Update `DATABASE_URL` di Vercel dengan connection pooling string Supabase (port 6543)
+2. Redeploy
+3. Coba daftar peserta baru di `/daftar` → cek Supabase, order harus masuk ke tabel `orders`
+4. Login ke `/admin/login` → dashboard harus menampilkan statistik dengan benar
+5. Buka `/admin/orders`, `/admin/members`, `/admin/codes` → semua list harus tampil tanpa error

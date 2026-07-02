@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../../../_lib/adminAuth";
+import { sql } from "../../../_lib/db";
 
 function generateCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -18,7 +18,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!orderId) return res.status(400).json({ error: "Order ID tidak valid" });
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
     const orders = await sql`SELECT * FROM orders WHERE order_id = ${orderId} LIMIT 1`;
     if (!orders.length) return res.status(404).json({ error: "Order tidak ditemukan" });
     const order = orders[0]!;

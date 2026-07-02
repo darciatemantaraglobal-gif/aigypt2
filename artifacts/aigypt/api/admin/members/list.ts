@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../../_lib/adminAuth";
+import { sql } from "../../_lib/db";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -9,8 +9,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { search, type, batch } = req.query as Record<string, string>;
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
-
     const whereClauses: string[] = [];
     const vals: (string | number)[] = [];
     let idx = 1;
@@ -19,15 +17,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (search) { whereClauses.push(`(email ILIKE $${idx} OR name ILIKE $${idx})`); vals.push(`%${search}%`); idx++; }
     const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(" AND ")}` : "";
 
-    const members = await sql.query(`SELECT * FROM members ${whereSql} ORDER BY created_at DESC`, vals) as Record<string, unknown>[];
+    const members = await sql.unsafe(`SELECT * FROM members ${whereSql} ORDER BY created_at DESC`, vals) as unknown as Record<string, unknown>[];
 
     const emails = members.map((m) => m["email"] as string);
     let progress: Record<string, unknown>[] = [];
     if (emails.length > 0) {
-      progress = await sql.query(
+      progress = await sql.unsafe(
         `SELECT member_email, is_completed FROM materi_progress WHERE member_email = ANY($1)`,
         [emails]
-      ) as Record<string, unknown>[];
+      ) as unknown as Record<string, unknown>[];
     }
 
     const completedByEmail: Record<string, number> = {};

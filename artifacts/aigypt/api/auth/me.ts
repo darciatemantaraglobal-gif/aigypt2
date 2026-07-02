@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { jwtVerify } from "jose";
+import { sql } from "../_lib/db";
 
 const SESSION_COOKIE = "aigypt_session";
 const PREVIEW_CODE = process.env["PREVIEW_CODE"]?.trim().toUpperCase();
@@ -50,7 +50,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  const sql = neon(process.env["DATABASE_URL"]!);
   const rows = await sql`
     SELECT email, name, member_type, batch_number
     FROM members WHERE email = ${payload.email} LIMIT 1

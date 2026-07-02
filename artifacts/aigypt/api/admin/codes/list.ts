@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../../_lib/adminAuth";
+import { sql } from "../../_lib/db";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -12,8 +12,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const offset = (pageNum - 1) * pageSize;
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
-
     const whereClauses: string[] = [];
     const vals: (string | number)[] = [];
     let idx = 1;
@@ -25,11 +23,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(" AND ")}` : "";
 
-    const codes = await sql.query(
+    const codes = await sql.unsafe(
       `SELECT * FROM access_codes ${whereSql} ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`,
       vals
     );
-    const totalRes = await sql.query(`SELECT COUNT(*)::int AS c FROM access_codes ${whereSql}`, vals);
+    const totalRes = await sql.unsafe(`SELECT COUNT(*)::int AS c FROM access_codes ${whereSql}`, vals);
 
     return res.json({
       codes: (codes as Record<string, unknown>[]).map((c) => ({

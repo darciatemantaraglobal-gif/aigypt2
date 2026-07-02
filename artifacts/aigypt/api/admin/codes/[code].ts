@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { neon } from "@neondatabase/serverless";
 import { verifyAdmin } from "../../_lib/adminAuth";
+import { sql } from "../../_lib/db";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -11,7 +11,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!code) return res.status(400).json({ error: "Kode tidak valid" });
 
   try {
-    const sql = neon(process.env["DATABASE_URL"]!);
     const existing = await sql`SELECT is_used FROM access_codes WHERE code = ${code} LIMIT 1`;
     if (!existing.length) return res.status(404).json({ error: "Kode tidak ditemukan" });
     if (existing[0]!["is_used"]) return res.status(400).json({ error: "Kode yang sudah dipakai tidak bisa dihapus" });
