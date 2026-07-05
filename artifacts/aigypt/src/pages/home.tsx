@@ -958,7 +958,7 @@ export default function Home() {
             style={{ background: "rgba(124,58,237,0.1)" }}
           >
             <span className="font-mono text-xs font-bold tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 3 · PENDAFTARAN DIBUKA</span>
-            <span className="font-mono text-xs" style={{ color: "#71717A" }}>Pertemuan pertama: 6 Juli 2026 · Tempat sangat terbatas</span>
+            <span className="font-mono text-xs" style={{ color: "#71717A" }}>Pertemuan pertama: 14 Juli 2026 · Tempat sangat terbatas</span>
           </motion.div>
 
           {/* Tambahan: Angkatan Pertama */}
@@ -1268,7 +1268,7 @@ export default function Home() {
 
                 <div className="mb-6 flex flex-wrap gap-3">
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 3: PENDAFTARAN DIBUKA</span>
-                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Pertemuan pertama: 6 Juli 2026</span>
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Pertemuan pertama: 14 Juli 2026</span>
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Kuota terbatas per batch</span>
                 </div>
 
@@ -1590,7 +1590,7 @@ export default function Home() {
             className="text-base sm:text-lg mb-10"
             style={{ color: "#71717A", fontWeight: 300 }}
           >
-            Pertemuan pertama Batch 3 pada 6 Juli 2026. Tempat sangat terbatas.
+            Pertemuan pertama Batch 3 pada 14 Juli 2026. Tempat sangat terbatas.
           </motion.p>
           {/* Risk-reversal */}
           <motion.p

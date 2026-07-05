@@ -232,7 +232,7 @@ export default function Daftar() {
               className="text-base leading-relaxed max-w-xl mx-auto"
               style={{ color: "#71717A", fontWeight: 300 }}
             >
-              Pertemuan pertama Batch 3 pada 6 Juli 2026. Kuota sangat terbatas. Amankan tempatmu sekarang.
+              Pertemuan pertama Batch 3 pada 14 Juli 2026. Kuota sangat terbatas. Amankan tempatmu sekarang.
             </motion.p>
           </motion.div>
 

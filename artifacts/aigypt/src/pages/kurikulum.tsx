@@ -445,7 +445,7 @@ export default function Kurikulum() {
             hanya bisa menunggu solusi, menjadi yang menciptakannya sendiri.
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-col items-center gap-3">
-            <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 3 · PENDAFTARAN DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026</p>
+            <p className="font-mono text-xs tracking-widest" style={{ color: "#A855F7", letterSpacing: "0.15em" }}>BATCH 3 · PENDAFTARAN DIBUKA · PERTEMUAN PERTAMA 14 JULI 2026</p>
             <Link href="/daftar">
               <span
                 className="inline-flex items-center gap-2 text-base font-medium text-white transition-all duration-200 cursor-pointer"
@@ -588,7 +588,7 @@ export default function Kurikulum() {
             variants={containerStagger}
           >
             {[
-              { num: 1, day: "Senin, 6 Juli 2026",   title: "Fondasi dan Keterampilan",    sub: "Membahas Sesi 1–2: mindset AI dan seni berdialog dengan kecerdasan" },
+              { num: 1, day: "Selasa, 14 Juli 2026",   title: "Fondasi dan Keterampilan",    sub: "Membahas Sesi 1–2: mindset AI dan seni berdialog dengan kecerdasan" },
               { num: 2, day: "Rabu, 8 Juli 2026",    title: "Penerapan",                   sub: "Membahas Sesi 3: AI untuk ilmu dan amanah organisasi" },
               { num: 3, day: "Sabtu, 11 Juli 2026",  title: "Produksi dan Penciptaan",     sub: "Membahas Sesi 4–5: dari menghasilkan karya hingga membangun aplikasi" },
               { num: 4, day: "Senin, 13 Juli 2026",  title: "Pembuktian",                  sub: "Membahas Sesi 6: Demo Day, mempersembahkan karyamu" },
