@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useParams, useLocation, Link } from "wouter";
+import { fadeRise, staggerFast, cardItem, viewportConfig } from "@/lib/animations";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetProgress, getGetProgressQueryKey } from "@workspace/api-client-react";
 import { Navbar } from "@/components/Navbar";
@@ -498,6 +499,126 @@ export default function KelasDetailPage() {
             )}
           </motion.div>
         </div>
+      </section>
+
+      {/* ── APA BEDANYA KELAS INI ── */}
+      <section className="max-w-5xl mx-auto px-6 sm:px-10 py-16">
+        {/* Label + Headline */}
+        <motion.div
+          variants={fadeRise}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          className="mb-10"
+        >
+          <p
+            className="font-mono mb-3"
+            style={{ fontSize: "11px", letterSpacing: "0.1em", color: "#71717A" }}
+          >
+            KELAS KHUSUS · AIGYPT BATCH 1
+          </p>
+          <h2
+            className="font-display font-semibold"
+            style={{ fontSize: "clamp(1.75rem, 4vw, 2rem)", color: "#FAFAFA", lineHeight: 1.2 }}
+          >
+            Apa Bedanya Kelas Ini
+          </h2>
+        </motion.div>
+
+        {/* Numbered list */}
+        <motion.div
+          variants={staggerFast}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+        >
+          {[
+            {
+              num: "01",
+              heading: "Bukan mengajarkan AI, tapi menggunakan AI untuk membuat sesuatu.",
+              sub: "Kamu datang dengan ide atau masalah nyata. Kamu pulang dengan produk yang bisa dipakai orang lain.",
+            },
+            {
+              num: "02",
+              heading: "AI adalah alat, bukan tujuan.",
+              sub: "Fokusnya bukan pada cara kerja AI, tapi pada cara memakainya untuk mengeksekusi ide dari kepala menjadi produk nyata.",
+            },
+            {
+              num: "03",
+              heading: "Output akhir adalah aplikasi atau website yang benar-benar jalan.",
+              sub: "Bukan slide presentasi. Bukan catatan. Sesuatu yang bisa kamu buka di browser dan tunjukkan ke orang lain.",
+            },
+            {
+              num: "04",
+              heading: "Dimulai dari masalah masisir sehari-hari.",
+              sub: "Setiap karya lahir dari kebutuhan nyata, bukan dari skenario buatan. Solusi yang kamu bangun adalah solusi untuk hidupmu sendiri.",
+            },
+            {
+              num: "05",
+              heading: "Untuk yang sudah bisa pakai AI tapi belum tahu cara menghasilkan dari situ.",
+              sub: "Kelas ini bukan pengantar. Ini adalah jembatan antara tahu dan membuat.",
+            },
+          ].map((item) => (
+            <motion.div
+              key={item.num}
+              variants={cardItem}
+              className="flex gap-5 items-start"
+              style={{
+                borderTop: "1px solid rgba(255,255,255,0.06)",
+                paddingTop: "20px",
+                paddingBottom: "20px",
+              }}
+            >
+              {/* Number */}
+              <span
+                className="font-mono flex-shrink-0"
+                style={{ fontSize: "11px", color: "#52525B", width: "32px", paddingTop: "2px" }}
+              >
+                {item.num}
+              </span>
+              {/* Content */}
+              <div>
+                <p
+                  className="font-display font-medium mb-1"
+                  style={{ fontSize: "15px", color: "#FAFAFA" }}
+                >
+                  {item.heading}
+                </p>
+                <p
+                  style={{ fontSize: "14px", color: "#A1A1AA", lineHeight: 1.6 }}
+                >
+                  {item.sub}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Closing block */}
+          <motion.div
+            variants={fadeRise}
+            style={{
+              borderTop: "1px solid rgba(255,255,255,0.06)",
+              paddingTop: "24px",
+              marginTop: "4px",
+            }}
+          >
+            <p
+              className="font-mono mb-3"
+              style={{ fontSize: "11px", letterSpacing: "0.1em", color: "#71717A" }}
+            >
+              SINGKATNYA
+            </p>
+            <p
+              className="font-display font-medium mb-1"
+              style={{ fontSize: "18px", color: "#FAFAFA", lineHeight: 1.4 }}
+            >
+              Dari ide masisir sehari-hari, jadi solusi digital yang benar-benar jalan.
+            </p>
+            <p style={{ fontSize: "14px", color: "#A1A1AA" }}>
+              Bukan paham AI. Bukan menyelesaikan latihan. Kamu menghasilkan sesuatu yang nyata.
+            </p>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ── SESSION LIST ── */}

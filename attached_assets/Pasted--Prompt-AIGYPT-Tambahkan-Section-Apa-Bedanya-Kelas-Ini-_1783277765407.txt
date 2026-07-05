@@ -1,0 +1,81 @@
+# Prompt — AIGYPT: Tambahkan Section "Apa Bedanya Kelas Ini"
+
+Copy-paste prompt ini ke Replit Agent. Ini menambahkan section baru di halaman detail kelas (pages/kelas-detail.tsx) tepat setelah hero section dan sebelum daftar sesi materi.
+
+PENTING: Ini penambahan section baru. Jangan ubah hero section, daftar sesi, atau komponen lain yang sudah berjalan.
+
+---
+
+## PENEMPATAN
+
+Tambahkan di pages/kelas-detail.tsx (atau file halaman kelas yang sesuai), tepat setelah hero section dan sebelum daftar sesi materi.
+
+---
+
+## KONTEN SECTION
+
+Label (mono kecil di atas headline):
+KELAS KHUSUS · AIGYPT BATCH 1
+
+Headline:
+Apa Bedanya Kelas Ini
+
+Lima poin diferensiasi sebagai daftar vertikal bernomor (bukan bullet):
+
+01
+Heading: Bukan mengajarkan AI, tapi menggunakan AI untuk membuat sesuatu.
+Sub: Kamu datang dengan ide atau masalah nyata. Kamu pulang dengan produk yang bisa dipakai orang lain.
+
+02
+Heading: AI adalah alat, bukan tujuan.
+Sub: Fokusnya bukan pada cara kerja AI, tapi pada cara memakainya untuk mengeksekusi ide dari kepala menjadi produk nyata.
+
+03
+Heading: Output akhir adalah aplikasi atau website yang benar-benar jalan.
+Sub: Bukan slide presentasi. Bukan catatan. Sesuatu yang bisa kamu buka di browser dan tunjukkan ke orang lain.
+
+04
+Heading: Dimulai dari masalah masisir sehari-hari.
+Sub: Setiap karya lahir dari kebutuhan nyata, bukan dari skenario buatan. Solusi yang kamu bangun adalah solusi untuk hidupmu sendiri.
+
+05
+Heading: Untuk yang sudah bisa pakai AI tapi belum tahu cara menghasilkan dari situ.
+Sub: Kelas ini bukan pengantar. Ini adalah jembatan antara tahu dan membuat.
+
+Blok penutup (setelah poin 05, dengan border-top hairline):
+Label mono: SINGKATNYA
+Pernyataan utama: Dari ide masisir sehari-hari, jadi solusi digital yang benar-benar jalan.
+Sub: Bukan paham AI. Bukan menyelesaikan latihan. Kamu menghasilkan sesuatu yang nyata.
+
+---
+
+## DESAIN
+
+Layout setiap poin: flexbox, nomor di kiri (lebar tetap 32px, mono, sangat muted #52525B), konten di kanan.
+Pemisah antar poin: border-bottom hairline rgba(255,255,255,0.06), padding vertikal 20-24px.
+Border pertama (di atas poin 01) juga ada.
+
+Tipografi:
+- Nomor: JetBrains Mono, 11px, #52525B
+- Heading poin: Space Grotesk, 15px, weight 500, #FAFAFA
+- Sub poin: Inter, 14px, weight 400, #A1A1AA, line-height 1.6
+- Label section: JetBrains Mono, 11px, letter-spacing 0.1em, #71717A
+- Headline section: Space Grotesk, 28-32px, weight 600, #FAFAFA
+- Pernyataan penutup: Space Grotesk, 18px, weight 500, #FAFAFA
+- Sub pernyataan: Inter, 14px, #A1A1AA
+
+Animasi (gunakan lib/animations.ts yang sudah ada):
+- Label dan headline: fadeRise
+- Poin 01-05: staggerChildren 0.08 detik (cardItem variant)
+- Blok penutup: fadeRise dengan sedikit delay
+
+---
+
+## REQUIREMENTS
+
+1. Semua teks Bahasa Indonesia, panggilan "kamu"
+2. Konsisten dengan design system dark luxury yang sudah ada
+3. Tidak mengubah section lain
+4. Gunakan lib/animations.ts yang sudah ada
+5. Fully responsive: mobile tetap proporsional
+6. npm run build sukses
