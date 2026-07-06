@@ -1,0 +1,122 @@
+# Prompt Kecil — AIGYPT: Checkbox Konfirmasi Sudah Bayar Sebelum Tombol Aktif
+
+Ini perubahan kecil di halaman /daftar/pembayaran. Tambahkan checkbox konfirmasi yang harus dicentang sebelum tombol "Konfirmasi via WhatsApp" bisa diklik, agar user tidak bisa konfirmasi sebelum benar-benar membayar.
+
+---
+
+## PERUBAHAN
+
+Di halaman /daftar/pembayaran (atau nama file yang sesuai), tambahkan checkbox di antara instruksi pembayaran dan tombol konfirmasi.
+
+### State Baru
+
+```typescript
+const [hasConfirmedPayment, setHasConfirmedPayment] = useState(false)
+```
+
+### Tampilan Checkbox
+
+Tambahkan tepat di atas tombol "Konfirmasi via WhatsApp":
+
+```tsx
+<label className="confirm-checkbox-label">
+  <input
+    type="checkbox"
+    checked={hasConfirmedPayment}
+    onChange={(e) => setHasConfirmedPayment(e.target.checked)}
+    className="confirm-checkbox-input"
+  />
+  <span className="confirm-checkbox-text">
+    Saya sudah melakukan pembayaran sebesar{' '}
+    <strong>Rp {finalAmount.toLocaleString('id-ID')}</strong> via QRIS
+  </span>
+</label>
+```
+
+### Tombol Dikunci Sampai Checkbox Dicentang
+
+```tsx
+<button
+  onClick={handleConfirmation}
+  disabled={!hasConfirmedPayment}
+  className={`confirm-button ${!hasConfirmedPayment ? 'confirm-button-disabled' : 'confirm-button-active'}`}
+>
+  Konfirmasi via WhatsApp
+</button>
+```
+
+### Styling
+
+```css
+.confirm-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.confirm-checkbox-label:has(input:checked) {
+  border-color: rgba(168, 85, 247, 0.4);
+  background: rgba(168, 85, 247, 0.05);
+}
+
+.confirm-checkbox-input {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  accent-color: #A855F7;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.confirm-checkbox-text {
+  font-size: 14px;
+  color: #A1A1AA;
+  line-height: 1.5;
+}
+
+.confirm-checkbox-label:has(input:checked) .confirm-checkbox-text {
+  color: #FAFAFA;
+}
+
+/* Tombol disabled */
+.confirm-button-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Tombol aktif setelah checkbox dicentang */
+.confirm-button-active {
+  opacity: 1;
+  cursor: pointer;
+}
+```
+
+### Opsional — Tooltip saat hover tombol yang masih disabled
+
+Jika memungkinkan, tambahkan title attribute pada tombol saat masih disabled:
+
+```tsx
+<button
+  disabled={!hasConfirmedPayment}
+  title={!hasConfirmedPayment ? 'Centang konfirmasi pembayaran terlebih dahulu' : ''}
+  ...
+>
+```
+
+---
+
+## REQUIREMENTS
+
+1. Checkbox harus dicentang sebelum tombol bisa diklik — tidak ada exception
+2. State checkbox reset ke false jika user kembali ke halaman sebelumnya
+3. Styling konsisten dengan dark luxury design system yang sudah ada
+4. Tidak mengubah logic konfirmasi WA, upload bukti, atau flow lain yang sudah berjalan
+5. npm run build sukses

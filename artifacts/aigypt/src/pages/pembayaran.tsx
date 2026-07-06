@@ -59,6 +59,7 @@ export default function Pembayaran() {
   const [error, setError] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [fallbackWaLink, setFallbackWaLink] = useState("");
+  const [hasConfirmedPayment, setHasConfirmedPayment] = useState(false);
 
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
@@ -323,16 +324,67 @@ export default function Pembayaran() {
                   </motion.div>
                 )}
 
+                {/* Checkbox konfirmasi sudah bayar */}
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "12px",
+                    cursor: "pointer",
+                    padding: "16px",
+                    border: hasConfirmedPayment
+                      ? "1px solid rgba(168,85,247,0.4)"
+                      : "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: "10px",
+                    background: hasConfirmedPayment
+                      ? "rgba(168,85,247,0.05)"
+                      : "rgba(255,255,255,0.02)",
+                    transition: "border-color 0.2s ease, background 0.2s ease",
+                    marginBottom: "16px",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={hasConfirmedPayment}
+                    onChange={(e) => setHasConfirmedPayment(e.target.checked)}
+                    style={{
+                      width: "18px",
+                      height: "18px",
+                      minWidth: "18px",
+                      accentColor: "#A855F7",
+                      marginTop: "2px",
+                      cursor: "pointer",
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      color: hasConfirmedPayment ? "#FAFAFA" : "#A1A1AA",
+                      lineHeight: 1.5,
+                      transition: "color 0.2s ease",
+                    }}
+                  >
+                    Saya sudah melakukan pembayaran sebesar{" "}
+                    <strong>{formatRp(finalPrice)}</strong> via QRIS
+                  </span>
+                </label>
+
                 <button
                   onClick={handleConfirm}
-                  disabled={loading || confirmed}
-                  className="w-full inline-flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={loading || confirmed || !hasConfirmedPayment}
+                  title={!hasConfirmedPayment ? "Centang konfirmasi pembayaran terlebih dahulu" : ""}
+                  className="w-full inline-flex items-center justify-center gap-2 text-base font-medium text-white transition-all duration-200"
                   style={{
                     background: "linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)",
                     borderRadius: "12px",
                     padding: "15px 24px",
                     minHeight: "52px",
-                    boxShadow: "0px 4px 20px rgba(124,58,237,0.45)",
+                    boxShadow: hasConfirmedPayment
+                      ? "0px 4px 20px rgba(124,58,237,0.45)"
+                      : "none",
+                    opacity: (loading || confirmed || !hasConfirmedPayment) ? 0.4 : 1,
+                    cursor: (loading || confirmed || !hasConfirmedPayment) ? "not-allowed" : "pointer",
+                    pointerEvents: (!hasConfirmedPayment && !loading) ? "none" : "auto",
                   }}
                 >
                   {loading ? (
