@@ -25,6 +25,7 @@ import {
   glowPop,
   fadeRise,
 } from "@/lib/animations";
+import { galleryPhotos } from "@/lib/galleryPhotos";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -856,6 +857,142 @@ function GallerySection() {
   );
 }
 
+// ─── Kegiatan Gallery Section ──────────────────────────────────────────────────
+
+function KegiatanGallerySection() {
+  const statsRef = useRef<HTMLDivElement>(null);
+  const statsInView = useInView(statsRef, { once: true, amount: 0.5 });
+  const batchCount  = useCountUp(3,   900,  statsInView);
+  const memberCount = useCountUp(200, 1200, statsInView);
+  const cityCount   = useCountUp(1,   600,  statsInView);
+
+  const stats = [
+    { count: batchCount,  suffix: "",  label: "BATCH SEBELUMNYA"   },
+    { count: memberCount, suffix: "+", label: "PESERTA BERGABUNG"  },
+    { count: cityCount,   suffix: "",  label: "KOMUNITAS DI KAIRO" },
+  ];
+
+  return (
+    <section className="py-12 sm:py-20" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="max-w-5xl mx-auto px-6 sm:px-10">
+
+        {/* ── Header ── */}
+        <motion.div
+          variants={fadeRise}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          className="mb-10 sm:mb-14"
+        >
+          <p className="font-mono mb-3" style={{ fontSize: "11px", letterSpacing: "0.12em", color: "#71717A" }}>
+            BUKAN SEKADAR KLAIM
+          </p>
+          <h2
+            className="font-display font-semibold mb-4"
+            style={{ fontSize: "clamp(1.75rem, 4vw, 2rem)", color: "#FAFAFA", letterSpacing: "-0.01em" }}
+          >
+            Ini Sudah Terjadi
+          </h2>
+          <p style={{ fontSize: "15px", color: "#A1A1AA", lineHeight: 1.7, maxWidth: "580px" }}>
+            AIGYPT bukan program baru. Ratusan masisir sudah merasakannya langsung — di ruang kelas
+            yang sama, di kota yang sama, dengan tantangan yang sama dengan milikmu.
+          </p>
+        </motion.div>
+
+        {/* ── Masonry Grid ── */}
+        <motion.div
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          className="columns-1 sm:columns-2 lg:columns-3"
+          style={{ columnGap: "12px" }}
+        >
+          {galleryPhotos.map((photo) => (
+            <motion.div
+              key={photo.id}
+              variants={cardItem}
+              className="break-inside-avoid relative group overflow-hidden rounded-xl"
+              style={{ marginBottom: "12px" }}
+            >
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-auto block"
+                style={{
+                  filter: "brightness(0.88)",
+                  transition: "transform 0.45s ease, filter 0.45s ease",
+                }}
+                onMouseEnter={e => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  img.style.transform = "scale(1.03)";
+                  img.style.filter    = "brightness(1)";
+                }}
+                onMouseLeave={e => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  img.style.transform = "scale(1)";
+                  img.style.filter    = "brightness(0.88)";
+                }}
+              />
+              {/* Caption overlay */}
+              <div
+                className="absolute inset-0 flex items-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: "linear-gradient(to top, rgba(6,6,8,0.82) 0%, transparent 55%)" }}
+              >
+                {photo.caption && (
+                  <p
+                    className="font-mono px-4 pb-3"
+                    style={{ fontSize: "11px", color: "rgba(250,250,250,0.85)", letterSpacing: "0.05em" }}
+                  >
+                    {photo.caption}
+                  </p>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* ── Counter Stats ── */}
+        <motion.div
+          ref={statsRef}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          className="mt-10 flex flex-col sm:flex-row items-center justify-center"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "32px" }}
+        >
+          {stats.map((stat, i) => (
+            <motion.div
+              key={i}
+              variants={glowPop}
+              className="flex flex-col items-center text-center px-8 py-5 sm:py-2 w-full sm:w-auto"
+              style={
+                i > 0
+                  ? { borderTop: "1px solid rgba(255,255,255,0.06)", borderLeft: "none" }
+                  : {}
+              }
+            >
+              <span
+                className="font-display font-semibold"
+                style={{ fontSize: "clamp(1.75rem, 4vw, 2rem)", color: "#FAFAFA", lineHeight: 1 }}
+              >
+                {stat.count}{stat.suffix}
+              </span>
+              <span className="font-mono mt-2" style={{ fontSize: "11px", letterSpacing: "0.12em", color: "#71717A" }}>
+                {stat.label}
+              </span>
+            </motion.div>
+          ))}
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
+
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -1128,6 +1265,9 @@ export default function Home() {
 
       {/* ══ [BARU] TESTIMONI ══ */}
       <TestimoniSection />
+
+      {/* ══ [BARU] GALERI KEGIATAN ══ */}
+      <KegiatanGallerySection />
 
       {/* ══ SECTION 4: MENGAPA AIGYPT ══ */}
       <section

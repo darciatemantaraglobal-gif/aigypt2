@@ -1,0 +1,235 @@
+# Prompt — AIGYPT: Tambahkan Galeri Foto Kegiatan (Social Proof Nyata)
+
+Copy-paste prompt ini ke Replit Agent BESERTA kelima foto yang dilampirkan. Ini menambahkan section galeri foto kegiatan AIGYPT yang nyata ke landing page, menggantikan atau melengkapi placeholder testimoni yang sudah ada sebelumnya.
+
+PENTING: Simpan kelima foto yang dilampirkan ke folder assets project terlebih dahulu sebelum menggunakannya di komponen.
+
+---
+
+## LANGKAH 1 — Simpan Foto
+
+Simpan kelima foto yang dilampirkan ke:
+```
+artifacts/aigypt/src/assets/gallery/photo-1.jpg
+artifacts/aigypt/src/assets/gallery/photo-2.jpg
+artifacts/aigypt/src/assets/gallery/photo-3.jpg
+artifacts/aigypt/src/assets/gallery/photo-4.jpg
+artifacts/aigypt/src/assets/gallery/photo-5.jpg
+```
+
+Jika project menggunakan folder public/ untuk static assets, simpan ke public/gallery/ dan sesuaikan path import-nya.
+
+---
+
+## LANGKAH 2 — Data Foto (lib/galleryPhotos.ts)
+
+Buat file data terpisah agar mudah ditambah nanti:
+
+```typescript
+// lib/galleryPhotos.ts
+export interface GalleryPhoto {
+  id: string
+  src: string
+  alt: string
+  caption?: string
+}
+
+export const galleryPhotos: GalleryPhoto[] = [
+  {
+    id: '1',
+    src: '/gallery/photo-1.jpg',
+    alt: 'Sesi kelas AIGYPT — peserta antusias berdiskusi',
+    caption: 'Sesi tatap muka perdana'
+  },
+  {
+    id: '2',
+    src: '/gallery/photo-2.jpg',
+    alt: 'Peserta AIGYPT mengikuti sesi AI untuk Revolusi Masalah',
+    caption: 'AI untuk Revolusi Masalah'
+  },
+  {
+    id: '3',
+    src: '/gallery/photo-3.jpg',
+    alt: 'Komunitas AIGYPT berkumpul di luar ruangan',
+    caption: 'Komunitas yang terus berkembang'
+  },
+  {
+    id: '4',
+    src: '/gallery/photo-4.jpg',
+    alt: 'Sesi AIGYPT dengan peserta penuh ruangan',
+    caption: 'Ruang penuh, antusias nyata'
+  },
+  {
+    id: '5',
+    src: '/gallery/photo-5.jpg',
+    alt: 'Sesi diskusi kecil dan demo AIGYPT',
+    caption: 'Diskusi dan demo langsung'
+  }
+]
+```
+
+---
+
+## LANGKAH 3 — Section Galeri di Landing Page
+
+Tambahkan section baru di landing page (rute /) ditempatkan setelah section Testimoni dan sebelum section Galeri Karya yang sudah ada. Jika section Testimoni belum ada, tempatkan setelah section Showcase "Lihat Apa yang Bisa Kamu Hasilkan".
+
+### Header Section
+
+```
+Label (mono): BUKAN SEKADAR KLAIM
+Headline: Ini Sudah Terjadi
+Sub: AIGYPT bukan program baru. Ratusan masisir sudah merasakannya langsung — di ruang kelas yang sama, di kota yang sama, dengan tantangan yang sama dengan milikmu.
+```
+
+### Layout Foto — Masonry Grid Dinamis
+
+Tampilkan kelima foto dalam layout masonry (bukan grid seragam) agar terasa lebih organik seperti feed nyata, bukan presentasi korporat.
+
+Desktop (5 kolom adaptif, 2 baris):
+```
+[ Foto 1 — landscape lebar  ] [ Foto 2 — portrait         ]
+[ Foto 3 — landscape lebar  ] [ Foto 4 — landscape lebar  ] [ Foto 5 — portrait kecil ]
+```
+
+Atau gunakan CSS columns untuk masonry yang lebih mudah diimplementasi:
+
+```css
+.gallery-grid {
+  columns: 3;
+  column-gap: 12px;
+}
+
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Tablet: 2 kolom */
+@media (max-width: 768px) {
+  .gallery-grid { columns: 2; }
+}
+
+/* Mobile: 1 kolom */
+@media (max-width: 480px) {
+  .gallery-grid { columns: 1; }
+}
+```
+
+### Styling Setiap Foto
+
+```css
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  filter: brightness(0.9);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.02);
+  filter: brightness(1);
+}
+
+/* Overlay gradient di bawah tiap foto untuk caption */
+.gallery-item-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 16px 16px;
+  background: linear-gradient(to top, rgba(6,6,8,0.8), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .gallery-item-overlay {
+  opacity: 1;
+}
+
+.gallery-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: rgba(250,250,250,0.8);
+  letter-spacing: 0.05em;
+}
+```
+
+### Counter Stats (di bawah grid foto)
+
+Tambahkan baris statistik singkat di bawah grid foto dengan count-up animation saat masuk viewport, menggunakan angka nyata berdasarkan foto-foto yang ada:
+
+```
+3 BATCH SEBELUMNYA
+200+ PESERTA BERGABUNG
+1 KOMUNITAS DI KAIRO
+```
+
+Styling: tiga kolom dengan angka besar (Space Grotesk, 28-32px, weight 600, #FAFAFA) dan label kecil di bawahnya (JetBrains Mono, 11px, #71717A). Pisahkan tiap stat dengan border-right hairline di desktop, stack di mobile.
+
+---
+
+## LANGKAH 4 — Optimasi Gambar
+
+Karena foto-foto ini adalah file JPEG berukuran besar (kemungkinan beberapa MB per foto), lakukan optimasi dasar:
+
+1. Jika ada tooling (sharp, imagemin, atau sejenisnya tersedia di environment), kompres foto ke kualitas 80% JPEG tanpa mengubah dimensi
+2. Tambahkan atribut `loading="lazy"` pada setiap tag `<img>` agar foto di bawah viewport tidak diload duluan
+3. Tambahkan atribut `decoding="async"` untuk performa lebih baik
+4. Set dimensi dengan `width` dan `height` yang sesuai untuk mencegah layout shift (CLS)
+
+```tsx
+<img
+  src={photo.src}
+  alt={photo.alt}
+  loading="lazy"
+  decoding="async"
+  className="gallery-photo"
+/>
+```
+
+---
+
+## ANIMASI
+
+Terapkan animasi yang konsisten dengan sistem yang sudah ada di lib/animations.ts:
+- Header section (label, headline, sub): fadeRise
+- Grid foto: stagger reveal, setiap foto muncul berurutan dengan delay sekitar 0.1 detik antar foto
+- Counter stats: count-up animation + glowPop saat masuk viewport (gunakan pola yang sama dengan stat grid di section Keanggotaan)
+
+---
+
+## REQUIREMENTS TEKNIS
+
+1. File foto disimpan ke folder assets/gallery/ atau public/gallery/ sesuai konvensi project
+2. Data foto di file terpisah lib/galleryPhotos.ts agar mudah ditambah foto baru nanti
+3. Lazy loading pada semua gambar
+4. Layout masonry responsive: 3 kolom desktop, 2 kolom tablet, 1 kolom mobile
+5. Hover effect halus pada setiap foto (scale + brightness)
+6. Caption muncul saat hover dengan fade-in
+7. Counter stats dengan count-up animation
+8. Semua teks Bahasa Indonesia
+9. npm run build harus sukses
+
+---
+
+## CATATAN UNTUK FOTO BERIKUTNYA
+
+Tambahkan komentar di lib/galleryPhotos.ts:
+```typescript
+// Untuk menambah foto baru:
+// 1. Simpan foto ke public/gallery/photo-N.jpg
+// 2. Tambahkan entri baru ke array galleryPhotos di bawah
+// 3. Push ke GitHub, Vercel otomatis redeploy
+```
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Section galeri foto kegiatan AIGYPT tampil di landing page dengan layout masonry yang organik, menampilkan kelima foto nyata dari kegiatan AIGYPT sebelumnya, dilengkapi hover effect elegan, caption yang muncul saat hover, dan counter statistik "200+ peserta, 3 batch" yang memberi social proof kuat kepada calon peserta baru.

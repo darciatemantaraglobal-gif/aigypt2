@@ -1,0 +1,207 @@
+# Prompt — AIGYPT: Update Info Urgent Batch 3
+
+Copy-paste prompt ini ke Replit Agent. Ini update info paling urgent di seluruh website AIGYPT agar sesuai dengan Batch 3 yang akan dimulai 14 Juli 2026.
+
+PENTING: Ini perubahan konten/data saja. Jangan ubah desain, layout, atau komponen yang sudah ada.
+
+---
+
+## RINGKASAN PERUBAHAN
+
+```
+LAMA                          BARU
+Batch 1                    →  Batch 3
+Mulai: 6 Juli 2026         →  Mulai: 14 Juli 2026
+Pendaftaran tutup: 5 Juli  →  Pendaftaran tutup: 13 Juli 2026
+4 pertemuan live           →  3 pertemuan (2 hari offline, 1 hari online/Zoom)
+aigypt.vercel.app          →  aigypt.id
+6 minggu / 6 sesi weekly   →  3 hari padat (bukan mingguan lagi)
+```
+
+---
+
+## LANGKAH 1 — Update Domain di Seluruh Codebase
+
+Cari dan ganti SEMUA kemunculan domain lama dengan domain baru di seluruh folder src/:
+
+```
+aigypt.vercel.app  →  aigypt.id
+```
+
+Termasuk di:
+- Semua komponen dan halaman (.tsx, .ts)
+- Template pesan WhatsApp (di api routes dan komponen konfirmasi)
+- Teks CTA "buka aigypt.vercel.app/login" di pesan WA admin
+- Meta tags (jika ada og:url atau canonical)
+- vercel.json atau konfigurasi lain yang menyebut domain lama
+- lib/coupons.ts atau file konfigurasi lain yang menyebut domain
+
+Jangan hapus atau ubah konfigurasi deployment Vercel, hanya ganti teks yang menampilkan domain ke user.
+
+---
+
+## LANGKAH 2 — Update Semua Referensi "Batch 1" Menjadi "Batch 3"
+
+Cari secara menyeluruh di seluruh folder src/ untuk semua kemunculan teks berikut dan ganti:
+
+```
+"Batch 1"      →  "Batch 3"
+"BATCH 1"      →  "BATCH 3"
+"batch 1"      →  "batch 3"
+"batch-1"      →  "batch-3" (jika ada di slug atau ID)
+```
+
+Termasuk di:
+- Announcement bar ("PENDAFTARAN BATCH 1 DIBUKA" → "PENDAFTARAN BATCH 3 DIBUKA")
+- Hero section urgency block
+- Card kelas flagship
+- Halaman kurikulum
+- Template pesan WhatsApp konfirmasi pendaftaran
+- Admin panel label
+- lib/coupons.ts (deskripsi kupon "Diskon spesial pendaftaran Batch 1" → "Batch 3")
+- Semua teks lain yang menyebut "Batch 1"
+
+PENGECUALIAN: Jangan ubah referensi "Batch 1" atau "Batch 2" di section galeri foto kegiatan (jika sudah ada) atau di section testimonial yang menceritakan peserta batch sebelumnya — itu memang sejarah yang valid.
+
+---
+
+## LANGKAH 3 — Update Tanggal
+
+Cari dan ganti semua referensi tanggal lama:
+
+### Tanggal mulai kelas:
+```
+"6 Juli 2026"   →  "14 Juli 2026"
+"6 July 2026"   →  "14 July 2026"
+"Juli 6"        →  "Juli 14"
+"July 6"        →  "July 14"
+```
+
+### Batas pendaftaran:
+```
+"5 Juli 2026"   →  "13 Juli 2026"
+"5 July 2026"   →  "13 July 2026"
+```
+
+### Countdown timer — ubah target date:
+```typescript
+// Ganti dari:
+const targetDate = new Date('2026-07-06T00:00:00+03:00')
+// Menjadi (waktu Kairo UTC+3, hari mulai kelas):
+const targetDate = new Date('2026-07-14T00:00:00+03:00')
+```
+
+### Kupon AIGYPT26 — perpanjang masa berlaku:
+Di lib/coupons.ts, update validUntil:
+```typescript
+// Ganti dari:
+validUntil: '2026-07-06T23:59:59+07:00'
+// Menjadi (sehari sebelum kelas mulai, WIB):
+validUntil: '2026-07-13T23:59:59+07:00'
+```
+
+---
+
+## LANGKAH 4 — Update Format Kelas
+
+### Di card kelas flagship (landing page dan halaman kelas):
+
+Ganti detail format dari:
+```
+6 SESI MATERI · 4 PERTEMUAN LIVE · SEMUA LEVEL
+```
+Menjadi:
+```
+3 HARI PERTEMUAN · 2 OFFLINE + 1 ONLINE · SEMUA LEVEL
+```
+
+### Di section timeline/jadwal (halaman kurikulum):
+
+Ganti headline dan konten timeline dari format "4 pertemuan" atau "6 minggu" menjadi:
+
+```
+Label (mono): JADWAL PERTEMUAN BATCH 3
+
+Headline: Tiga Hari yang Mengubah Cara Kamu Bekerja dengan AI
+
+Sub:
+Bukan kelas mingguan. Tiga hari padat yang dirancang agar kamu
+keluar dengan sesuatu yang sudah jalan, bukan sekadar catatan.
+
+3 card pertemuan (grid, bukan 4 atau 6 lagi):
+
+Card 1:
+Nomor: 1
+Label: OFFLINE
+Tanggal: Hari 1 — 14 Juli 2026
+Judul: Fondasi dan Kelompok
+Sub: Materi fundamental AI, seni prompting, pembagian 6 kelompok berdasarkan minat dan bidang masing-masing peserta.
+
+Card 2:
+Nomor: 2
+Label: ONLINE · ZOOM
+Tanggal: Hari 2 — (konfirmasi jadwal pasca pendaftaran)
+Judul: Eksekusi Bersama Mentor
+Sub: Tiap kelompok belajar Vibe Coding dan mulai membangun aplikasi atau website dari ide mereka, didampingi mentor.
+
+Card 3:
+Nomor: 3
+Label: OFFLINE
+Tanggal: Hari 3 — (konfirmasi jadwal pasca pendaftaran)
+Judul: Demo Day dan Showcase
+Sub: Tiap kelompok presentasi dan demo project yang sudah jadi di depan seluruh peserta.
+
+Catatan kecil di bawah grid (mono, muted):
+JADWAL LENGKAP DIKONFIRMASI SETELAH PENDAFTARAN · PESERTA BERKOLABORASI PER KELOMPOK DARI AWAL HINGGA DEMO DAY
+```
+
+### Di FAQ — update jawaban terkait format:
+
+Cari pertanyaan soal format/jadwal dan update menjadi:
+```
+Format kelas Batch 3:
+Tiga hari pertemuan padat — dua hari tatap muka langsung dan satu hari
+via Zoom. Peserta dibagi ke dalam 6 kelompok berdasarkan minat atau
+bidang sejak hari pertama, lalu berkolaborasi membangun project nyata
+bersama kelompok masing-masing hingga Demo Day di hari ketiga.
+```
+
+---
+
+## LANGKAH 5 — Update Tagline dan Copy Utama
+
+### Announcement bar (marquee):
+```
+Ganti: PENDAFTARAN BATCH 1 DIBUKA · PERTEMUAN PERTAMA 6 JULI 2026 · TEMPAT TERBATAS
+Menjadi: PENDAFTARAN BATCH 3 DIBUKA · KELAS DIMULAI 14 JULI 2026 · TEMPAT TERBATAS
+```
+
+### Hero landing page — urgency block:
+```
+Ganti: "Pertemuan pertama: 6 Juli 2026"
+Menjadi: "Kelas dimulai 14 Juli 2026 · Daftar sebelum 13 Juli"
+```
+
+### Template pesan WhatsApp konfirmasi pendaftaran (yang dikirim ke peserta):
+```
+Ganti referensi "Batch 1" menjadi "Batch 3"
+Ganti link aigypt.vercel.app/login menjadi aigypt.id/login
+```
+
+---
+
+## VERIFIKASI AKHIR
+
+Setelah semua perubahan, lakukan pencarian global untuk memastikan tidak ada yang terlewat:
+1. Cari "Batch 1" → harus nol hasil (kecuali di galeri/testimoni sejarah)
+2. Cari "vercel.app" → harus nol hasil
+3. Cari "6 Juli" atau "July 6" → harus nol hasil
+4. Cari "5 Juli" → harus nol hasil
+5. Cari "4 pertemuan" → harus nol hasil (kecuali konteks lain yang tidak relevan)
+6. npm run build harus sukses
+
+---
+
+## OUTPUT YANG DIHARAPKAN
+
+Seluruh website AIGYPT menampilkan informasi Batch 3 yang konsisten: domain aigypt.id, tanggal 14 Juli 2026, batas pendaftaran 13 Juli, format 3 hari (2 offline + 1 Zoom), dan semua referensi "Batch 1" sudah diperbarui menjadi "Batch 3". Tidak ada informasi lama yang tersisa atau bertentangan antar halaman.
