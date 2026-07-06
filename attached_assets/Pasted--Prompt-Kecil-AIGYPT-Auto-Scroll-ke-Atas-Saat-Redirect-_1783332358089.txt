@@ -1,0 +1,70 @@
+# Prompt Kecil — AIGYPT: Auto Scroll ke Atas Saat Redirect ke Halaman Pembayaran QRIS
+
+Ini perubahan sangat kecil. Saat user submit form pendaftaran dan diarahkan ke halaman /daftar/pembayaran, halaman tidak otomatis scroll ke atas — user melihat halaman dari posisi scroll sebelumnya.
+
+---
+
+## PERUBAHAN
+
+Ada dua tempat yang perlu diperbaiki:
+
+### 1. Di halaman /daftar/pembayaran
+
+Tambahkan scroll ke atas saat komponen pertama kali dimount:
+
+```typescript
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}, [])
+```
+
+Tambahkan useEffect ini di bagian atas komponen halaman pembayaran (pages/daftar/pembayaran.tsx atau nama file yang sesuai), setelah deklarasi state tapi sebelum logic lainnya.
+
+### 2. Di halaman /daftar/menunggu (halaman setelah konfirmasi WA)
+
+Lakukan hal yang sama agar konsisten:
+
+```typescript
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}, [])
+```
+
+### 3. Jika menggunakan React Router atau Wouter
+
+Jika navigasi antar halaman menggunakan setLocation (Wouter) atau navigate (React Router), scroll position kadang dipertahankan dari halaman sebelumnya. Cek apakah sudah ada ScrollRestoration atau scroll-to-top global di router. Jika belum ada, tambahkan komponen ScrollToTop sederhana:
+
+```typescript
+// components/ScrollToTop.tsx
+import { useEffect } from 'react'
+import { useLocation } from 'wouter' // atau react-router
+
+export function ScrollToTop() {
+  const [location] = useLocation()
+  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [location])
+  
+  return null
+}
+```
+
+Lalu pasang di root App.tsx di dalam Router:
+
+```tsx
+<Router>
+  <ScrollToTop />
+  {/* routes lainnya */}
+</Router>
+```
+
+Ini solusi global yang mengatasi masalah scroll position di semua perpindahan halaman sekaligus, tidak hanya di halaman pembayaran.
+
+---
+
+## REQUIREMENTS
+
+1. Gunakan behavior 'smooth' untuk scroll di dalam halaman, 'instant' untuk perpindahan halaman baru (agar tidak terasa aneh saat halaman baru muncul dari tengah)
+2. Tidak mengubah komponen atau logic lain
+3. npm run build sukses

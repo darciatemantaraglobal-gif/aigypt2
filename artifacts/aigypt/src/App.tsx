@@ -21,6 +21,7 @@ import Toolbox from "@/pages/toolbox";
 import Daftar from "@/pages/daftar";
 import Pembayaran from "@/pages/pembayaran";
 import Sukses from "@/pages/sukses";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 if (import.meta.env.VITE_API_URL) {
   setBaseUrl(import.meta.env.VITE_API_URL);
@@ -74,6 +75,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <ScrollToTop />
           <Router />
         </WouterRouter>
         <Toaster />
