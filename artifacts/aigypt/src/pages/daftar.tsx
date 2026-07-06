@@ -69,7 +69,7 @@ const tiers = [
     desc: "Bimbingan penuh, komunitas aktif, dan sertifikat.",
     features: [
       "Semua yang ada di Member Mandiri",
-      "4 pertemuan live bersama mentor (6, 8, 11, 13 Juli 2026)",
+      "3 hari pertemuan (14 Juli offline, Zoom, & Demo Day)",
       "Bimbingan dan feedback langsung",
       "Komunitas eksklusif Batch 3",
       "Sertifikat penyelesaian",

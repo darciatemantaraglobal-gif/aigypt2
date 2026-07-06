@@ -515,7 +515,7 @@ export default function KelasDetailPage() {
             className="font-mono mb-3"
             style={{ fontSize: "11px", letterSpacing: "0.1em", color: "#71717A" }}
           >
-            KELAS KHUSUS · AIGYPT BATCH 1
+            KELAS KHUSUS · AIGYPT BATCH 3
           </p>
           <h2
             className="font-display font-semibold"

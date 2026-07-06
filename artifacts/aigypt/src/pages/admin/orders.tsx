@@ -19,7 +19,7 @@ const inputStyle: React.CSSProperties = {
 
 function buildWaText(o: { name: string; email: string; phone: string; memberType: string; accessCode: string | null }): string {
   const type = o.memberType === "kelas" ? "Member Kelas" : "Member Mandiri";
-  return `Halo ${o.name}! Pembayaran AIGYPT kamu sudah dikonfirmasi.\n\nPaket: ${type}\nKode Akses: ${o.accessCode ?? "(belum ada)"}\n\nCara login:\n1. Buka aigypt.vercel.app/login\n2. Masukkan email: ${o.email}\n3. Masukkan kode akses di atas\n\nSelamat belajar! 🎉`;
+  return `Halo ${o.name}! Pembayaran AIGYPT kamu sudah dikonfirmasi.\n\nPaket: ${type}\nKode Akses: ${o.accessCode ?? "(belum ada)"}\n\nCara login:\n1. Buka aigypt.id/login\n2. Masukkan email: ${o.email}\n3. Masukkan kode akses di atas\n\nSelamat belajar! 🎉`;
 }
 
 function formatRp(n: number) {

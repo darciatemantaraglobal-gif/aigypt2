@@ -89,7 +89,7 @@ router.post("/midtrans/create-transaction", async (req, res) => {
   const grossAmount = memberType === "kelas" ? PRICE_KELAS : PRICE_MANDIRI;
   const orderId = generateOrderId();
   const normalizedPhone = phone.replace(/^\+62/, "0").replace(/^62/, "0").replace(/\D/g, "");
-  const memberLabel = memberType === "kelas" ? "AIGYPT Member Kelas - Batch 1" : "AIGYPT Member Mandiri - Batch 1";
+  const memberLabel = memberType === "kelas" ? "AIGYPT Member Kelas - Batch 3" : "AIGYPT Member Mandiri - Batch 3";
 
   const payload = {
     transaction_details: {
@@ -294,7 +294,7 @@ router.post("/midtrans/webhook", async (req, res) => {
 
     const pesertaMessage =
       `Assalamualaikum ${order.name}! 🎉\n\n` +
-      `Pembayaran AIGYPT Class Batch 1 kamu sudah dikonfirmasi.\n\n` +
+      `Pembayaran AIGYPT Class Batch 3 kamu sudah dikonfirmasi.\n\n` +
       `Paket: *${memberLabel}*\n` +
       `Kode Akses: *${accessCode}*\n\n` +
       `Cara login:\n` +

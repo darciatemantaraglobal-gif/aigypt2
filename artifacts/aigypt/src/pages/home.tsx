@@ -216,8 +216,8 @@ const faqs = [
     a: "Tidak sama sekali. AIGYPT dirancang untuk membawamu dari nol. Kamu akan mencipta tanpa perlu menjadi programmer.",
   },
   {
-    q: "Apa itu format Hybrid?",
-    a: "Kamu mempelajari keseluruhan enam sesi materi secara mandiri di platform, kapan saja sesuai waktumu. Selain itu, ada empat pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026. Di sana kita membahas lebih dalam, praktek bersama, dan tanya jawab langsung.",
+    q: "Apa format kelas Batch 3?",
+    a: "Tiga hari pertemuan padat — dua hari tatap muka langsung dan satu hari via Zoom. Peserta dibagi ke dalam 6 kelompok berdasarkan minat atau bidang sejak hari pertama, lalu berkolaborasi membangun project nyata bersama kelompok masing-masing hingga Demo Day di hari ketiga.",
   },
   {
     q: "Berapa peserta per batch?",
@@ -1140,7 +1140,7 @@ export default function Home() {
             variants={fadeUp}
             className="inline-flex flex-wrap items-center justify-center gap-6"
           >
-            {["6 SESI MATERI", "4 PERTEMUAN LIVE", "HYBRID", "SEMUA LEVEL"].map((t) => (
+            {["3 HARI PERTEMUAN", "2 OFFLINE + 1 ONLINE", "SEMUA LEVEL"].map((t) => (
               <span key={t} className="font-mono text-xs tracking-widest" style={{ color: "#52525B", letterSpacing: "0.15em" }}>
                 {t}
               </span>
@@ -1387,14 +1387,14 @@ export default function Home() {
                       Menghasilkan Solusimu
                     </h3>
                     <p className="text-sm" style={{ color: "#71717A" }}>
-                      Kelas perdana AIGYPT. Pelajari 6 sesi materi lengkap secara mandiri, plus 4 pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026.
+                      Kelas perdana AIGYPT. Tiga hari pertemuan padat — dua hari offline dan satu hari via Zoom — untuk menghasilkan project nyata bersama kelompokmu.
                     </p>
                   </div>
                   <div
                     className="flex-shrink-0 inline-flex rounded-2xl overflow-hidden"
                     style={{ border: "1px solid rgba(255,255,255,0.06)" }}
                   >
-                    {[["6", "SESI MATERI"], ["4", "PERTEMUAN LIVE"], ["1", "KARYA NYATA"]].map(([val, lbl], i) => (
+                    {[["3", "HARI PERTEMUAN"], ["2+1", "OFFLINE+ONLINE"], ["1", "KARYA NYATA"]].map(([val, lbl], i) => (
                       <div key={i} className="flex items-center">
                         {i > 0 && <div className="self-stretch w-px" style={{ background: "rgba(255,255,255,0.06)" }} />}
                         <div className="px-5 py-3 text-center">
@@ -1408,12 +1408,12 @@ export default function Home() {
 
                 <div className="mb-6 flex flex-wrap gap-3">
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(124,58,237,0.12)", color: "#A855F7", border: "1px solid rgba(124,58,237,0.25)" }}>BATCH 3: PENDAFTARAN DIBUKA</span>
-                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Pertemuan pertama: 14 Juli 2026</span>
+                  <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Kelas dimulai 14 Juli 2026 · Daftar sebelum 13 Juli</span>
                   <span className="font-mono text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", color: "#71717A", border: "1px solid rgba(255,255,255,0.06)" }}>Kuota terbatas per batch</span>
                 </div>
 
                 <p className="text-sm leading-[1.9] mb-8 max-w-2xl" style={{ color: "#A1A1AA", fontWeight: 300 }}>
-                  Format Hybrid: pelajari 6 sesi materi secara mandiri kapan saja, plus 4 pertemuan live bersama mentor pada 6, 8, 11, dan 13 Juli 2026.
+                  Tiga hari pertemuan padat: dua hari tatap muka langsung dan satu hari via Zoom. Peserta dibagi kelompok sejak hari pertama dan berkolaborasi membangun project nyata hingga Demo Day.
                 </p>
 
                 {/* Tambahan: Mengapa Bergabung Sekarang */}
@@ -1603,7 +1603,7 @@ export default function Home() {
                 subDesc: "Semua itu, plus dibimbing langsung menerapkannya.",
                 features: [
                   "Semua yang ada di Member Mandiri",
-                  "4 pertemuan live bersama mentor (6, 8, 11, 13 Juli 2026)",
+                  "3 hari pertemuan (14 Juli offline, Zoom, & Demo Day)",
                   "Bimbingan dan feedback langsung",
                   "Komunitas eksklusif Batch 3",
                   "Sertifikat penyelesaian",
@@ -1659,7 +1659,7 @@ export default function Home() {
                     >
                       GUNAKAN KODE AIGYPT26 · HEMAT Rp 51.000
                     </span>
-                    <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Berlaku hingga 15 Juli 2026 untuk pendaftaran Batch 3</p>
+                    <p className="text-xs mt-1.5" style={{ color: "#52525B" }}>Berlaku hingga 13 Juli 2026 untuk pendaftaran Batch 3</p>
                   </div>
                 )}
                 <p className="text-xs mb-5 pb-4" style={{ color: "#7C3AED", borderBottom: "1px solid rgba(124,58,237,0.1)", fontStyle: "italic" }}>

@@ -94,7 +94,7 @@ router.post("/qris/confirm", async (req, res) => {
 
   const orderId = generateOrderId();
   const normalizedPhone = phone.replace(/^\+62/, "0").replace(/^62/, "0").replace(/\D/g, "");
-  const memberLabel = memberType === "kelas" ? "Member Kelas - Batch 1" : "Member Mandiri - Batch 1";
+  const memberLabel = memberType === "kelas" ? "Member Kelas - Batch 3" : "Member Mandiri - Batch 3";
 
   try {
     await db.insert(ordersTable).values({

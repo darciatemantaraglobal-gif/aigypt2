@@ -439,7 +439,7 @@ export default function Kurikulum() {
             className="text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-8"
             style={{ color: "#A1A1AA", fontWeight: 300 }}
           >
-            Empat pertemuan padat yang dirancang bukan untuk membuatmu tahu lebih banyak
+            Tiga hari padat yang dirancang bukan untuk membuatmu tahu lebih banyak
             tentang kecerdasan buatan, tapi untuk mengubah caramu memandang
             setiap masalah yang kamu hadapi sebagai masisir. Dari yang dulu
             hanya bisa menunggu solusi, menjadi yang menciptakannya sendiri.
@@ -566,44 +566,63 @@ export default function Kurikulum() {
       <section className="py-16 sm:py-24" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
           <Reveal className="mb-6">
-            <SectionLabel>JADWAL PERTEMUAN LIVE BATCH 3</SectionLabel>
+            <SectionLabel>JADWAL PERTEMUAN BATCH 3</SectionLabel>
             <motion.h2
               variants={fadeUp}
               className="font-display font-semibold mb-4"
               style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", letterSpacing: "-0.01em" }}
             >
-              Empat Pertemuan, Satu Transformasi Penuh
+              Tiga Hari yang Mengubah Cara Kamu Bekerja dengan AI
             </motion.h2>
             <motion.p variants={fadeUp} className="text-sm leading-[1.9] max-w-2xl" style={{ color: "#71717A", fontWeight: 300 }}>
-              Kamu tetap mempelajari keseluruhan enam sesi secara mandiri di platform, kapan saja sesuai waktumu.
-              Empat pertemuan ini adalah momen kita berkumpul bersama, membahas lebih dalam, praktek langsung,
-              dan menjawab pertanyaanmu secara langsung.
+              Bukan kelas mingguan. Tiga hari padat yang dirancang agar kamu
+              keluar dengan sesuatu yang sudah jalan, bukan sekadar catatan.
             </motion.p>
           </Reveal>
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
             initial="hidden"
             whileInView="visible"
             viewport={viewportConfig}
             variants={containerStagger}
           >
             {[
-              { num: 1, day: "Selasa, 14 Juli 2026",   title: "Fondasi dan Keterampilan",    sub: "Membahas Sesi 1–2: mindset AI dan seni berdialog dengan kecerdasan" },
-              { num: 2, day: "Rabu, 8 Juli 2026",    title: "Penerapan",                   sub: "Membahas Sesi 3: AI untuk ilmu dan amanah organisasi" },
-              { num: 3, day: "Sabtu, 11 Juli 2026",  title: "Produksi dan Penciptaan",     sub: "Membahas Sesi 4–5: dari menghasilkan karya hingga membangun aplikasi" },
-              { num: 4, day: "Senin, 13 Juli 2026",  title: "Pembuktian",                  sub: "Membahas Sesi 6: Demo Day, mempersembahkan karyamu" },
+              {
+                num: 1,
+                label: "OFFLINE",
+                day: "Hari 1 — 14 Juli 2026",
+                title: "Fondasi dan Kelompok",
+                sub: "Materi fundamental AI, seni prompting, pembagian 6 kelompok berdasarkan minat dan bidang masing-masing peserta.",
+              },
+              {
+                num: 2,
+                label: "ONLINE · ZOOM",
+                day: "Hari 2 — (konfirmasi jadwal pasca pendaftaran)",
+                title: "Eksekusi Bersama Mentor",
+                sub: "Tiap kelompok belajar Vibe Coding dan mulai membangun aplikasi atau website dari ide mereka, didampingi mentor.",
+              },
+              {
+                num: 3,
+                label: "OFFLINE",
+                day: "Hari 3 — (konfirmasi jadwal pasca pendaftaran)",
+                title: "Demo Day dan Showcase",
+                sub: "Tiap kelompok presentasi dan demo project yang sudah jadi di depan seluruh peserta.",
+              },
             ].map((item) => (
               <motion.div
                 key={item.num}
                 variants={cardItem}
-                className="flex items-start gap-4 rounded-xl px-5 py-5"
+                className="flex flex-col gap-3 rounded-xl px-5 py-5"
                 style={{ background: "rgba(10,10,15,0.7)", border: "1px solid rgba(255,255,255,0.05)" }}
               >
-                <div
-                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-mono text-sm font-bold mt-0.5"
-                  style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }}
-                >
-                  {item.num}
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-mono text-sm font-bold"
+                    style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)", color: "#A855F7" }}
+                  >
+                    {item.num}
+                  </div>
+                  <span className="font-mono text-[10px]" style={{ color: "#A855F7", letterSpacing: "0.1em" }}>{item.label}</span>
                 </div>
                 <div>
                   <p className="font-mono text-[10px] mb-1" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>
@@ -623,7 +642,7 @@ export default function Kurikulum() {
             viewport={viewportConfig}
             transition={{ delay: 0.6 }}
           >
-            SETIAP PERTEMUAN BERLANGSUNG 1.5–2 JAM SECARA LIVE BERSAMA MENTOR
+            JADWAL LENGKAP DIKONFIRMASI SETELAH PENDAFTARAN · PESERTA BERKOLABORASI PER KELOMPOK DARI AWAL HINGGA DEMO DAY
           </motion.p>
         </div>
       </section>
