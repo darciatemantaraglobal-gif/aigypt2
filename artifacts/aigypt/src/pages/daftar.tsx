@@ -59,6 +59,8 @@ const tiers = [
       "Kode keanggotaan eksklusif",
       "Pembaruan materi selamanya",
       "Akses Vibe Coding Toolbox",
+      { text: "Bonus akses Talqeeh — platform prompt AI untuk akademik Al-Azhar", href: "https://talqeeh.vercel.app", bonus: true },
+      { text: "Bonus akses Deenme — aplikasi tracker ibadah harian", bonus: true },
     ],
     highlight: false,
   },
@@ -337,14 +339,24 @@ export default function Daftar() {
                   </div>
 
                   <ul className="space-y-2">
-                    {tier.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-sm" style={{ color: isSelected ? "#A1A1AA" : "#52525B" }}>
-                        <span className="flex-shrink-0 mt-0.5" style={{ color: isSelected ? "#7C3AED" : "#3F3F46" }}>
-                          <IconCheck />
-                        </span>
-                        {f}
-                      </li>
-                    ))}
+                    {tier.features.map((f, idx) => {
+                      const item = typeof f === "string" ? { text: f, href: undefined, bonus: false } : f;
+                      return (
+                        <li key={idx} className="flex items-start gap-2 text-sm" style={{ color: isSelected ? "#A1A1AA" : "#52525B" }}>
+                          <span className="flex-shrink-0 mt-0.5" style={{ color: isSelected ? "#7C3AED" : "#3F3F46" }}>
+                            <IconCheck />
+                          </span>
+                          <span className="flex items-center gap-2 flex-wrap leading-snug">
+                            {item.href ? (
+                              <a href={item.href} target="_blank" rel="noopener noreferrer" style={{ color: isSelected ? "#A1A1AA" : "#52525B", textDecoration: "underline", textUnderlineOffset: "3px" }}>{item.text}</a>
+                            ) : item.text}
+                            {item.bonus && (
+                              <span className="font-mono text-[10px] px-1.5 py-0.5 rounded" style={{ background: "rgba(217,119,6,0.10)", color: "#D97706", border: "1px solid rgba(217,119,6,0.2)", letterSpacing: "0.08em", flexShrink: 0 }}>BONUS</span>
+                            )}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               );
