@@ -76,15 +76,18 @@ router.post("/qris/confirm", async (req, res) => {
       return;
     }
 
-    const alreadyUsed = await db
-      .select({ id: couponUsageTable.id })
-      .from(couponUsageTable)
-      .where(and(eq(couponUsageTable.couponCode, codeUpper), eq(couponUsageTable.email, normalizedEmail)))
-      .limit(1);
+    // Kupon multiUse tidak dibatasi per email, skip cek riwayat pemakaian
+    if (!couponValidation.coupon.multiUse) {
+      const alreadyUsed = await db
+        .select({ id: couponUsageTable.id })
+        .from(couponUsageTable)
+        .where(and(eq(couponUsageTable.couponCode, codeUpper), eq(couponUsageTable.email, normalizedEmail)))
+        .limit(1);
 
-    if (alreadyUsed.length > 0) {
-      res.status(400).json({ error: "Kupon ini sudah pernah kamu gunakan" });
-      return;
+      if (alreadyUsed.length > 0) {
+        res.status(400).json({ error: "Kupon ini sudah pernah kamu gunakan" });
+        return;
+      }
     }
 
     appliedCouponCode = codeUpper;
@@ -112,7 +115,8 @@ router.post("/qris/confirm", async (req, res) => {
       snapToken: null,
     });
 
-    if (appliedCouponCode) {
+    // Hanya catat coupon_usage untuk kupon non-multiUse (1x per email)
+    if (appliedCouponCode && !couponValidation?.coupon?.multiUse) {
       try {
         await db.insert(couponUsageTable).values({
           couponCode: appliedCouponCode,

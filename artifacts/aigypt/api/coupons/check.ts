@@ -5,6 +5,7 @@ interface Coupon {
   discountAmount: number;
   applicableTo: "kelas" | "mandiri" | "all";
   validUntil: string;
+  multiUse?: boolean;
 }
 
 const ACTIVE_COUPONS: Coupon[] = [
@@ -13,6 +14,13 @@ const ACTIVE_COUPONS: Coupon[] = [
     discountAmount: 51000,
     applicableTo: "kelas",
     validUntil: "2026-07-15T23:59:59+07:00",
+  },
+  {
+    code: "HIFEST26",
+    discountAmount: 74000,
+    applicableTo: "kelas",
+    validUntil: "2026-07-13T23:59:59+07:00",
+    multiUse: true,
   },
 ];
 

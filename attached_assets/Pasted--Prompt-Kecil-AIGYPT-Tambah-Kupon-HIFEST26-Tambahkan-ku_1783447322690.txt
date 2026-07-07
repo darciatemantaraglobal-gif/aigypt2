@@ -1,0 +1,93 @@
+# Prompt Kecil — AIGYPT: Tambah Kupon HIFEST26
+
+Tambahkan kupon baru "HIFEST26" ke file lib/coupons.ts yang sudah ada. Ini hanya penambahan satu entry baru ke array ACTIVE_COUPONS — tidak perlu mengubah komponen, API route, atau logic validasi apapun karena sistem kupon sudah berjalan.
+
+---
+
+## PERUBAHAN
+
+Buka file `lib/coupons.ts`, temukan array `ACTIVE_COUPONS`, dan tambahkan entry baru di bawah kupon AIGYPT26 yang sudah ada:
+
+```typescript
+{
+  code: 'HIFEST26',
+  discountAmount: 74000,
+  applicableTo: 'kelas',
+  validUntil: '2026-07-13T23:59:59+07:00',
+  description: 'Kupon HIFEST — diskon spesial Member Kelas Batch 3'
+}
+```
+
+Sehingga ACTIVE_COUPONS menjadi:
+
+```typescript
+export const ACTIVE_COUPONS: Coupon[] = [
+  {
+    code: 'AIGYPT26',
+    discountAmount: 51000,
+    applicableTo: 'kelas',
+    validUntil: '2026-07-13T23:59:59+07:00',
+    description: 'Diskon spesial pendaftaran Batch 3'
+  },
+  {
+    code: 'HIFEST26',
+    discountAmount: 74000,
+    applicableTo: 'kelas',
+    validUntil: '2026-07-13T23:59:59+07:00',
+    description: 'Kupon HIFEST — diskon spesial Member Kelas Batch 3'
+  }
+]
+```
+
+---
+
+## CATATAN PENTING
+
+Kupon HIFEST26 TIDAK punya batas pemakaian per email (berbeda dari AIGYPT26). Karena sistem validasi saat ini mengecek tabel `coupon_usage` untuk mencegah pemakaian ganda per email, tambahkan field baru `multiUse: true` pada interface Coupon dan logic validasi:
+
+```typescript
+export interface Coupon {
+  code: string
+  discountAmount: number
+  applicableTo: 'kelas' | 'mandiri' | 'all'
+  validUntil: string
+  description: string
+  multiUse?: boolean  // jika true, bisa dipakai berkali-kali oleh email berbeda
+}
+```
+
+Update fungsi `validateCoupon` dan API route `api/coupons/check.ts` agar melewati pengecekan `coupon_usage` jika `coupon.multiUse === true`:
+
+```typescript
+// Di api/coupons/check.ts
+// Jika kupon multiUse, skip pengecekan riwayat pemakaian
+if (coupon.multiUse) {
+  return res.status(200).json({ valid: true })
+}
+
+// Jika bukan multiUse, cek apakah email sudah pernah pakai
+const { data: existingUsage } = await supabase
+  .from('coupon_usage')
+  .select('id')
+  .eq('coupon_code', code.toUpperCase())
+  .eq('email', email.toLowerCase())
+  .single()
+
+if (existingUsage) {
+  return res.status(200).json({
+    valid: false,
+    error: 'Kupon ini sudah pernah kamu gunakan'
+  })
+}
+```
+
+Dengan ini AIGYPT26 tetap 1x per email, sementara HIFEST26 bisa dipakai berkali-kali oleh siapapun selama belum kedaluwarsa.
+
+---
+
+## REQUIREMENTS
+
+1. Hanya ubah lib/coupons.ts dan api/coupons/check.ts
+2. Tidak mengubah komponen UI, halaman, atau file lain
+3. AIGYPT26 tetap berjalan seperti sebelumnya (1x per email)
+4. npm run build sukses

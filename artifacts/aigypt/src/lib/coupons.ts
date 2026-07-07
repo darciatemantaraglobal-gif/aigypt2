@@ -4,6 +4,7 @@ export interface Coupon {
   applicableTo: "kelas" | "mandiri" | "all";
   validUntil: string;
   description: string;
+  multiUse?: boolean; // jika true, bisa dipakai berkali-kali oleh email berbeda
 }
 
 export const ACTIVE_COUPONS: Coupon[] = [
@@ -13,6 +14,14 @@ export const ACTIVE_COUPONS: Coupon[] = [
     applicableTo: "kelas",
     validUntil: "2026-07-13T23:59:59+07:00",
     description: "Diskon spesial pendaftaran Batch 3",
+  },
+  {
+    code: "HIFEST26",
+    discountAmount: 74000,
+    applicableTo: "kelas",
+    validUntil: "2026-07-13T23:59:59+07:00",
+    description: "Kupon HIFEST — diskon spesial Member Kelas Batch 3",
+    multiUse: true,
   },
 ];
 

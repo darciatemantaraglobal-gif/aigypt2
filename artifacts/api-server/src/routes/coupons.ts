@@ -29,6 +29,12 @@ router.post("/coupons/check", async (req, res) => {
   }
 
   try {
+    // Kupon multiUse boleh dipakai oleh siapa saja, skip cek riwayat pemakaian
+    if (clientValidation.coupon?.multiUse) {
+      res.json({ valid: true, coupon: clientValidation.coupon });
+      return;
+    }
+
     const existing = await db
       .select({ id: couponUsageTable.id })
       .from(couponUsageTable)
