@@ -17,7 +17,7 @@ export const ACTIVE_COUPONS: Coupon[] = [
   },
   {
     code: "HIFEST26",
-    discountAmount: 74000,
+    discountAmount: 51000,
     applicableTo: "kelas",
     validUntil: "2026-07-13T23:59:59+07:00",
     description: "Kupon HIFEST — diskon spesial Member Kelas Batch 3",

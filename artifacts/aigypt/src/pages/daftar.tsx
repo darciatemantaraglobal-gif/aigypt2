@@ -301,11 +301,6 @@ export default function Daftar() {
                         <span className="font-mono font-bold text-sm" style={{ color: hasDiscount ? "#A855F7" : "#A1A1AA" }}>
                           {formatRp(tierFinalPrice)}
                         </span>
-                        {hasDiscount && (
-                          <span className="font-mono text-xs px-1.5 py-0.5 rounded" style={{ background: "rgba(124,58,237,0.15)", color: "#A855F7" }}>
-                            -{formatRp(appliedCoupon!.discountAmount)}
-                          </span>
-                        )}
                         {!hasDiscount && (
                           <span className="text-xs" style={{ color: "#52525B" }}>sekali bayar</span>
                         )}
