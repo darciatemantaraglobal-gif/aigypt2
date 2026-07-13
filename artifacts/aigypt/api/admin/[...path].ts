@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
 import { verifyAdmin, signAdminToken, setAdminCookie, clearAdminCookie } from "../_lib/adminAuth.js";
+import { getSegments, getBody } from "../_lib/route.js";
 
 function generateCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -18,14 +19,14 @@ function generateOrderId(): string {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
 
-  const segments = ([] as string[]).concat((req.query["path"] as string | string[] | undefined) ?? []);
+  const segments = getSegments(req, "/api/admin/");
   const [section, sub1, sub2] = segments;
 
   // ---- ROUTES TANPA SESSION (login) ----
   if (section === "login" && req.method === "POST") {
     const ADMIN_PASSWORD = (process.env["ADMIN_PASSWORD"] ?? "").trim();
     if (!ADMIN_PASSWORD) return res.status(503).json({ error: "ADMIN_PASSWORD belum dikonfigurasi" });
-    const { password } = req.body as { password?: string };
+    const { password } = getBody<{ password?: string }>(req);
     if (!password || password !== ADMIN_PASSWORD) return res.status(401).json({ error: "Password salah" });
     const token = await signAdminToken();
     setAdminCookie(res, token);

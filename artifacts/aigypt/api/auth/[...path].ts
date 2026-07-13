@@ -1,11 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
+import { getSegments } from "../_lib/route.js";
 import { SignJWT, jwtVerify } from "jose";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
 
-  const segments = ([] as string[]).concat((req.query["path"] as string | string[] | undefined) ?? []);
+  const segments = getSegments(req, "/api/auth/");
   const [section] = segments;
 
   // ---- LOGIN ----
