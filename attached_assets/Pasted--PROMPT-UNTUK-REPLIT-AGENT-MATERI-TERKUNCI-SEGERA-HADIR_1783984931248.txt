@@ -1,0 +1,49 @@
+# PROMPT UNTUK REPLIT AGENT — MATERI TERKUNCI "SEGERA HADIR"
+
+---
+
+Halo, saya butuh bantuan memperbaiki satu bug di aplikasi AIGYPT. Sebelum menyentuh kode, tolong baca batasan di bawah sampai selesai, karena aplikasi ini sudah berjalan di produksi dan saya tidak bisa menanggung kerusakan baru.
+
+## Batasan yang tidak boleh dilanggar
+
+Aplikasi ini berjalan di Vercel dengan database Supabase, dalam pnpm monorepo. Root directory yang dipakai Vercel adalah `artifacts/aigypt`. Jangan memigrasikan apapun ke sistem Replit, jangan mengganti database, jangan mengganti autentikasi, jangan mengubah struktur folder, dan jangan menyentuh `vercel.json` maupun `pnpm-workspace.yaml`.
+
+Yang paling penting: JANGAN mengubah isi materi pembelajaran. File `src/lib/materiContent.ts`, `src/lib/fundamentalAI.ts`, dan `src/lib/classesData.ts` sudah benar dan sedang dipakai untuk program yang berjalan hari ini. Isinya jangan diedit sama sekali. Bug ini bukan ada di sana.
+
+## Masalah yang terjadi
+
+Saya baru menambahkan kelas baru bernama Fundamental AI. Materinya sudah lengkap, berisi dua puluh dua langkah, dan sudah terdaftar dengan benar di `materiByKelas` di dalam `src/lib/materiContent.ts` dengan kunci `"fundamental-ai"`. Kelasnya juga sudah terdaftar di `src/lib/classesData.ts` dengan `status: "new"`.
+
+Tapi ketika saya membuka halaman detail kelas di `/kelas/fundamental-ai`, tombol untuk masuk ke materi tidak muncul. Yang muncul justru tombol mati bertuliskan "Materi segera hadir", seolah-olah materinya belum ada. Padahal materinya jelas-jelas sudah ada dan sudah bisa diakses kalau saya mengetik URL sesi materinya langsung.
+
+## Akar masalahnya
+
+Saya sudah menelusuri ini sampai ketemu, jadi kamu tidak perlu menebak-nebak. Silakan buka `src/pages/kelas-detail.tsx` dan perhatikan tiga hal berikut.
+
+Pertama, di bagian atas file, sekitar baris dua belas, ada sebuah konstanta bernama `sessionsByKelas`. Ini adalah map yang di-hardcode langsung di dalam file komponen, berisi daftar sesi untuk setiap kelas, lengkap dengan `num`, `title`, `essence`, `mastery`, `tools`, dan `mission`. Masalahnya, map ini hanya punya satu entri, yaitu `"maksimalkan-ai"`. Kelas `"fundamental-ai"` tidak ada di sana.
+
+Kedua, sekitar baris tiga ratus tujuh puluh, ada baris `const sessions = sessionsByKelas[kelasId];`. Karena `"fundamental-ai"` tidak terdaftar di map tadi, variabel `sessions` bernilai `undefined`.
+
+Ketiga, sekitar baris empat ratus tujuh puluh tujuh, ada kondisi render `{isAvailable && sessions ? (tombol Mulai Belajar) : (tombol mati Materi segera hadir)}`. Variabel `isAvailable` sebenarnya sudah bernilai true, karena dia mengecek `kelas.status === "available" || kelas.status === "new"`, dan status kelas saya memang `"new"`. Jadi yang membuat tombol jatuh ke kondisi terkunci murni karena `sessions` bernilai `undefined`.
+
+Jadi penyebab sebenarnya adalah ada dua sumber kebenaran yang terpisah untuk hal yang sama. Materi sebenarnya hidup di `materiByKelas` di dalam `src/lib/materiContent.ts`, tapi halaman detail kelas justru menentukan ketersediaan materi dari map hardcoded `sessionsByKelas` yang terpisah dan harus di-update manual. Setiap kali ada kelas baru, orang akan lupa meng-update map kedua ini, dan bug yang sama akan terulang.
+
+## Yang saya minta kamu lakukan
+
+Ada dua bagian, dan saya ingin dua-duanya dikerjakan.
+
+Bagian pertama, perbaiki gejalanya sekarang. Tambahkan entri baru untuk `"fundamental-ai"` ke dalam map `sessionsByKelas` di `src/pages/kelas-detail.tsx`. Kelas ini hanya punya satu sesi. Isi entri tersebut dengan `num` bernilai `"01"`, `title` bernilai "Fundamental AI: Dari Nol Sampai Paham", `essence` yang menjelaskan bahwa sesi ini adalah sepuluh menit untuk mengerti AI itu apa, bisa apa, dan bagaimana cara memakainya. Untuk `mastery`, isi dengan poin-poin yang mencerminkan isi materi sebenarnya, yaitu memahami cara kerja AI tanpa jargon teknis, menelusuri sejarah AI dari tahun seribu sembilan ratus lima puluh sampai sekarang beserta contoh nyatanya, menguasai peta lengkap AI berdasarkan enam kategori kemampuan, mengetahui tool mana untuk masalah apa, menerapkan formula lima bahan prompt agar hasilnya berkualitas, dan mengenali batas etika penggunaan AI baik dalam kehidupan sehari-hari maupun profesional. Untuk `tools`, sebutkan ChatGPT, Claude, Gemini, Perplexity, dan NotebookLM. Untuk `mission`, tulis ajakan untuk mengambil satu masalah nyata minggu ini, menyusun prompt dengan formula lima bahan, lalu merasakan bedanya.
+
+Jangan mengubah entri `"maksimalkan-ai"` yang sudah ada. Biarkan apa adanya.
+
+Bagian kedua, dan ini yang lebih penting, hilangkan akar masalahnya supaya bug ini tidak terulang untuk kelas berikutnya. Saya ingin `kelas-detail.tsx` tidak lagi bergantung sepenuhnya pada map hardcoded untuk menentukan apakah materi sudah tersedia atau belum. Sumber kebenaran untuk ketersediaan materi seharusnya adalah `materiByKelas` yang diimpor dari `src/lib/materiContent.ts`, karena di sanalah materi sebenarnya hidup.
+
+Konkretnya, ubah logikanya begini. Impor `materiByKelas` ke dalam `kelas-detail.tsx`. Lalu ketika menghitung `sessions`, ambil dulu dari `sessionsByKelas[kelasId]` seperti sekarang, karena map itu berisi konten kaya seperti `essence`, `mastery`, `tools`, dan `mission` yang memang tidak ada di `materiByKelas`. Tapi kalau `sessionsByKelas[kelasId]` ternyata tidak ada, jangan langsung menyerah dan menampilkan "Materi segera hadir". Sebagai gantinya, periksa apakah `materiByKelas[kelasId]` ada dan berisi sesi. Kalau ya, bangun daftar sesi minimal secara otomatis dari sana, dengan mengambil `sesiNumber`, `title`, dan `subtitle` dari setiap sesi di `materiByKelas`, lalu memetakannya ke bentuk yang dibutuhkan komponen. Untuk field yang tidak punya padanan seperti `mastery`, `tools`, dan `mission`, isi dengan array kosong atau string kosong, dan pastikan komponen turunannya aman menangani nilai kosong tersebut tanpa crash, misalnya dengan optional chaining atau pengecekan panjang array sebelum me-render.
+
+Dengan begitu, setiap kali ada kelas baru yang materinya sudah terdaftar di `materiByKelas`, tombol "Mulai Belajar" otomatis muncul, meskipun seseorang lupa menambahkan detail kaya ke `sessionsByKelas`. Kelas yang punya detail kaya tetap menampilkan detail kaya itu, jadi tidak ada penurunan kualitas untuk kelas yang sudah ada.
+
+## Cara kerja yang saya harapkan
+
+Sebelum menulis kode, baca dulu tiga file ini sampai paham hubungannya: `src/pages/kelas-detail.tsx`, `src/lib/materiContent.ts` khususnya bagian `materiByKelas` di paling bawah dan definisi tipe `SesiMateri` di paling atas, dan `src/lib/classesData.ts` khususnya tipe `Status` dan daftar `kelasList`.
+
+Setelah selesai, pastikan tidak ada error TypeScript, dan jelaskan ke saya dalam bahasa manusia apa yang kamu ubah. Lalu tolong konfirmasi tiga hal secara eksplisit: bahwa kelas `fundamental-ai` sekarang menampilkan tombol "Mulai Belajar" dan bukan "Materi segera hadir", bahwa kelas `maksimalkan-ai` yang sudah ada sama sekali tidak berubah tampilan maupun perilakunya, dan bahwa file materi yang saya larang disentuh memang tidak kamu sentuh.
