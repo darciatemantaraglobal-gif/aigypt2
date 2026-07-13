@@ -17,6 +17,21 @@ const sessionsByKelas: Record<string, Array<{
   tools: string[];
   mission: string;
 }>> = {
+  "fundamental-ai": [
+    {
+      num: "01",
+      title: "Fundamental AI: Dari Nol Sampai Paham",
+      essence: "Sepuluh menit untuk mengerti AI itu apa, bisa apa, dan cara pakainya biar hidupmu beneran kebantu.",
+      mastery: [
+        "Memahami apa itu AI tanpa jargon teknis, dan kenapa dia bisa salah (halusinasi)",
+        "Peta lengkap AI berdasarkan masalahmu: nulis, riset, visual, suara/video, coding, produktivitas",
+        "Formula 5 bahan prompt (Peran, Konteks, Tugas, Format, Batasan) yang langsung menaikkan kualitas hasil",
+        "Batas etika pakai AI di kehidupan sehari-hari dan dunia profesional",
+      ],
+      tools: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"],
+      mission: "Pilih satu masalah nyata mingguan ini, tulis prompt pakai formula 5 bahan, dan rasakan bedanya.",
+    },
+  ],
   "maksimalkan-ai": [
     {
       num: "01",

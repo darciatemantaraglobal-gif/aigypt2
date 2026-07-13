@@ -333,14 +333,16 @@ function SkipModal({
 
 function CompletionCelebration({
   sesiNum,
+  totalSesi,
   onNext,
   onDashboard,
 }: {
   sesiNum: number;
+  totalSesi: number;
   onNext: () => void;
   onDashboard: () => void;
 }) {
-  const hasNext = sesiNum < 6; // max 6 sesi for current content
+  const hasNext = sesiNum < totalSesi;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <motion.div
@@ -366,7 +368,9 @@ function CompletionCelebration({
         <p className="text-sm text-[#94A3B8] mb-7 leading-relaxed">
           {hasNext
             ? `Keren! Kamu sudah selesaikan Sesi ${sesiNum}. Lanjut ke Sesi ${sesiNum + 1}?`
-            : "Luar biasa! Kamu sudah menyelesaikan semua 6 sesi AIGYPT. Kamu sekarang adalah builder AI yang sesungguhnya."}
+            : totalSesi > 1
+            ? `Luar biasa! Kamu sudah menyelesaikan semua ${totalSesi} sesi kelas ini. Kamu sekarang adalah builder AI yang sesungguhnya.`
+            : "Selamat! Kamu sudah menyelesaikan sesi ini. Waktunya bawa ilmunya ke praktik nyata."}
         </p>
 
         <div className="flex flex-col gap-3">
@@ -965,6 +969,7 @@ export default function MateriPage() {
         {showCompletion && (
           <CompletionCelebration
             sesiNum={sesiNum}
+            totalSesi={totalSesi}
             onNext={() => {
               setShowCompletion(false);
               setLocation(`/kelas/${kelasId}/materi/sesi-${sesiNum + 1}`);
