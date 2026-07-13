@@ -16,6 +16,24 @@ function generateOrderId(): string {
   return `AIGYPT-${ts}-${rand}`;
 }
 
+function sanitizeUsername(raw: string): string {
+  return raw.toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 30);
+}
+
+/**
+ * Generate username unik dari email (bagian sebelum @) kalau admin tidak
+ * mengisi username secara manual. Kalau sudah dipakai, tambahkan angka.
+ */
+async function generateUniqueUsername(seed: string): Promise<string> {
+  const base = sanitizeUsername(seed.split("@")[0] ?? seed) || "member";
+  for (let i = 0; i < 30; i++) {
+    const candidate = i === 0 ? base : `${base}${i}`;
+    const existing = await sql`SELECT id FROM members WHERE username = ${candidate} LIMIT 1`;
+    if (existing.length === 0) return candidate;
+  }
+  return `${base}${Date.now()}`;
+}
+
 /**
  * Tabel `members` tidak pernah ditulis oleh kode manapun sebelumnya:
  * hanya dibaca oleh dashboard-stats dan halaman Member, sehingga selalu
@@ -24,16 +42,18 @@ function generateOrderId(): string {
  */
 async function upsertMember(args: {
   email: string; name: string; accessCode: string;
-  memberType: string; batchNumber: number;
+  memberType: string; batchNumber: number; username?: string;
 }) {
+  const username = args.username?.trim() ? sanitizeUsername(args.username) : await generateUniqueUsername(args.email);
   await sql`
-    INSERT INTO members (email, name, access_code, member_type, batch_number)
-    VALUES (${args.email}, ${args.name}, ${args.accessCode}, ${args.memberType}, ${args.batchNumber})
+    INSERT INTO members (email, name, access_code, member_type, batch_number, username)
+    VALUES (${args.email}, ${args.name}, ${args.accessCode}, ${args.memberType}, ${args.batchNumber}, ${username})
     ON CONFLICT (email) DO UPDATE SET
       name = EXCLUDED.name,
       access_code = EXCLUDED.access_code,
       member_type = EXCLUDED.member_type,
-      batch_number = EXCLUDED.batch_number
+      batch_number = EXCLUDED.batch_number,
+      username = COALESCE(members.username, EXCLUDED.username)
   `;
   await sql`
     UPDATE access_codes
@@ -163,14 +183,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ---- MEMBERS: CREATE ----
     if (section === "members" && sub1 === "create" && req.method === "POST") {
-      const { name, email, memberType, batchNumber, accessCode: providedCode } = getBody<{
-        name?: string; email?: string; memberType?: string; batchNumber?: number; accessCode?: string;
+      const { name, email, memberType, batchNumber, accessCode: providedCode, username } = getBody<{
+        name?: string; email?: string; memberType?: string; batchNumber?: number; accessCode?: string; username?: string;
       }>(req);
       if (!name || !email || !memberType) return res.status(400).json({ error: "Nama, email, dan tipe member wajib diisi" });
       if (!["mandiri", "kelas"].includes(memberType)) return res.status(400).json({ error: "Tipe member tidak valid" });
 
       const normalizedEmail = email.toLowerCase().trim();
       const batch = batchNumber ?? 3;
+
+      if (username?.trim()) {
+        const cleanUsername = sanitizeUsername(username);
+        const existingUsername = await sql`SELECT id FROM members WHERE username = ${cleanUsername} LIMIT 1`;
+        if (existingUsername.length > 0) return res.status(400).json({ error: "Username sudah dipakai member lain" });
+      }
 
       let accessCode = providedCode?.trim();
       if (accessCode) {
@@ -194,9 +220,84 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
         VALUES (${orderId}, ${name}, ${normalizedEmail}, ${"-"}, ${memberType}, ${batch}, 0, 0, 'paid', ${accessCode}, NOW())
       `;
-      await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch });
+      await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch, username });
 
       return res.json({ success: true, orderId, accessCode });
+    }
+
+    // ---- MEMBERS: UPDATE ----
+    if (section === "members" && sub1 && sub2 === "update" && req.method === "POST") {
+      const currentEmail = decodeURIComponent(sub1);
+      const existingRows = await sql`SELECT * FROM members WHERE email = ${currentEmail} LIMIT 1`;
+      if (!existingRows.length) return res.status(404).json({ error: "Member tidak ditemukan" });
+      const existing = existingRows[0]!;
+
+      const { name, email, username, memberType, batchNumber, accessCode } = getBody<{
+        name?: string; email?: string; username?: string; memberType?: string; batchNumber?: number; accessCode?: string;
+      }>(req);
+      if (!name || !email || !memberType) return res.status(400).json({ error: "Nama, email, dan tipe member wajib diisi" });
+      if (!["mandiri", "kelas"].includes(memberType)) return res.status(400).json({ error: "Tipe member tidak valid" });
+
+      const newEmail = email.toLowerCase().trim();
+      const batch = batchNumber ?? (existing["batch_number"] as number) ?? 3;
+
+      if (newEmail !== currentEmail) {
+        const clash = await sql`SELECT id FROM members WHERE email = ${newEmail} LIMIT 1`;
+        if (clash.length > 0) return res.status(400).json({ error: "Email sudah dipakai member lain" });
+      }
+
+      let newUsername = existing["username"] as string | null;
+      if (username?.trim()) {
+        const cleanUsername = sanitizeUsername(username);
+        if (cleanUsername !== existing["username"]) {
+          const clashUsername = await sql`SELECT id FROM members WHERE username = ${cleanUsername} LIMIT 1`;
+          if (clashUsername.length > 0) return res.status(400).json({ error: "Username sudah dipakai member lain" });
+        }
+        newUsername = cleanUsername;
+      }
+
+      const currentAccessCode = existing["access_code"] as string;
+      let newAccessCode = currentAccessCode;
+      if (accessCode?.trim() && accessCode.trim() !== currentAccessCode) {
+        newAccessCode = accessCode.trim();
+        const codeRows = await sql`SELECT is_used, used_by_email FROM access_codes WHERE code = ${newAccessCode} LIMIT 1`;
+        if (codeRows.length > 0 && codeRows[0]!["is_used"] && codeRows[0]!["used_by_email"] !== currentEmail) {
+          return res.status(400).json({ error: "Kode akses sudah dipakai member lain" });
+        }
+        if (codeRows.length === 0) {
+          await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${newAccessCode}, ${memberType}, ${batch}, false)`;
+        }
+        // Bebaskan kode lama, pakai kode baru.
+        await sql`UPDATE access_codes SET is_used = false, used_by_email = NULL, used_at = NULL WHERE code = ${currentAccessCode}`;
+        await sql`UPDATE access_codes SET is_used = true, used_by_email = ${newEmail}, used_at = NOW() WHERE code = ${newAccessCode}`;
+      } else if (newEmail !== currentEmail) {
+        // Kode akses sama, tapi pemiliknya (email) berubah.
+        await sql`UPDATE access_codes SET used_by_email = ${newEmail} WHERE code = ${currentAccessCode}`;
+      }
+
+      await sql`
+        UPDATE members
+        SET name = ${name}, email = ${newEmail}, username = ${newUsername}, member_type = ${memberType},
+            batch_number = ${batch}, access_code = ${newAccessCode}
+        WHERE email = ${currentEmail}
+      `;
+
+      // Sinkronkan ke tabel orders supaya login (yang membaca dari orders,
+      // bukan members) tetap konsisten dengan perubahan di atas.
+      await sql`
+        UPDATE orders
+        SET name = ${name}, email = ${newEmail}, member_type = ${memberType},
+            batch_number = ${batch}, access_code = ${newAccessCode}
+        WHERE email = ${currentEmail} AND access_code = ${currentAccessCode}
+      `;
+
+      // materi_progress terkait member juga perlu ikut pindah kalau email berubah,
+      // supaya histori belajar tidak lepas dari member yang diedit.
+      if (newEmail !== currentEmail) {
+        await sql`UPDATE materi_progress SET member_email = ${newEmail} WHERE member_email = ${currentEmail}`;
+      }
+
+      return res.json({ success: true, email: newEmail, accessCode: newAccessCode, username: newUsername });
     }
 
     // ---- MEMBERS: LIST ----
@@ -228,7 +329,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
       return res.json({
         members: members.map((m) => ({
-          id: m["id"], email: m["email"], name: m["name"], memberType: m["member_type"],
+          id: m["id"], email: m["email"], name: m["name"], username: m["username"] ?? null, memberType: m["member_type"],
           batchNumber: m["batch_number"], accessCode: m["access_code"],
           completedSessions: completedByEmail[m["email"] as string] ?? 0, totalSessions: 6,
           createdAt: m["created_at"], lastLogin: m["last_login"],
@@ -248,8 +349,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `;
       return res.json({
         member: {
-          id: member["id"], email: member["email"], name: member["name"], memberType: member["member_type"],
-          batchNumber: member["batch_number"], accessCode: member["access_code"],
+          id: member["id"], email: member["email"], name: member["name"], username: member["username"] ?? null,
+          memberType: member["member_type"], batchNumber: member["batch_number"], accessCode: member["access_code"],
           createdAt: member["created_at"], lastLogin: member["last_login"],
         },
         progress: progress.map((p) => ({
