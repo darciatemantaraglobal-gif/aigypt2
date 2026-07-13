@@ -1,0 +1,73 @@
+# PROMPT UNTUK REPLIT AGENT — PERBAIKAN AIGYPT
+
+---
+
+Halo, saya butuh bantuan memperbaiki beberapa bug serius di aplikasi AIGYPT. Sebelum kamu mulai, ada beberapa batasan keras yang WAJIB kamu patuhi, dan saya minta kamu membaca ini sampai selesai sebelum menyentuh satu baris kode pun.
+
+## Batasan yang tidak boleh dilanggar
+
+Aplikasi ini sudah berjalan di produksi di Vercel dengan database Supabase Postgres, dan saya TIDAK ingin migrasi ke sistem apapun milik Replit. Jangan memindahkan database ke Replit DB, jangan mengganti autentikasi ke Replit Auth, jangan menambahkan Replit Object Storage, dan jangan mengubah struktur deployment. Semua tetap di Vercel serverless functions dan Supabase. Kalau kamu merasa ada cara yang "lebih mudah" dengan tooling Replit, abaikan, karena itu akan merusak produksi saya.
+
+Struktur repo ini adalah pnpm monorepo. Root directory yang dipakai Vercel adalah `artifacts/aigypt`. Jangan mengubah struktur folder, jangan memindahkan file antar workspace, jangan menyentuh `pnpm-workspace.yaml`, dan jangan mengubah `vercel.json`.
+
+Package `artifacts/aigypt/package.json` punya `"type": "module"`, artinya semua serverless function berjalan sebagai ESM. Ini penting: setiap relative import di dalam folder `api/` WAJIB memakai ekstensi `.js` secara eksplisit, misalnya `import { sql } from "../_lib/db.js"`. Kalau kamu lupa ekstensi ini, seluruh function akan crash dengan `ERR_MODULE_NOT_FOUND` dan aplikasi mati total. Ini sudah pernah terjadi dan sangat menyakitkan, jadi tolong sangat hati-hati di sini.
+
+Ada satu hal lagi yang sangat penting dan tidak intuitif. Di runtime Vercel, objek `req.query` dan `req.body` di project ini TIDAK selalu terisi. Ini sudah menyebabkan bug besar sebelumnya: routing catch-all gagal membaca segmen path, sehingga endpoint login tidak pernah dieksekusi dan selalu membalas 401. Karena itu sudah ada helper di `artifacts/aigypt/api/_lib/route.ts` yang berisi tiga fungsi: `getSegments(req, basePath)` untuk membaca segmen path, `getBody<T>(req)` untuk membaca body, dan `getQuery(req)` untuk membaca query string. Semua endpoint baru yang kamu buat WAJIB memakai ketiga helper ini. Jangan pernah mengakses `req.query` atau `req.body` secara langsung. Kalau kamu melakukannya, bug lama akan kembali.
+
+Terakhir, jangan menyentuh file-file materi pembelajaran: `src/lib/materiContent.ts`, `src/lib/fundamentalAI.ts`, dan `src/lib/classesData.ts`. Isinya sudah benar dan sudah dipakai untuk program yang sedang berjalan.
+
+## Masalah 1: Member yang sudah login diminta login lagi saat membuka materi
+
+Ini bug paling parah dan paling merusak pengalaman pengguna. Member berhasil login, masuk ke dashboard, tapi begitu klik masuk ke pelajaran, dia langsung dilempar balik ke halaman login. Sudah saya telusuri sampai ke akarnya, dan penyebabnya ada dua lapis.
+
+Lapis pertama, endpoint `/api/auth/login` di `artifacts/aigypt/api/auth/[...path].ts` mengembalikan JWT sebagai field `token` di response body, dan endpoint `/api/auth/me` mensyaratkan header `Authorization: Bearer <token>`. Masalahnya, di sisi frontend, fungsi `setAuthTokenGetter()` dari `@workspace/api-client-react` TIDAK PERNAH dipanggil di mana pun. Silakan cek sendiri, cari di seluruh `src/`, kamu tidak akan menemukannya. Akibatnya token hasil login tidak pernah disimpan dan tidak pernah dilampirkan ke request berikutnya. Jadi `/api/auth/me` selalu membalas 401, hook `useAuth()` selalu menganggap `isAuthenticated` bernilai false, dan halaman materi yang punya auth guard langsung melakukan redirect ke `/login`. Selamanya. Tidak peduli berapa kali member login ulang.
+
+Lapis kedua, dan ini bahkan lebih mendasar: endpoint `/api/progress` sama sekali TIDAK ADA. Coba lihat isi folder `artifacts/aigypt/api/`, yang ada hanya `admin`, `auth`, `coupons`, dan `qris`. Padahal frontend memanggil `GET /api/progress` lewat hook `useGetProgress()`, memanggil `POST /api/progress` lewat `useMarkComplete()`, dan di `src/pages/materi/index.tsx` ada `fetch("/api/progress/step")` serta `fetch("/api/progress/skip")`. Semua panggilan itu menghantam endpoint yang tidak eksis dan mendapat 404. Jadi progress belajar tidak pernah tersimpan sama sekali.
+
+Cara memperbaikinya. Saya ingin kamu mengubah autentikasi member dari Bearer token menjadi HttpOnly cookie, karena itulah desain yang sebenarnya diinginkan oleh kodebase ini. Lihat komentar di `lib/api-client-react/src/custom-fetch.ts`, di sana tertulis eksplisit bahwa `setAuthTokenGetter` tidak seharusnya dipakai di aplikasi web karena cookie sesi otomatis dilampirkan oleh browser. Lihat juga bahwa panggilan fetch di `src/pages/materi/index.tsx` sudah memakai `credentials: "include"`, yang artinya memang dirancang untuk cookie. Dan admin panel di `api/admin/[...path].ts` sudah memakai pola cookie HttpOnly lewat `api/_lib/adminAuth.ts`. Jadi tinggal menyamakan alur member dengan alur admin yang sudah terbukti jalan.
+
+Konkretnya, buat file baru `artifacts/aigypt/api/_lib/memberAuth.ts` yang meniru pola `adminAuth.ts` yang sudah ada. Isinya sebuah fungsi untuk menandatangani JWT berisi identitas member, sebuah fungsi untuk memasang cookie HttpOnly bernama `aigypt_session` dengan atribut `Path=/`, `SameSite=Lax`, `Secure` saat produksi, dan masa berlaku 30 hari, sebuah fungsi untuk menghapus cookie itu, dan sebuah fungsi untuk memverifikasi request lalu mengembalikan data member atau null. Pakai library `jose` yang sudah terpasang, dan pakai `process.env["JWT_SECRET"]` sebagai secret, sama seperti yang sudah dipakai sekarang.
+
+Untuk kompatibilitas, fungsi verifikasi itu sebaiknya mencoba membaca cookie terlebih dahulu, dan kalau cookie tidak ada, jatuh ke header `Authorization: Bearer` sebagai cadangan. Dengan begitu tidak ada yang rusak untuk klien lama, tapi alur web jadi berfungsi.
+
+Lalu ubah `api/auth/[...path].ts`. Pada endpoint login, selain tetap mengembalikan `token` di body seperti sekarang, tambahkan pemasangan cookie sesi lewat fungsi baru tadi. Pada endpoint `/api/auth/me`, ganti pembacaan Bearer-only menjadi memanggil fungsi verifikasi yang baru, sehingga cookie ikut dikenali. Pada endpoint logout, hapus cookie sesi.
+
+Kemudian buat file baru `artifacts/aigypt/api/progress/[...path].ts`. Ini endpoint yang selama ini hilang. Gunakan `getSegments(req, "/api/progress/")` untuk membaca segmen, dan ingat bahwa `GET /api/progress` tanpa segmen tambahan juga harus ditangani, jadi tangani kasus segmen kosong. Semua endpoint di file ini wajib memverifikasi member lewat `memberAuth`, dan membalas 401 kalau tidak terautentikasi.
+
+Endpoint `GET /api/progress` mengembalikan array progress milik member yang sedang login, dibaca dari tabel `materi_progress` dengan filter `member_email`. Bentuk objek yang dikembalikan harus camelCase agar cocok dengan frontend, yaitu `sesiNumber`, `kelasId`, `isCompleted`, `currentStep`, `wasSkipped`, dan `completedAt`. Perhatikan bahwa kolom di database memakai snake_case, jadi lakukan pemetaan.
+
+Endpoint `POST /api/progress` menerima body berisi `kelasId` dan `sesiNumber`, lalu menandai sesi itu selesai, mengisi `is_completed` menjadi true dan `completed_at` menjadi waktu sekarang.
+
+Endpoint `POST /api/progress/step` menerima body berisi `kelasId`, `sesiNumber`, dan `currentStep`, lalu menyimpan posisi step terakhir yang dibaca member. Ini dipanggil sangat sering karena ada auto-save, jadi buat seringan mungkin dan jangan sampai melempar error yang mengganggu UI.
+
+Endpoint `POST /api/progress/skip` menerima body berisi `kelasId` dan `sesiNumber`, lalu menandai `was_skipped` menjadi true untuk sesi tersebut.
+
+Semua operasi tulis di atas harus idempoten, artinya kalau baris untuk kombinasi member dan sesi itu sudah ada, dia di-update, bukan membuat duplikat. Cara paling bersih adalah dengan `INSERT ... ON CONFLICT ... DO UPDATE`. Tapi saya tidak yakin tabel `materi_progress` sudah punya unique constraint pada kombinasi `(member_email, kelas_id, sesi_number)`. Tolong periksa dulu. Kalau constraint itu belum ada, JANGAN mencoba membuatnya lewat kode aplikasi. Sebagai gantinya, tuliskan SQL migration-nya di file terpisah `docs/migration-progress.sql` dan beri tahu saya dengan jelas bahwa saya harus menjalankannya manual di Supabase SQL Editor, karena migration di project ini memang selalu dijalankan manual dan tidak pernah otomatis. Sementara constraint belum ada, tulis logika upsert secara manual, yaitu SELECT dulu untuk mengecek keberadaan baris, lalu UPDATE kalau ada dan INSERT kalau belum ada.
+
+Terakhir untuk bagian ini, sekali cookie sesi sudah berfungsi, pastikan hook `useAuth()` di `src/hooks/use-auth.ts` bekerja tanpa perubahan berarti, karena `useGetMe()` akan otomatis mengirim cookie. Jangan menambahkan `setAuthTokenGetter` di frontend, karena justru cookie yang kita inginkan.
+
+## Masalah 2: Admin panel tidak bisa menambah member
+
+Di halaman `src/pages/admin/members.tsx` tidak ada cara untuk menambahkan member baru, dan di sisi server memang tidak ada endpoint untuk itu. Route yang tersedia di `api/admin/[...path].ts` hanya `members/list`, `members/:email/detail`, dan `members/:email/reset-progress`. Tidak ada `members/create`.
+
+Saya ingin kamu menambahkan endpoint `POST /api/admin/members/create` di dalam `api/admin/[...path].ts`, ditempatkan di dalam blok yang sudah dilindungi session admin. Endpoint ini menerima body berisi `name`, `email`, `memberType`, dan opsional `batchNumber` yang default-nya 3, serta opsional `accessCode` kalau admin ingin menentukan kode sendiri.
+
+Yang penting kamu pahami: di aplikasi ini, login member membaca dari tabel `orders`, BUKAN dari tabel `members`. Silakan lihat sendiri query di endpoint `/api/auth/login`, dia mencari baris di `orders` dengan `status = 'paid'` dan `access_code` yang cocok. Artinya, kalau kamu hanya memasukkan baris ke tabel `members`, member itu tetap tidak akan bisa login. Ini jebakan yang sudah memakan waktu saya berjam-jam.
+
+Jadi endpoint `members/create` harus menulis ke tiga tabel sekaligus dalam satu alur yang konsisten. Pertama, buat kode akses unik dan masukkan ke `access_codes`, atau pakai kode yang diberikan admin kalau ada, dengan validasi bahwa kode itu belum dipakai. Kedua, buat satu baris di `orders` dengan `status = 'paid'`, `access_code` terisi, dan `paid_at` diisi waktu sekarang, karena baris inilah yang menjadi tiket login member. Ketiga, catat member di tabel `members` lewat upsert berdasarkan email. Perlu diketahui bahwa `members.access_code` punya foreign key ke `access_codes.code`, jadi urutan penulisan harus benar, kode akses dulu baru member, kalau terbalik akan gagal dengan pelanggaran foreign key.
+
+Sebenarnya sudah ada helper `upsertMember()` di dalam `api/admin/[...path].ts` yang melakukan bagian ketiga ini sekaligus menandai kode akses menjadi terpakai. Pakai ulang helper itu, jangan menulis logika duplikat.
+
+Di sisi frontend, tambahkan tombol "Tambah Member" di halaman `src/pages/admin/members.tsx` yang membuka modal berisi input nama, email, pilihan tipe member antara `kelas` dan `mandiri`, dan input opsional kode akses. Setelah sukses, tampilkan kode akses yang dihasilkan dengan tombol salin, karena kode itulah yang akan saya kirim ke peserta lewat WhatsApp. Ikuti gaya visual admin panel yang sudah ada, jangan membuat desain baru.
+
+## Masalah 3: Endpoint healthz tidak ada
+
+Client yang di-generate memanggil `/api/healthz` tapi endpoint itu tidak ada. Buat file sederhana `artifacts/aigypt/api/healthz.ts` yang membalas status 200 dengan JSON berisi status ok dan timestamp. Ini sepele tapi menghilangkan satu sumber error di console.
+
+## Cara kerja yang saya harapkan
+
+Sebelum menulis kode, tolong baca dulu file-file berikut sampai paham, karena semuanya saling terkait: `artifacts/aigypt/api/_lib/route.ts`, `artifacts/aigypt/api/_lib/db.ts`, `artifacts/aigypt/api/_lib/adminAuth.ts`, `artifacts/aigypt/api/auth/[...path].ts`, `artifacts/aigypt/api/admin/[...path].ts`, `artifacts/aigypt/src/hooks/use-auth.ts`, `artifacts/aigypt/src/pages/materi/index.tsx`, dan `lib/api-client-react/src/custom-fetch.ts`.
+
+Setelah selesai, tolong jelaskan ke saya dalam bahasa manusia apa saja yang kamu ubah dan kenapa, lalu sebutkan dengan jelas apakah ada SQL migration yang harus saya jalankan manual di Supabase SQL Editor. Jangan berasumsi migration akan jalan sendiri, karena di project ini tidak pernah begitu.
+
+Satu catatan penutup yang tidak berhubungan dengan kode tapi perlu kamu tahu supaya tidak salah diagnosis: saat ini environment variable `DATABASE_URL` di Vercel masih memakai host direct connection Supabase yang hanya punya alamat IPv6, sehingga semua query gagal dengan `ENOTFOUND`. Saya akan memperbaikinya sendiri dengan mengganti ke Session Pooler. Jadi kalau kamu melihat error koneksi database, itu bukan bug kode dan jangan coba diperbaiki lewat kode.

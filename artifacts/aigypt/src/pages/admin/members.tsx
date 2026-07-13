@@ -19,6 +19,139 @@ const inputStyle: React.CSSProperties = {
   color: "#FAFAFA", fontFamily: "'Inter',sans-serif", borderRadius: 8, padding: "8px 12px", fontSize: 13, outline: "none",
 };
 
+function AddMemberModal({
+  onClose,
+  onCreated,
+}: {
+  onClose: () => void;
+  onCreated: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [memberType, setMemberType] = useState<"kelas" | "mandiri">("kelas");
+  const [accessCode, setAccessCode] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<{ accessCode: string } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSaving(true);
+    try {
+      const r = await adminFetch("/admin/members/create", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          email,
+          memberType,
+          accessCode: accessCode.trim() || undefined,
+        }),
+      });
+      const d = await r.json();
+      if (!r.ok) {
+        setError(d.error ?? "Gagal menambahkan member");
+        return;
+      }
+      setResult({ accessCode: d.accessCode });
+      onCreated();
+    } catch {
+      setError("Gagal menambahkan member");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCopy = () => {
+    if (!result) return;
+    navigator.clipboard.writeText(result.accessCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="rounded-2xl border p-6 max-w-sm w-full" style={{ background: "#101018", borderColor: "rgba(255,255,255,0.08)" }}>
+        {result ? (
+          <div>
+            <h3 className="font-bold text-white mb-2" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Member Ditambahkan</h3>
+            <p className="text-xs mb-4" style={{ color: "#71717A" }}>Kirim kode akses ini ke peserta lewat WhatsApp.</p>
+            <div className="flex items-center justify-between gap-3 rounded-xl px-4 py-3 mb-4" style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.3)" }}>
+              <span className="font-mono text-sm" style={{ color: "#A855F7" }}>{result.accessCode}</span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="text-xs px-3 py-1.5 rounded-lg font-mono"
+                style={{ color: copied ? "#4ade80" : "#A855F7", border: "1px solid rgba(124,58,237,0.3)" }}
+              >
+                {copied ? "Tersalin" : "Copy"}
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full py-2.5 rounded-xl text-sm text-white font-medium"
+              style={{ background: "#7C3AED" }}
+            >
+              Tutup
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <h3 className="font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Tambah Member</h3>
+            {error && (
+              <p className="text-xs mb-3 px-3 py-2 rounded-lg" style={{ color: "#f87171", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
+                {error}
+              </p>
+            )}
+            <div className="space-y-3 mb-5">
+              <div>
+                <label className="text-xs font-mono block mb-1" style={{ color: "#52525B" }}>NAMA</label>
+                <input required value={name} onChange={e => setName(e.target.value)} style={{ ...inputStyle, width: "100%" }} />
+              </div>
+              <div>
+                <label className="text-xs font-mono block mb-1" style={{ color: "#52525B" }}>EMAIL</label>
+                <input required type="email" value={email} onChange={e => setEmail(e.target.value)} style={{ ...inputStyle, width: "100%" }} />
+              </div>
+              <div>
+                <label className="text-xs font-mono block mb-1" style={{ color: "#52525B" }}>TIPE MEMBER</label>
+                <select value={memberType} onChange={e => setMemberType(e.target.value as "kelas" | "mandiri")} style={{ ...inputStyle, width: "100%", appearance: "none" }}>
+                  <option value="kelas">Kelas</option>
+                  <option value="mandiri">Mandiri</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-mono block mb-1" style={{ color: "#52525B" }}>KODE AKSES (opsional)</label>
+                <input value={accessCode} onChange={e => setAccessCode(e.target.value)} placeholder="Otomatis jika dikosongkan" style={{ ...inputStyle, width: "100%" }} />
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-2.5 rounded-xl border text-sm"
+                style={{ borderColor: "rgba(255,255,255,0.08)", color: "#94A3B8" }}
+              >
+                Batal
+              </button>
+              <button
+                type="submit"
+                disabled={saving}
+                className="flex-1 py-2.5 rounded-xl text-sm text-white font-medium disabled:opacity-50"
+                style={{ background: "#7C3AED" }}
+              >
+                {saving ? "Menyimpan..." : "Tambah"}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminMembers() {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +164,7 @@ export default function AdminMembers() {
   const [resetTarget, setResetTarget] = useState<string | null>(null);
   const [resetting, setResetting] = useState(false);
   const [toast, setToast] = useState("");
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
 
@@ -78,10 +212,25 @@ export default function AdminMembers() {
         </div>
       )}
       <ConfirmModal open={!!resetTarget} title="Reset Progress?" message={`Progress belajar ${resetTarget} akan dihapus semua. Aksi ini tidak bisa dibatalkan.`} confirmLabel="Reset Progress" onConfirm={handleResetProgress} onCancel={() => setResetTarget(null)} loading={resetting} />
+      {showAddModal && (
+        <AddMemberModal
+          onClose={() => setShowAddModal(false)}
+          onCreated={() => { showToast("Member ditambahkan"); fetchMembers(); }}
+        />
+      )}
 
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Member</h1>
-        <p className="text-sm mt-1" style={{ color: "#71717A" }}>Kelola semua member yang terdaftar</p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Member</h1>
+          <p className="text-sm mt-1" style={{ color: "#71717A" }}>Kelola semua member yang terdaftar</p>
+        </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="text-sm px-4 py-2.5 rounded-xl text-white font-medium transition-colors"
+          style={{ background: "#7C3AED" }}
+        >
+          + Tambah Member
+        </button>
       </div>
 
       <div className="flex flex-wrap gap-3 mb-4">

@@ -161,6 +161,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.json({ success: true });
     }
 
+    // ---- MEMBERS: CREATE ----
+    if (section === "members" && sub1 === "create" && req.method === "POST") {
+      const { name, email, memberType, batchNumber, accessCode: providedCode } = getBody<{
+        name?: string; email?: string; memberType?: string; batchNumber?: number; accessCode?: string;
+      }>(req);
+      if (!name || !email || !memberType) return res.status(400).json({ error: "Nama, email, dan tipe member wajib diisi" });
+      if (!["mandiri", "kelas"].includes(memberType)) return res.status(400).json({ error: "Tipe member tidak valid" });
+
+      const normalizedEmail = email.toLowerCase().trim();
+      const batch = batchNumber ?? 3;
+
+      let accessCode = providedCode?.trim();
+      if (accessCode) {
+        const existing = await sql`SELECT id FROM access_codes WHERE code = ${accessCode} LIMIT 1`;
+        if (existing.length > 0) return res.status(400).json({ error: "Kode akses sudah dipakai, pilih kode lain" });
+      } else {
+        for (let attempt = 0; attempt < 20; attempt++) {
+          const candidate = generateCode();
+          const existing = await sql`SELECT id FROM access_codes WHERE code = ${candidate} LIMIT 1`;
+          if (existing.length === 0) { accessCode = candidate; break; }
+        }
+        if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses unik" });
+      }
+
+      const orderId = generateOrderId();
+
+      // Urutan wajib: access_codes dulu, baru members — members.access_code
+      // punya foreign key ke access_codes.code.
+      await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
+      await sql`
+        INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
+        VALUES (${orderId}, ${name}, ${normalizedEmail}, ${"-"}, ${memberType}, ${batch}, 0, 0, 'paid', ${accessCode}, NOW())
+      `;
+      await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch });
+
+      return res.json({ success: true, orderId, accessCode });
+    }
+
     // ---- MEMBERS: LIST ----
     if (section === "members" && sub1 === "list" && req.method === "GET") {
       const { search, type, batch } = getQuery(req);

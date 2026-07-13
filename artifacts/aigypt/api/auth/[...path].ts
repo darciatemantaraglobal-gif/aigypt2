@@ -1,7 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
 import { getSegments, getBody } from "../_lib/route.js";
-import { SignJWT, jwtVerify } from "jose";
+import { SignJWT } from "jose";
+import { setMemberCookie, clearMemberCookie, verifyMember } from "../_lib/memberAuth.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -37,6 +38,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .setExpirationTime("30d")
         .sign(secret);
 
+      setMemberCookie(res, token);
+
       return res.json({
         token,
         user: {
@@ -52,25 +55,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // ---- LOGOUT ----
   if (section === "logout" && req.method === "POST") {
+    clearMemberCookie(res);
     return res.json({ success: true });
   }
 
   // ---- ME ----
   if (section === "me" && req.method === "GET") {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith("Bearer ")) return res.status(401).json({ error: "Unauthorized" });
-    const token = authHeader.slice(7);
+    const member = await verifyMember(req);
+    if (!member) return res.status(401).json({ error: "Unauthorized" });
 
     try {
-      const jwtSecret = process.env["JWT_SECRET"];
-      if (!jwtSecret) return res.status(503).json({ error: "JWT_SECRET belum dikonfigurasi" });
-      const secret = new TextEncoder().encode(jwtSecret);
-      const { payload } = await jwtVerify(token, secret);
-      const orderId = payload["orderId"] as string;
-
       const rows = await sql`
         SELECT order_id, name, email, member_type, batch_number, status, access_code
-        FROM orders WHERE order_id = ${orderId} LIMIT 1
+        FROM orders WHERE order_id = ${member.orderId} LIMIT 1
       `;
       if (!rows.length) return res.status(404).json({ error: "Order tidak ditemukan" });
 
@@ -80,7 +77,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         memberType: order["member_type"], batchNumber: order["batch_number"],
         status: order["status"], accessCode: order["access_code"] ?? null,
       });
-    } catch {
+    } catch (err) {
+      console.error("[Auth Me] Error:", err);
       return res.status(401).json({ error: "Token tidak valid atau sudah expired" });
     }
   }
