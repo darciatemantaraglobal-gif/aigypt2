@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
-import { getSegments } from "../_lib/route.js";
+import { getSegments, getBody } from "../_lib/route.js";
 import { SignJWT, jwtVerify } from "jose";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -11,7 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // ---- LOGIN ----
   if (section === "login" && req.method === "POST") {
-    const { email, code } = req.body as { email?: string; code?: string };
+    const { email, code } = getBody<{ email?: string; code?: string }>(req);
     if (!email || !code) return res.status(400).json({ error: "Email dan kode akses wajib diisi" });
 
     try {

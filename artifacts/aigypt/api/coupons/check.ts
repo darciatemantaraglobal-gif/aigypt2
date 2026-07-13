@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { getBody } from "../_lib/route.js";
 
 interface Coupon {
   code: string;
@@ -40,9 +41,9 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "POST") return res.status(405).json({ valid: false, error: "Method not allowed" });
 
-  const { code, email, memberType } = req.body as {
+  const { code, email, memberType } = getBody<{
     code?: string; email?: string; memberType?: string;
-  };
+  }>(req);
 
   if (!code || !email || !memberType) {
     return res.status(400).json({ valid: false, error: "Data tidak lengkap" });

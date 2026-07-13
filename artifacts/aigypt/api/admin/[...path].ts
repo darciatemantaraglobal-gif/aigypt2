@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
 import { verifyAdmin, signAdminToken, setAdminCookie, clearAdminCookie } from "../_lib/adminAuth.js";
-import { getSegments, getBody } from "../_lib/route.js";
+import { getSegments, getBody, getQuery } from "../_lib/route.js";
 
 function generateCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -14,6 +14,32 @@ function generateOrderId(): string {
   const ts = Date.now().toString().slice(-8);
   const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
   return `AIGYPT-${ts}-${rand}`;
+}
+
+/**
+ * Tabel `members` tidak pernah ditulis oleh kode manapun sebelumnya:
+ * hanya dibaca oleh dashboard-stats dan halaman Member, sehingga selalu
+ * kosong. Setiap kali order dilunasi dan kode akses terbit, member harus
+ * ikut tercatat di sini.
+ */
+async function upsertMember(args: {
+  email: string; name: string; accessCode: string;
+  memberType: string; batchNumber: number;
+}) {
+  await sql`
+    INSERT INTO members (email, name, access_code, member_type, batch_number)
+    VALUES (${args.email}, ${args.name}, ${args.accessCode}, ${args.memberType}, ${args.batchNumber})
+    ON CONFLICT (email) DO UPDATE SET
+      name = EXCLUDED.name,
+      access_code = EXCLUDED.access_code,
+      member_type = EXCLUDED.member_type,
+      batch_number = EXCLUDED.batch_number
+  `;
+  await sql`
+    UPDATE access_codes
+    SET is_used = true, used_by_email = ${args.email}, used_at = NOW()
+    WHERE code = ${args.accessCode}
+  `;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -52,9 +78,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const [totalMembers, unusedCodes, pendingOrders, paidOrders, recentOrders] = await Promise.all([
         sql`SELECT COUNT(*)::int AS c FROM members`,
         sql`SELECT COUNT(*)::int AS c FROM access_codes WHERE is_used = false`,
-        sql`SELECT COUNT(*)::int AS c FROM orders WHERE status = 'pending_qris'`,
+        sql`SELECT COUNT(*)::int AS c FROM orders WHERE status IN ('pending', 'pending_qris')`,
         sql`SELECT COUNT(*)::int AS c FROM orders WHERE status = 'paid'`,
-        sql`SELECT order_id, name, email, member_type, status, amount, created_at FROM orders ORDER BY created_at DESC LIMIT 5`,
+        sql`SELECT order_id, name, email, member_type, status, COALESCE(final_amount, amount) AS amount, created_at FROM orders ORDER BY created_at DESC LIMIT 5`,
       ]);
       return res.json({
         totalMembers: totalMembers[0]?.["c"] ?? 0,
@@ -70,7 +96,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ---- CODES: GENERATE ----
     if (section === "codes" && sub1 === "generate" && req.method === "POST") {
-      const { type, batchNumber, count: countReq } = req.body as { type?: string; batchNumber?: number; count?: number };
+      const { type, batchNumber, count: countReq } = getBody<{ type?: string; batchNumber?: number; count?: number }>(req);
       if (!type || !["mandiri", "kelas"].includes(type)) return res.status(400).json({ error: "Tipe harus 'mandiri' atau 'kelas'" });
       const n = Number(countReq);
       if (!n || n < 1 || n > 50) return res.status(400).json({ error: "Jumlah kode harus antara 1 dan 50" });
@@ -93,7 +119,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ---- CODES: LIST ----
     if (section === "codes" && sub1 === "list" && req.method === "GET") {
-      const { type, batch, status, search, page = "1" } = req.query as Record<string, string>;
+      const { type, batch, status, search, page = "1" } = getQuery(req);
       const pageNum = Math.max(1, parseInt(page, 10) || 1);
       const pageSize = 20;
       const offset = (pageNum - 1) * pageSize;
@@ -137,7 +163,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ---- MEMBERS: LIST ----
     if (section === "members" && sub1 === "list" && req.method === "GET") {
-      const { search, type, batch } = req.query as Record<string, string>;
+      const { search, type, batch } = getQuery(req);
       const whereClauses: string[] = [];
       const vals: (string | number)[] = [];
       let idx = 1;
@@ -204,7 +230,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ---- ORDERS: LIST ----
     if (section === "orders" && sub1 === "list" && req.method === "GET") {
-      const { status, type } = req.query as Record<string, string>;
+      const { status, type } = getQuery(req);
       const whereClauses: string[] = [];
       const vals: string[] = [];
       let idx = 1;
@@ -224,10 +250,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // ---- ORDERS: CREATE ----
     if (section === "orders" && sub1 === "create" && req.method === "POST") {
-      const { name, email, phone, memberType, batchNumber, amount, status } = req.body as {
+      const { name, email, phone, memberType, batchNumber, amount, status } = getBody<{
         name?: string; email?: string; phone?: string; memberType?: string;
         batchNumber?: number; amount?: number; status?: string;
-      };
+      }>(req);
       if (!name || !email || !phone || !memberType || !amount) return res.status(400).json({ error: "Semua field wajib diisi" });
       if (!["mandiri", "kelas"].includes(memberType)) return res.status(400).json({ error: "Tipe member tidak valid" });
 
@@ -246,13 +272,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses unik" });
         await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
         await sql`
-          INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, status, access_code, paid_at)
-          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, 'paid', ${accessCode}, NOW())
+          INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
+          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'paid', ${accessCode}, NOW())
         `;
+        await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch });
       } else {
         await sql`
-          INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, status)
-          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, 'pending')
+          INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status)
+          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'pending_qris')
         `;
       }
       return res.json({ success: true, orderId, accessCode });
@@ -276,6 +303,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${order["member_type"]}, ${order["batch_number"]}, false)`;
       await sql`UPDATE orders SET status = 'paid', access_code = ${accessCode}, paid_at = NOW() WHERE order_id = ${orderId}`;
+      await upsertMember({
+        email: order["email"] as string,
+        name: order["name"] as string,
+        accessCode,
+        memberType: order["member_type"] as string,
+        batchNumber: (order["batch_number"] as number) ?? 3,
+      });
       return res.json({ success: true, accessCode });
     }
 

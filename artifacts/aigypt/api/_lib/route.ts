@@ -46,3 +46,24 @@ export function getBody<T = Record<string, unknown>>(req: VercelRequest): T {
   }
   return b as T;
 }
+
+/**
+ * Ambil query string. req.query tidak selalu terisi di runtime Vercel
+ * (masalah yang sama seperti req.query["path"]), sehingga semua filter,
+ * pencarian, dan paginasi di admin panel diam-diam tidak berfungsi.
+ */
+export function getQuery(req: VercelRequest): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(req.query ?? {})) {
+    if (k === "path") continue;
+    if (typeof v === "string") out[k] = v;
+    else if (Array.isArray(v) && v[0] != null) out[k] = String(v[0]);
+  }
+  const qs = (req.url ?? "").split("?")[1];
+  if (qs) {
+    for (const [k, v] of new URLSearchParams(qs).entries()) {
+      if (k !== "path" && !(k in out)) out[k] = v;
+    }
+  }
+  return out;
+}

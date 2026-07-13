@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
+import { getBody } from "../_lib/route.js";
 
 interface Coupon {
   code: string;
@@ -55,9 +56,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { name, email, phone, memberType, couponCode } = req.body as {
+  const { name, email, phone, memberType, couponCode } = getBody<{
     name?: string; email?: string; phone?: string; memberType?: string; couponCode?: string;
-  };
+  }>(req);
 
   if (!name || !email || !phone || !memberType) {
     return res.status(400).json({ error: "Semua field wajib diisi" });
