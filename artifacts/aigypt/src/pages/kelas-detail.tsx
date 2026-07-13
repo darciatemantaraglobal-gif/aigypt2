@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useGetProgress, getGetProgressQueryKey } from "@workspace/api-client-react";
 import { Navbar } from "@/components/Navbar";
 import { kelasList, type KelasItem } from "@/lib/classesData";
+import { materiByKelas } from "@/lib/materiContent";
 
 // ─── Session data for each kelas ─────────────────────────────────────────────
 
@@ -13,9 +14,9 @@ const sessionsByKelas: Record<string, Array<{
   num: string;
   title: string;
   essence: string;
-  mastery: string[];
-  tools: string[];
-  mission: string;
+  mastery?: string[];
+  tools?: string[];
+  mission?: string;
 }>> = {
   "fundamental-ai": [
     {
@@ -277,35 +278,41 @@ function SessionRow({
             >
               <div className="px-5 sm:px-8 pb-6 pl-[calc(1.25rem+clamp(1.75rem,4vw,2.75rem)+1.25rem)]">
                 {/* Mastery */}
-                <div className="mb-4">
-                  <p className="font-mono text-[10px] tracking-widest mb-3" style={{ color: "#52525B", letterSpacing: "0.12em" }}>
-                    YANG AKAN KAMU KUASAI
-                  </p>
-                  <ul className="space-y-2">
-                    {session.mastery.map((item, j) => (
-                      <li key={j} className="flex items-start gap-2.5 text-xs" style={{ color: "#A1A1AA" }}>
-                        <span className="flex-shrink-0 font-mono text-xs mt-0.5" style={{ color: "rgba(124,58,237,0.5)" }}>—</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {session.mastery && session.mastery.length > 0 && (
+                  <div className="mb-4">
+                    <p className="font-mono text-[10px] tracking-widest mb-3" style={{ color: "#52525B", letterSpacing: "0.12em" }}>
+                      YANG AKAN KAMU KUASAI
+                    </p>
+                    <ul className="space-y-2">
+                      {session.mastery.map((item, j) => (
+                        <li key={j} className="flex items-start gap-2.5 text-xs" style={{ color: "#A1A1AA" }}>
+                          <span className="flex-shrink-0 font-mono text-xs mt-0.5" style={{ color: "rgba(124,58,237,0.5)" }}>—</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* Tools */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {session.tools.map((t) => (
-                    <span key={t} className="font-mono text-[10px] px-2.5 py-1 rounded-full" style={{ border: "1px solid rgba(124,58,237,0.2)", color: "#A855F7", background: "rgba(124,58,237,0.07)" }}>
-                      {t}
-                    </span>
-                  ))}
-                </div>
+                {session.tools && session.tools.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {session.tools.map((t) => (
+                      <span key={t} className="font-mono text-[10px] px-2.5 py-1 rounded-full" style={{ border: "1px solid rgba(124,58,237,0.2)", color: "#A855F7", background: "rgba(124,58,237,0.07)" }}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
                 {/* Mission + CTA */}
                 <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <div className="rounded-lg px-4 py-3 flex-1" style={{ background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.15)" }}>
-                    <p className="font-mono text-[10px] mb-1.5" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>MISI MINGGU INI</p>
-                    <p className="text-xs leading-relaxed" style={{ color: "#D4D4D8" }}>{session.mission}</p>
-                  </div>
+                  {session.mission ? (
+                    <div className="rounded-lg px-4 py-3 flex-1" style={{ background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.15)" }}>
+                      <p className="font-mono text-[10px] mb-1.5" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>MISI MINGGU INI</p>
+                      <p className="text-xs leading-relaxed" style={{ color: "#D4D4D8" }}>{session.mission}</p>
+                    </div>
+                  ) : <div className="flex-1" />}
                   <button
                     className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-display font-semibold text-white transition-all duration-200"
                     style={{ background: "linear-gradient(135deg, #7C3AED, #6D28D9)", boxShadow: "0 0 16px rgba(124,58,237,0.3)" }}
@@ -382,7 +389,21 @@ export default function KelasDetailPage() {
     );
   }
 
-  const sessions = sessionsByKelas[kelasId];
+  // Ambil sessions dari map kaya dulu. Kalau tidak ada, fallback ke
+  // materiByKelas supaya kelas baru yang materinya sudah terdaftar di sana
+  // tidak perlu diupdate manual di sini juga.
+  const sessions =
+    sessionsByKelas[kelasId] ??
+    (materiByKelas[kelasId]?.length
+      ? materiByKelas[kelasId]!.map((s) => ({
+          num: String(s.sesiNumber).padStart(2, "0"),
+          title: s.title,
+          essence: s.subtitle,
+          mastery: [] as string[],
+          tools: [] as string[],
+          mission: "",
+        }))
+      : undefined);
   const isAvailable = kelas.status === "available" || kelas.status === "new";
 
   const completedSet = new Set(progress.filter((p) => p.isCompleted).map((p) => p.sesiNumber));
