@@ -1,0 +1,89 @@
+# PROMPT UNTUK REPLIT AGENT — DATABASE TIDAK BISA DIJANGKAU (ENOTFOUND)
+
+---
+
+Halo. Aplikasi AIGYPT saya sedang bermasalah: semua fitur yang menyentuh database gagal, sementara fitur yang tidak menyentuh database berjalan normal. Saya butuh bantuanmu untuk memastikan diagnosisnya benar, membuat alat diagnostik supaya masalah seperti ini tidak lagi tersembunyi, lalu memandu saya memperbaikinya langkah demi langkah.
+
+Tolong baca semuanya sampai selesai sebelum menyentuh kode.
+
+## Batasan yang tidak boleh dilanggar
+
+Aplikasi ini berjalan di produksi di Vercel dengan database Supabase Postgres, dalam pnpm monorepo, dengan root directory Vercel di `artifacts/aigypt`. Saya TIDAK ingin migrasi ke sistem apapun milik Replit. Jangan memindahkan database ke Replit DB, jangan mengganti autentikasi ke Replit Auth, jangan mengubah struktur folder, dan jangan menyentuh `vercel.json` maupun `pnpm-workspace.yaml`.
+
+Package `artifacts/aigypt/package.json` punya `"type": "module"`, artinya semua serverless function berjalan sebagai ESM. Setiap relative import di dalam folder `api/` WAJIB memakai ekstensi `.js` secara eksplisit, contohnya `import { sql } from "../_lib/db.js"`. Kalau ekstensi ini lupa, seluruh serverless function crash dengan `ERR_MODULE_NOT_FOUND` dan aplikasi mati total. Ini sudah pernah terjadi dan sangat menyakitkan.
+
+Di runtime Vercel pada project ini, `req.query` dan `req.body` tidak selalu terisi. Sudah ada helper di `artifacts/aigypt/api/_lib/route.ts` berisi `getSegments`, `getBody`, dan `getQuery`. Endpoint baru wajib memakai helper itu, jangan mengakses `req.query` atau `req.body` secara langsung.
+
+## Gejalanya
+
+Login admin berhasil, dan itu masuk akal karena endpoint login admin hanya membandingkan password dengan environment variable, tidak menyentuh database sama sekali.
+
+Tapi semua yang butuh database gagal. Dashboard admin tidak menampilkan statistik apapun. Tombol Tambah Member gagal dengan pesan "Gagal menambahkan member". Tombol Selesaikan Sesi di halaman materi tidak menyimpan apapun.
+
+Polanya sangat konsisten: yang tidak butuh database jalan, yang butuh database gagal.
+
+## Error aslinya dari log runtime Vercel
+
+```
+[Admin API] Error: Error: getaddrinfo ENOTFOUND db.bkodyneqxoynzpxpdqme.supabase.co
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)
+    at Object.apply (/vercel/path0/artifacts/aigypt/api/_lib/db.ts:29:13)
+  errno: -3007,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'db.bkodyneqxoynzpxpdqme.supabase.co'
+```
+
+## Dugaan saya, tolong konfirmasi atau bantah
+
+Menurut saya `DATABASE_URL` di environment variable Vercel masih memakai host direct connection Supabase, yaitu `db.bkodyneqxoynzpxpdqme.supabase.co`. Setahu saya host itu hanya punya alamat IPv6, sedangkan runtime serverless Vercel tidak bisa menjangkau IPv6, sehingga DNS-nya gagal resolve dan setiap query mati sebelum berangkat.
+
+Kalau dugaan saya benar, ini bukan bug kode, dan tidak ada baris kode yang bisa memperbaikinya. Yang harus diganti adalah nilai environment variable-nya, ke connection string Session Pooler yang berjalan di IPv4.
+
+Tolong periksa kodebase saya dan konfirmasi apakah dugaan ini benar. Kalau menurutmu penyebabnya bukan itu, katakan dengan jelas dan tunjukkan buktinya di kode. Jangan setuju dengan saya cuma karena saya yang bilang.
+
+## Tugas 1: verifikasi lapisan database saya
+
+Baca `artifacts/aigypt/api/_lib/db.ts`. Pastikan koneksinya dibuat secara lazy, artinya baru terbentuk saat query pertama dijalankan, bukan saat modul di-import. Ini penting: kalau koneksi dibuat di top level dan `DATABASE_URL` bermasalah, seluruh serverless function akan crash saat load dengan `FUNCTION_INVOCATION_FAILED`, sehingga bahkan endpoint yang tidak butuh database ikut mati. Kalau ternyata masih dibuat di top level, perbaiki agar lazy.
+
+Pastikan juga opsi koneksinya cocok untuk Supabase pooler, khususnya `prepare: false`, karena pooler mode transaction tidak mendukung prepared statement. Kalau opsi ini belum ada, tambahkan.
+
+## Tugas 2: buat endpoint diagnostik
+
+Masalah ini sulit dilacak karena error-nya tersembunyi. Saya ingin alat yang langsung memberi tahu apa yang salah.
+
+Buat file baru `artifacts/aigypt/api/healthz.ts`, sebuah serverless function sederhana yang bisa saya buka lewat browser di `https://www.aigypt.id/api/healthz`.
+
+Endpoint ini harus mengembalikan JSON yang berisi informasi berikut. Pertama, daftar environment variable penting dan apakah masing-masing ADA atau TIDAK ADA. Yang perlu diperiksa minimal `DATABASE_URL`, `JWT_SECRET`, `ADMIN_PASSWORD`, `SUPABASE_URL`, dan `SUPABASE_SERVICE_ROLE_KEY`.
+
+PENTING soal keamanan: jangan pernah menampilkan nilai aslinya. Untuk `DATABASE_URL`, tampilkan hanya bagian HOST-nya saja, tanpa username dan tanpa password. Jadi kalau nilainya `postgresql://user:rahasia@db.abc.supabase.co:5432/postgres`, yang ditampilkan cukup `db.abc.supabase.co`. Untuk variable lain, cukup tampilkan true atau false apakah dia terisi. Password dan API key tidak boleh bocor ke response.
+
+Kedua, endpoint ini harus menjalankan satu query paling sederhana ke database, misalnya `SELECT 1`, lalu melaporkan berhasil atau gagal. Kalau gagal, tampilkan pesan error-nya dan kode error-nya, misalnya `ENOTFOUND`.
+
+Ketiga, dan ini yang paling berguna: tambahkan pemeriksaan cerdas terhadap host `DATABASE_URL`. Kalau host-nya mengandung `pooler.supabase.com`, laporkan bahwa konfigurasinya sudah benar. Kalau host-nya berpola `db.<sesuatu>.supabase.co`, laporkan dengan jelas bahwa ini adalah direct connection yang tidak bisa dijangkau Vercel, dan sertakan instruksi singkat cara memperbaikinya. Buat pesannya dalam bahasa Indonesia yang mudah dimengerti, karena ini untuk saya baca sendiri, bukan untuk pengguna umum.
+
+Endpoint ini tidak boleh membocorkan apapun yang sensitif, tapi juga tidak perlu autentikasi, supaya saya bisa membukanya cepat lewat browser saat panik.
+
+## Tugas 3: tuliskan panduan langkahnya untuk saya
+
+Buat file `docs/fix-database-url.md` berisi panduan yang bisa saya ikuti sendiri, dalam bahasa Indonesia, sangat konkret, tanpa asumsi bahwa saya hafal letak menu.
+
+Isinya harus mencakup: cara menemukan connection string Session Pooler yang benar di dashboard Supabase, termasuk menu persis yang harus saya klik. Perbedaan jelas antara connection string Direct dan Session Pooler, beserta ciri-ciri visual bagaimana saya bisa membedakannya dalam satu detik. Cara mengganti `DATABASE_URL` di dashboard Vercel, termasuk pengingat bahwa scope Production harus dicentang. Pengingat keras bahwa setelah mengubah environment variable, saya WAJIB melakukan redeploy dengan build cache dimatikan, karena environment variable baru tidak akan aktif sebelum itu. Dan terakhir, cara memverifikasi bahwa perbaikannya berhasil, yaitu dengan membuka endpoint `/api/healthz` yang kamu buat tadi.
+
+Sertakan juga kesalahan-kesalahan umum yang mungkin saya lakukan, misalnya keliru mengganti `SUPABASE_URL` padahal yang harus diganti adalah `DATABASE_URL`, atau lupa mengganti placeholder password di dalam connection string, atau tanpa sadar ikut menyalin spasi di ujung.
+
+## Tugas 4: SQL untuk memverifikasi datanya
+
+Buat file `docs/verifikasi-data.sql` berisi kumpulan query yang bisa saya jalankan di Supabase SQL Editor untuk memastikan datanya sehat setelah koneksi berhasil.
+
+Query yang saya butuhkan: melihat semua member beserta kode akses dan tipe membernya. Melihat semua order beserta statusnya. Melihat kode akses yang belum terpakai. Dan mengecek apakah ada member yang kode aksesnya tidak punya pasangan di tabel `access_codes`, karena ada foreign key di sana.
+
+Perlu kamu tahu, dan ini penting supaya query-nya benar: login member di aplikasi ini membaca dari tabel `orders` dengan `status = 'paid'`, BUKAN dari tabel `members`. Jadi kalau ada member yang terdaftar di tabel `members` tapi tidak punya baris order berstatus paid, dia tidak akan pernah bisa login. Tolong sertakan satu query khusus untuk mendeteksi kasus itu, karena itu jebakan yang sudah memakan waktu saya berjam-jam.
+
+## Yang saya harapkan darimu
+
+Kerjakan tiga tugas di atas, lalu jelaskan dalam bahasa manusia. Yang paling saya butuhkan adalah jawaban jujur atas satu pertanyaan: apakah dugaan saya soal IPv6 dan Session Pooler itu benar, atau ada penyebab lain yang saya lewatkan?
+
+Kalau ternyata benar, katakan terus terang bahwa masalah ini TIDAK bisa diselesaikan lewat kode, dan bahwa saya sendiri yang harus mengganti environment variable di dashboard Vercel. Jangan menghabiskan waktu mencoba memperbaikinya lewat kode, dan jangan menawarkan workaround yang tidak perlu.
+
+Kalau ternyata salah, tunjukkan bukti di kode dan perbaiki penyebab sebenarnya.
