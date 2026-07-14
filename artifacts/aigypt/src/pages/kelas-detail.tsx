@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useGetProgress, getGetProgressQueryKey } from "@workspace/api-client-react";
 import { Navbar } from "@/components/Navbar";
 import { kelasList, type KelasItem } from "@/lib/classesData";
+import sesi1Cover from "@/assets/covers/sesi-1-cover.png";
 
 // ─── Session data for each kelas ─────────────────────────────────────────────
 
@@ -152,6 +153,22 @@ const sessionsByKelas: Record<string, Array<{
 // ─── Cover ────────────────────────────────────────────────────────────────────
 
 function KelasHeroCover({ kelas }: { kelas: KelasItem }) {
+  if (kelas.coverImage) {
+    return (
+      <div className="absolute inset-0 overflow-hidden" style={{ background: "#060608" }}>
+        <img
+          src={kelas.coverImage}
+          alt={kelas.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div
+          className="absolute bottom-0 left-0 right-0"
+          style={{ height: "60%", background: "linear-gradient(to top, #060608 0%, transparent 100%)" }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="absolute inset-0 overflow-hidden" style={{ background: kelas.gradient }}>
       <div
@@ -311,6 +328,11 @@ function SessionRow({
               style={{ overflow: "hidden" }}
             >
               <div className="px-5 sm:px-8 pb-6 pl-[calc(1.25rem+clamp(1.75rem,4vw,2.75rem)+1.25rem)]">
+                {kelasId === "maksimalkan-ai" && sesiNum === 1 && (
+                  <div className="mb-5 rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <img src={sesi1Cover} alt="Materi Sesi 1: AIGYPT" className="w-full h-auto block" />
+                  </div>
+                )}
                 {/* Mastery */}
                 <div className="mb-4">
                   <p className="font-mono text-[10px] tracking-widest mb-3" style={{ color: "#52525B", letterSpacing: "0.12em" }}>

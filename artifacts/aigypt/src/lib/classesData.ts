@@ -11,12 +11,15 @@ export interface KelasItem {
   level: Level;
   status: Status;
   gradient: string;          // CSS gradient string for cover
+  coverImage?: string;       // optional cover image, overrides gradient art
   accentColor: string;       // dominant accent color
   iconPath: string;          // inline SVG path data
   personas: string[];
   route?: string;
   whatYouLearn: string[];
 }
+
+import fundamentalCover from "@/assets/covers/fundamental-cover.png";
 
 export const kelasList: KelasItem[] = [
   {
@@ -31,6 +34,7 @@ export const kelasList: KelasItem[] = [
     status: "new",
     gradient:
       "linear-gradient(135deg, #060608 0%, #14082e 40%, #2d1060 75%, #3b0f70 100%)",
+    coverImage: fundamentalCover,
     accentColor: "#A855F7",
     iconPath:
       "M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25",
