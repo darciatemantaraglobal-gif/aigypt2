@@ -2,6 +2,11 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
 import { verifyAdmin, signAdminToken, setAdminCookie, clearAdminCookie } from "../_lib/adminAuth.js";
 import { getSegments, getBody, getQuery } from "../_lib/route.js";
+import type postgres from "postgres";
+
+// Type alias yang menerima baik koneksi biasa maupun objek transaksi (sql.begin).
+// Keduanya (Sql dan TransactionSql) extend ISql<{}>, sehingga ini adalah tipe paling tepat.
+type Executor = postgres.ISql<{}>;
 
 function generateCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -47,7 +52,7 @@ async function generateUniqueUsername(seed: string): Promise<string> {
 async function upsertMember(args: {
   email: string; name: string; accessCode: string;
   memberType: string; batchNumber: number;
-}, tx: typeof sql = sql) {
+}, tx: Executor = sql) {
   await tx`
     INSERT INTO members (email, name, access_code, member_type, batch_number)
     VALUES (${args.email}, ${args.name}, ${args.accessCode}, ${args.memberType}, ${args.batchNumber})
@@ -464,13 +469,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           if (existing.length === 0) { accessCode = candidate; break; }
         }
         if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses unik" });
+        // Salin ke konstanta agar TypeScript tidak kehilangan penyempitan tipe di dalam closure sql.begin
+        const code: string = accessCode;
         await sql.begin(async (tx) => {
-          await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
+          await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${code}, ${memberType}, ${batch}, false)`;
           await tx`
             INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
-            VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'paid', ${accessCode}, NOW())
+            VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'paid', ${code}, NOW())
           `;
-          await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch }, tx);
+          await upsertMember({ email: normalizedEmail, name, accessCode: code, memberType, batchNumber: batch }, tx);
         });
         await trySetUsername(normalizedEmail);
       } else {
@@ -497,6 +504,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (existingCode) {
         // Order sudah punya kode akses (dari flow lain) → pakai kode itu, jangan generate baru.
         await sql.begin(async (tx) => {
+          // Pastikan kode ada di tabel access_codes (mungkin diisi manual lewat SQL Editor)
+          // agar FK dari members.access_code tidak gagal. ON CONFLICT DO NOTHING = idempoten.
+          await tx`
+            INSERT INTO access_codes (code, type, batch_number, is_used)
+            VALUES (${existingCode}, ${order["member_type"]}, ${order["batch_number"]}, false)
+            ON CONFLICT (code) DO NOTHING
+          `;
           await tx`UPDATE orders SET status = 'paid', paid_at = NOW() WHERE order_id = ${orderId}`;
           await upsertMember({
             email: order["email"] as string,
