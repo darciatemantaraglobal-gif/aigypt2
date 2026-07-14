@@ -6,7 +6,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useGetProgress, getGetProgressQueryKey } from "@workspace/api-client-react";
 import { Navbar } from "@/components/Navbar";
 import { kelasList, type KelasItem } from "@/lib/classesData";
-import { materiByKelas } from "@/lib/materiContent";
 
 // ─── Session data for each kelas ─────────────────────────────────────────────
 
@@ -14,23 +13,58 @@ const sessionsByKelas: Record<string, Array<{
   num: string;
   title: string;
   essence: string;
-  mastery?: string[];
-  tools?: string[];
-  mission?: string;
+  mastery: string[];
+  tools: string[];
+  mission: string;
 }>> = {
   "fundamental-ai": [
     {
       num: "01",
-      title: "Fundamental AI: Dari Nol Sampai Paham",
-      essence: "Sepuluh menit untuk mengerti AI itu apa, bisa apa, dan cara pakainya biar hidupmu beneran kebantu.",
+      title: "Mesin yang Menebak, Bukan Mesin yang Tahu",
+      essence: "Satu ide inti yang mengubah semua cara kamu memakai AI.",
       mastery: [
-        "Memahami apa itu AI tanpa jargon teknis, dan kenapa dia bisa salah (halusinasi)",
-        "Peta lengkap AI berdasarkan masalahmu: nulis, riset, visual, suara/video, coding, produktivitas",
-        "Formula 5 bahan prompt (Peran, Konteks, Tugas, Format, Batasan) yang langsung menaikkan kualitas hasil",
-        "Batas etika pakai AI di kehidupan sehari-hari dan dunia profesional",
+        "Memahami AI sebagai mesin pelanjut pola, bukan mesin pencari jawaban",
+        "Menurunkan enam aturan praktis dari satu fakta itu, bukan menghafalnya terpisah",
+        "Merasakan kecepatan lompatan AI lewat garis waktu 1950 sampai sekarang",
       ],
-      tools: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"],
-      mission: "Pilih satu masalah nyata mingguan ini, tulis prompt pakai formula 5 bahan, dan rasakan bedanya.",
+      tools: ["ChatGPT", "Claude", "Gemini"],
+      mission: "Uji pemahamanmu lewat kuis interaktif di akhir sesi.",
+    },
+    {
+      num: "02",
+      title: "Peta: Tool Mana untuk Masalah Apa",
+      essence: "Berhenti memakai satu AI untuk semua hal.",
+      mastery: [
+        "Memakai kerangka dua sumbu: risiko kalau salah, dan nilai di bentuk serta kecepatan",
+        "Mengenali peta AI dalam enam kategori kemampuan",
+        "Mencocokkan masalah nyata dengan tool yang tepat, termasuk kapan tidak memakai AI",
+      ],
+      tools: ["Perplexity", "NotebookLM", "Canva AI", "CapCut AI"],
+      mission: "Cocokkan tiga situasi nyata dengan tool-nya lewat kuis interaktif.",
+    },
+    {
+      num: "03",
+      title: "Seni Bertanya",
+      essence: "Dua orang, AI yang sama, hasil beda jauh. Ini penyebabnya.",
+      mastery: [
+        "Memahami prompt sebagai cara mempersempit ruang pola",
+        "Menerapkan formula lima bahan: Peran, Konteks, Tugas, Format, Batasan",
+        "Mengenali halusinasi dan melindungi diri, khususnya untuk kajian keislaman",
+      ],
+      tools: ["Claude", "ChatGPT", "Perplexity"],
+      mission: "Latih insting curigamu terhadap kitab dan hadits yang dikarang AI.",
+    },
+    {
+      num: "04",
+      title: "Etika & Bekal Pulang",
+      essence: "Garis yang tidak boleh dilewati, dan satu langkah untuk malam ini.",
+      mastery: [
+        "Mengenali enam prinsip etika pemakaian AI sehari-hari dan profesional",
+        "Membedakan pemakaian yang sehat dan yang merugikan diri sendiri",
+        "Membawa pulang tiga bekal dan satu langkah nyata",
+      ],
+      tools: ["Semua tool"],
+      mission: "Ambil satu masalah nyata malam ini, susun prompt lima bahan, rasakan bedanya.",
     },
   ],
   "maksimalkan-ai": [
@@ -278,41 +312,35 @@ function SessionRow({
             >
               <div className="px-5 sm:px-8 pb-6 pl-[calc(1.25rem+clamp(1.75rem,4vw,2.75rem)+1.25rem)]">
                 {/* Mastery */}
-                {session.mastery && session.mastery.length > 0 && (
-                  <div className="mb-4">
-                    <p className="font-mono text-[10px] tracking-widest mb-3" style={{ color: "#52525B", letterSpacing: "0.12em" }}>
-                      YANG AKAN KAMU KUASAI
-                    </p>
-                    <ul className="space-y-2">
-                      {session.mastery.map((item, j) => (
-                        <li key={j} className="flex items-start gap-2.5 text-xs" style={{ color: "#A1A1AA" }}>
-                          <span className="flex-shrink-0 font-mono text-xs mt-0.5" style={{ color: "rgba(124,58,237,0.5)" }}>—</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <div className="mb-4">
+                  <p className="font-mono text-[10px] tracking-widest mb-3" style={{ color: "#52525B", letterSpacing: "0.12em" }}>
+                    YANG AKAN KAMU KUASAI
+                  </p>
+                  <ul className="space-y-2">
+                    {session.mastery.map((item, j) => (
+                      <li key={j} className="flex items-start gap-2.5 text-xs" style={{ color: "#A1A1AA" }}>
+                        <span className="flex-shrink-0 font-mono text-xs mt-0.5" style={{ color: "rgba(124,58,237,0.5)" }}>—</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 {/* Tools */}
-                {session.tools && session.tools.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {session.tools.map((t) => (
-                      <span key={t} className="font-mono text-[10px] px-2.5 py-1 rounded-full" style={{ border: "1px solid rgba(124,58,237,0.2)", color: "#A855F7", background: "rgba(124,58,237,0.07)" }}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {session.tools.map((t) => (
+                    <span key={t} className="font-mono text-[10px] px-2.5 py-1 rounded-full" style={{ border: "1px solid rgba(124,58,237,0.2)", color: "#A855F7", background: "rgba(124,58,237,0.07)" }}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
 
                 {/* Mission + CTA */}
                 <div className="flex items-start justify-between gap-4 flex-wrap">
-                  {session.mission ? (
-                    <div className="rounded-lg px-4 py-3 flex-1" style={{ background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.15)" }}>
-                      <p className="font-mono text-[10px] mb-1.5" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>MISI MINGGU INI</p>
-                      <p className="text-xs leading-relaxed" style={{ color: "#D4D4D8" }}>{session.mission}</p>
-                    </div>
-                  ) : <div className="flex-1" />}
+                  <div className="rounded-lg px-4 py-3 flex-1" style={{ background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.15)" }}>
+                    <p className="font-mono text-[10px] mb-1.5" style={{ color: "#7C3AED", letterSpacing: "0.1em" }}>MISI MINGGU INI</p>
+                    <p className="text-xs leading-relaxed" style={{ color: "#D4D4D8" }}>{session.mission}</p>
+                  </div>
                   <button
                     className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-display font-semibold text-white transition-all duration-200"
                     style={{ background: "linear-gradient(135deg, #7C3AED, #6D28D9)", boxShadow: "0 0 16px rgba(124,58,237,0.3)" }}
@@ -389,21 +417,7 @@ export default function KelasDetailPage() {
     );
   }
 
-  // Ambil sessions dari map kaya dulu. Kalau tidak ada, fallback ke
-  // materiByKelas supaya kelas baru yang materinya sudah terdaftar di sana
-  // tidak perlu diupdate manual di sini juga.
-  const sessions =
-    sessionsByKelas[kelasId] ??
-    (materiByKelas[kelasId]?.length
-      ? materiByKelas[kelasId]!.map((s) => ({
-          num: String(s.sesiNumber).padStart(2, "0"),
-          title: s.title,
-          essence: s.subtitle,
-          mastery: [] as string[],
-          tools: [] as string[],
-          mission: "",
-        }))
-      : undefined);
+  const sessions = sessionsByKelas[kelasId];
   const isAvailable = kelas.status === "available" || kelas.status === "new";
 
   const completedSet = new Set(progress.filter((p) => p.isCompleted).map((p) => p.sesiNumber));

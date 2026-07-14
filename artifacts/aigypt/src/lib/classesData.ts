@@ -25,7 +25,7 @@ export const kelasList: KelasItem[] = [
     tagline: "Sepuluh menit yang mengubah cara kamu kerja.",
     description:
       "Sesi pembuka AIGYPT. Kenali AI dari akarnya: apa itu AI, sejarahnya, peta lengkap tool berdasarkan masalahmu, cara bertanya yang benar, dan batas etikanya. Dilengkapi kuis interaktif.",
-    sesiCount: 1,
+    sesiCount: 4,
     duration: "10 menit",
     level: "Pemula",
     status: "new",

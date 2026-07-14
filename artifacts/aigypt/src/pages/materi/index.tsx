@@ -9,7 +9,7 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { materiByKelas, type MateriStep, type SesiMateri } from "@/lib/materiContent";
+import { materiByKelas, type MateriStep, type SesiMateri, type QuizItem } from "@/lib/materiContent";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -107,6 +107,99 @@ function ConceptSlide({ step }: { step: MateriStep }) {
           <p className="text-[#E2E8F0] text-sm leading-relaxed">{step.content}</p>
         )}
 
+        {/* Ide besar — jangkar visual sesi */}
+        {step.bigIdea && (
+          <div className="relative rounded-2xl border border-[#7C3AED]/40 bg-gradient-to-br from-[#7C3AED]/20 via-[#12121A] to-[#0A0A0F] px-6 py-7 overflow-hidden">
+            <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-[#7C3AED]/20 blur-3xl" />
+            <p className="relative font-display font-semibold text-xl sm:text-2xl text-white leading-snug">
+              {step.bigIdea.text}
+            </p>
+            {step.bigIdea.caption && (
+              <p className="relative mt-3 text-xs font-mono uppercase tracking-wide text-[#A855F7]">
+                {step.bigIdea.caption}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Timeline */}
+        {step.timeline && step.timeline.length > 0 && (
+          <div className="relative pl-6">
+            <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-[#7C3AED] via-[#7C3AED]/40 to-transparent" />
+            <div className="space-y-4">
+              {step.timeline.map((t, i) => (
+                <div key={i} className="relative">
+                  <span className="absolute -left-6 top-1 w-[15px] h-[15px] rounded-full border-2 border-[#7C3AED] bg-[#0A0A0F]" />
+                  <p className="font-mono text-[11px] font-semibold text-[#A855F7] tracking-wide">
+                    {t.year}
+                  </p>
+                  <p className="text-sm text-white leading-snug mt-0.5">{t.event}</p>
+                  {t.example && (
+                    <p className="text-xs text-[#71717A] mt-0.5">{t.example}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Matriks 2x2 */}
+        {step.matrix && (
+          <div>
+            <div className="flex items-center justify-between mb-2 px-1">
+              <span className="text-[10px] font-mono uppercase tracking-wide text-[#71717A]">
+                {step.matrix.yLabel}
+              </span>
+              <span className="text-[10px] font-mono uppercase tracking-wide text-[#71717A]">
+                {step.matrix.xLabel}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {step.matrix.quadrants.map((q, i) => {
+                const accent = q.accent || "purple";
+                return (
+                  <div
+                    key={i}
+                    className={`rounded-xl border p-4 ${cardColors[accent] || cardColors.purple}`}
+                  >
+                    <p className="text-[10px] font-mono uppercase tracking-wide text-[#71717A] mb-1.5">
+                      {q.title}
+                    </p>
+                    <p className={`text-sm font-semibold mb-2.5 leading-snug ${titleColors[accent] || titleColors.purple}`}>
+                      {q.verdict}
+                    </p>
+                    <ul className="space-y-1.5">
+                      {q.items.map((item, j) => (
+                        <li key={j} className="text-xs text-[#94A3B8] leading-snug">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Rantai langkah */}
+        {step.flow && step.flow.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+            {step.flow.map((f, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-[#7C3AED]/25 bg-[#12121A] px-3 py-3.5"
+              >
+                <span className="w-5 h-5 rounded-md bg-[#7C3AED]/20 border border-[#7C3AED]/40 text-[10px] font-mono text-[#A855F7] flex items-center justify-center mb-2">
+                  {i + 1}
+                </span>
+                <p className="text-xs font-semibold text-white leading-snug">{f.label}</p>
+                <p className="text-[11px] text-[#71717A] leading-snug mt-1">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Quote */}
         {step.quote && (
           <div className="rounded-xl border border-[#7C3AED]/40 bg-[#7C3AED]/10 p-4">
@@ -191,7 +284,86 @@ function ConceptSlide({ step }: { step: MateriStep }) {
             </table>
           </div>
         )}
+
+        {/* Quiz interaktif */}
+        {step.quiz && step.quiz.length > 0 && <QuizBlock items={step.quiz} />}
+
+        {/* Note */}
+        {step.note && (
+          <div className="flex items-start gap-2.5 rounded-lg border border-[#1E1E2E] bg-[#12121A] px-4 py-3">
+            <span className="flex-shrink-0 mt-0.5 text-[#A855F7] text-xs font-mono">i</span>
+            <p className="text-xs text-[#94A3B8] leading-relaxed">{step.note}</p>
+          </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+// ─── Quiz interaktif ──────────────────────────────────────────────────────────
+
+function QuizBlock({ items }: { items: QuizItem[] }) {
+  const [picked, setPicked] = useState<Record<number, number>>({});
+
+  return (
+    <div className="space-y-4">
+      {items.map((q, qi) => {
+        const choice = picked[qi];
+        const answered = choice !== undefined;
+
+        return (
+          <div key={qi} className="rounded-xl border border-[#1E1E2E] bg-[#0A0A0F] p-4">
+            <div className="flex items-start gap-2.5 mb-3">
+              <span className="flex-shrink-0 w-5 h-5 rounded-md bg-[#7C3AED]/20 border border-[#7C3AED]/40 flex items-center justify-center text-[10px] font-mono text-[#A855F7]">
+                {qi + 1}
+              </span>
+              <p className="text-sm text-white font-medium leading-snug">{q.question}</p>
+            </div>
+
+            <div className="space-y-2">
+              {q.options.map((opt, oi) => {
+                const isCorrect = oi === q.answerIndex;
+                const isPicked = choice === oi;
+
+                let cls = "border-[#1E1E2E] bg-[#12121A] text-[#94A3B8] hover:border-[#7C3AED]/50 hover:text-white";
+                if (answered && isCorrect) {
+                  cls = "border-green-500/50 bg-green-500/10 text-green-300";
+                } else if (answered && isPicked && !isCorrect) {
+                  cls = "border-red-500/50 bg-red-500/10 text-red-300";
+                } else if (answered) {
+                  cls = "border-[#1E1E2E] bg-[#0A0A0F] text-[#52525B]";
+                }
+
+                return (
+                  <button
+                    key={oi}
+                    type="button"
+                    disabled={answered}
+                    onClick={() => setPicked((p) => ({ ...p, [qi]: oi }))}
+                    className={`w-full text-left rounded-lg border px-3.5 py-2.5 text-xs leading-snug transition-all duration-150 ${cls} ${answered ? "cursor-default" : "cursor-pointer"}`}
+                  >
+                    <span className="font-mono text-[10px] mr-2 opacity-60">
+                      {String.fromCharCode(65 + oi)}
+                    </span>
+                    {opt}
+                    {answered && isCorrect && <span className="float-right">✓</span>}
+                    {answered && isPicked && !isCorrect && <span className="float-right">✕</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {answered && (
+              <div className="mt-3 rounded-lg border border-[#7C3AED]/30 bg-[#7C3AED]/10 px-3.5 py-2.5">
+                <p className="text-[10px] font-mono uppercase tracking-wide text-[#A855F7] mb-1">
+                  {choice === q.answerIndex ? "Tepat" : "Belum tepat"}
+                </p>
+                <p className="text-xs text-[#E2E8F0] leading-relaxed">{q.why}</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -333,16 +505,14 @@ function SkipModal({
 
 function CompletionCelebration({
   sesiNum,
-  totalSesi,
   onNext,
   onDashboard,
 }: {
   sesiNum: number;
-  totalSesi: number;
   onNext: () => void;
   onDashboard: () => void;
 }) {
-  const hasNext = sesiNum < totalSesi;
+  const hasNext = sesiNum < 6; // max 6 sesi for current content
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <motion.div
@@ -368,9 +538,7 @@ function CompletionCelebration({
         <p className="text-sm text-[#94A3B8] mb-7 leading-relaxed">
           {hasNext
             ? `Keren! Kamu sudah selesaikan Sesi ${sesiNum}. Lanjut ke Sesi ${sesiNum + 1}?`
-            : totalSesi > 1
-            ? `Luar biasa! Kamu sudah menyelesaikan semua ${totalSesi} sesi kelas ini. Kamu sekarang adalah builder AI yang sesungguhnya.`
-            : "Selamat! Kamu sudah menyelesaikan sesi ini. Waktunya bawa ilmunya ke praktik nyata."}
+            : "Luar biasa! Kamu sudah menyelesaikan semua 6 sesi AIGYPT. Kamu sekarang adalah builder AI yang sesungguhnya."}
         </p>
 
         <div className="flex flex-col gap-3">
@@ -969,7 +1137,6 @@ export default function MateriPage() {
         {showCompletion && (
           <CompletionCelebration
             sesiNum={sesiNum}
-            totalSesi={totalSesi}
             onNext={() => {
               setShowCompletion(false);
               setLocation(`/kelas/${kelasId}/materi/sesi-${sesiNum + 1}`);

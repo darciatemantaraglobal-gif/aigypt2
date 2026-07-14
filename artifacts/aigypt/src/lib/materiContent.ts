@@ -17,6 +17,47 @@ export interface CardItem {
   accent?: "green" | "red" | "purple" | "blue";
 }
 
+// ─── Blok visual (semua opsional, tidak mengubah step lama) ───────────
+
+/** Satu kalimat besar yang jadi jangkar sesi. */
+export interface BigIdea {
+  text: string;
+  caption?: string;
+}
+
+/** Garis waktu visual, pengganti tabel sejarah yang kaku. */
+export interface TimelineItem {
+  year: string;
+  event: string;
+  example?: string;
+}
+
+/** Matriks 2x2 dengan label sumbu. */
+export interface MatrixData {
+  xLabel: string;
+  yLabel: string;
+  quadrants: Array<{
+    title: string;
+    verdict: string;
+    items: string[];
+    accent?: "green" | "red" | "purple" | "blue";
+  }>;
+}
+
+/** Rantai langkah bernomor, dibaca kiri ke kanan. */
+export interface FlowStep {
+  label: string;
+  desc: string;
+}
+
+/** Kuis interaktif: peserta klik, langsung dapat umpan balik. */
+export interface QuizItem {
+  question: string;
+  options: string[];
+  answerIndex: number;
+  why: string;
+}
+
 export interface MateriStep {
   id: string;
   type: StepType;
@@ -28,6 +69,11 @@ export interface MateriStep {
   prompts?: PromptItem[];
   table?: TableData;
   cards?: CardItem[];
+  bigIdea?: BigIdea;
+  timeline?: TimelineItem[];
+  matrix?: MatrixData;
+  flow?: FlowStep[];
+  quiz?: QuizItem[];
   note?: string;
   isCompletion?: boolean;
 }

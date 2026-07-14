@@ -1,590 +1,455 @@
 import type { SesiMateri } from "./materiContent";
 
 // ═══════════════════════════════════════════════════════════════════
-// FUNDAMENTAL AI — Sesi pembuka AIGYPT
-// Durasi penyampaian: ~10 menit (22 slide, rata-rata 25-30 detik/slide)
-// Standalone: tidak mengubah materiContent.ts yang sudah ada
+// FUNDAMENTAL AI — 4 sesi pendek, total ~12 menit
+//
+// Dipecah supaya peserta punya titik napas dan rasa progres, bukan
+// maraton satu sesi panjang. Tiap sesi ditutup kuis interaktif yang
+// bisa diklik, jadi peserta menguji diri, bukan sekadar membaca.
+//
+// Tulang punggung: satu ide (AI = mesin pelanjut pola), lalu semua
+// aturan praktis diturunkan dari situ.
 // ═══════════════════════════════════════════════════════════════════
 
 export const fundamentalAIMateri: SesiMateri[] = [
+  // ═══════════════════════════════════════════════════════════════
+  // SESI 1 — Mesin yang Menebak, Bukan Mesin yang Tahu  (~4 menit)
+  // ═══════════════════════════════════════════════════════════════
   {
     sesiNumber: 1,
-    title: "Fundamental AI: Dari Nol Sampai Paham",
-    subtitle:
-      "Sepuluh menit untuk ngerti AI itu apa, bisa apa, dan gimana cara pakainya biar hidup lo beneran kebantu",
+    title: "Mesin yang Menebak, Bukan Mesin yang Tahu",
+    subtitle: "Satu ide yang akan mengubah semua cara kamu memakai AI",
     steps: [
-      // ─── PEMBUKA ───────────────────────────────────────────────
       {
-        id: "f-1",
+        id: "fa1-1",
         type: "concept",
-        title: "Sebelum Mulai, Satu Fakta Dulu",
-        subtitle: "Kenapa sesi ini penting banget buat lo",
+        title: "Bukan Soal Pintar",
+        subtitle: "Empat menit pertama, dan kamu akan melihat AI dengan mata berbeda",
         content:
-          "Sekarang ini ada dua jenis orang. Yang pertama masih ngerjain semuanya manual, begadang tiga malam buat satu makalah. Yang kedua ngerjain hal yang sama dalam dua jam, terus tidur nyenyak. Bedanya bukan kepintaran. Bedanya cuma satu: yang kedua tahu cara pakai AI dengan benar.",
+          "Ada dua mahasiswa. Sama pintarnya. Yang satu begadang tiga malam buat satu makalah. Yang satu selesai dalam dua jam, terus tidur nyenyak. Bedanya bukan otak. Bedanya satu hal kecil: yang kedua ngerti AI itu benda apa sebenarnya.",
         quote:
-          "AI nggak akan gantiin kamu. Tapi orang yang bisa pakai AI, pelan-pelan bakal ninggalin kamu.",
-        bullets: [
-          "Sepuluh menit ke depan, kamu bakal ngerti AI itu sebenernya apa",
-          "Kamu bakal punya peta lengkap: masalah apa, pakai AI yang mana",
-          "Kamu bakal tahu cara ngomong sama AI biar hasilnya bagus",
-          "Kamu bakal tahu batasan etikanya, biar nggak kebablasan",
-        ],
+          "Banyak orang pakai AI berbulan-bulan tanpa pernah tahu benda apa yang sedang mereka ajak bicara. Itu sebabnya hasilnya biasa saja.",
       },
-
-      // ─── APA ITU AI ────────────────────────────────────────────
       {
-        id: "f-2",
+        id: "fa1-2",
         type: "concept",
-        title: "AI Itu Apa Sih, Sebenernya?",
-        subtitle: "Penjelasan tanpa jargon, tanpa bikin pusing",
+        title: "Satu Kalimat yang Menjelaskan Segalanya",
+        subtitle: "Kalau kamu cuma ingat satu hal dari kelas ini, ingat yang ini",
+        bigIdea: {
+          text: "AI itu mesin pelanjut pola. Bukan mesin pencari jawaban.",
+          caption: "Dari sini semua aturan lahir",
+        },
         content:
-          "Lupakan dulu bayangan robot dari film. AI yang kita pakai sehari-hari itu jauh lebih sederhana konsepnya. Bayangin ada satu santri yang udah baca hampir semua buku yang pernah ditulis manusia. Semua kitab, semua jurnal, semua artikel, semua tutorial. Dia hafal polanya. Terus dia duduk di depan kamu dan bilang, silakan tanya apa aja.",
+          "Bayangin ada santri yang sudah membaca hampir semua yang pernah ditulis manusia. Semua kitab, semua jurnal, semua artikel. Tapi saat menjawab, dia tidak boleh membuka satu kitab pun. Semuanya dari ingatan pola. Dia tidak mengambil jawaban dari mana-mana. Dia menyusunnya, kata demi kata.",
         bullets: [
-          "AI belajar dari miliaran teks yang ditulis manusia, terus dia nangkep polanya",
-          "Waktu kamu nanya, dia nyusun jawaban kata demi kata berdasarkan pola itu",
-          "Dia bukan mesin pencari. Dia bukan ngambil jawaban dari database",
-          "Dia menyusun jawaban baru, khusus buat pertanyaan kamu",
+          "Google mencari. AI menyusun. Ini beda mendasar, bukan beda teknis",
+          "Dia tidak punya kitabnya di tangan. Dia punya pola dari kitab",
+          "Jawabannya baru, dibuat khusus buat kamu, detik ini juga",
         ],
-        note: "Makanya AI bisa salah. Dia nebak pola, bukan baca kunci jawaban.",
+        note: "Dia tidak bertanya pada dirinya \"apa yang benar\". Dia bertanya \"kata apa yang paling mungkin muncul berikutnya\".",
       },
-
       {
-        id: "f-3",
+        id: "fa1-3",
         type: "concept",
-        title: "Mitos vs Realita",
-        subtitle: "Bersihin dulu kepala kita dari salah paham",
+        title: "Enam Akibat dari Satu Fakta Itu",
+        subtitle: "Perhatikan: ini bukan enam aturan hafalan. Ini satu fakta dilihat dari enam sisi",
         table: {
-          headers: ["Yang Orang Kira", "Kenyataannya"],
+          headers: ["Karena AI melanjutkan pola...", "Maka untuk kamu artinya..."],
           rows: [
-            ["AI selalu benar", "AI bisa ngarang dengan sangat meyakinkan. Selalu cek ulang"],
-            ["AI bisa baca pikiran", "AI cuma tahu apa yang kamu tulis. Nggak lebih"],
-            ["AI bakal gantiin manusia", "AI nggantiin yang nggak mau belajar, bukan yang mau belajar"],
-            ["AI itu ribet dan teknis", "Kalau bisa ngetik WhatsApp, kamu bisa pakai AI"],
-            ["Pakai AI itu curang", "Tergantung caranya. Kalkulator juga dulu dianggap curang"],
-            ["AI mahal", "Mayoritas tool terbaik ada versi gratisnya"],
+            ["Dia menyusun, bukan mengambil", "Dia bisa mengarang nama kitab yang tidak ada. Bukan bohong, tapi menebak"],
+            ["Nada percaya diri itu sendiri sebuah pola", "Yakin bukan tanda benar. Dia salah dengan gaya yang sama meyakinkannya"],
+            ["Bentuk itu pola kuat, fakta spesifik itu pola lemah", "Dia rapi di struktur, rapuh di angka, nama, tanggal, dan kutipan"],
+            ["Prompt kamu mempersempit ruang pola", "Makin jelas perintahmu, makin sempit ruangnya, makin tepat hasilnya"],
+            ["Contoh adalah pola yang paling gampang ditiru", "Kasih contoh tulisan yang kamu mau. Lebih ampuh dari sepuluh paragraf penjelasan"],
+            ["Dia tidak tahu apa yang dia tidak tahu", "Verifikasi bukan opsi. Itu bagian dari pekerjaanmu, bukan pekerjaannya"],
           ],
         },
       },
-
-      // ─── SEJARAH ───────────────────────────────────────────────
       {
-        id: "f-4",
+        id: "fa1-4",
         type: "concept",
-        title: "Sejarah Singkat AI",
-        subtitle: "Dari mimpi ilmuwan sampai ada di HP kamu",
+        title: "Sejarah Singkat, Satu Pelajaran",
+        subtitle: "Bukan buat dihafal. Buat merasakan kecepatannya",
+        timeline: [
+          { year: "1950", event: "Alan Turing bertanya: bisakah mesin berpikir?", example: "Turing Test" },
+          { year: "1997", event: "Komputer mengalahkan juara dunia catur", example: "Deep Blue vs Kasparov" },
+          { year: "2016", event: "AI menang di Go, permainan tersulit di dunia", example: "AlphaGo vs Lee Sedol" },
+          { year: "2022", event: "AI percakapan meledak ke publik", example: "ChatGPT" },
+          { year: "2023 ke atas", event: "AI bisa melihat, mendengar, membuat gambar, video, aplikasi", example: "Claude, Gemini, dan seterusnya" },
+        ],
         content:
-          "AI bukan barang baru. Dia udah dikembangin puluhan tahun, cuma baru meledak beberapa tahun terakhir. Ini garis besarnya.",
-        table: {
-          headers: ["Tahun", "Yang Terjadi", "Contoh Nyata"],
-          rows: [
-            ["1950", "Alan Turing nanya: bisa nggak mesin berpikir?", "Turing Test"],
-            ["1956", "Istilah Artificial Intelligence pertama kali dipakai", "Konferensi Dartmouth"],
-            ["1997", "Komputer ngalahin juara dunia catur", "Deep Blue vs Kasparov"],
-            ["2011", "Asisten suara masuk ke HP", "Siri di iPhone"],
-            ["2016", "AI ngalahin juara dunia Go, permainan tersulit di dunia", "AlphaGo vs Lee Sedol"],
-            ["2022", "AI percakapan meledak, 100 juta user dalam 2 bulan", "ChatGPT rilis"],
-            ["2023-2026", "AI bisa lihat, dengar, bikin gambar, bikin video, bikin aplikasi", "Claude, Gemini, Sora, Veo"],
-          ],
-        },
-        note: "Perhatiin polanya: dari 1950 ke 2022 butuh 70 tahun. Dari 2022 ke sekarang, lompatannya lebih besar dari 70 tahun sebelumnya digabung.",
+          "Perhatikan jaraknya. Dari 1950 ke 2022 butuh tujuh puluh tahun. Dari 2022 ke sekarang, lompatannya lebih besar dari tujuh puluh tahun sebelumnya digabung.",
+        note: "Pelajarannya cuma satu: yang menunggu sampai \"nanti kalau sudah matang\" akan menunggu selamanya.",
       },
-
-      // ─── KATEGORI: JANTUNG MATERI ──────────────────────────────
       {
-        id: "f-5",
-        type: "concept",
-        title: "Peta AI Berdasarkan Masalah Kamu",
-        subtitle: "Ini bagian paling penting. Simpan baik-baik",
-        content:
-          "Kesalahan paling umum: orang pakai satu AI buat semua hal. Itu kayak pakai obeng buat mukul paku. Bisa sih, tapi ngapain. Setiap AI punya spesialisasi. Sekarang kita bagi berdasarkan MASALAH kamu, bukan berdasarkan nama tool-nya.",
-        cards: [
-          {
-            title: "Kategori 1 — Nulis & Mikir",
-            subtitle: "Teks, ide, analisis",
-            items: [
-              "Claude — juara teks panjang, baca PDF, analisis kitab",
-              "ChatGPT — serba bisa, brainstorming, komunitas terbesar",
-              "Gemini — nyambung ke Google Docs, Drive, Gmail",
-            ],
-            accent: "purple",
-          },
-          {
-            title: "Kategori 2 — Cari & Riset",
-            subtitle: "Informasi terkini, referensi",
-            items: [
-              "Perplexity — nyari sambil kasih sumbernya, anti hoaks",
-              "Gemini — akses internet real-time",
-              "Elicit / Consensus — khusus nyari jurnal ilmiah",
-            ],
-            accent: "blue",
-          },
-        ],
-      },
-
-      {
-        id: "f-6",
-        type: "concept",
-        title: "Peta AI (Lanjutan)",
-        subtitle: "Kategori visual dan produktivitas",
-        cards: [
-          {
-            title: "Kategori 3 — Gambar & Desain",
-            subtitle: "Visual, poster, ilustrasi",
-            items: [
-              "Midjourney — kualitas artistik paling tinggi",
-              "DALL-E / Gemini Image — gratis, gampang, cepat",
-              "Canva AI — langsung jadi desain siap pakai",
-              "Ideogram — paling jago bikin teks di dalam gambar",
-            ],
-            accent: "green",
-          },
-          {
-            title: "Kategori 4 — Suara & Video",
-            subtitle: "Audio, dubbing, konten",
-            items: [
-              "ElevenLabs — voice over natural, bisa bahasa Indonesia",
-              "CapCut AI — edit video otomatis, subtitle otomatis",
-              "Veo / Sora — bikin video dari tulisan",
-              "Whisper — ubah rekaman jadi teks",
-            ],
-            accent: "purple",
-          },
-        ],
-      },
-
-      {
-        id: "f-7",
-        type: "concept",
-        title: "Peta AI (Lanjutan)",
-        subtitle: "Kategori teknis dan belajar",
-        cards: [
-          {
-            title: "Kategori 5 — Ngoding & Bikin Aplikasi",
-            subtitle: "Bahkan kalau kamu nggak bisa coding",
-            items: [
-              "Claude Code — bikin aplikasi dari ngobrol biasa",
-              "Cursor — editor kode yang dipandu AI",
-              "Replit / Lovable — bikin website tanpa install apa-apa",
-              "GitHub Copilot — nemenin nulis kode",
-            ],
-            accent: "blue",
-          },
-          {
-            title: "Kategori 6 — Belajar & Produktivitas",
-            subtitle: "Bantu kamu ngerti lebih cepat",
-            items: [
-              "NotebookLM — upload kitab, langsung bisa tanya isinya",
-              "Notion AI — rapiin catatan otomatis",
-              "Otter — notulen rapat otomatis",
-              "Grammarly — koreksi tulisan Inggris",
-            ],
-            accent: "green",
-          },
-        ],
-      },
-
-      // ─── TABEL MASALAH → SOLUSI ────────────────────────────────
-      {
-        id: "f-8",
-        type: "concept",
-        title: "Tabel Sakti: Masalah Kamu, Tool-nya",
-        subtitle: "Screenshot slide ini. Serius",
-        table: {
-          headers: ["Masalah Kamu", "Pakai Ini", "Kenapa"],
-          rows: [
-            ["Nulis makalah bahasa Arab", "Claude", "Paling paham konteks akademik & bahasa"],
-            ["Terjemah kitab kuning", "Claude", "Nangkep nuansa, bukan terjemah kaku"],
-            ["Ringkas PDF 200 halaman", "NotebookLM", "Dibikin khusus buat baca dokumen"],
-            ["Nyari referensi ilmiah", "Perplexity", "Kasih sumber, bisa dicek"],
-            ["Bikin poster acara", "Canva AI / Ideogram", "Langsung jadi, teksnya rapi"],
-            ["Bikin caption jualan", "ChatGPT", "Paling jago gaya marketing"],
-            ["Edit video kajian", "CapCut AI", "Subtitle otomatis, gratis"],
-            ["Voice over konten", "ElevenLabs", "Suaranya natural"],
-            ["Bikin website organisasi", "Lovable / Replit", "Nggak perlu bisa coding"],
-            ["Notulen rapat", "Otter", "Rekam, langsung jadi teks rapi"],
-            ["Cek fakta berita", "Perplexity / Gemini", "Akses internet real-time"],
-            ["Belajar materi susah", "Claude / ChatGPT", "Bisa disuruh jelasin ulang sampai paham"],
-          ],
-        },
-      },
-
-      // ─── AI DALAM HIDUP SEHARI-HARI ────────────────────────────
-      {
-        id: "f-9",
-        type: "concept",
-        title: "AI Dalam Hidup Sehari-hari",
-        subtitle: "Bukan cuma buat tugas kuliah",
-        cards: [
-          {
-            title: "Urusan Pribadi",
-            items: [
-              "Nyusun jadwal harian yang realistis",
-              "Bikin meal plan hemat sesuai budget",
-              "Nulis pesan susah: minta izin, nolak ajakan, minta maaf",
-              "Nemenin mikir waktu lagi bingung ambil keputusan",
-            ],
-            accent: "purple",
-          },
-          {
-            title: "Urusan Akademik",
-            items: [
-              "Ringkas materi sebelum imtihan",
-              "Bikin soal latihan sendiri dari catatan",
-              "Minta dijelaskan pakai analogi sampai paham",
-              "Cek argumen makalah, cari celah lemahnya",
-            ],
-            accent: "blue",
-          },
-          {
-            title: "Urusan Organisasi",
-            items: [
-              "Proposal kegiatan dari nol dalam hitungan jam",
-              "Notulen rapat rapi otomatis",
-              "Draft surat resmi ke lembaga",
-              "Konten publikasi buat Instagram",
-            ],
-            accent: "green",
-          },
-          {
-            title: "Urusan Cuan",
-            items: [
-              "Riset pasar sebelum jualan",
-              "Caption dan copywriting produk",
-              "Template balas chat customer",
-              "Analisis kompetitor",
-            ],
-            accent: "purple",
-          },
-        ],
-      },
-
-      // ─── CARA PAKAI OPTIMAL ────────────────────────────────────
-      {
-        id: "f-10",
-        type: "concept",
-        title: "Rahasianya Ada di Cara Nanya",
-        subtitle: "Dua orang, AI yang sama, hasil beda jauh",
-        content:
-          "Ini bagian yang paling sering dilewatin orang. AI itu sebagus perintah yang kamu kasih. Kalau perintahnya asal, hasilnya juga asal. Bahasa kerennya: garbage in, garbage out.",
-        quote:
-          "AI itu bukan Google. AI itu asisten pribadi yang sangat pintar, dan kamu adalah bosnya. Kasih briefing yang jelas.",
-        bullets: [
-          "AI nggak bisa baca pikiran kamu. Dia cuma tahu apa yang kamu tulis",
-          "Makin detail brief-nya, makin bagus hasilnya",
-          "Kalau hasilnya jelek, jangan salahin AI-nya. Perbaiki perintahnya",
-        ],
-      },
-
-      {
-        id: "f-11",
-        type: "concept",
-        title: "Formula 5 Bahan Prompt Bagus",
-        subtitle: "Hafalin ini, hasil kamu langsung naik kelas",
-        cards: [
-          {
-            title: "1. Peran",
-            items: ["Kasih tahu AI dia harus jadi siapa", "Contoh: Kamu adalah dosen fiqih senior"],
-            accent: "purple",
-          },
-          {
-            title: "2. Konteks",
-            items: ["Ceritain situasi kamu", "Contoh: Saya mahasiswa semester 3 Syariah Al-Azhar"],
-            accent: "blue",
-          },
-          {
-            title: "3. Tugas",
-            items: ["Bilang persis apa yang kamu mau", "Contoh: Buatkan outline makalah 5 bab"],
-            accent: "green",
-          },
-          {
-            title: "4. Format",
-            items: ["Tentukan bentuk hasilnya", "Contoh: Tabel, poin-poin, 500 kata"],
-            accent: "purple",
-          },
-          {
-            title: "5. Batasan",
-            items: ["Kasih aturan mainnya", "Contoh: Gaya akademik formal, jangan pakai istilah asing"],
-            accent: "blue",
-          },
-        ],
-        note: "Nggak harus kelima-limanya selalu. Tapi makin lengkap, makin bagus.",
-      },
-
-      {
-        id: "f-12",
+        id: "fa1-5",
         type: "practice",
-        title: "Lihat Bedanya Sendiri",
-        subtitle: "Prompt yang sama, tapi kualitas beda jauh",
-        content:
-          "Bandingkan tiga prompt ini. Ketiganya minta hal yang sama, tapi hasilnya bakal beda langit dan bumi.",
-        prompts: [
+        title: "Uji Pemahamanmu",
+        subtitle: "Klik jawabanmu. Langsung ketahuan benar atau salah",
+        quiz: [
           {
-            label: "Level 1 — Payah",
-            prompt: "bantuin makalah",
+            question: "AI menjawab dengan sangat percaya diri. Apa artinya?",
+            options: [
+              "Berarti jawabannya bisa dipercaya",
+              "Tidak berarti apa-apa soal benar atau salah",
+              "Berarti dia menemukan sumber yang kuat",
+            ],
+            answerIndex: 1,
+            why: "Nada percaya diri itu sendiri sebuah pola bahasa yang dia tiru dari jutaan teks. Dia salah dengan gaya yang sama meyakinkannya saat dia benar.",
           },
           {
-            label: "Level 2 — Lumayan",
-            prompt: "Bantu saya bikin makalah tentang zakat",
+            question: "Kenapa AI bisa menyebut nama kitab yang tidak pernah ada?",
+            options: [
+              "Karena datanya rusak",
+              "Karena dia sengaja berbohong",
+              "Karena dia menyusun jawaban dari pola, bukan mengambil dari kitab",
+            ],
+            answerIndex: 2,
+            why: "Dia tidak punya kitabnya. Dia punya pola dari kitab. Saat pola itu diteruskan, bisa lahir nama yang terdengar sangat masuk akal tapi tidak pernah ada.",
           },
-          {
-            label: "Level 3 — Bagus (pakai formula 5 bahan)",
-            prompt: `Kamu adalah pembimbing akademik di Fakultas Syariah Al-Azhar.
+        ],
+        isCompletion: true,
+      },
+    ],
+  },
 
-Saya mahasiswa semester 3. Saya harus menulis makalah 15 halaman 
+  // ═══════════════════════════════════════════════════════════════
+  // SESI 2 — Peta: Tool Mana untuk Masalah Apa  (~4 menit)
+  // ═══════════════════════════════════════════════════════════════
+  {
+    sesiNumber: 2,
+    title: "Peta: Tool Mana untuk Masalah Apa",
+    subtitle: "Berhenti pakai satu AI untuk semua hal. Itu seperti memukul paku dengan obeng",
+    steps: [
+      {
+        id: "fa2-1",
+        type: "concept",
+        title: "Dua Pertanyaan Sebelum Menyentuh AI",
+        subtitle: "Kerangka ini tidak akan basi. Nama tool akan basi. Ini tidak",
+        content:
+          "Sebelum pakai AI untuk apapun, tanya dua hal. Satu: kalau AI salah di sini, seberapa mahal? Dua: seberapa besar nilai pekerjaan ini ada di bentuk, kecepatan, dan volume? Dua jawaban itu langsung menentukan cara kamu memperlakukan dia.",
+        matrix: {
+          yLabel: "Risiko kalau salah",
+          xLabel: "Nilai di bentuk & kecepatan",
+          quadrants: [
+            {
+              title: "Risiko rendah, bentuk tinggi",
+              verdict: "Lepaskan. Biarkan AI kerja",
+              items: [
+                "Caption jualan, dua puluh variasi judul",
+                "Draft pesan, balasan chat, brainstorming",
+                "Merapikan catatan yang kamu tulis sendiri",
+              ],
+              accent: "green",
+            },
+            {
+              title: "Risiko tinggi, bentuk tinggi",
+              verdict: "AI menyusun, kamu verifikasi baris per baris",
+              items: [
+                "Makalah, proposal kegiatan, laporan",
+                "Terjemahan matan dan teks panjang",
+                "Semua nama, angka, kutipan wajib dicek ulang",
+              ],
+              accent: "blue",
+            },
+            {
+              title: "Risiko tinggi, bentuk rendah",
+              verdict: "AI cuma penajam pikiran. Jangan jadikan sumber",
+              items: [
+                "Hadits, sanad, hukum fiqih, fatwa",
+                "Angka statistik, klaim ilmiah, rujukan kitab",
+                "Sumbernya tetap kitab dan guru. Titik",
+              ],
+              accent: "red",
+            },
+            {
+              title: "Risiko rendah, bentuk rendah",
+              verdict: "Tidak usah pakai AI",
+              items: [
+                "Balas chat dua kalimat, catat daftar belanja",
+                "Buka AI, tulis prompt, baca hasil, perbaiki",
+                "Total lebih lama daripada kamu kerjakan sendiri",
+              ],
+              accent: "purple",
+            },
+          ],
+        },
+        note: "Tahu kapan tidak memakai alat, itu juga keahlian.",
+      },
+      {
+        id: "fa2-2",
+        type: "concept",
+        title: "Peta AI per Kategori Kemampuan",
+        subtitle: "Screenshot slide ini. Jangan dihafal, nama tool berubah cepat",
+        cards: [
+          { title: "Menulis & Berpikir", items: ["Claude, teks panjang & analisis dokumen", "ChatGPT, serba bisa & brainstorming", "Gemini, terhubung ekosistem Google"], accent: "purple" },
+          { title: "Mencari & Meriset", items: ["Perplexity, menjawab sambil memberi sumber", "Gemini, akses internet langsung", "Elicit & Consensus, khusus jurnal ilmiah"], accent: "blue" },
+          { title: "Gambar & Desain", items: ["Midjourney, kualitas artistik", "Canva AI, langsung jadi desain siap pakai", "Ideogram, paling rapi menulis teks di gambar"], accent: "green" },
+          { title: "Suara & Video", items: ["ElevenLabs, voice over natural", "CapCut AI, edit & subtitle otomatis", "Whisper, ubah rekaman jadi teks"], accent: "purple" },
+          { title: "Ngoding & Bikin Aplikasi", items: ["Claude Code & Cursor, dipandu AI", "Replit & Lovable, tanpa install apapun", "Bahkan kalau kamu tidak bisa coding"], accent: "blue" },
+          { title: "Belajar & Produktivitas", items: ["NotebookLM, upload kitab lalu tanya isinya", "Otter, notulen rapat otomatis", "Notion AI, merapikan catatan"], accent: "green" },
+        ],
+        note: "Ini contoh, bukan kitab suci. Enam bulan lagi sebagian nama di sini sudah berubah. Yang tidak berubah adalah dua pertanyaan di slide sebelumnya.",
+      },
+      {
+        id: "fa2-3",
+        type: "concept",
+        title: "Masalahmu, Tool-nya",
+        subtitle: "Yang paling sering kamu butuhkan sehari-hari",
+        table: {
+          headers: ["Masalahmu", "Pakai", "Ingat"],
+          rows: [
+            ["PDF kitab 300 halaman, imtihan lusa", "NotebookLM", "Dibuat khusus membaca dokumen panjang"],
+            ["Butuh rujukan yang bisa diverifikasi", "Perplexity", "Dia memberi sumbernya, bukan cuma jawaban"],
+            ["Terjemah matan dengan nuansa yang pas", "Claude", "Tetap cek istilah teknisnya sendiri"],
+            ["Dua puluh ide caption dalam lima menit", "ChatGPT", "Risiko rendah, lepaskan saja"],
+            ["Poster acara, deadline besok", "Canva AI / Ideogram", "Cek ejaan teksnya, sering meleset"],
+            ["Video kajian butuh subtitle", "CapCut AI", "Baca ulang subtitle istilah Arabnya"],
+            ["Website organisasi tanpa bisa coding", "Lovable / Replit", "Mulai dari yang kecil dulu"],
+            ["Materi kuliah yang tidak masuk otak", "Claude / ChatGPT", "Minta dijelaskan ulang sampai paham"],
+          ],
+        },
+      },
+      {
+        id: "fa2-4",
+        type: "practice",
+        title: "Uji Pemahamanmu",
+        subtitle: "Situasinya nyata. Pilih tool-nya",
+        quiz: [
+          {
+            question: "Kamu dapat PDF kitab 300 halaman. Imtihan lusa. Tool apa?",
+            options: ["ChatGPT", "NotebookLM", "Midjourney"],
+            answerIndex: 1,
+            why: "NotebookLM dibuat khusus untuk membaca dan menjawab dari dokumen panjang yang kamu upload sendiri, jadi risiko dia mengarang jauh lebih kecil.",
+          },
+          {
+            question: "Kamu butuh lima jurnal ilmiah yang bisa kamu buka dan cek sendiri.",
+            options: ["Perplexity", "ChatGPT", "Canva AI"],
+            answerIndex: 0,
+            why: "Perplexity menjawab sambil memberi tautan sumbernya. Kamu bisa membuka dan memverifikasi, bukan sekadar percaya.",
+          },
+          {
+            question: "Kamu mau menulis ucapan duka untuk teman yang kehilangan ayahnya.",
+            options: [
+              "Pakai ChatGPT biar cepat dan rapi",
+              "Pakai Claude biar bahasanya indah",
+              "Tulis sendiri, sependek apapun",
+            ],
+            answerIndex: 2,
+            why: "Risikonya memang rendah, tapi ini soal keaslian. Hal yang harusnya lahir dari hatimu, tulis sendiri. Kuadran keempat: tidak usah pakai AI.",
+          },
+        ],
+        isCompletion: true,
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // SESI 3 — Seni Bertanya  (~4 menit)
+  // ═══════════════════════════════════════════════════════════════
+  {
+    sesiNumber: 3,
+    title: "Seni Bertanya",
+    subtitle: "Dua orang, AI yang sama, hasil beda jauh. Ini penyebabnya",
+    steps: [
+      {
+        id: "fa3-1",
+        type: "concept",
+        title: "Bertanya = Mempersempit Pola",
+        subtitle: "Ingat ide besar di sesi satu? Ini penerapan langsungnya",
+        content:
+          "Prompt yang buruk membiarkan ruang polanya selebar samudra, jadi AI menebak ke mana-mana. Prompt yang baik mempersempit ruang itu sampai yang tersisa cuma jawaban yang kamu mau. Lima bahan berikut fungsinya cuma satu: mempersempit.",
+        flow: [
+          { label: "Peran", desc: "Dia harus jadi siapa" },
+          { label: "Konteks", desc: "Situasimu apa" },
+          { label: "Tugas", desc: "Persisnya kamu mau apa" },
+          { label: "Format", desc: "Bentuk hasilnya bagaimana" },
+          { label: "Batasan", desc: "Aturan mainnya apa" },
+        ],
+        note: "Batasan, bahan kelima, yang paling sering dilupakan dan paling menyelamatkan. Contoh: \"kalau tidak yakin, bilang tidak yakin\".",
+      },
+      {
+        id: "fa3-2",
+        type: "practice",
+        title: "Rasakan Bedanya",
+        subtitle: "Permintaan yang sama, ruang pola yang beda jauh",
+        prompts: [
+          { label: "Ruang pola selebar samudra", prompt: "bantuin makalah" },
+          { label: "Masih terlalu luas", prompt: "Bantu saya bikin makalah tentang zakat" },
+          {
+            label: "Ruangnya disempitkan sampai presisi",
+            prompt: `Kamu pembimbing akademik di Fakultas Syariah Al-Azhar.
+
+Saya mahasiswa semester 3. Saya harus menulis makalah 15 halaman
 berjudul "Zakat Aset Digital dalam Perspektif Fiqih Kontemporer".
 
-Tolong buatkan:
-1. Outline 5 bab dengan sub-poin detail tiap bab
-2. Lima referensi kitab fiqih yang relevan
+Buatkan:
+1. Outline 5 bab dengan sub-poin detail
+2. Lima rujukan kitab fiqih yang relevan
 3. Contoh paragraf pembuka bab pendahuluan
 
 Format: poin bernomor, bahasa Indonesia akademik formal.
 Batasan: jangan mengarang nama kitab. Kalau tidak yakin, bilang tidak yakin.`,
           },
         ],
-        note: "Coba sendiri nanti. Rasain bedanya.",
+        note: "Prompt ketiga bukan lebih baik karena lebih panjang. Dia lebih baik karena setiap kalimatnya membuang satu kemungkinan salah.",
       },
-
       {
-        id: "f-13",
+        id: "fa3-3",
         type: "concept",
-        title: "Lima Kebiasaan Orang yang Jago Pakai AI",
-        subtitle: "Ini yang membedakan pemula dan yang udah paham",
-        bullets: [
-          "Ngobrol, bukan sekali tembak. Hasil pertama jarang sempurna. Bilang: kurang panjang, tolong perdalam bagian dua",
-          "Kasih contoh. Tunjukin tulisan yang kamu suka, suruh AI ikutin gayanya",
-          "Suruh AI nanya balik. Tambahin: kalau ada yang kurang jelas, tanya dulu ke saya sebelum menjawab",
-          "Selalu verifikasi. Terutama angka, nama kitab, tanggal, dan hadits. AI bisa ngarang dengan sangat meyakinkan",
-          "Pakai AI buat mikir, bukan buat gantiin mikir. Suruh dia debat sama kamu, bukan bikinin semuanya",
-        ],
-      },
-
-      // ─── HALUSINASI ────────────────────────────────────────────
-      {
-        id: "f-14",
-        type: "concept",
-        title: "Bahaya Terbesar: AI Bisa Ngarang",
-        subtitle: "Namanya halusinasi. Dan dia terdengar sangat meyakinkan",
+        title: "Bahaya Terbesar Buat Kita",
+        subtitle: "Dan kenapa mahasiswa Al-Azhar lebih rentan dari orang lain",
         content:
-          "Ini penting banget, apalagi buat kita yang belajar agama. AI bisa nyebut nama kitab yang nggak ada. Bisa ngarang hadits. Bisa bikin nomor halaman yang salah. Dan dia nyampeinnya dengan nada yang sangat percaya diri.",
+          "Ingat lagi: dia menyusun, bukan mengambil. Artinya dia bisa menyusun nama kitab yang tidak pernah ada, sanad yang tidak pernah tersambung, dan nomor halaman yang dikarang. Dan dia menyampaikannya dengan nada seyakin ustadz yang sudah mengajar tiga puluh tahun.",
         cards: [
           {
-            title: "Yang Rawan Dikarang",
+            title: "Paling Rawan Dikarang",
             items: [
               "Nama kitab dan pengarangnya",
-              "Kutipan hadits dan sanadnya",
+              "Matan hadits, sanad, dan derajatnya",
+              "Nomor halaman dan jilid",
               "Angka statistik dan tahun",
-              "Nomor halaman dan referensi",
               "Nama tokoh dan biografinya",
             ],
             accent: "red",
           },
           {
-            title: "Cara Ngelindungin Diri",
+            title: "Cara Melindungi Diri",
             items: [
-              "Tambahin di prompt: kalau tidak yakin, bilang tidak yakin",
-              "Cek ulang semua nama kitab dan hadits ke sumber asli",
-              "Pakai Perplexity kalau butuh sumber yang bisa diverifikasi",
-              "Jangan pernah setor tulisan tanpa baca ulang sendiri",
+              "Tulis di prompt: kalau tidak yakin, bilang tidak yakin",
+              "Pakai Perplexity kalau butuh sumber yang bisa dicek",
+              "Semua nama kitab dan hadits, kembalikan ke sumber aslinya",
+              "Jangan pernah setor apapun yang belum kamu baca ulang",
             ],
             accent: "green",
-          },
-        ],
-        note: "Aturan emas: AI boleh jadi asisten, tapi tanggung jawab akhir tetap di tangan kamu.",
-      },
-
-      // ─── ETIKA ─────────────────────────────────────────────────
-      {
-        id: "f-15",
-        type: "concept",
-        title: "Etika Pakai AI: Garis yang Nggak Boleh Dilewati",
-        subtitle: "Dalam kehidupan sehari-hari",
-        cards: [
-          {
-            title: "Boleh dan Sehat",
-            items: [
-              "Pakai AI buat ngerti materi yang susah",
-              "Minta AI cek dan koreksi tulisan kamu sendiri",
-              "Brainstorming ide sebelum kamu kembangkan",
-              "Minta AI kritik argumen kamu, cari kelemahannya",
-              "Bikin rangkuman dari catatan kamu sendiri",
-            ],
-            accent: "green",
-          },
-          {
-            title: "Jangan, Ini Merugikan Kamu",
-            items: [
-              "Copy paste jawaban AI mentah-mentah tanpa dibaca",
-              "Setor tugas yang kamu sendiri nggak paham isinya",
-              "Nyebar informasi agama dari AI tanpa verifikasi ulang",
-              "Pakai AI buat nulis hal yang harusnya dari hati kamu",
-              "Bikin konten palsu, deepfake, atau nyamar jadi orang lain",
-            ],
-            accent: "red",
           },
         ],
         quote:
-          "Tanya diri kamu: kalau dosen tanya isi tulisan ini, saya bisa jawab nggak? Kalau nggak bisa, berarti kamu belum pantas nyetor.",
+          "Menyebarkan hadits palsu karena percaya AI, tetap menyebarkan hadits palsu. Alasannya tidak akan menolongmu.",
       },
-
       {
-        id: "f-16",
-        type: "concept",
-        title: "Etika Pakai AI di Dunia Profesional",
-        subtitle: "Kerja, organisasi, dan bisnis",
-        table: {
-          headers: ["Prinsip", "Artinya di Praktik"],
-          rows: [
-            ["Transparansi", "Kalau AI bantu banyak, jujur aja bilang. Jangan pura-pura"],
-            ["Kerahasiaan", "Jangan pernah masukin data pribadi orang, nomor rekening, atau rahasia lembaga ke AI"],
-            ["Verifikasi", "Semua hasil AI yang keluar atas nama kamu atau lembaga, wajib dicek dulu"],
-            ["Tanggung jawab", "Salahnya AI tetap jadi salahmu di mata orang. Nggak ada alasan"],
-            ["Hak cipta", "Karya AI yang mirip karya orang lain tetap bermasalah secara moral"],
-            ["Keadilan", "AI bisa punya bias. Jangan jadikan dia hakim untuk urusan yang menyangkut orang"],
-          ],
-        },
-        note: "Aturan sederhana: kalau kamu malu ketahuan pakai AI untuk hal itu, kemungkinan besar kamu memang nggak seharusnya.",
-      },
-
-      // ─── SESI INTERAKTIF ───────────────────────────────────────
-      {
-        id: "f-17",
+        id: "fa3-4",
         type: "practice",
-        title: "Kuis Kilat: Tebak Tool-nya",
-        subtitle: "Angkat tangan yang tahu jawabannya",
-        content:
-          "Sekarang giliran kamu. Gue sebutin masalahnya, kamu tebak AI mana yang paling cocok. Nggak usah takut salah, ini bukan imtihan.",
-        table: {
-          headers: ["No", "Situasinya", "Jawaban"],
-          rows: [
-            ["1", "Kamu dapat PDF kitab 300 halaman, imtihan lusa", "NotebookLM"],
-            ["2", "Panitia butuh poster acara, deadline besok pagi", "Canva AI atau Ideogram"],
-            ["3", "Kamu perlu 5 jurnal ilmiah yang bisa diverifikasi", "Perplexity"],
-            ["4", "Kamu mau bikin website organisasi tapi nggak bisa coding", "Lovable atau Replit"],
-            ["5", "Video kajian 2 jam butuh subtitle Indonesia", "CapCut AI"],
-            ["6", "Kamu harus terjemah matan Arab dengan nuansa yang pas", "Claude"],
-            ["7", "Kamu butuh 20 ide caption jualan dalam 5 menit", "ChatGPT"],
-            ["8", "Rapat 90 menit, kamu males nulis notulen", "Otter"],
-          ],
-        },
-        note: "Kalau kamu bisa jawab minimal 5 dari 8, artinya materi ini udah nyantol.",
-      },
-
-      {
-        id: "f-18",
-        type: "practice",
-        title: "Tantangan 2 Menit: Perbaiki Prompt Ini",
-        subtitle: "Ini prompt jelek. Tugas kamu bikin dia jadi bagus",
-        content:
-          "Di bawah ini ada prompt yang buruk. Pakai formula 5 bahan tadi (Peran, Konteks, Tugas, Format, Batasan) untuk memperbaikinya. Coba tulis versi kamu sendiri dulu, baru lihat contoh perbaikannya.",
-        prompts: [
+        title: "Uji Pemahamanmu",
+        subtitle: "Latih insting curigamu",
+        quiz: [
           {
-            label: "Prompt Buruk — Perbaiki Ini",
-            prompt: "buatin proposal acara",
+            question: "AI menyebut kitab \"Al-Ahkam Ar-Raqmiyyah\" karya Ibnu Utsaimin, halaman 214. Apa yang kamu lakukan?",
+            options: [
+              "Langsung kutip, sumbernya jelas",
+              "Curigai dan cek ke sumber asli sebelum dipakai",
+              "Tanya AI lagi apakah itu benar",
+            ],
+            answerIndex: 1,
+            why: "Nama kitab, nama pengarang, dan nomor halaman: tiga hal paling rawan dikarang, muncul sekaligus dalam satu kalimat. Bertanya ulang ke AI juga tidak menolong, dia bisa mengarang pembenaran.",
           },
           {
-            label: "Contoh Perbaikan (jangan diintip dulu)",
-            prompt: `Kamu adalah sekretaris organisasi mahasiswa yang berpengalaman 
-menyusun proposal kegiatan.
-
-Konteks: Saya ketua panitia Seminar AI untuk Masisir di Kairo. 
-Target peserta 150 orang, budget 8000 EGP, durasi acara satu hari.
-
-Tugas: Buatkan proposal kegiatan lengkap yang mencakup latar belakang, 
-tujuan, susunan acara, rincian anggaran, dan penutup.
-
-Format: Dokumen terstruktur dengan heading dan sub-heading, 
-bahasa Indonesia resmi organisasi.
-
-Batasan: Anggaran harus realistis dan totalnya tidak melebihi budget. 
-Jangan mengarang nama sponsor atau pemateri.`,
+            question: "Bagian mana dari prompt yang paling menyelamatkanmu dari halusinasi?",
+            options: [
+              "Peran, misalnya \"kamu dosen fiqih\"",
+              "Format, misalnya \"buat dalam tabel\"",
+              "Batasan, misalnya \"kalau tidak yakin, bilang tidak yakin\"",
+            ],
+            answerIndex: 2,
+            why: "Batasan memberi AI izin untuk mengaku tidak tahu. Tanpa itu, pola default-nya adalah tetap menjawab, karena menjawab lebih mirip pola percakapan normal daripada diam.",
           },
         ],
-        note: "Rasain bedanya? Prompt pertama bikin AI nebak-nebak. Prompt kedua bikin AI kerja beneran.",
+        isCompletion: true,
       },
+    ],
+  },
 
+  // ═══════════════════════════════════════════════════════════════
+  // SESI 4 — Etika & Bekal Pulang  (~3 menit)
+  // ═══════════════════════════════════════════════════════════════
+  {
+    sesiNumber: 4,
+    title: "Etika & Bekal Pulang",
+    subtitle: "Garis yang tidak boleh dilewati, dan satu langkah untuk malam ini",
+    steps: [
       {
-        id: "f-19",
-        type: "practice",
-        title: "Benar atau Salah?",
-        subtitle: "Sesi cepat, jawab dalam hati atau teriakin",
+        id: "fa4-1",
+        type: "concept",
+        title: "Garis yang Tidak Boleh Dilewati",
+        subtitle: "Sehari-hari dan profesional, sekaligus",
         table: {
-          headers: ["Pernyataan", "Jawaban", "Alasannya"],
+          headers: ["Prinsip", "Artinya dalam praktik"],
           rows: [
-            ["AI selalu kasih informasi yang akurat", "Salah", "AI bisa halusinasi dan ngarang dengan meyakinkan"],
-            ["Prompt yang detail bikin hasil lebih bagus", "Benar", "Makin jelas briefing, makin bagus outputnya"],
-            ["Boleh masukin data pribadi orang lain ke AI", "Salah", "Itu melanggar privasi dan bisa berbahaya"],
-            ["Semua AI sama aja kemampuannya", "Salah", "Tiap AI punya spesialisasi masing-masing"],
-            ["AI bisa dipakai buat ngerti materi kuliah", "Benar", "Ini justru salah satu penggunaan paling sehat"],
-            ["Hasil AI bisa langsung disetor tanpa dibaca", "Salah", "Tanggung jawab tetap di tangan kamu"],
+            ["Pemahaman", "Kalau kamu tidak bisa menjelaskan isinya, kamu belum pantas menyetorkannya"],
+            ["Kejujuran", "Kalau AI membantu banyak, katakan saja. Jangan berpura-pura"],
+            ["Kerahasiaan", "Jangan pernah memasukkan data pribadi orang, nomor rekening, atau rahasia lembaga"],
+            ["Verifikasi", "Semua yang keluar atas namamu, wajib kamu cek dulu"],
+            ["Tanggung jawab", "Salahnya AI tetap jadi salahmu di mata orang. Tidak ada alasan"],
+            ["Keaslian", "Hal yang harusnya lahir dari hatimu, tulis sendiri. Ucapan duka, permintaan maaf, doa"],
           ],
         },
+        quote:
+          "Uji sederhana: kalau kamu malu ketahuan memakai AI untuk hal itu, kemungkinan besar kamu memang tidak seharusnya.",
       },
-
-      // ─── PENUTUP ───────────────────────────────────────────────
       {
-        id: "f-20",
+        id: "fa4-2",
+        type: "practice",
+        title: "Uji Pemahamanmu",
+        subtitle: "Kasus nyata. Mana yang boleh, mana yang tidak",
+        quiz: [
+          {
+            question: "Kamu menyetor makalah hasil AI yang kamu sendiri belum baca. Boleh?",
+            options: [
+              "Boleh, yang penting selesai tepat waktu",
+              "Tidak. Kalau tidak bisa menjelaskan isinya, kamu belum pantas menyetorkannya",
+              "Boleh, asalkan kamu jujur bilang pakai AI",
+            ],
+            answerIndex: 1,
+            why: "Kejujuran saja tidak cukup. Prinsip pemahaman lebih dasar: karyamu adalah yang bisa kamu pertanggungjawabkan saat ditanya, bukan yang berhasil kamu kumpulkan.",
+          },
+          {
+            question: "Kamu masukkan daftar nama dan nomor WA panitia ke AI agar dirapikan.",
+            options: [
+              "Aman, cuma nama dan nomor",
+              "Melanggar kerahasiaan. Itu data pribadi orang lain",
+              "Aman kalau AI-nya berbayar",
+            ],
+            answerIndex: 1,
+            why: "Itu bukan datamu. Kamu tidak punya izin dari mereka untuk menyerahkannya ke pihak ketiga, mau AI-nya gratis maupun berbayar.",
+          },
+          {
+            question: "Kamu pakai AI untuk mencari celah lemah dalam argumen makalahmu sendiri.",
+            options: [
+              "Curang, itu tugas dosen",
+              "Sehat. Ini justru salah satu pemakaian terbaik",
+              "Sia-sia, AI tidak paham argumen",
+            ],
+            answerIndex: 1,
+            why: "Memakai AI untuk mendebat dan menajamkan pikiranmu sendiri adalah pemakaian paling sehat. Kamu tetap yang berpikir, dia cuma lawan tanding.",
+          },
+        ],
+      },
+      {
+        id: "fa4-3",
         type: "concept",
-        title: "Tiga Hal yang Harus Kamu Bawa Pulang",
-        subtitle: "Kalau lupa semua, ingat tiga ini aja",
+        title: "Tiga Bekal, Satu Langkah",
+        subtitle: "Kalau lupa semuanya, ingat ini saja",
         cards: [
           {
-            title: "Satu — Pilih Alat yang Tepat",
-            items: [
-              "Jangan pakai satu AI buat semua hal",
-              "Kenali masalahmu dulu, baru pilih tool-nya",
-              "Balik lagi ke tabel sakti tadi kapan pun butuh",
-            ],
+            title: "Satu",
+            items: ["Dia melanjutkan pola, bukan mencari jawaban", "Dari sini semua aturan lahir"],
             accent: "purple",
           },
           {
-            title: "Dua — Cara Nanya Menentukan Segalanya",
-            items: [
-              "Peran, Konteks, Tugas, Format, Batasan",
-              "Ngobrol sama AI, jangan sekali tembak",
-              "Hasil jelek berarti prompt-nya yang perlu diperbaiki",
-            ],
+            title: "Dua",
+            items: ["Kalau salah, seberapa mahal?", "Seberapa besar nilainya di bentuk dan kecepatan?"],
             accent: "blue",
           },
           {
-            title: "Tiga — Kamu Tetap Bosnya",
-            items: [
-              "AI bisa ngarang, kamu wajib verifikasi",
-              "Pakai AI buat mikir lebih tajam, bukan buat berhenti mikir",
-              "Tanggung jawab akhir selalu ada di tangan kamu",
-            ],
+            title: "Tiga",
+            items: ["Kamu tetap bosnya. Verifikasi bagian dari pekerjaanmu", "Pakai dia untuk berpikir lebih tajam, bukan berhenti berpikir"],
             accent: "green",
           },
         ],
-      },
-
-      {
-        id: "f-21",
-        type: "concept",
-        title: "Satu Langkah Kecil Hari Ini",
-        subtitle: "Jangan tutup materi ini terus lupa",
         content:
-          "Ilmu yang nggak dipraktekin itu cuma jadi hiburan. Sebelum tidur nanti, lakukan satu hal ini.",
-        bullets: [
-          "Pikirin satu masalah nyata yang kamu hadapi minggu ini. Yang bikin kamu stres beneran",
-          "Buka salah satu AI. Bebas, mana aja",
-          "Tulis prompt pakai formula 5 bahan tadi. Jangan asal ketik",
-          "Lihat hasilnya. Kalau kurang, perbaiki prompt-nya dan coba lagi",
-          "Rasain bedanya. Itu momen di mana AI berhenti jadi mainan dan mulai jadi alat",
-        ],
+          "Malam ini sebelum tidur: ambil satu masalah nyata yang bikin kamu stres minggu ini. Buka AI mana saja. Tulis prompt dengan lima bahan tadi. Lihat hasilnya, perbaiki, coba lagi. Rasakan bedanya. Itu momen AI berhenti jadi mainan dan mulai jadi alat.",
         quote:
-          "Yang bikin kamu ketinggalan bukan karena kamu nggak pintar. Tapi karena kamu nunda mulai.",
-      },
-
-      {
-        id: "f-22",
-        type: "concept",
-        title: "Sampai Jumpa di Sesi Berikutnya",
-        subtitle: "Fundamental selesai. Sekarang saatnya bangun sesuatu",
-        content:
-          "Kamu udah punya fondasinya. Kamu tahu AI itu apa, kamu tahu tool mana buat masalah apa, kamu tahu cara nanya yang benar, dan kamu tahu di mana batas etikanya. Itu udah lebih dari cukup buat mulai. Di sesi selanjutnya, kita nggak cuma bahas teori lagi. Kita bakal bikin sesuatu yang nyata pakai tangan kita sendiri.",
-        quote:
-          "AI nggak bikin kamu jadi orang lain. AI bikin kamu jadi versi kamu yang lebih cepat, lebih tajam, dan lebih berani ambil kerjaan besar.",
+          "Yang membuatmu tertinggal bukan karena kamu kurang pintar. Tapi karena kamu menunda mulai.",
         isCompletion: true,
       },
     ],
