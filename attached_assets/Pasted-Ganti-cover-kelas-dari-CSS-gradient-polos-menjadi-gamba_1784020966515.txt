@@ -1,0 +1,15 @@
+Ganti cover kelas dari CSS gradient polos menjadi gambar asli untuk 2 kelas: "fundamental-ai" dan "maksimalkan-ai". Semua ada di artifacts/aigypt. Jangan ubah kelas lain (yang belum punya cover gambar tetap pakai gradient seperti sekarang).
+
+Dua file gambar sudah ada di artifacts/aigypt/src/assets/covers/cover-fundamental-ai.png dan artifacts/aigypt/src/assets/covers/cover-maksimalkan-ai.png (kalau strukturnya beda, sesuaikan folder assets yang sudah ada, ikuti pola src/assets/logo-aigypt.png yang sudah dipakai di Logo.tsx).
+
+1. Di artifacts/aigypt/src/lib/classesData.ts, tambahkan field opsional coverImage?: string pada interface KelasItem. Isi field ini hanya untuk 2 kelas berikut (kelas lain biarkan tanpa field ini):
+   - kelas dengan id "fundamental-ai": import gambar dari "@/assets/covers/cover-fundamental-ai.png" di bagian atas file, lalu isi coverImage dengan hasil import itu.
+   - kelas dengan id "maksimalkan-ai": import dari "@/assets/covers/cover-maksimalkan-ai.png" dengan cara yang sama.
+
+2. Di artifacts/aigypt/src/pages/kelas.tsx, function KelasGradientCover: kalau kelas.coverImage ada isinya, render <img src={kelas.coverImage} className="absolute inset-0 w-full h-full object-cover" /> SEBELUM elemen grain texture dan radial glow (elemen-elemen itu tetap dirender di atasnya supaya konsisten dengan cover lain), lalu skip background gradient (kelas.gradient) untuk kasus ini. Kalau coverImage tidak ada, biarkan behavior lama (gradient) seperti sekarang, tidak berubah.
+
+3. Lakukan hal yang sama di artifacts/aigypt/src/pages/kelas-detail.tsx pada function KelasHeroCover.
+
+4. PENTING — cek potensi duplikasi teks: kedua gambar cover ini sudah punya judul kelas dan tagline ter-desain di dalam gambarnya sendiri (bagian atas gambar). Sementara itu KelasCard di kelas.tsx merender ulang kelas.title dan sesiCount di bagian bawah card (di div "Bottom info"), dan KelasHeroCover kemungkinan juga dipakai bersama title terpisah di kelas-detail.tsx. Setelah cover gambar terpasang, screenshot hasilnya dan cek apakah teks jadi terlihat dobel atau bertabrakan secara visual. Kalau terlihat dobel/berantakan khusus untuk 2 kelas ini, kecilkan ukuran font judul di "Bottom info" ATAU sembunyikan render judul di situ khusus kalau kelas.coverImage ada isinya (karena judulnya sudah termuat di gambar) — pilih yang secara visual paling rapi, dan laporkan pilihan mana yang diambil.
+
+Setelah selesai, pastikan tsc lolos dan build Vite tetap sukses.
