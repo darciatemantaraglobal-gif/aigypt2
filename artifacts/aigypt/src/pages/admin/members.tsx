@@ -33,12 +33,14 @@ function AddMemberModal({
   const [accessCode, setAccessCode] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [result, setResult] = useState<{ accessCode: string } | null>(null);
   const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setErrorDetail(null);
     setSaving(true);
     try {
       const r = await adminFetch("/admin/members/create", {
@@ -54,6 +56,7 @@ function AddMemberModal({
       const d = await r.json();
       if (!r.ok) {
         setError(d.error ?? "Gagal menambahkan member");
+        setErrorDetail(d.detail ?? null);
         return;
       }
       setResult({ accessCode: d.accessCode });
@@ -104,9 +107,10 @@ function AddMemberModal({
           <form onSubmit={handleSubmit}>
             <h3 className="font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Tambah Member</h3>
             {error && (
-              <p className="text-xs mb-3 px-3 py-2 rounded-lg" style={{ color: "#f87171", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
-                {error}
-              </p>
+              <div className="mb-3 px-3 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
+                <p className="text-xs" style={{ color: "#f87171" }}>{error}</p>
+                {errorDetail && <p className="text-xs mt-1 font-mono" style={{ color: "#71717A" }}>{errorDetail}</p>}
+              </div>
             )}
             <div className="space-y-3 mb-5">
               <div>
@@ -175,10 +179,12 @@ function EditMemberModal({
   const [accessCode, setAccessCode] = useState(member.accessCode ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setErrorDetail(null);
     setSaving(true);
     try {
       const r = await adminFetch(`/admin/members/${encodeURIComponent(member.email)}/update`, {
@@ -195,6 +201,7 @@ function EditMemberModal({
       const d = await r.json();
       if (!r.ok) {
         setError(d.error ?? "Gagal menyimpan perubahan");
+        setErrorDetail(d.detail ?? null);
         return;
       }
       onSaved({ email: d.email });
@@ -212,9 +219,10 @@ function EditMemberModal({
         <form onSubmit={handleSubmit}>
           <h3 className="font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Edit Member</h3>
           {error && (
-            <p className="text-xs mb-3 px-3 py-2 rounded-lg" style={{ color: "#f87171", background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
-              {error}
-            </p>
+            <div className="mb-3 px-3 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
+              <p className="text-xs" style={{ color: "#f87171" }}>{error}</p>
+              {errorDetail && <p className="text-xs mt-1 font-mono" style={{ color: "#71717A" }}>{errorDetail}</p>}
+            </div>
           )}
           <div className="space-y-3 mb-5">
             <div>

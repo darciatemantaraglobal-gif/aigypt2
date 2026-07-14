@@ -19,10 +19,13 @@ export const insertAccessCodeSchema = createInsertSchema(accessCodesTable).omit(
 export type InsertAccessCode = z.infer<typeof insertAccessCodeSchema>;
 export type AccessCode = typeof accessCodesTable.$inferSelect;
 
+// DOKUMENTASI SAJA — jangan jalankan drizzle-kit push/generate/migrate.
+// Semua perubahan struktur dilakukan manual lewat Supabase SQL Editor.
 export const membersTable = pgTable("members", {
   id: uuid("id").defaultRandom().primaryKey(),
   email: varchar("email", { length: 255 }).unique().notNull(),
   name: varchar("name", { length: 255 }),
+  username: varchar("username", { length: 50 }),
   accessCode: varchar("access_code", { length: 20 }).references(() => accessCodesTable.code),
   memberType: varchar("member_type", { length: 20 }).notNull(),
   batchNumber: integer("batch_number"),
@@ -52,6 +55,9 @@ export const insertMateriProgressSchema = createInsertSchema(materiProgressTable
 export type InsertMateriProgress = z.infer<typeof insertMateriProgressSchema>;
 export type MateriProgress = typeof materiProgressTable.$inferSelect;
 
+// DOKUMENTASI SAJA — jangan jalankan drizzle-kit push/generate/migrate.
+// Semua perubahan struktur dilakukan manual lewat Supabase SQL Editor.
+// Kolom di database bernama "amount", bukan "gross_amount".
 export const ordersTable = pgTable("orders", {
   id: uuid("id").defaultRandom().primaryKey(),
   orderId: varchar("order_id", { length: 50 }).unique().notNull(),
@@ -60,7 +66,7 @@ export const ordersTable = pgTable("orders", {
   phone: varchar("phone", { length: 30 }).notNull(),
   memberType: varchar("member_type", { length: 20 }).notNull(),
   batchNumber: integer("batch_number"),
-  grossAmount: integer("gross_amount").notNull(),
+  grossAmount: integer("amount").notNull(),
   couponCode: varchar("coupon_code", { length: 50 }),
   discountAmount: integer("discount_amount").default(0),
   finalAmount: integer("final_amount"),

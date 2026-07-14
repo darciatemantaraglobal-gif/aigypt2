@@ -43,9 +43,9 @@ async function generateUniqueUsername(seed: string): Promise<string> {
 async function upsertMember(args: {
   email: string; name: string; accessCode: string;
   memberType: string; batchNumber: number; username?: string;
-}) {
+}, tx: typeof sql = sql) {
   const username = args.username?.trim() ? sanitizeUsername(args.username) : await generateUniqueUsername(args.email);
-  await sql`
+  await tx`
     INSERT INTO members (email, name, access_code, member_type, batch_number, username)
     VALUES (${args.email}, ${args.name}, ${args.accessCode}, ${args.memberType}, ${args.batchNumber}, ${username})
     ON CONFLICT (email) DO UPDATE SET
@@ -55,7 +55,7 @@ async function upsertMember(args: {
       batch_number = EXCLUDED.batch_number,
       username = COALESCE(members.username, EXCLUDED.username)
   `;
-  await sql`
+  await tx`
     UPDATE access_codes
     SET is_used = true, used_by_email = ${args.email}, used_at = NOW()
     WHERE code = ${args.accessCode}
@@ -215,12 +215,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // Urutan wajib: access_codes dulu, baru members — members.access_code
       // punya foreign key ke access_codes.code.
-      await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
-      await sql`
-        INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
-        VALUES (${orderId}, ${name}, ${normalizedEmail}, ${"-"}, ${memberType}, ${batch}, 0, 0, 'paid', ${accessCode}, NOW())
-      `;
-      await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch, username });
+      // Dibungkus transaction: kalau salah satu gagal, semuanya rollback.
+      await sql.begin(async (tx) => {
+        await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
+        await tx`
+          INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
+          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${"-"}, ${memberType}, ${batch}, 0, 0, 'paid', ${accessCode}, NOW())
+        `;
+        await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch, username }, tx);
+      });
 
       return res.json({ success: true, orderId, accessCode });
     }
@@ -409,12 +412,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           if (existing.length === 0) { accessCode = candidate; break; }
         }
         if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses unik" });
-        await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
-        await sql`
-          INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
-          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'paid', ${accessCode}, NOW())
-        `;
-        await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch });
+        await sql.begin(async (tx) => {
+          await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
+          await tx`
+            INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
+            VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'paid', ${accessCode}, NOW())
+          `;
+          await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch }, tx);
+        });
       } else {
         await sql`
           INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status)
@@ -440,14 +445,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
       if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses" });
 
-      await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${order["member_type"]}, ${order["batch_number"]}, false)`;
-      await sql`UPDATE orders SET status = 'paid', access_code = ${accessCode}, paid_at = NOW() WHERE order_id = ${orderId}`;
-      await upsertMember({
-        email: order["email"] as string,
-        name: order["name"] as string,
-        accessCode,
-        memberType: order["member_type"] as string,
-        batchNumber: (order["batch_number"] as number) ?? 3,
+      await sql.begin(async (tx) => {
+        await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${order["member_type"]}, ${order["batch_number"]}, false)`;
+        await tx`UPDATE orders SET status = 'paid', access_code = ${accessCode}, paid_at = NOW() WHERE order_id = ${orderId}`;
+        await upsertMember({
+          email: order["email"] as string,
+          name: order["name"] as string,
+          accessCode,
+          memberType: order["member_type"] as string,
+          batchNumber: (order["batch_number"] as number) ?? 3,
+        }, tx);
       });
       return res.json({ success: true, accessCode });
     }
@@ -464,6 +471,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(404).json({ error: "Route tidak ditemukan" });
   } catch (err) {
     console.error("[Admin API] Error:", err);
-    return res.status(500).json({ error: "Terjadi kesalahan server" });
+    return res.status(500).json({
+      error: "Terjadi kesalahan server",
+      detail: err instanceof Error ? err.message : String(err),
+    });
   }
 }
