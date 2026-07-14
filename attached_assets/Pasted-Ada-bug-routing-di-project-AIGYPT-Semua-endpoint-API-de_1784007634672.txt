@@ -1,0 +1,11 @@
+Ada bug routing di project AIGYPT. Semua endpoint API dengan dua segmen path gagal dengan 404 dari Vercel, misalnya /api/admin/members/list dan /api/admin/codes/list dan /api/admin/members/create. Sedangkan endpoint satu segmen seperti /api/admin/dashboard-stats dan /api/admin/verify berjalan normal dengan status 200. Ini sudah dikonfirmasi lewat browser console di produksi. Artinya function catch-all tidak menangkap path bertingkat, sehingga request ditolak Vercel sebelum sampai ke handler. Akibatnya admin panel tidak bisa menambahkan member, list member selalu kosong, dan list kode akses juga kosong.
+
+Perbaiki dengan dua langkah berikut, dan jangan ubah UI, desain, atau logika bisnis apapun.
+
+Pertama, pastikan nama file catch-all sudah benar. Di folder artifacts/aigypt/api ada tiga route catch-all, yaitu admin, auth, dan progress. Nama file yang benar untuk masing-masing adalah [...path].ts dengan tiga titik di dalam kurung siku, bukan [path].ts dengan satu titik. Periksa ketiganya, dan kalau ada yang namanya masih [path].ts, rename menjadi [...path].ts tanpa mengubah isi filenya sama sekali. Pastikan perubahan nama ini benar-benar ter-commit ke git, karena rename file kadang tidak terdeteksi kalau hanya berubah di lokal.
+
+Kedua, tambahkan rewrite eksplisit di artifacts/aigypt/vercel.json supaya routing tidak bergantung pada bagaimana Vercel me-resolve nama file. Di dalam array rewrites, tambahkan tiga entri baru dan taruh semuanya di posisi paling atas, sebelum rewrite SPA yang sudah ada. Entri pertama mengarahkan source /api/admin/:path* ke destination /api/admin/[...path]. Entri kedua mengarahkan source /api/auth/:path* ke destination /api/auth/[...path]. Entri ketiga mengarahkan source /api/progress/:path* ke destination /api/progress/[...path]. Urutan ini penting karena rewrite SPA yang lama harus tetap berada di paling bawah supaya tidak menelan request API.
+
+Tidak perlu mengubah file api/_lib/route.ts sama sekali. Fungsi getSegments di situ sudah punya fallback yang mem-parsing segmen langsung dari req.url kalau req.query.path kosong, jadi handler tetap bisa membaca segmen path dengan benar setelah rewrite diterapkan.
+
+Setelah selesai, pastikan tsc lolos tanpa error, lalu laporkan nama file mana saja yang di-rename dan tampilkan isi akhir vercel.json.

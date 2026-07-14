@@ -1,6 +1,9 @@
 {
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/api/admin/:path*", "destination": "/api/admin/[...path]" },
+    { "source": "/api/auth/:path*",  "destination": "/api/auth/[...path]"  },
+    { "source": "/api/progress/:path*", "destination": "/api/progress/[...path]" },
     { "source": "/((?!api).*)", "destination": "/index.html" }
   ],
   "headers": [
