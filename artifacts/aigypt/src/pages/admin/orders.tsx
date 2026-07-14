@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Fragment } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { CopyButton } from "@/components/admin/CopyButton";
@@ -54,9 +54,9 @@ export default function AdminOrders() {
     if (filterType !== "all") p.set("type", filterType);
     try {
       const r = await adminFetch(`/admin/orders/list?${p}`);
-      const d = await r.json() as { orders: Order[] };
-      setOrders(d.orders);
-    } catch { /* handled */ }
+      const d = await r.json() as { orders?: Order[] };
+      setOrders(d.orders ?? []);
+    } catch { /* redirect handled in adminFetch */ }
     finally { setLoading(false); }
   }, [filterStatus, filterType]);
 
@@ -237,9 +237,8 @@ export default function AdminOrders() {
                 const displayAmount = o.finalAmount ?? o.grossAmount;
 
                 return (
-                  <>
+                  <Fragment key={o.id}>
                     <tr
-                      key={o.id}
                       style={{ borderBottom: isExpanded ? "none" : "1px solid rgba(255,255,255,0.04)", cursor: "pointer" }}
                       onClick={() => setExpandedOrder(isExpanded ? null : o.id)}
                     >
@@ -288,7 +287,7 @@ export default function AdminOrders() {
                       </td>
                     </tr>
                     {isExpanded && hasCoupon && (
-                      <tr key={`${o.id}-detail`} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                      <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                         <td colSpan={8} className="px-4 pb-4 pt-0">
                           <div className="rounded-xl p-3 text-xs space-y-1.5" style={{ background: "rgba(124,58,237,0.05)", border: "1px solid rgba(124,58,237,0.15)" }}>
                             <p className="font-mono mb-2" style={{ color: "#7C3AED", letterSpacing: "0.08em" }}>RINCIAN HARGA</p>
@@ -308,7 +307,7 @@ export default function AdminOrders() {
                         </td>
                       </tr>
                     )}
-                  </>
+                  </Fragment>
                 );
               })}
             </tbody>

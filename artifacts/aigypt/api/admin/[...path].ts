@@ -39,27 +39,47 @@ async function generateUniqueUsername(seed: string): Promise<string> {
  * hanya dibaca oleh dashboard-stats dan halaman Member, sehingga selalu
  * kosong. Setiap kali order dilunasi dan kode akses terbit, member harus
  * ikut tercatat di sini.
+ *
+ * Kolom `username` SENGAJA tidak dimasukkan ke sini karena kolom tersebut
+ * mungkin belum ada di DB produksi. Gunakan trySetUsername() setelah
+ * transaksi selesai.
  */
 async function upsertMember(args: {
   email: string; name: string; accessCode: string;
-  memberType: string; batchNumber: number; username?: string;
+  memberType: string; batchNumber: number;
 }, tx: typeof sql = sql) {
-  const username = args.username?.trim() ? sanitizeUsername(args.username) : await generateUniqueUsername(args.email);
   await tx`
-    INSERT INTO members (email, name, access_code, member_type, batch_number, username)
-    VALUES (${args.email}, ${args.name}, ${args.accessCode}, ${args.memberType}, ${args.batchNumber}, ${username})
+    INSERT INTO members (email, name, access_code, member_type, batch_number)
+    VALUES (${args.email}, ${args.name}, ${args.accessCode}, ${args.memberType}, ${args.batchNumber})
     ON CONFLICT (email) DO UPDATE SET
       name = EXCLUDED.name,
       access_code = EXCLUDED.access_code,
       member_type = EXCLUDED.member_type,
-      batch_number = EXCLUDED.batch_number,
-      username = COALESCE(members.username, EXCLUDED.username)
+      batch_number = EXCLUDED.batch_number
   `;
   await tx`
     UPDATE access_codes
     SET is_used = true, used_by_email = ${args.email}, used_at = NOW()
     WHERE code = ${args.accessCode}
   `;
+}
+
+/**
+ * Set username member secara opsional, TERPISAH dari transaksi utama.
+ * Dibungkus try/catch karena kolom ini mungkin belum ada di DB produksi.
+ * Jika kolom belum ada, tambahkan dulu lewat Supabase SQL Editor:
+ *   ALTER TABLE members ADD COLUMN username varchar(50);
+ * Hanya mengisi jika username masih NULL (tidak overwrite yang sudah ada).
+ */
+async function trySetUsername(email: string, preferredUsername?: string): Promise<void> {
+  const username = preferredUsername?.trim()
+    ? sanitizeUsername(preferredUsername)
+    : await generateUniqueUsername(email);
+  try {
+    await sql`UPDATE members SET username = ${username} WHERE email = ${email} AND username IS NULL`;
+  } catch {
+    // Kolom "username" belum ada di DB — abaikan, member tetap terbuat.
+  }
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -199,9 +219,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       let accessCode = providedCode?.trim();
+      // Cek apakah kode yang disediakan admin sudah dipakai member lain.
+      // Kode yang sudah ada tapi is_used = false (pre-generated) tetap boleh dipakai.
+      let accessCodeAlreadyInDb = false;
       if (accessCode) {
-        const existing = await sql`SELECT id FROM access_codes WHERE code = ${accessCode} LIMIT 1`;
-        if (existing.length > 0) return res.status(400).json({ error: "Kode akses sudah dipakai, pilih kode lain" });
+        const existing = await sql`SELECT is_used FROM access_codes WHERE code = ${accessCode} LIMIT 1`;
+        if (existing.length > 0) {
+          if (existing[0]!["is_used"]) {
+            return res.status(400).json({ error: "Kode akses sudah dipakai member lain" });
+          }
+          // Kode ada di DB tapi belum dipakai → gunakan langsung, jangan INSERT lagi.
+          accessCodeAlreadyInDb = true;
+        }
       } else {
         for (let attempt = 0; attempt < 20; attempt++) {
           const candidate = generateCode();
@@ -217,13 +246,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // punya foreign key ke access_codes.code.
       // Dibungkus transaction: kalau salah satu gagal, semuanya rollback.
       await sql.begin(async (tx) => {
-        await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
+        if (!accessCodeAlreadyInDb) {
+          await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${accessCode}, ${memberType}, ${batch}, false)`;
+        }
         await tx`
           INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
           VALUES (${orderId}, ${name}, ${normalizedEmail}, ${"-"}, ${memberType}, ${batch}, 0, 0, 'paid', ${accessCode}, NOW())
         `;
-        await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch, username }, tx);
+        await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch }, tx);
       });
+      // Username disimpan terpisah dari transaksi karena kolom mungkin belum ada di DB.
+      await trySetUsername(normalizedEmail, username);
 
       return res.json({ success: true, orderId, accessCode });
     }
@@ -420,6 +453,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           `;
           await upsertMember({ email: normalizedEmail, name, accessCode, memberType, batchNumber: batch }, tx);
         });
+        await trySetUsername(normalizedEmail);
       } else {
         await sql`
           INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status)
@@ -456,6 +490,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           batchNumber: (order["batch_number"] as number) ?? 3,
         }, tx);
       });
+      await trySetUsername(order["email"] as string);
       return res.json({ success: true, accessCode });
     }
 

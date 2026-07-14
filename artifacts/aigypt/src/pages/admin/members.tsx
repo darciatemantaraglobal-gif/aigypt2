@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Fragment } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmModal } from "@/components/admin/ConfirmModal";
@@ -302,9 +302,9 @@ export default function AdminMembers() {
     if (filterBatch) p.set("batch", filterBatch);
     try {
       const r = await adminFetch(`/admin/members/list?${p}`);
-      const d = await r.json() as { members: Member[] };
-      setMembers(d.members);
-    } catch { /* handled */ }
+      const d = await r.json() as { members?: Member[] };
+      setMembers(d.members ?? []);
+    } catch { /* redirect handled in adminFetch */ }
     finally { setLoading(false); }
   }, [search, filterType, filterBatch]);
 
@@ -392,8 +392,8 @@ export default function AdminMembers() {
               ) : members.length === 0 ? (
                 <tr><td colSpan={6} className="text-center py-10 text-sm" style={{ color: "#52525B" }}>Tidak ada member ditemukan</td></tr>
               ) : members.map(m => (
-                <>
-                  <tr key={m.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+                <Fragment key={m.id}>
+                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
                     className="cursor-pointer hover:bg-white/[0.02] transition-colors" onClick={() => handleExpand(m.email)}>
                     <td className="px-4 py-3">
                       <div className="font-medium text-sm" style={{ color: "#FAFAFA" }}>{m.name ?? "—"}</div>
@@ -426,7 +426,7 @@ export default function AdminMembers() {
                     </td>
                   </tr>
                   {expanded === m.email && (
-                    <tr key={`${m.id}-detail`} style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                       <td colSpan={6} className="px-6 py-5" style={{ background: "rgba(124,58,237,0.04)" }}>
                         {detailLoading ? (
                           <p className="text-xs" style={{ color: "#52525B" }}>Memuat detail...</p>
@@ -472,7 +472,7 @@ export default function AdminMembers() {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>
