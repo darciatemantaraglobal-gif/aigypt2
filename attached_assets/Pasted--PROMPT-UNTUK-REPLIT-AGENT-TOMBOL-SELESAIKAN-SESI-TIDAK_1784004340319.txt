@@ -1,0 +1,83 @@
+# PROMPT UNTUK REPLIT AGENT — TOMBOL "SELESAIKAN SESI" TIDAK BERFUNGSI
+
+---
+
+Halo. Tombol "Selesaikan Sesi" di halaman materi aplikasi AIGYPT tidak berfungsi. Peserta mengkliknya dan tidak terjadi apa-apa. Saya sudah menelusuri sampai ke akarnya, jadi kamu tidak perlu menebak-nebak. Tolong baca semua batasan di bawah sampai selesai sebelum menyentuh satu baris kode pun.
+
+## Batasan yang tidak boleh dilanggar
+
+Aplikasi ini sudah berjalan di produksi di Vercel dengan database Supabase Postgres, dalam pnpm monorepo, dengan root directory Vercel di `artifacts/aigypt`. Saya TIDAK ingin migrasi ke sistem apapun milik Replit. Jangan memindahkan database ke Replit DB, jangan mengganti autentikasi ke Replit Auth, jangan menambahkan storage Replit, dan jangan mengubah struktur deployment. Kalau kamu merasa ada cara yang lebih mudah dengan tooling Replit, abaikan, karena itu akan merusak produksi saya.
+
+Jangan mengubah struktur folder, jangan memindahkan file antar workspace, dan jangan menyentuh `vercel.json` maupun `pnpm-workspace.yaml`.
+
+Package `artifacts/aigypt/package.json` punya `"type": "module"`, artinya semua serverless function berjalan sebagai ESM. Ini penting dan tidak intuitif: setiap relative import di dalam folder `api/` WAJIB memakai ekstensi `.js` secara eksplisit, misalnya `import { sql } from "../_lib/db.js"`. Kalau kamu lupa ekstensi ini, seluruh serverless function akan crash dengan `ERR_MODULE_NOT_FOUND` dan seluruh aplikasi mati total. Ini sudah pernah terjadi dan memakan waktu saya berjam-jam, jadi tolong sangat hati-hati.
+
+Ada satu lagi yang juga tidak intuitif. Di runtime Vercel pada project ini, objek `req.query` dan `req.body` TIDAK selalu terisi. Ini pernah menyebabkan bug besar: routing catch-all gagal membaca segmen path, sehingga endpoint login tidak pernah dieksekusi dan selalu membalas 401. Karena itu sudah ada helper di `artifacts/aigypt/api/_lib/route.ts` yang berisi `getSegments(req, basePath)`, `getBody<T>(req)`, dan `getQuery(req)`. Semua endpoint baru WAJIB memakai helper ini. Jangan pernah mengakses `req.query` atau `req.body` secara langsung, karena bug lama akan kembali.
+
+Jangan menyentuh file materi: `src/lib/materiContent.ts`, `src/lib/fundamentalAI.ts`, dan `src/lib/classesData.ts`. Isinya sudah benar.
+
+## Akar masalahnya, sudah saya telusuri
+
+Buka `artifacts/aigypt/src/pages/materi/index.tsx` dan lihat fungsi `handleComplete()` di sekitar baris sembilan ratus dua. Isinya memanggil `markComplete.mutateAsync(...)`, yang berasal dari hook `useMarkComplete()` di `@workspace/api-client-react`. Hook itu melakukan `POST` ke `/api/progress`.
+
+Sekarang lihat isi folder `artifacts/aigypt/api/`. Yang ada di sana hanya `_lib`, `admin`, `auth`, `coupons`, dan `qris`. Tidak ada folder `progress` sama sekali. Artinya endpoint `/api/progress` TIDAK PERNAH ADA. Setiap kali peserta menekan tombol Selesaikan Sesi, request-nya menghantam endpoint yang tidak eksis dan mendapat 404.
+
+Lebih parah lagi, di dalam `handleComplete()` ada blok `catch` yang isinya kosong, cuma ada komentar `// silent`. Jadi error 404 itu ditelan diam-diam dan tidak pernah muncul ke permukaan. Dari sisi peserta, tombolnya seolah-olah mati padahal sebenarnya gagal. Ini juga sebabnya tidak ada pesan error apapun yang muncul.
+
+Masalah yang sama juga membuat fitur lain tidak berfungsi. Di file yang sama ada pemanggilan `fetch("/api/progress/step")` untuk menyimpan posisi step terakhir, dan `fetch("/api/progress/skip")` untuk melewati sesi. Keduanya juga menghantam endpoint yang tidak ada. Dan hook `useGetProgress()` yang melakukan `GET /api/progress` juga selalu gagal, sehingga progress belajar peserta tidak pernah tersimpan sama sekali.
+
+Ada satu lapis lagi yang perlu kamu tahu, kalau tidak perbaikanmu akan tetap gagal dengan 401. Endpoint `/api/auth/login` di `artifacts/aigypt/api/auth/[...path].ts` mengembalikan JWT sebagai field `token` di dalam response body, dan `/api/auth/me` mensyaratkan header `Authorization: Bearer <token>`. Masalahnya, fungsi `setAuthTokenGetter()` dari `@workspace/api-client-react` TIDAK PERNAH dipanggil di mana pun di dalam `src/`. Silakan cari sendiri, kamu tidak akan menemukannya. Akibatnya token hasil login tidak pernah disimpan dan tidak pernah dilampirkan ke request berikutnya. Jadi semua endpoint yang butuh autentikasi member akan membalas 401.
+
+## Cara memperbaikinya
+
+Autentikasi member harus dipindahkan dari Bearer token menjadi HttpOnly cookie, karena itulah desain yang sebenarnya diinginkan kodebase ini. Buktinya ada tiga. Pertama, komentar di `lib/api-client-react/src/custom-fetch.ts` menyebutkan secara eksplisit bahwa `setAuthTokenGetter` tidak seharusnya dipakai di aplikasi web karena cookie sesi otomatis dilampirkan browser. Kedua, panggilan fetch di `src/pages/materi/index.tsx` sudah memakai `credentials: "include"`, yang memang dirancang untuk cookie. Ketiga, admin panel di `api/admin/[...path].ts` sudah memakai pola cookie HttpOnly lewat `api/_lib/adminAuth.ts` dan terbukti berjalan.
+
+Jadi tugasnya adalah menyamakan alur member dengan alur admin yang sudah terbukti jalan.
+
+### Langkah satu: buat modul autentikasi member
+
+Buat file baru `artifacts/aigypt/api/_lib/memberAuth.ts` yang meniru pola `api/_lib/adminAuth.ts` yang sudah ada. Baca file itu dulu sampai paham strukturnya, lalu tiru.
+
+Isinya: sebuah fungsi untuk menandatangani JWT berisi identitas member, minimal email dan tipe membernya. Sebuah fungsi untuk memasang cookie HttpOnly bernama `aigypt_session`, dengan atribut `HttpOnly`, `Path=/`, `SameSite=Lax`, `Secure` ketika produksi, dan masa berlaku tiga puluh hari. Sebuah fungsi untuk menghapus cookie itu. Dan sebuah fungsi verifikasi yang membaca request lalu mengembalikan data member atau null.
+
+Pakai library `jose` yang sudah terpasang, dan pakai `process.env["JWT_SECRET"]` sebagai secret, sama seperti yang sudah dipakai sekarang.
+
+Fungsi verifikasi harus mencoba membaca cookie terlebih dahulu, lalu kalau cookie tidak ada, jatuh ke header `Authorization: Bearer` sebagai cadangan. Dengan begitu tidak ada klien lama yang rusak, tapi alur web jadi berfungsi.
+
+### Langkah dua: pasang cookie saat login
+
+Ubah `artifacts/aigypt/api/auth/[...path].ts`. Pada endpoint login, selain tetap mengembalikan `token` di dalam body seperti sekarang, tambahkan pemasangan cookie sesi memakai fungsi baru tadi. Pada endpoint `/api/auth/me`, ganti pembacaan Bearer-only menjadi memanggil fungsi verifikasi yang baru, sehingga cookie ikut dikenali. Pada endpoint logout, hapus cookie sesi.
+
+Jangan mengubah logika pencocokan kredensial yang sudah ada. Perhatikan bahwa login member membaca dari tabel `orders` dengan `status = 'paid'`, bukan dari tabel `members`. Biarkan seperti itu, jangan diubah.
+
+### Langkah tiga: buat endpoint progress yang selama ini hilang
+
+Buat file baru `artifacts/aigypt/api/progress/[...path].ts`.
+
+Gunakan `getSegments(req, "/api/progress/")` untuk membaca segmen path. Perhatikan bahwa `GET /api/progress` tanpa segmen tambahan juga harus ditangani, jadi tangani kasus ketika array segmennya kosong.
+
+Semua endpoint di file ini wajib memverifikasi member lewat modul `memberAuth` yang kamu buat di langkah satu, dan membalas 401 kalau tidak terautentikasi.
+
+Endpoint `GET /api/progress` mengembalikan array progress milik member yang sedang login, dibaca dari tabel `materi_progress` dengan filter kolom `member_email`. Bentuk objek yang dikembalikan harus camelCase agar cocok dengan yang diharapkan frontend, yaitu `sesiNumber`, `kelasId`, `isCompleted`, `currentStep`, `wasSkipped`, dan `completedAt`. Perhatikan kolom di database memakai snake_case, jadi lakukan pemetaan.
+
+Endpoint `POST /api/progress` menerima body berisi `kelasId` dan `sesiNumber`, lalu menandai sesi itu selesai dengan mengisi `is_completed` menjadi true dan `completed_at` menjadi waktu sekarang. Inilah yang dipanggil tombol Selesaikan Sesi.
+
+Endpoint `POST /api/progress/step` menerima body berisi `kelasId`, `sesiNumber`, dan `currentStep`, lalu menyimpan posisi step terakhir yang dibaca peserta. Ini dipanggil sangat sering karena ada auto-save, jadi buat seringan mungkin dan jangan sampai melempar error yang mengganggu tampilan.
+
+Endpoint `POST /api/progress/skip` menerima body berisi `kelasId` dan `sesiNumber`, lalu menandai `was_skipped` menjadi true untuk sesi tersebut.
+
+Semua operasi tulis di atas harus idempoten. Artinya kalau baris untuk kombinasi member dan sesi itu sudah ada, dia di-update, bukan membuat baris duplikat. Cara paling bersih adalah `INSERT ... ON CONFLICT ... DO UPDATE`. Tapi saya tidak yakin tabel `materi_progress` sudah punya unique constraint pada kombinasi `(member_email, kelas_id, sesi_number)`. Tolong periksa dulu. Kalau constraint itu belum ada, JANGAN membuatnya lewat kode aplikasi. Sebagai gantinya, tuliskan SQL migration-nya di file terpisah `docs/migration-progress.sql`, lalu beri tahu saya dengan jelas bahwa saya harus menjalankannya manual di Supabase SQL Editor. Migration di project ini memang selalu dijalankan manual dan tidak pernah otomatis. Sementara constraint belum ada, tulis logika upsert secara manual, yaitu SELECT dulu untuk mengecek keberadaan baris, lalu UPDATE kalau ada dan INSERT kalau belum.
+
+### Langkah empat: berhenti menelan error
+
+Kembali ke `artifacts/aigypt/src/pages/materi/index.tsx`, di fungsi `handleComplete()`. Blok `catch` yang isinya cuma komentar `// silent` itu berbahaya, karena menyembunyikan kegagalan dari peserta dan dari saya. Ganti supaya kalau gagal, peserta melihat pesan error yang jelas, misalnya lewat komponen toast yang sudah ada di project ini di `src/hooks/use-toast.ts`. Cukup pesan sederhana dalam bahasa Indonesia yang memberi tahu bahwa penyimpanan gagal dan minta peserta mencoba lagi.
+
+Lakukan hal yang sama untuk pemanggilan `fetch` ke `/api/progress/step` dan `/api/progress/skip` kalau di sana juga ada penelanan error yang serupa. Khusus untuk `/api/progress/step` yang jalan otomatis di latar belakang, jangan menampilkan toast setiap kali gagal karena akan mengganggu, cukup catat ke console.
+
+## Cara kerja yang saya harapkan
+
+Sebelum menulis kode, baca dulu file-file berikut sampai paham hubungannya, karena semuanya saling terkait: `artifacts/aigypt/api/_lib/route.ts`, `artifacts/aigypt/api/_lib/db.ts`, `artifacts/aigypt/api/_lib/adminAuth.ts`, `artifacts/aigypt/api/auth/[...path].ts`, `artifacts/aigypt/src/pages/materi/index.tsx`, `artifacts/aigypt/src/hooks/use-auth.ts`, dan `lib/api-client-react/src/custom-fetch.ts`.
+
+Setelah selesai, pastikan tidak ada error TypeScript, lalu jelaskan ke saya dalam bahasa manusia apa saja yang kamu ubah dan kenapa. Lalu konfirmasi empat hal secara eksplisit. Pertama, endpoint `/api/progress` sekarang ada dan menangani GET, POST, POST step, dan POST skip. Kedua, autentikasi member sudah memakai cookie HttpOnly sehingga request dari browser membawa identitas dengan benar. Ketiga, tombol Selesaikan Sesi sekarang benar-benar menyimpan progress, dan kalau gagal, peserta melihat pesan error, bukan diam saja. Keempat, sebutkan dengan jelas apakah ada SQL migration yang harus saya jalankan manual di Supabase SQL Editor.
+
+Satu catatan penutup yang tidak berhubungan dengan kode tapi perlu kamu tahu supaya tidak salah diagnosis. Environment variable `DATABASE_URL` di Vercel saat ini masih memakai host direct connection Supabase yang hanya punya alamat IPv6, sehingga semua query gagal dengan `ENOTFOUND`. Saya akan memperbaikinya sendiri dengan menggantinya ke Session Pooler. Jadi kalau kamu melihat error koneksi database, itu bukan bug kode dan jangan coba diperbaiki lewat kode.

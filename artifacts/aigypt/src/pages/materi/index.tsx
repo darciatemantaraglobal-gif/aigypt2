@@ -9,6 +9,7 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "@/hooks/use-toast";
 import { materiByKelas, type MateriStep, type SesiMateri, type QuizItem } from "@/lib/materiContent";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -800,7 +801,7 @@ export default function MateriPage() {
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({ kelasId, sesiNumber: sesiNum, currentStep: step }),
-        }).catch(() => {});
+        }).catch((err) => { console.error("[saveStep] Gagal auto-save posisi:", err); });
       }, 800);
     },
     [sesiNum]
@@ -904,8 +905,13 @@ export default function MateriPage() {
       await markComplete.mutateAsync({ data: { kelasId, sesiNumber: sesiNum } });
       queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
       setShowCompletion(true);
-    } catch {
-      // silent
+    } catch (err) {
+      console.error("[handleComplete] Gagal menyimpan progress:", err);
+      toast({
+        title: "Gagal menyimpan progress",
+        description: "Penyimpanan sesi gagal. Pastikan koneksi internetmu stabil, lalu coba lagi.",
+        variant: "destructive",
+      });
     }
   }
 
@@ -926,7 +932,14 @@ export default function MateriPage() {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({ kelasId, sesiNumber: n - 1 }),
-    }).catch(() => {});
+    }).catch((err) => {
+      console.error("[handleSkipConfirm] Gagal menyimpan skip:", err);
+      toast({
+        title: "Gagal melewati sesi",
+        description: "Terjadi kesalahan saat menyimpan. Coba lagi.",
+        variant: "destructive",
+      });
+    });
     queryClient.invalidateQueries({ queryKey: getGetProgressQueryKey() });
     setLocation(`/kelas/${kelasId}/materi/sesi-${n}`);
   }
