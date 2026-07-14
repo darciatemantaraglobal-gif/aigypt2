@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, Fragment } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmModal } from "@/components/admin/ConfirmModal";
+import { CopyButton } from "@/components/admin/CopyButton";
 import { adminFetch } from "@/hooks/use-admin-auth";
 
 interface Member {
@@ -292,6 +293,12 @@ export default function AdminMembers() {
   const [toast, setToast] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [editTarget, setEditTarget] = useState<Member | null>(null);
+  const [showAutoPanel, setShowAutoPanel] = useState(false);
+  const [autoType, setAutoType] = useState<"kelas" | "mandiri">("kelas");
+  const [autoCount, setAutoCount] = useState(1);
+  const [autoLoading, setAutoLoading] = useState(false);
+  const [autoError, setAutoError] = useState("");
+  const [autoResult, setAutoResult] = useState<{ accessCode: string; email: string; orderId: string }[]>([]);
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
 
@@ -364,14 +371,83 @@ export default function AdminMembers() {
           <h1 className="text-xl font-bold text-white" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Member</h1>
           <p className="text-sm mt-1" style={{ color: "#71717A" }}>Kelola semua member yang terdaftar</p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="text-sm px-4 py-2.5 rounded-xl text-white font-medium transition-colors"
-          style={{ background: "#7C3AED" }}
-        >
-          + Tambah Member
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => { setShowAutoPanel(p => !p); setAutoResult([]); setAutoError(""); }}
+            className="text-sm px-4 py-2.5 rounded-xl font-medium transition-colors"
+            style={{ background: "transparent", border: "1px solid rgba(124,58,237,0.5)", color: "#A855F7" }}
+          >
+            Auto Tambah
+          </button>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="text-sm px-4 py-2.5 rounded-xl text-white font-medium transition-colors"
+            style={{ background: "#7C3AED" }}
+          >
+            + Tambah Member
+          </button>
+        </div>
       </div>
+
+      {/* Panel Auto Tambah */}
+      {showAutoPanel && (
+        <div className="rounded-xl p-6 mb-6" style={{ background: "#101018", border: "1px solid rgba(255,255,255,0.06)" }}>
+          <h2 className="text-sm font-semibold text-white mb-4" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Auto Tambah Member</h2>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setAutoError(""); setAutoResult([]); setAutoLoading(true);
+              try {
+                const r = await adminFetch("/admin/members/auto-create", {
+                  method: "POST",
+                  body: JSON.stringify({ memberType: autoType, count: autoCount, batchNumber: 3 }),
+                });
+                const d = await r.json() as { created?: { accessCode: string; email: string; orderId: string }[]; error?: string };
+                if (!r.ok || d.error) { setAutoError(d.error ?? "Gagal membuat slot member"); return; }
+                setAutoResult(d.created ?? []);
+                fetchMembers();
+              } catch { setAutoError("Gagal terhubung ke server"); }
+              finally { setAutoLoading(false); }
+            }}
+            className="flex flex-wrap gap-4 items-end"
+          >
+            <div className="flex-1 min-w-32">
+              <label className="block text-xs font-mono mb-1.5" style={{ color: "#52525B", letterSpacing: "0.1em" }}>TIPE</label>
+              <select value={autoType} onChange={e => setAutoType(e.target.value as "kelas" | "mandiri")} style={{ ...inputStyle, appearance: "none" }}>
+                <option value="kelas">Kelas</option>
+                <option value="mandiri">Mandiri</option>
+              </select>
+            </div>
+            <div className="w-28">
+              <label className="block text-xs font-mono mb-1.5" style={{ color: "#52525B", letterSpacing: "0.1em" }}>JUMLAH</label>
+              <input type="number" min={1} max={20} value={autoCount} onChange={e => setAutoCount(+e.target.value)} style={inputStyle} />
+            </div>
+            <button type="submit" disabled={autoLoading}
+              className="px-6 py-2 rounded-lg text-sm font-semibold text-white transition-opacity"
+              style={{ background: "linear-gradient(135deg,#7C3AED,#A855F7)", opacity: autoLoading ? 0.7 : 1, fontFamily: "'Space Grotesk',sans-serif", whiteSpace: "nowrap" }}>
+              {autoLoading ? "Membuat..." : "Buat Slot"}
+            </button>
+          </form>
+          {autoError && <p className="text-xs mt-3" style={{ color: "#f87171" }}>{autoError}</p>}
+
+          {autoResult.length > 0 && (
+            <div className="mt-5 pt-5" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-mono" style={{ color: "#A855F7" }}>{autoResult.length} slot baru dibuat</p>
+                <CopyButton text={autoResult.map(r => r.accessCode).join("\n")} label="Salin Semua" />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {autoResult.map(r => (
+                  <div key={r.accessCode} className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg" style={{ background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.2)" }}>
+                    <span className="font-mono text-xs" style={{ color: "#A855F7", letterSpacing: "0.05em" }}>{r.accessCode}</span>
+                    <CopyButton text={r.accessCode} label="Salin" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-3 mb-4">
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama / email..." style={{ ...inputStyle, width: 240 }} />
@@ -403,8 +479,13 @@ export default function AdminMembers() {
                   <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
                     className="cursor-pointer hover:bg-white/[0.02] transition-colors" onClick={() => handleExpand(m.email)}>
                     <td className="px-4 py-3">
-                      <div className="font-medium text-sm" style={{ color: "#FAFAFA" }}>{m.name ?? "—"}</div>
-                      <div className="text-xs mt-0.5" style={{ color: "#71717A" }}>{m.email}</div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm" style={{ color: "#FAFAFA" }}>{m.name ?? "—"}</span>
+                        {m.email.endsWith("@placeholder.aigypt.id") && (
+                          <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: "rgba(245,158,11,0.15)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.25)" }}>Belum diisi</span>
+                        )}
+                      </div>
+                      <div className="text-xs mt-0.5" style={{ color: m.email.endsWith("@placeholder.aigypt.id") ? "#52525B" : "#71717A" }}>{m.email}</div>
                       {m.username && <div className="text-xs mt-0.5 font-mono" style={{ color: "#52525B" }}>@{m.username}</div>}
                     </td>
                     <td className="px-4 py-3"><StatusBadge status={m.memberType} /></td>

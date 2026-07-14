@@ -121,10 +121,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // ---- DASHBOARD ----
     if (section === "dashboard-stats" && req.method === "GET") {
       const [totalMembers, unusedCodes, pendingOrders, paidOrders, recentOrders] = await Promise.all([
-        sql`SELECT COUNT(*)::int AS c FROM members`,
+        sql`SELECT COUNT(*)::int AS c FROM members WHERE email NOT LIKE '%@placeholder.aigypt.id'`,
         sql`SELECT COUNT(*)::int AS c FROM access_codes WHERE is_used = false`,
         sql`SELECT COUNT(*)::int AS c FROM orders WHERE status IN ('pending', 'pending_qris')`,
-        sql`SELECT COUNT(*)::int AS c FROM orders WHERE status = 'paid'`,
+        sql`SELECT COUNT(*)::int AS c FROM orders WHERE status = 'paid' AND email NOT LIKE '%@placeholder.aigypt.id'`,
         sql`SELECT order_id, name, email, member_type, status, COALESCE(final_amount, amount) AS amount, created_at FROM orders ORDER BY created_at DESC LIMIT 5`,
       ]);
       return res.json({
@@ -264,6 +264,51 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await trySetUsername(normalizedEmail, username);
 
       return res.json({ success: true, orderId, accessCode });
+    }
+
+    // ---- MEMBERS: AUTO-CREATE ----
+    if (section === "members" && sub1 === "auto-create" && req.method === "POST") {
+      const { memberType = "kelas", batchNumber, count = 1 } = getBody<{
+        memberType?: string; batchNumber?: number; count?: number;
+      }>(req);
+      if (!["mandiri", "kelas"].includes(memberType))
+        return res.status(400).json({ error: "Tipe harus 'mandiri' atau 'kelas'" });
+      if (!Number.isInteger(count) || count < 1 || count > 20)
+        return res.status(400).json({ error: "Jumlah harus antara 1 sampai 20" });
+      const batch = batchNumber ?? 3;
+
+      const created: { accessCode: string; email: string; orderId: string }[] = [];
+
+      for (let i = 0; i < count; i++) {
+        let accessCode: string | null = null;
+        for (let attempt = 0; attempt < 20; attempt++) {
+          const candidate = generateCode();
+          const existing = await sql`SELECT id FROM access_codes WHERE code = ${candidate} LIMIT 1`;
+          if (existing.length === 0) { accessCode = candidate; break; }
+        }
+        if (!accessCode) return res.status(500).json({ error: "Gagal generate kode akses unik" });
+
+        // Email placeholder diturunkan dari bagian kode setelah tanda hubung, dijadikan huruf kecil.
+        // Format ini lolos validasi input email tapi mudah dikenali sebagai belum diisi.
+        const codeSuffix = accessCode.replace(/^AIGYPT-/, "").toLowerCase();
+        const placeholderEmail = `aigypt-${codeSuffix}@placeholder.aigypt.id`;
+        const placeholderName = "Belum Diisi";
+        const orderId = generateOrderId();
+        const code: string = accessCode;
+
+        await sql.begin(async (tx) => {
+          await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${code}, ${memberType}, ${batch}, false)`;
+          await tx`
+            INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status, access_code, paid_at)
+            VALUES (${orderId}, ${placeholderName}, ${placeholderEmail}, ${"-"}, ${memberType}, ${batch}, 0, 0, 'paid', ${code}, NOW())
+          `;
+          await upsertMember({ email: placeholderEmail, name: placeholderName, accessCode: code, memberType, batchNumber: batch }, tx);
+        });
+        await trySetUsername(placeholderEmail);
+        created.push({ accessCode, email: placeholderEmail, orderId });
+      }
+
+      return res.json({ created });
     }
 
     // ---- MEMBERS: UPDATE ----
