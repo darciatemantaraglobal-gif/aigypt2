@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
 import { getSegments, getBody } from "../_lib/route.js";
 import { SignJWT } from "jose";
-import { setMemberCookie, clearMemberCookie, verifyMember } from "../_lib/memberAuth.js";
+import { setMemberCookie, clearMemberCookie, verifyMember, isOrderRevoked } from "../_lib/memberAuth.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(204).end();
@@ -22,6 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         WHERE email = ${email.toLowerCase().trim()}
           AND access_code = ${code.trim()}
           AND status = 'paid'
+          AND access_revoked = false
         LIMIT 1
       `;
       if (!rows.length) return res.status(401).json({ error: "Email atau kode akses tidak valid" });
@@ -63,6 +64,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (section === "me" && req.method === "GET") {
     const member = await verifyMember(req);
     if (!member) return res.status(401).json({ error: "Unauthorized" });
+
+    if (await isOrderRevoked(member.orderId)) {
+      clearMemberCookie(res);
+      return res.status(401).json({ error: "Akses kamu sudah tidak aktif. Hubungi admin AIGYPT untuk info lebih lanjut." });
+    }
 
     try {
       const rows = await sql`

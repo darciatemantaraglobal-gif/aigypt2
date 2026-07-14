@@ -463,7 +463,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           id: m["id"], email: m["email"], name: m["name"], username: m["username"] ?? null, memberType: m["member_type"],
           batchNumber: m["batch_number"], accessCode: m["access_code"],
           completedSessions: completedByEmail[m["email"] as string] ?? 0, totalSessions: 6,
-          createdAt: m["created_at"], lastLogin: m["last_login"],
+          createdAt: m["created_at"], lastLogin: m["last_login"], accessRevoked: m["access_revoked"] ?? false,
         })),
       });
     }
@@ -482,7 +482,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         member: {
           id: member["id"], email: member["email"], name: member["name"], username: member["username"] ?? null,
           memberType: member["member_type"], batchNumber: member["batch_number"], accessCode: member["access_code"],
-          createdAt: member["created_at"], lastLogin: member["last_login"],
+          createdAt: member["created_at"], lastLogin: member["last_login"], accessRevoked: member["access_revoked"] ?? false,
         },
         progress: progress.map((p) => ({
           sesiNumber: p["sesi_number"], kelasId: p["kelas_id"], isCompleted: p["is_completed"],
@@ -495,6 +495,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (section === "members" && sub1 && sub2 === "reset-progress" && req.method === "POST") {
       const email = decodeURIComponent(sub1);
       await sql`DELETE FROM materi_progress WHERE member_email = ${email}`;
+      return res.json({ success: true });
+    }
+
+    // ---- MEMBERS: REVOKE ACCESS ----
+    if (section === "members" && sub1 && sub2 === "revoke-access" && req.method === "POST") {
+      const email = decodeURIComponent(sub1);
+      const existing = await sql`SELECT access_code FROM members WHERE email = ${email} LIMIT 1`;
+      if (!existing.length) return res.status(404).json({ error: "Member tidak ditemukan" });
+      const memberAccessCode = existing[0]!["access_code"] as string;
+
+      await sql.begin(async (tx) => {
+        await tx`UPDATE members SET access_revoked = true WHERE email = ${email}`;
+        await tx`UPDATE orders SET access_revoked = true WHERE email = ${email} AND access_code = ${memberAccessCode}`;
+      });
+
+      return res.json({ success: true });
+    }
+
+    // ---- MEMBERS: RESTORE ACCESS ----
+    if (section === "members" && sub1 && sub2 === "restore-access" && req.method === "POST") {
+      const email = decodeURIComponent(sub1);
+      const existing = await sql`SELECT access_code FROM members WHERE email = ${email} LIMIT 1`;
+      if (!existing.length) return res.status(404).json({ error: "Member tidak ditemukan" });
+      const memberAccessCode = existing[0]!["access_code"] as string;
+
+      await sql.begin(async (tx) => {
+        await tx`UPDATE members SET access_revoked = false WHERE email = ${email}`;
+        await tx`UPDATE orders SET access_revoked = false WHERE email = ${email} AND access_code = ${memberAccessCode}`;
+      });
+
       return res.json({ success: true });
     }
 

@@ -1,0 +1,24 @@
+Tambahkan fitur "Cabut Akses" di admin panel AIGYPT: admin bisa mencabut akses satu member (sehingga dia tidak bisa login lagi DAN sesi yang sedang aktif langsung ditolak), dengan opsi untuk mengaktifkan kembali. Migration SQL (kolom access_revoked di tabel members dan orders) SUDAH dijalankan manual di Supabase, jangan ubah struktur database lagi. Semua ada di artifacts/aigypt. Jangan ubah fitur lain yang sudah ada.
+
+BACKGROUND PENTING: Sesi login member pakai JWT yang valid 30 hari dan TIDAK dicek ulang ke database di verifyMember() (artifacts/aigypt/api/_lib/memberAuth.ts). Supaya cabut akses benar-benar efektif (bukan cuma blokir login baru, tapi juga nendang sesi yang sedang aktif), perlu penambahan pengecekan access_revoked di beberapa tempat, dijelaskan di bawah.
+
+1. LOGIN — di artifacts/aigypt/api/auth/[...path].ts, section "login": tambahkan kondisi AND access_revoked = false pada query SELECT dari tabel orders, supaya member yang sudah dicabut aksesnya tidak bisa login lagi. Pesan error tetap sama seperti sekarang ("Email atau kode akses tidak valid"), jangan bocorkan informasi bahwa akun ini sebenarnya dicabut (biar tidak membingungkan atau memancing pertanyaan dari peserta ke arah yang salah).
+
+2. SESI AKTIF — tambahkan function baru di artifacts/aigypt/api/_lib/memberAuth.ts bernama isOrderRevoked(orderId: string): Promise<boolean> yang query SELECT access_revoked FROM orders WHERE order_id = orderId LIMIT 1, dan pakai function ini di dua tempat:
+   a. Di artifacts/aigypt/api/auth/[...path].ts section "me": setelah verifyMember() berhasil dan sebelum mengembalikan data user, cek isOrderRevoked(member.orderId). Kalau true, panggil clearMemberCookie(res) lalu return res.status(401).json({ error: "Akses kamu sudah tidak aktif. Hubungi admin AIGYPT untuk info lebih lanjut." }).
+   b. Di artifacts/aigypt/api/progress/[...path].ts: setelah verifyMember() berhasil (baris await verifyMember(req)), tambahkan pengecekan isOrderRevoked yang sama, return 401 dengan pesan yang sama kalau revoked.
+   Import isOrderRevoked dari _lib/memberAuth.ts di kedua file itu.
+
+3. ENDPOINT ADMIN — di artifacts/aigypt/api/admin/[...path].ts, tambahkan dua route baru mengikuti pola route MEMBERS yang sudah ada (harus lewat verifyAdminSession seperti route admin lainnya):
+   - POST /admin/members/:email/revoke-access — cari member berdasarkan email dari sub1, kalau tidak ketemu return 404 "Member tidak ditemukan". Dalam satu sql.begin(), update members SET access_revoked = true WHERE email = ..., DAN update orders SET access_revoked = true WHERE email = ... AND access_code = (access_code member itu). Return res.json({ success: true }).
+   - POST /admin/members/:email/restore-access — logic sama persis tapi access_revoked = false di kedua tabel.
+
+4. LIST & DETAIL MEMBER — di section MEMBERS: LIST dan MEMBERS: DETAIL pada file yang sama, tambahkan field accessRevoked: m["access_revoked"] ?? false pada object yang dikembalikan (SELECT * sudah otomatis ikut kolom baru ini, tinggal dimasukkan ke response JSON).
+
+5. FRONTEND — di artifacts/aigypt/src/pages/admin/members.tsx:
+   a. Tambahkan accessRevoked: boolean ke interface Member.
+   b. Di kolom NAMA/EMAIL, tampilkan badge kecil "Akses Dicabut" (pakai style merah, mirip badge "Belum diisi" yang sudah ada tapi warna rgba(239,68,68,...) bukan amber) kalau m.accessRevoked true.
+   c. Di kolom AKSI, tambahkan satu tombol lagi di sebelah Edit dan Salin Pesan: kalau m.accessRevoked false, tombol berlabel "Cabut Akses" warna merah yang saat diklik membuka ConfirmModal (komponen sudah ada di components/admin/ConfirmModal.tsx) dengan pesan konfirmasi "Akses [nama] akan dicabut. Dia tidak akan bisa login lagi, termasuk sesi yang sedang aktif. Lanjutkan?", lalu panggil POST /admin/members/{email}/revoke-access dan fetchMembers() setelah sukses, tampilkan toast "Akses [nama] dicabut". Kalau m.accessRevoked true, tombolnya berubah jadi "Aktifkan Lagi" warna hijau yang manggil endpoint restore-access dengan pola yang sama (tanpa perlu ConfirmModal untuk restore, langsung eksekusi).
+   d. Jangan tampilkan tombol Cabut Akses/Aktifkan Lagi untuk member yang emailnya masih placeholder (@placeholder.aigypt.id), karena belum ada gunanya untuk member yang belum diisi datanya.
+
+Setelah selesai, pastikan tsc lolos dan build Vite tetap sukses. Semua teks tetap Bahasa Indonesia.

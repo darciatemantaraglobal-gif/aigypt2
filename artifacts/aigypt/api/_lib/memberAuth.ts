@@ -1,5 +1,6 @@
 import { jwtVerify, SignJWT } from "jose";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { sql } from "./db.js";
 
 const MEMBER_COOKIE = "aigypt_session";
 const SESSION_DAYS = 30;
@@ -60,6 +61,13 @@ export function clearMemberCookie(res: VercelResponse) {
  * lalu fallback ke header Authorization: Bearer (klien lama / non-browser)
  * supaya tidak ada yang rusak untuk klien yang sudah ada.
  */
+/** Cek apakah akses order ini sudah dicabut admin (dipakai untuk nendang sesi JWT yang masih aktif). */
+export async function isOrderRevoked(orderId: string): Promise<boolean> {
+  const rows = await sql`SELECT access_revoked FROM orders WHERE order_id = ${orderId} LIMIT 1`;
+  if (!rows.length) return false;
+  return Boolean(rows[0]!["access_revoked"]);
+}
+
 export async function verifyMember(req: VercelRequest): Promise<MemberPayload | null> {
   const cookies = parseCookies(req.headers.cookie);
   let token = cookies[MEMBER_COOKIE];

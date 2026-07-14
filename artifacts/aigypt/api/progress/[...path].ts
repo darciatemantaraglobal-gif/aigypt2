@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sql } from "../_lib/db.js";
 import { getSegments, getBody } from "../_lib/route.js";
-import { verifyMember } from "../_lib/memberAuth.js";
+import { verifyMember, isOrderRevoked } from "../_lib/memberAuth.js";
 
 /**
  * Upsert manual (SELECT lalu UPDATE/INSERT) karena belum dipastikan ada
@@ -51,6 +51,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const member = await verifyMember(req);
   if (!member) return res.status(401).json({ error: "Unauthorized" });
+
+  if (await isOrderRevoked(member.orderId)) {
+    return res.status(401).json({ error: "Akses kamu sudah tidak aktif. Hubungi admin AIGYPT untuk info lebih lanjut." });
+  }
 
   const segments = getSegments(req, "/api/progress/");
   const [section] = segments;

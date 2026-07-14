@@ -8,7 +8,7 @@ import { adminFetch } from "@/hooks/use-admin-auth";
 interface Member {
   id: string; email: string; name: string | null; username: string | null; memberType: string; batchNumber: number | null;
   accessCode: string | null; completedSessions: number; totalSessions: number;
-  createdAt: string; lastLogin: string | null;
+  createdAt: string; lastLogin: string | null; accessRevoked: boolean;
 }
 interface MemberDetail {
   member: { email: string; name: string | null; username: string | null; memberType: string; batchNumber: number | null; accessCode: string | null; createdAt: string; lastLogin: string | null };
@@ -316,6 +316,9 @@ export default function AdminMembers() {
   const [toast, setToast] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [editTarget, setEditTarget] = useState<Member | null>(null);
+  const [revokeTarget, setRevokeTarget] = useState<Member | null>(null);
+  const [revoking, setRevoking] = useState(false);
+  const [restoringEmail, setRestoringEmail] = useState<string | null>(null);
   const [showAutoPanel, setShowAutoPanel] = useState(false);
   const [autoType, setAutoType] = useState<"kelas" | "mandiri">("kelas");
   const [autoCount, setAutoCount] = useState(1);
@@ -367,6 +370,25 @@ export default function AdminMembers() {
     } finally { setResetting(false); setResetTarget(null); }
   };
 
+  const handleRevokeAccess = async () => {
+    if (!revokeTarget) return;
+    setRevoking(true);
+    try {
+      await adminFetch(`/admin/members/${encodeURIComponent(revokeTarget.email)}/revoke-access`, { method: "POST" });
+      showToast(`Akses ${revokeTarget.name ?? revokeTarget.email} dicabut`);
+      fetchMembers();
+    } finally { setRevoking(false); setRevokeTarget(null); }
+  };
+
+  const handleRestoreAccess = async (m: Member) => {
+    setRestoringEmail(m.email);
+    try {
+      await adminFetch(`/admin/members/${encodeURIComponent(m.email)}/restore-access`, { method: "POST" });
+      showToast(`Akses ${m.name ?? m.email} diaktifkan kembali`);
+      fetchMembers();
+    } finally { setRestoringEmail(null); }
+  };
+
   return (
     <AdminLayout>
       {toast && (
@@ -375,6 +397,15 @@ export default function AdminMembers() {
         </div>
       )}
       <ConfirmModal open={!!resetTarget} title="Reset Progress?" message={`Progress belajar ${resetTarget} akan dihapus semua. Aksi ini tidak bisa dibatalkan.`} confirmLabel="Reset Progress" onConfirm={handleResetProgress} onCancel={() => setResetTarget(null)} loading={resetting} />
+      <ConfirmModal
+        open={!!revokeTarget}
+        title="Cabut Akses?"
+        message={`Akses ${revokeTarget?.name ?? revokeTarget?.email} akan dicabut. Dia tidak akan bisa login lagi, termasuk sesi yang sedang aktif. Lanjutkan?`}
+        confirmLabel="Cabut Akses"
+        onConfirm={handleRevokeAccess}
+        onCancel={() => setRevokeTarget(null)}
+        loading={revoking}
+      />
       {showAddModal && (
         <AddMemberModal
           onClose={() => setShowAddModal(false)}
@@ -533,6 +564,9 @@ export default function AdminMembers() {
                         {m.email.endsWith("@placeholder.aigypt.id") && (
                           <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: "rgba(245,158,11,0.15)", color: "#F59E0B", border: "1px solid rgba(245,158,11,0.25)" }}>Belum diisi</span>
                         )}
+                        {m.accessRevoked && (
+                          <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: "rgba(239,68,68,0.15)", color: "#f87171", border: "1px solid rgba(239,68,68,0.25)" }}>Akses Dicabut</span>
+                        )}
                       </div>
                       <div className="text-xs mt-0.5" style={{ color: m.email.endsWith("@placeholder.aigypt.id") ? "#52525B" : "#71717A" }}>{m.email}</div>
                       {m.username && <div className="text-xs mt-0.5 font-mono" style={{ color: "#52525B" }}>@{m.username}</div>}
@@ -562,6 +596,28 @@ export default function AdminMembers() {
                           <span onClick={e => e.stopPropagation()}>
                             <CopyButton text={buildMemberWaText(m)} label="Salin Pesan" />
                           </span>
+                        )}
+                        {!isPlaceholderMember(m) && (
+                          m.accessRevoked ? (
+                            <button
+                              type="button"
+                              onClick={e => { e.stopPropagation(); handleRestoreAccess(m); }}
+                              disabled={restoringEmail === m.email}
+                              className="text-xs px-2.5 py-1 rounded-lg transition-colors disabled:opacity-50"
+                              style={{ color: "#4ade80", border: "1px solid rgba(34,197,94,0.3)", background: "rgba(34,197,94,0.06)" }}
+                            >
+                              {restoringEmail === m.email ? "Memproses..." : "Aktifkan Lagi"}
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={e => { e.stopPropagation(); setRevokeTarget(m); }}
+                              className="text-xs px-2.5 py-1 rounded-lg transition-colors"
+                              style={{ color: "#f87171", border: "1px solid rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.06)" }}
+                            >
+                              Cabut Akses
+                            </button>
+                          )
                         )}
                         <span className="text-xs" style={{ color: expanded === m.email ? "#A855F7" : "#52525B" }}>{expanded === m.email ? "▲" : "▼"}</span>
                       </div>
