@@ -314,10 +314,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // ---- MEMBERS: UPDATE ----
     if (section === "members" && sub1 && sub2 === "update" && req.method === "POST") {
       const currentEmail = decodeURIComponent(sub1);
-      const existingRows = await sql`SELECT * FROM members WHERE email = ${currentEmail} LIMIT 1`;
-      if (!existingRows.length) return res.status(404).json({ error: "Member tidak ditemukan" });
-      const existing = existingRows[0]!;
-
       const { name, email, username, memberType, batchNumber, accessCode } = getBody<{
         name?: string; email?: string; username?: string; memberType?: string; batchNumber?: number; accessCode?: string;
       }>(req);
@@ -325,6 +321,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!["mandiri", "kelas"].includes(memberType)) return res.status(400).json({ error: "Tipe member tidak valid" });
 
       const newEmail = email.toLowerCase().trim();
+
+      const existingRows = await sql`SELECT * FROM members WHERE email = ${currentEmail} LIMIT 1`;
+      if (!existingRows.length) {
+        // currentEmail sudah tidak ada — kemungkinan besar submit sebelumnya sudah berhasil
+        // dan email member ini sudah berubah jadi newEmail. Cek dulu sebelum menyerah dengan error:
+        // kalau member dengan newEmail sudah ada dan datanya identik dengan yang mau disubmit,
+        // anggap ini idempotent retry (double-submit / race condition), bukan kegagalan.
+        const alreadyAppliedRows = await sql`SELECT * FROM members WHERE email = ${newEmail} LIMIT 1`;
+        if (alreadyAppliedRows.length > 0) {
+          const already = alreadyAppliedRows[0]!;
+          const batchMatches = batchNumber === undefined || Number(already["batch_number"]) === Number(batchNumber);
+          const codeMatches = !accessCode?.trim() || already["access_code"] === accessCode.trim();
+          if (
+            already["name"] === name &&
+            already["member_type"] === memberType &&
+            batchMatches &&
+            codeMatches
+          ) {
+            return res.json({
+              success: true,
+              email: already["email"] as string,
+              accessCode: already["access_code"] as string,
+              username: already["username"] as string | null,
+            });
+          }
+        }
+        return res.status(404).json({ error: "Member tidak ditemukan" });
+      }
+      const existing = existingRows[0]!;
+
       const batch = batchNumber ?? (existing["batch_number"] as number) ?? 3;
 
       // --- Validasi semua sebelum transaksi dimulai ---

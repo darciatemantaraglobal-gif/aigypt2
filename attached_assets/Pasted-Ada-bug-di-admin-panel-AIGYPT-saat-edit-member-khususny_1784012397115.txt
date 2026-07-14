@@ -1,0 +1,13 @@
+Ada bug di admin panel AIGYPT: saat edit member (khususnya member placeholder hasil Auto Tambah), kadang muncul "Gagal menyimpan perubahan" padahal perubahan sebenarnya sudah tersimpan di database. Investigasi menunjukkan endpoint /api/admin/members/[email]/update dipanggil dengan email LAMA (misal email placeholder aigypt-xxxxx@placeholder.aigypt.id) padahal member itu sudah berhasil di-rename ke email baru di percobaan submit sebelumnya, sehingga lookup "WHERE email = [email lama]" tidak ketemu dan balikin 404 "Member tidak ditemukan".
+
+Semua ada di artifacts/aigypt. Jangan ubah UI/desain, cuma perbaiki logic-nya.
+
+Perbaiki dua hal di artifacts/aigypt/src/pages/admin/members.tsx, komponen EditMemberModal:
+
+1. Cegah double-submit: pastikan tombol Simpan benar-benar tidak bisa diklik dua kali sebelum request pertama selesai. Cek apakah ada race condition di mana user bisa klik Simpan, request masih pending, lalu entah karena re-render atau klik cepat, request kedua terkirim dengan data/identifier yang sama. Kalau perlu, tambahkan guard eksplisit di awal handleSubmit: if (saving) return; sebagai lapisan tambahan selain disabled={saving} di tombol.
+
+2. Kalau response dari server berupa 404 dengan pesan "Member tidak ditemukan" pada saat SAVE (bukan create), kemungkinan besar member itu sudah berhasil di-update di percobaan sebelumnya (email-nya sudah berubah). Daripada cuma nampilin error generik yang bikin bingung, tampilkan pesan yang lebih jelas ke admin: "Member ini sudah tidak ditemukan dengan email lama — kemungkinan perubahan sebelumnya sudah tersimpan. Silakan refresh halaman untuk melihat data terbaru." Lalu otomatis panggil fetchMembers() (lewat prop atau callback) supaya list ke-refresh dan admin bisa lihat kondisi data yang sebenarnya, tanpa perlu manual reload browser.
+
+Setelah itu, tambahkan juga pengecekan defensif di endpoint MEMBERS: UPDATE di artifacts/aigypt/api/admin/[...path].ts: kalau lookup by currentEmail gagal (404), sebelum langsung return error, cek juga apakah ada member dengan email yang SAMA PERSIS dengan email baru yang mau disimpan (email dari body). Kalau ada dan datanya sudah identik dengan yang mau disubmit, balikin success: true saja (idempotent), bukan error — supaya kalau ini memang kasus "sudah kesimpan duluan", user tidak melihat pesan gagal yang membingungkan.
+
+Setelah selesai, test dengan cara: edit satu member placeholder, ubah nama dan email, klik Simpan dua kali berturut-turut dengan cepat, pastikan tidak muncul error membingungkan dan data tersimpan benar. Pastikan tsc lolos dan build Vite tetap sukses.

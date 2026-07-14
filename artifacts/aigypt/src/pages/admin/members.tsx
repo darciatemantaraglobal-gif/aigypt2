@@ -167,10 +167,12 @@ function EditMemberModal({
   member,
   onClose,
   onSaved,
+  onStaleRefresh,
 }: {
   member: Member;
   onClose: () => void;
   onSaved: (updated: { email: string }) => void;
+  onStaleRefresh: () => void;
 }) {
   const [name, setName] = useState(member.name ?? "");
   const [email, setEmail] = useState(member.email);
@@ -184,6 +186,9 @@ function EditMemberModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Guard eksplisit tambahan selain disabled={saving} di tombol — mencegah
+    // request kedua terkirim kalau ada race condition (klik cepat / re-render).
+    if (saving) return;
     setError("");
     setErrorDetail(null);
     setSaving(true);
@@ -201,6 +206,15 @@ function EditMemberModal({
       });
       const d = await r.json();
       if (!r.ok) {
+        if (r.status === 404 && typeof d.error === "string" && d.error.includes("tidak ditemukan")) {
+          // Kemungkinan besar percobaan submit sebelumnya sudah berhasil dan email
+          // member ini sudah berubah, jadi lookup dengan email lama gagal. Beri
+          // pesan yang jelas dan refresh list di background supaya admin melihat
+          // kondisi data yang sebenarnya tanpa perlu reload manual.
+          setError("Member ini sudah tidak ditemukan dengan email lama — kemungkinan perubahan sebelumnya sudah tersimpan. Silakan refresh halaman untuk melihat data terbaru.");
+          onStaleRefresh();
+          return;
+        }
         setError(d.error ?? "Gagal menyimpan perubahan");
         setErrorDetail(d.detail ?? null);
         return;
@@ -363,6 +377,7 @@ export default function AdminMembers() {
           member={editTarget}
           onClose={() => setEditTarget(null)}
           onSaved={() => { showToast("Perubahan member disimpan"); setExpanded(null); setDetail(null); fetchMembers(); }}
+          onStaleRefresh={fetchMembers}
         />
       )}
 
