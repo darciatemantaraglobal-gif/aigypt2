@@ -10,10 +10,22 @@ import type { VercelRequest } from "@vercel/node";
  * undefined, semua blok route ter-skip, dan request jatuh ke session
  * guard yang balas 401 Unauthorized. Akibatnya /api/admin/login tidak
  * pernah mengecek password sama sekali.
+ *
+ * PERHATIAN — bug Vercel rewrite:
+ * Ketika vercel.json punya rewrite "/api/admin/:path*" → "/api/admin/[...path]",
+ * Vercel meneruskan sisa path sebagai SATU string berisi garis miring, bukan
+ * array. Contoh: request ke /api/admin/codes/list membuat req.query["path"]
+ * bernilai "codes/list" (string), bukan ["codes","list"] (array).
+ * Karena itu setiap elemen harus dipecah dulu berdasarkan "/" sebelum dipakai.
+ * Nilai dari req.query sudah di-decode Vercel — jangan panggil decodeURIComponent
+ * di jalur ini untuk menghindari double decode.
  */
 export function getSegments(req: VercelRequest, basePath: string): string[] {
   const raw = req.query?.["path"] as string | string[] | undefined;
-  const fromQuery = ([] as string[]).concat(raw ?? []).filter(Boolean);
+  const fromQuery = ([] as string[])
+    .concat(raw ?? [])
+    .flatMap((s) => s.split("/"))
+    .filter(Boolean);
   if (fromQuery.length > 0) return fromQuery;
 
   const pathname = (req.url ?? "").split("?")[0] ?? "";
