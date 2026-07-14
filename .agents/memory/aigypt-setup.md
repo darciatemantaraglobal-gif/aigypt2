@@ -21,3 +21,6 @@ Artifact-managed workflows tidak otomatis inject `PORT`. Harus eksplisit di comm
 
 ## Security note (pre-existing)
 `MASTER_ACCESS_CODE` dan `PREVIEW_CODE` tersimpan di `.replit` `[userenv.shared]` — bukan di Secrets.
+
+## After a fresh import/clone
+`node_modules` tidak ikut ter-clone/import, jadi workflow gagal (`esbuild`/`vite: not found`) sampai `pnpm install` dijalankan sekali di root monorepo. Jalankan lalu restart kedua workflow.
