@@ -153,24 +153,15 @@ const sessionsByKelas: Record<string, Array<{
 // ─── Cover ────────────────────────────────────────────────────────────────────
 
 function KelasHeroCover({ kelas }: { kelas: KelasItem }) {
-  if (kelas.coverImage) {
-    return (
-      <div className="absolute inset-0 overflow-hidden" style={{ background: "#060608" }}>
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ background: kelas.coverImage ? "#060608" : kelas.gradient }}>
+      {kelas.coverImage && (
         <img
           src={kelas.coverImage}
           alt={kelas.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div
-          className="absolute bottom-0 left-0 right-0"
-          style={{ height: "60%", background: "linear-gradient(to top, #060608 0%, transparent 100%)" }}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className="absolute inset-0 overflow-hidden" style={{ background: kelas.gradient }}>
+      )}
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{

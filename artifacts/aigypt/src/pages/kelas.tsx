@@ -13,31 +13,18 @@ function KelasGradientCover({
   kelas: KelasItem;
   size?: "card" | "modal";
 }) {
-  if (kelas.coverImage) {
-    return (
-      <div className="absolute inset-0 overflow-hidden" style={{ background: "#060608" }}>
+  return (
+    <div
+      className="absolute inset-0 overflow-hidden"
+      style={{ background: kelas.coverImage ? "#060608" : kelas.gradient }}
+    >
+      {kelas.coverImage && (
         <img
           src={kelas.coverImage}
           alt={kelas.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Bottom gradient fade for text legibility */}
-        <div
-          className="absolute bottom-0 left-0 right-0"
-          style={{
-            height: "65%",
-            background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%)",
-          }}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className="absolute inset-0 overflow-hidden"
-      style={{ background: kelas.gradient }}
-    >
+      )}
       {/* Grain texture */}
       <div
         className="absolute inset-0 opacity-[0.035]"
@@ -181,12 +168,14 @@ function KelasCard({
 
         {/* Bottom info */}
         <div className="absolute bottom-0 left-0 right-0 z-10 p-3">
-          <p
-            className="font-display font-semibold text-white leading-tight mb-1"
-            style={{ fontSize: "0.8rem", textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}
-          >
-            {kelas.title}
-          </p>
+          {!kelas.coverImage && (
+            <p
+              className="font-display font-semibold text-white leading-tight mb-1"
+              style={{ fontSize: "0.8rem", textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}
+            >
+              {kelas.title}
+            </p>
+          )}
           <p className="font-mono text-[9px]" style={{ color: "#52525B" }}>
             {kelas.sesiCount} SESI · {kelas.duration.replace("/sesi", "/SESI")}
           </p>
