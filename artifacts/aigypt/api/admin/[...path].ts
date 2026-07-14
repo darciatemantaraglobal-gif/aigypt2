@@ -277,6 +277,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const newEmail = email.toLowerCase().trim();
       const batch = batchNumber ?? (existing["batch_number"] as number) ?? 3;
 
+      // --- Validasi semua sebelum transaksi dimulai ---
       if (newEmail !== currentEmail) {
         const clash = await sql`SELECT id FROM members WHERE email = ${newEmail} LIMIT 1`;
         if (clash.length > 0) return res.status(400).json({ error: "Email sudah dipakai member lain" });
@@ -285,7 +286,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       let newUsername = existing["username"] as string | null;
       if (username?.trim()) {
         const cleanUsername = sanitizeUsername(username);
-        if (cleanUsername !== existing["username"]) {
+        if (cleanUsername !== (existing["username"] as string | null)) {
           const clashUsername = await sql`SELECT id FROM members WHERE username = ${cleanUsername} LIMIT 1`;
           if (clashUsername.length > 0) return res.status(400).json({ error: "Username sudah dipakai member lain" });
         }
@@ -294,43 +295,61 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const currentAccessCode = existing["access_code"] as string;
       let newAccessCode = currentAccessCode;
-      if (accessCode?.trim() && accessCode.trim() !== currentAccessCode) {
-        newAccessCode = accessCode.trim();
+      let codeIsNewAndNotInDb = false;
+      const accessCodeChanged = accessCode?.trim() && accessCode.trim() !== currentAccessCode;
+
+      if (accessCodeChanged) {
+        newAccessCode = accessCode!.trim();
         const codeRows = await sql`SELECT is_used, used_by_email FROM access_codes WHERE code = ${newAccessCode} LIMIT 1`;
         if (codeRows.length > 0 && codeRows[0]!["is_used"] && codeRows[0]!["used_by_email"] !== currentEmail) {
           return res.status(400).json({ error: "Kode akses sudah dipakai member lain" });
         }
-        if (codeRows.length === 0) {
-          await sql`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${newAccessCode}, ${memberType}, ${batch}, false)`;
-        }
-        // Bebaskan kode lama, pakai kode baru.
-        await sql`UPDATE access_codes SET is_used = false, used_by_email = NULL, used_at = NULL WHERE code = ${currentAccessCode}`;
-        await sql`UPDATE access_codes SET is_used = true, used_by_email = ${newEmail}, used_at = NOW() WHERE code = ${newAccessCode}`;
-      } else if (newEmail !== currentEmail) {
-        // Kode akses sama, tapi pemiliknya (email) berubah.
-        await sql`UPDATE access_codes SET used_by_email = ${newEmail} WHERE code = ${currentAccessCode}`;
+        if (codeRows.length === 0) codeIsNewAndNotInDb = true;
       }
 
-      await sql`
-        UPDATE members
-        SET name = ${name}, email = ${newEmail}, username = ${newUsername}, member_type = ${memberType},
-            batch_number = ${batch}, access_code = ${newAccessCode}
-        WHERE email = ${currentEmail}
-      `;
+      // --- Semua penulisan ke DB dalam satu transaction ---
+      // Urutan wajib: access_codes baru dulu (FK), baru members, baru bebaskan/tandai kode, baru orders.
+      await sql.begin(async (tx) => {
+        // 1. INSERT kode akses baru kalau belum ada (FK members.access_code → access_codes.code)
+        if (accessCodeChanged && codeIsNewAndNotInDb) {
+          await tx`INSERT INTO access_codes (code, type, batch_number, is_used) VALUES (${newAccessCode}, ${memberType}, ${batch}, false)`;
+        }
 
-      // Sinkronkan ke tabel orders supaya login (yang membaca dari orders,
-      // bukan members) tetap konsisten dengan perubahan di atas.
-      await sql`
-        UPDATE orders
-        SET name = ${name}, email = ${newEmail}, member_type = ${memberType},
-            batch_number = ${batch}, access_code = ${newAccessCode}
-        WHERE email = ${currentEmail} AND access_code = ${currentAccessCode}
-      `;
+        // 2. Update baris members (tanpa username — ditangani trySetUsername setelah tx)
+        await tx`
+          UPDATE members
+          SET name = ${name}, email = ${newEmail}, member_type = ${memberType},
+              batch_number = ${batch}, access_code = ${newAccessCode}
+          WHERE email = ${currentEmail}
+        `;
 
-      // materi_progress terkait member juga perlu ikut pindah kalau email berubah,
-      // supaya histori belajar tidak lepas dari member yang diedit.
-      if (newEmail !== currentEmail) {
-        await sql`UPDATE materi_progress SET member_email = ${newEmail} WHERE member_email = ${currentEmail}`;
+        // 3. Update status is_used di access_codes
+        if (accessCodeChanged) {
+          // Bebaskan kode lama, aktifkan kode baru
+          await tx`UPDATE access_codes SET is_used = false, used_by_email = NULL, used_at = NULL WHERE code = ${currentAccessCode}`;
+          await tx`UPDATE access_codes SET is_used = true, used_by_email = ${newEmail}, used_at = NOW() WHERE code = ${newAccessCode}`;
+        } else if (newEmail !== currentEmail) {
+          // Kode sama tapi email berubah → update used_by_email supaya sinkron
+          await tx`UPDATE access_codes SET used_by_email = ${newEmail} WHERE code = ${currentAccessCode}`;
+        }
+
+        // 4. Sinkronkan tabel orders (supaya login lewat orders tetap konsisten)
+        await tx`
+          UPDATE orders
+          SET name = ${name}, email = ${newEmail}, member_type = ${memberType},
+              batch_number = ${batch}, access_code = ${newAccessCode}
+          WHERE email = ${currentEmail} AND access_code = ${currentAccessCode}
+        `;
+        // Catatan: materi_progress TIDAK perlu diupdate manual.
+        // FK materi_progress_member_email_fkey sudah ON UPDATE CASCADE —
+        // Postgres memindahkan email-nya sendiri saat members.email berubah.
+      });
+
+      // Username dihandle terpisah karena kolom mungkin belum ada di DB produksi.
+      if (newUsername !== null) {
+        try {
+          await sql`UPDATE members SET username = ${newUsername} WHERE email = ${newEmail}`;
+        } catch { /* kolom username belum ada */ }
       }
 
       return res.json({ success: true, email: newEmail, accessCode: newAccessCode, username: newUsername });
@@ -455,9 +474,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
         await trySetUsername(normalizedEmail);
       } else {
+        // Simpan status persis seperti yang dikirim frontend ('pending').
+        // Jangan tulis 'pending_qris' dari route admin — itu hanya untuk flow QRIS publik.
         await sql`
           INSERT INTO orders (order_id, name, email, phone, member_type, batch_number, amount, final_amount, status)
-          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'pending_qris')
+          VALUES (${orderId}, ${name}, ${normalizedEmail}, ${phone}, ${memberType}, ${batch}, ${amount}, ${amount}, 'pending')
         `;
       }
       return res.json({ success: true, orderId, accessCode });
@@ -471,6 +492,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const order = orders[0]!;
       if (order["status"] === "paid") return res.json({ success: true, accessCode: order["access_code"] });
 
+      const existingCode = (order["access_code"] as string | null)?.trim() || null;
+
+      if (existingCode) {
+        // Order sudah punya kode akses (dari flow lain) → pakai kode itu, jangan generate baru.
+        await sql.begin(async (tx) => {
+          await tx`UPDATE orders SET status = 'paid', paid_at = NOW() WHERE order_id = ${orderId}`;
+          await upsertMember({
+            email: order["email"] as string,
+            name: order["name"] as string,
+            accessCode: existingCode,
+            memberType: order["member_type"] as string,
+            batchNumber: (order["batch_number"] as number) ?? 3,
+          }, tx);
+        });
+        await trySetUsername(order["email"] as string);
+        return res.json({ success: true, accessCode: existingCode });
+      }
+
+      // Order belum punya kode akses → generate kode baru.
       let accessCode = "";
       for (let attempt = 0; attempt < 20; attempt++) {
         const candidate = generateCode();

@@ -281,6 +281,7 @@ export default function AdminMembers() {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterBatch, setFilterBatch] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -294,10 +295,16 @@ export default function AdminMembers() {
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
 
+  // Debounce: tunda request 400ms setelah user berhenti mengetik
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), 400);
+    return () => clearTimeout(id);
+  }, [search]);
+
   const fetchMembers = useCallback(async () => {
     setLoading(true);
     const p = new URLSearchParams();
-    if (search) p.set("search", search);
+    if (debouncedSearch) p.set("search", debouncedSearch);
     if (filterType !== "all") p.set("type", filterType);
     if (filterBatch) p.set("batch", filterBatch);
     try {
@@ -306,7 +313,7 @@ export default function AdminMembers() {
       setMembers(d.members ?? []);
     } catch { /* redirect handled in adminFetch */ }
     finally { setLoading(false); }
-  }, [search, filterType, filterBatch]);
+  }, [debouncedSearch, filterType, filterBatch]);
 
   useEffect(() => { fetchMembers(); }, [fetchMembers]);
 

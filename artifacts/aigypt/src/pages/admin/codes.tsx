@@ -18,7 +18,7 @@ const inputStyle: React.CSSProperties = {
 
 export default function AdminCodes() {
   const [type, setType] = useState("mandiri");
-  const [batchNum, setBatchNum] = useState(1);
+  const [batchNum, setBatchNum] = useState(3);
   const [genCount, setGenCount] = useState(1);
   const [generating, setGenerating] = useState(false);
   const [genError, setGenError] = useState("");
@@ -33,6 +33,7 @@ export default function AdminCodes() {
   const [filterBatch, setFilterBatch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -40,22 +41,28 @@ export default function AdminCodes() {
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
 
+  // Debounce: tunda request 400ms setelah user berhenti mengetik
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), 400);
+    return () => clearTimeout(id);
+  }, [search]);
+
   const fetchCodes = useCallback(async (p = page) => {
     setLoading(true);
     const params = new URLSearchParams({ page: String(p) });
     if (filterType !== "all") params.set("type", filterType);
     if (filterBatch) params.set("batch", filterBatch);
     if (filterStatus !== "all") params.set("status", filterStatus);
-    if (search) params.set("search", search);
+    if (debouncedSearch) params.set("search", debouncedSearch);
     try {
       const r = await adminFetch(`/admin/codes/list?${params}`);
-      const d = await r.json() as { codes: Code[]; total: number; page: number };
-      setCodes(d.codes); setTotal(d.total); setPage(p);
+      const d = await r.json() as { codes?: Code[]; total: number; page: number };
+      setCodes(d.codes ?? []); setTotal(d.total ?? 0); setPage(p);
     } catch { /* redirect handled in adminFetch */ }
     finally { setLoading(false); }
-  }, [filterType, filterBatch, filterStatus, search, page]);
+  }, [filterType, filterBatch, filterStatus, debouncedSearch, page]);
 
-  useEffect(() => { fetchCodes(1); }, [filterType, filterBatch, filterStatus, search]); // eslint-disable-line
+  useEffect(() => { fetchCodes(1); }, [filterType, filterBatch, filterStatus, debouncedSearch]); // eslint-disable-line
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault(); setGenError(""); setGenerating(true);
