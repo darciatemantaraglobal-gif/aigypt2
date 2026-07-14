@@ -20,6 +20,15 @@ const inputStyle: React.CSSProperties = {
   color: "#FAFAFA", fontFamily: "'Inter',sans-serif", borderRadius: 8, padding: "8px 12px", fontSize: 13, outline: "none",
 };
 
+function isPlaceholderMember(m: { email: string }): boolean {
+  return m.email.endsWith("@placeholder.aigypt.id");
+}
+
+function buildMemberWaText(m: { name: string | null; email: string; memberType: string; batchNumber: number | null; accessCode: string | null }): string {
+  const type = m.memberType === "kelas" ? "Member Kelas" : "Member Mandiri";
+  return `Halo ${m.name}! Ini info login AIGYPT kamu.\n\nPaket: ${type} - Batch ${m.batchNumber ?? "—"}\nEmail: ${m.email}\nKode Akses: ${m.accessCode ?? "(belum ada kode akses)"}\n\nCara login:\n1. Buka aigypt.id/login\n2. Masukkan email di atas\n3. Masukkan kode akses di atas\n\nSelamat belajar! 🎉`;
+}
+
 function AddMemberModal({
   onClose,
   onCreated,
@@ -388,6 +397,31 @@ export default function AdminMembers() {
         </div>
         <div className="flex items-center gap-2">
           <button
+            onClick={() => {
+              const eligible = members.filter(m => !isPlaceholderMember(m));
+              if (eligible.length === 0) {
+                showToast("Tidak ada member dengan data lengkap untuk disalin");
+                return;
+              }
+              const combined = eligible.map(m => buildMemberWaText(m)).join("\n----------\n");
+              navigator.clipboard.writeText(combined).then(() => {
+                showToast(`${eligible.length} pesan disalin`);
+              }).catch(() => {
+                const el = document.createElement("textarea");
+                el.value = combined;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand("copy");
+                document.body.removeChild(el);
+                showToast(`${eligible.length} pesan disalin`);
+              });
+            }}
+            className="text-sm px-4 py-2.5 rounded-xl font-medium transition-colors"
+            style={{ background: "transparent", border: "1px solid rgba(124,58,237,0.5)", color: "#A855F7" }}
+          >
+            Copy Semua
+          </button>
+          <button
             onClick={() => { setShowAutoPanel(p => !p); setAutoResult([]); setAutoError(""); }}
             className="text-sm px-4 py-2.5 rounded-xl font-medium transition-colors"
             style={{ background: "transparent", border: "1px solid rgba(124,58,237,0.5)", color: "#A855F7" }}
@@ -524,6 +558,11 @@ export default function AdminMembers() {
                         >
                           Edit
                         </button>
+                        {!isPlaceholderMember(m) && (
+                          <span onClick={e => e.stopPropagation()}>
+                            <CopyButton text={buildMemberWaText(m)} label="Salin Pesan" />
+                          </span>
+                        )}
                         <span className="text-xs" style={{ color: expanded === m.email ? "#A855F7" : "#52525B" }}>{expanded === m.email ? "▲" : "▼"}</span>
                       </div>
                     </td>

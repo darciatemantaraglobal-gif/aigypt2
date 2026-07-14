@@ -1,0 +1,26 @@
+Tambahkan fitur "Salin Pesan Login" di halaman admin Member (artifacts/aigypt/src/pages/admin/members.tsx), supaya admin bisa dengan cepat menyalin pesan siap kirim ke peserta lewat WhatsApp, tanpa harus ketik manual satu-satu. Jangan ubah fitur lain yang sudah ada, jangan ubah UI halaman Pesanan.
+
+KONTEKS: Tabel members TIDAK menyimpan nomor HP (beda dari tabel orders), jadi tidak bisa langsung buka wa.me otomatis dari halaman ini. Solusinya pakai copy-to-clipboard biasa (sudah ada komponen CopyButton di artifacts/aigypt/src/components/admin/CopyButton.tsx, reuse komponen itu, jangan bikin ulang).
+
+1. Buat function buildMemberWaText(member) yang menghasilkan teks pesan, formatnya konsisten dengan buildWaText yang sudah ada di artifacts/aigypt/src/pages/admin/orders.tsx (baris sekitar 20-23), tapi sesuaikan sumber datanya dari objek Member (name, email, memberType, batchNumber, accessCode), bukan dari Order. Contoh format:
+
+Halo {name}! Ini info login AIGYPT kamu.
+
+Paket: {Member Kelas / Member Mandiri} - Batch {batchNumber}
+Email: {email}
+Kode Akses: {accessCode}
+
+Cara login:
+1. Buka aigypt.id/login
+2. Masukkan email di atas
+3. Masukkan kode akses di atas
+
+Selamat belajar! 🎉
+
+Kalau accessCode null, tampilkan "(belum ada kode akses)" di posisi itu.
+
+2. Di kolom "AKSI" pada tabel member (satu baris dengan tombol Edit yang sudah ada), tambahkan CopyButton dengan text={buildMemberWaText(m)} dan label="Salin Pesan". Jangan tampilkan tombol ini untuk member yang emailnya masih berakhiran @placeholder.aigypt.id (yang badge-nya "Belum diisi"), karena datanya belum lengkap untuk dikirim — untuk member itu, biarkan hanya tombol Edit saja.
+
+3. Tambahkan tombol "Copy Semua" di bagian header halaman (dekat tombol "Auto Tambah" dan "+ Tambah Member" yang sudah ada). Saat diklik, gabungkan buildMemberWaText() dari SEMUA member yang sedang tampil di tabel saat itu (hasil filter/search yang aktif), KECUALI yang masih placeholder, dipisahkan garis "----------" antar member, lalu salin gabungan teks itu ke clipboard (pakai navigator.clipboard.writeText langsung, atau extract logic copy dari CopyButton jadi hook kecil biar reusable). Setelah berhasil disalin, tampilkan toast singkat "X pesan disalin" (pakai showToast yang sudah ada), dengan X adalah jumlah member yang tersalin. Kalau tidak ada member yang bisa disalin (semua placeholder atau list kosong), tampilkan toast "Tidak ada member dengan data lengkap untuk disalin" dan jangan salin apa-apa.
+
+Pastikan tsc lolos dan build Vite tetap sukses. Semua teks tetap Bahasa Indonesia.
