@@ -91,7 +91,8 @@ function ConceptSlide({ step }: { step: MateriStep }) {
   };
 
   return (
-    <div className="h-full flex flex-col justify-center max-w-2xl mx-auto px-6 py-8 overflow-y-auto">
+    <div className="h-full overflow-y-auto">
+      <div className="min-h-full flex flex-col justify-center max-w-2xl mx-auto px-6 py-8">
       <div className="space-y-6">
         {/* Title */}
         <div>
@@ -296,6 +297,7 @@ function ConceptSlide({ step }: { step: MateriStep }) {
             <p className="text-xs text-[#94A3B8] leading-relaxed">{step.note}</p>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
