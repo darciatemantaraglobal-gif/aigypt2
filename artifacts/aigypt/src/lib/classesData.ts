@@ -55,9 +55,9 @@ export const kelasList: KelasItem[] = [
     title: "Vibe Coding: Dari Masalah Jadi Aplikasi",
     tagline: "Kamu arsiteknya, AI tukangnya.",
     description:
-      "Ubah keluhan sehari-hari jadi website dan aplikasi yang benar-benar jalan, tanpa menulis satu baris kode pun. Kenali workflow lengkapnya, para AI agent yang membantumu, istilah-istilah penting (GitHub, Vercel, Supabase, deploy, dan lainnya), lalu jalani prosesnya: temukan masalah, susun blueprint, ngobrol dengan AI sampai aplikasinya jadi, dan rilis ke pengguna nyata. Dilengkapi prompt siap pakai dan kuis interaktif.",
-    sesiCount: 5,
-    duration: "60 menit",
+      "Ubah keluhan sehari-hari jadi website dan aplikasi yang benar-benar jalan, tanpa menulis satu baris kode pun. Kenali workflow lengkapnya, para AI agent yang membantumu, istilah-istilah penting, dan peta biaya yang jujur (gratis sampai mana, kapan mulai bayar). Lalu jalani prosesnya: pilih ide dari bank 20 ide siap pakai, susun blueprint, ikuti studi kasus utuh dari keluhan sampai aplikasi jadi, rilis ke pengguna nyata, tampil percaya diri di Demo Day, dan kenali tiga jalur mengubah karyamu jadi penghasilan. Dilengkapi prompt siap pakai dan kuis interaktif.",
+    sesiCount: 6,
+    duration: "90 menit",
     level: "Pemula",
     status: "new",
     gradient:
@@ -75,6 +75,10 @@ export const kelasList: KelasItem[] = [
       "Loop membangun: prompt, tes, feedback spesifik, ulang sampai jadi",
       "Menangani error dan kondisi stuck tanpa panik",
       "Rilis aplikasi ke pengguna nyata dengan 3 aturan keamanan dasar",
+      "Bank 20 ide aplikasi siap pakai + matriks memilih satu yang paling layak dibangun",
+      "Studi kasus utuh: satu keluhan nyata dibedah dari blueprint, prompt pertama, sampai jadi",
+      "Peta biaya yang jujur: gratis sampai mana, kapan waktunya keluar duit",
+      "Formula demo 3 menit untuk Demo Day, dan tiga jalur mengubah karya jadi rezeki",
     ],
   },
   {

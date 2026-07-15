@@ -344,6 +344,59 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Jalur yang disarankan: selama kelas, cukup Replit (semua sudah satu atap). Proyek serius pertamamu: GitHub + Vercel + Supabase. Ketiganya gratis untuk memulai, dan AI bisa memandu perpindahannya langkah demi langkah.",
       },
       {
+        id: "vc2-5d",
+        type: "concept",
+        title: "Soal Duit: Ngomongin yang Dari Tadi Kamu Pikirin",
+        subtitle: "Gratis sampai mana? Mulai bayar kapan? Ini jawabannya, sejujur-jujurnya",
+        content:
+          "Ada satu pertanyaan yang jarang diucapkan di kelas tapi selalu duduk di kepala: \"ini semua bayarnya berapa?\" Dan karena tidak terjawab, dia diam-diam jadi alasan untuk tidak mulai. Jadi kita bereskan sekarang. Jawaban singkatnya melegakan: seluruh fase belajar, dari sesi ini sampai aplikasimu dipakai teman-temanmu, bisa kamu lewati dengan Rp 0. Bukan gratis versi jebakan, memang paket gratisnya cukup. Duit baru masuk pembicaraan saat aplikasimu naik kelas: pembangunannya makin intens, butuh nama sendiri, atau mulai jadi ladang usaha.",
+        table: {
+          headers: ["Fase", "Yang kamu pakai", "Biaya"],
+          rows: [
+            [
+              "Belajar & latihan (kamu, sekarang)",
+              "Replit Starter, Claude/ChatGPT versi gratis, Vercel Hobby, Supabase Free",
+              "Rp 0. Titik",
+            ],
+            [
+              "Membangun makin serius",
+              "Replit Core, kalau jatah gratis Agent mulai terasa sempit: sekitar $25/bulan (± Rp 400 ribuan)",
+              "Opsional, bukan wajib. Banyak yang selesai satu aplikasi tanpa ini",
+            ],
+            [
+              "Rilis dengan nama sendiri",
+              "Domain: .my.id mulai belasan ribu setahun, .com dan .id sekitar Rp 150–250 ribu setahun",
+              "Setahun sekali. Setara traktir makan beberapa teman",
+            ],
+          ],
+        },
+        cards: [
+          {
+            title: "Tetap Rp 0 selama...",
+            accent: "green",
+            items: [
+              "Kamu latihan dan membangun proyek pribadi atau organisasi skala kecil, puluhan pengguna",
+              "Kamu ikhlas pakai alamat bawaan gratis: namaproyekmu.replit.app atau .vercel.app. Fungsinya sama persis dengan domain mahal",
+              "Jatah harian Agent gratismu dipakai dengan prompt yang jelas. Prompt ngawur bikin AI muter-muter, dan muter-muter itu yang makan jatah. Sesi 4 melatih ini",
+              "Kamu tidak panik saat proyek gratisan \"tidur\" karena lama tidak diakses. Dibangunkan lagi bisa, cuma butuh beberapa detik loading pertama",
+            ],
+          },
+          {
+            title: "Saatnya keluar duit saat...",
+            accent: "red",
+            items: [
+              "Jatah gratis Agent habis terus padahal proyekmu lagi jalan kencang. Itu tanda kamu produktif, bukan tanda boros",
+              "Aplikasimu mau dipakai orang luar dan butuh terlihat profesional: domain sendiri itu upgrade termurah dengan efek terbesar",
+              "Aplikasimu dipakai serius tiap hari dan tidak boleh \"tidur\". Di titik ini biasanya aplikasimu sudah menghasilkan nilai, jadi biayanya wajar",
+              "Pegang prinsip ini: duit keluar SETELAH nilai masuk, bukan sebelumnya",
+            ],
+          },
+        ],
+        quote:
+          "Jangan bayar untuk menghilangkan kecemasan. Bayarlah untuk menghilangkan hambatan yang benar-benar sudah kamu tabrak.",
+        note: "Angka di atas ditulis pertengahan 2026 dan pasti berubah, jadi cek halaman pricing masing-masing sebelum bayar apapun. Yang tidak akan berubah: fase belajar selalu bisa gratis. Artinya alasan \"belum ada budget\" resmi tidak berlaku, mulai hari ini.",
+      },
+      {
         id: "vc2-6",
         type: "concept",
         title: "Kamus Kantong",
@@ -435,6 +488,114 @@ export const vibeCodingMateri: SesiMateri[] = [
           "Masalah yang berulang tiap minggu lebih layak dibangun daripada yang terjadi sekali setahun",
           "Kalau ada lima orang lain yang mengeluh hal yang sama, kamu sedang memegang ide bagus",
         ],
+      },
+      {
+        id: "vc3-1a",
+        type: "concept",
+        title: "Bank Ide: 20 Amunisi Kalau Kepalamu Masih Kosong",
+        subtitle: "Bukan buat dicontek mentah-mentah. Buat mancing \"eh iya, itu masalah gue juga\"",
+        content:
+          "Sebagian dari kamu sekarang membatin: \"oke, mulai dari masalah... tapi masalah saya apa ya?\" Tenang, itu bukan tanda kamu kurang kreatif. Masalah yang kita alami tiap hari justru yang paling susah kelihatan, seperti kacamata yang kamu cari ke mana-mana padahal sedang dipakai. Maka ini: dua puluh ide dari kehidupan nyata di sekitarmu. Bacanya pelan-pelan. Tugasmu bukan memilih yang paling keren. Tugasmu menandai mana yang bikin kamu nyeletuk: \"ini sih gue banget.\"",
+        cards: [
+          {
+            title: "Organisasi & Kepanitiaan",
+            accent: "purple",
+            items: [
+              "Absensi kajian digital: isi dari HP, rekap otomatis, tidak ada lagi kertas yang hilang",
+              "Database anggota: nama, angkatan, almamater, kontak. Bisa dicari dalam tiga detik, bukan tiga hari",
+              "Arsip notulensi rapat: semua keputusan tersimpan dan bisa dicari, bukan tenggelam di grup WhatsApp",
+              "Pendaftaran acara dengan kartu peserta digital, panitia tidak lagi rekap manual dari chat",
+              "Papan pengumuman organisasi: satu sumber info resmi. Admin update, anggota baca, selesai",
+            ],
+          },
+          {
+            title: "Akademik & Belajar",
+            accent: "blue",
+            items: [
+              "Tracker muroja'ah: catat setoran harian, lihat grafik progres, tandai halaman yang sering lupa",
+              "Bank soal termin: kumpulan soal ujian tahun-tahun lalu per mata kuliah, bisa difilter dan dicari",
+              "Jadwal talaqqi bersama: siapa belajar kitab apa, di mana, jam berapa. Anti bentrok, anti zonk",
+              "Katalog muqarrar dan diktat: kitab apa ada di siapa, PDF-nya tersimpan di mana",
+              "Pencari teman belajar: masukkan mata kuliahmu, ketemu orang yang lagi berjuang di materi yang sama",
+            ],
+          },
+          {
+            title: "Bisnis & Jasa",
+            accent: "green",
+            items: [
+              "Katalog jastip: foto barang, harga, stok, tombol pesan langsung ke WhatsApp",
+              "Form pre-order makanan mingguan: menu, batas waktu pesan, rekap otomatis untuk yang masak",
+              "Daftar harga jasa dengan kalkulator: terjemah per halaman, ketik per lembar, desain per item",
+              "Booking jadwal jasa: potong rambut, les privat, tanpa chat bolak-balik \"kak besok bisa jam berapa\"",
+              "Lelang barang \"ana rahil\": katalog barang teman-teman yang mau pulang kampung, lengkap dengan harga",
+            ],
+          },
+          {
+            title: "Ibadah & Komunitas",
+            accent: "red",
+            items: [
+              "Tracker tilawah kelompok: target bersama, progres tiap anggota kelihatan, saling menyemangati",
+              "Manajemen iuran kas: siapa sudah bayar bulan ini, siapa belum, tanpa nagih satu-satu dengan canggung",
+              "Jadwal piket asrama atau sekretariat yang adil dan bergilir otomatis",
+              "Direktori kontak penting komunitas: dokter yang bisa dihubungi, jasa antar, nomor darurat, satu tempat",
+              "Galeri dokumentasi kegiatan: foto per acara, rapi, tidak hilang saat ganti pengurus",
+            ],
+          },
+        ],
+        note: "Perhatikan: tidak ada satu pun ide di atas yang butuh teknologi canggih. Semuanya masuk kolom hijau sesi 1. Yang bikin sebuah ide bagus bukan kecanggihannya, tapi seberapa nyata sakit yang dia obati.",
+      },
+      {
+        id: "vc3-1b",
+        type: "concept",
+        title: "Cara Milih Satu dari Dua Puluh",
+        subtitle: "Dua pertanyaan saja: seberapa sering masalahnya muncul, dan seberapa dekat kamu dengannya",
+        content:
+          "Sudah nandain beberapa ide? Bagus. Sekarang masalah barumu: milih SATU. Iya, satu. Orang yang mulai dengan tiga ide biasanya selesai dengan nol. Cara milihnya tidak pakai perasaan, pakai dua pertanyaan: seberapa sering masalah ini muncul, dan apakah kamu mengalaminya sendiri. Petakan idemu ke empat kotak ini.",
+        matrix: {
+          xLabel: "Makin sering masalahnya muncul →",
+          yLabel: "↑ Makin kamu alami sendiri",
+          quadrants: [
+            {
+              title: "Sering muncul + kamu alami sendiri",
+              verdict: "Bangun sekarang",
+              accent: "green",
+              items: [
+                "Ini zona emas. Kamu paham masalahnya luar-dalam dan jadi penguji pertamanya",
+                "Contoh: kamu bendahara yang tiap bulan pusing nagih kas? Aplikasi iuran kas itu milikmu",
+              ],
+            },
+            {
+              title: "Sering muncul + masalah orang lain",
+              verdict: "Boleh, tapi wawancara dulu",
+              accent: "blue",
+              items: [
+                "Ide bagus, tapi kamu menebak-nebak sakitnya. Ngobrol dulu dengan 3 orang yang mengalaminya",
+                "Kalau setelah ngobrol kamu makin yakin: gas. Kalau ternyata mereka santai saja: mundur",
+              ],
+            },
+            {
+              title: "Jarang muncul + kamu alami sendiri",
+              verdict: "Simpan di daftar tunggu",
+              accent: "purple",
+              items: [
+                "Masalah setahun sekali tidak layak jadi proyek pertama, effort-nya tidak sebanding",
+                "Catat di daftar 'nanti'. Setelah aplikasi pertamamu jadi, kamu bisa balik ke sini dengan skill penuh",
+              ],
+            },
+            {
+              title: "Jarang muncul + bukan masalahmu",
+              verdict: "Lewati dengan tenang",
+              accent: "red",
+              items: [
+                "Biasanya ini ide yang \"kedengarannya keren\" tapi tidak ada yang benar-benar kesakitan",
+                "Melewatkan ide seperti ini bukan kehilangan. Itu penghematan berminggu-minggu hidupmu",
+              ],
+            },
+          ],
+        },
+        quote:
+          "Ide terbaik untuk proyek pertamamu bukan yang paling besar. Yang terbaik adalah yang masalahnya kamu temui lagi minggu depan, dan minggu depannya lagi.",
+        note: "Sudah dapat satu? Kunci. Ide-ide lain tidak dibuang, mereka cuma antre. Sekarang ide terpilihmu siap masuk mesin berikutnya: Blueprint Lima Pertanyaan.",
       },
       {
         id: "vc3-2",
@@ -616,6 +777,71 @@ export const vibeCodingMateri: SesiMateri[] = [
           "Kadang jalan tercepat adalah mundur dua langkah ke versi yang jalan, bukan maju terus di jalan yang buntu.",
       },
       {
+        id: "vc4-4a",
+        type: "concept",
+        title: "Studi Kasus: Satu Benang Utuh",
+        subtitle: "Bagian 1 dari 3: dari keluhan di grup WhatsApp jadi blueprint",
+        content:
+          "Sejauh ini kamu melihat contoh dalam potongan-potongan: sepenggal blueprint di sini, sepotong prompt di sana. Sekarang kita bedah SATU cerita dari ujung ke ujung, tanpa diedit biar kelihatan keren. Kenalkan Fikri, pengurus kajian mingguan beranggota sekitar 40 orang. Keluhannya, persis seperti yang dia ketik di grup pengurus: \"absensi kertas ilang lagi... yang megang lupa bawa. rekap bulan kemaren juga belum, males banget 2 jam sendiri.\" Perhatikan: itu bukan ide aplikasi. Itu keluhan mentah. Dan dari situlah semuanya dimulai. Fikri duduk sepuluh menit dan mengisi Blueprint Lima Pertanyaan dari sesi 3.",
+        table: {
+          headers: ["Pertanyaan blueprint", "Jawaban Fikri"],
+          rows: [
+            ["Siapa penggunanya?", "Pengurus (3 orang) dan anggota kajian mingguan (±40 orang). Semuanya pakai HP, jarang buka laptop"],
+            ["Sakitnya apa?", "Absensi dicatat di kertas yang sering hilang atau ketinggalan, dan rekap bulanan manual makan 2 jam"],
+            ["Tiga fitur inti?", "(1) Anggota absen lewat form dari HP. (2) Admin lihat rekap kehadiran per pertemuan. (3) Admin bisa tambah jadwal pertemuan baru"],
+            ["Halamannya apa saja?", "Halaman absen untuk anggota. Halaman admin berisi rekap dan kelola jadwal, dikunci login sederhana"],
+            ["Rasanya gimana?", "Bersih, dominan hijau tua, tulisan agak besar karena banyak yang buka sambil jalan kaki ke kajian"],
+          ],
+        },
+        note: "Perhatikan juga yang TIDAK ada di blueprint: notifikasi otomatis, grafik statistik, leaderboard, export PDF. Semua ide bagus itu Fikri catat di daftar \"versi dua\". Bukan dibuang, cuma disuruh antre. Itu keputusan arsitek.",
+      },
+      {
+        id: "vc4-4b",
+        type: "concept",
+        title: "Studi Kasus, Bagian 2: Prompt Pertama, Utuh",
+        subtitle: "Blueprint di atas dipindah ke kerangka prompt. Ini yang Fikri tempel ke Replit Agent, apa adanya",
+        content:
+          "Tidak ada trik rahasia di sini. Fikri cuma mengambil kerangka prompt pertama dari step sebelumnya, lalu mengisinya dengan jawaban blueprintnya. Hasilnya seperti ini, dan kamu boleh curi strukturnya bulat-bulat.",
+        prompts: [
+          {
+            label: "Prompt pertama Fikri, tanpa dipotong",
+            prompt:
+              "Buatkan aplikasi web bernama Absensi Kajian An-Nur.\n\nPENGGUNA: pengurus (3 orang) dan anggota kajian mingguan (sekitar 40 orang). Hampir semua mengakses dari HP.\n\nMASALAH YANG DISELESAIKAN: absensi selama ini dicatat di kertas yang sering hilang, dan rekap kehadiran bulanan dikerjakan manual sampai 2 jam.\n\nFITUR INTI (hanya ini dulu):\n1. Anggota mengisi absen lewat form sederhana dari HP: pilih nama dari daftar, pilih pertemuan, tekan hadir.\n2. Admin melihat rekap kehadiran per pertemuan: siapa hadir, siapa tidak, dan total kehadiran tiap anggota.\n3. Admin bisa menambah jadwal pertemuan baru (judul, tanggal, tempat).\n\nHALAMAN: halaman absen untuk anggota (tanpa login), dan halaman admin (rekap + kelola jadwal) yang dilindungi login sederhana.\n\nTAMPILAN: bersih dan modern, dominan hijau tua, ukuran tulisan nyaman dibaca dari HP.\n\nJANGAN tambahkan fitur di luar daftar ini dulu.",
+          },
+        ],
+        quote:
+          "Bandingkan prompt itu dengan keluhan aslinya di grup. Isinya sama. Yang berubah cuma satu hal: kejelasannya.",
+        note: "Dua belas menit kemudian Agent selesai. Yang Fikri lakukan pertama BUKAN membaca laporan AI yang penuh percaya diri itu, tapi membuka aplikasinya dan mengklik semuanya sebagai pengguna paling ceroboh sedunia. Dan benar saja: dia menemukan tiga masalah. Lanjut ke bagian 3.",
+      },
+      {
+        id: "vc4-4c",
+        type: "concept",
+        title: "Studi Kasus, Bagian 3: Tiga Putaran, Lalu Jadi",
+        subtitle: "Beginilah rasanya percakapan Loop Suci di dunia nyata",
+        content:
+          "Hasil pertama Agent: sekitar 80 persen benar. Tapi tiga hal mengganggu: pertama, form absen menampilkan SEMUA pertemuan termasuk yang sudah lewat, membingungkan. Kedua, di HP tabel rekap terpotong ke kanan. Ketiga, dan ini serius: halaman admin ternyata bisa dibuka siapa saja yang tahu alamatnya. Perhatikan cara Fikri menyampaikan tiap masalah: selalu DI MANA, APA yang terjadi, BAGAIMANA seharusnya. Satu perbaikan per putaran.",
+        prompts: [
+          {
+            label: "Putaran 1: masalah kejelasan",
+            prompt:
+              "Di halaman absen anggota, semua pertemuan ditampilkan termasuk yang sudah lewat, jadi membingungkan. Ubah: tampilkan hanya pertemuan hari ini dan yang akan datang, urutkan dari yang paling dekat. Pertemuan yang sudah lewat pindahkan ke bagian \"Riwayat\" di bawahnya.",
+          },
+          {
+            label: "Putaran 2: masalah tampilan HP",
+            prompt:
+              "Di layar HP, tabel rekap di halaman admin terpotong ke kanan dan harus digeser-geser. Ubah jadi kartu bertumpuk ke bawah saat layar kecil: satu kartu per anggota, isinya nama, jumlah hadir, dan status di pertemuan terakhir.",
+          },
+          {
+            label: "Putaran 3: masalah keamanan",
+            prompt:
+              "Saya bisa membuka halaman /admin langsung dari browser tanpa login sama sekali. Ini bahaya. Pastikan seluruh halaman admin dan data di dalamnya hanya bisa diakses setelah login, termasuk kalau alamatnya diketik langsung. Setelah selesai, jelaskan dengan bahasa awam bagian mana yang kamu ubah.",
+          },
+        ],
+        quote:
+          "Tidak ada satu pun langkah tadi yang butuh kepintaran khusus. Yang dibutuhkan cuma kejelasan, dan kesabaran menjalani putaran.",
+        note: "Catatan jujur: aslinya Fikri melewati 14 putaran, tiga di atas cuma contoh rasa percakapannya. Total dari keluhan sampai dipakai: dua sore. Minggu berikutnya 34 dari 40 anggota absen lewat HP, dan rekap bulanan berubah dari 2 jam jadi satu kali buka halaman. Kalau reaksimu sekarang \"ooh, gitu doang?\", jawabannya: iya. Gitu doang. Dan sekarang giliranmu.",
+      },
+      {
         id: "vc4-5",
         type: "practice",
         title: "Praktik: Bangun Versi Pertamamu",
@@ -715,6 +941,54 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Vibe coding bukan tujuan akhir. Dia pintu masuk. Sebagian dari kamu akan berhenti di 'bisa bikin alat untuk masalah sendiri', dan itu sudah luar biasa. Sebagian lagi akan ketagihan dan jadi builder sungguhan. Dua-duanya menang.",
       },
       {
+        id: "vc5-3a",
+        type: "concept",
+        title: "Panggung Tiga Menit: Formula Demo Day",
+        subtitle: "Karya bagus yang diceritakan buruk akan kalah dari karya biasa yang diceritakan jelas",
+        content:
+          "Sebentar lagi kamu berdiri di Demo Day, dan tiga menit itu terasa seperti tiga detik kalau tidak disiapkan, atau tiga jam kalau kamu grogi tanpa pegangan. Kabar baiknya: cerita tiga menit yang bagus itu bukan bakat, itu formula. Empat babak, urutannya jangan ditukar.",
+        flow: [
+          { label: "Masalah (30 dtk)", desc: "Mulai dari sakitnya, bukan aplikasinya. \"Tiap bulan saya rekap absensi 2 jam, dan kertasnya sering hilang.\" Penonton harus mengangguk dulu sebelum melihat layar" },
+          { label: "Demo (90 dtk)", desc: "Tunjukkan SATU alur dari awal sampai tuntas: anggota absen, rekap langsung muncul. Bukan tur keliling semua menu" },
+          { label: "Dampak (30 dtk)", desc: "Angka kecil pun bertenaga: \"34 dari 40 anggota pakai di minggu pertama, rekap dari 2 jam jadi 1 klik\"" },
+          { label: "Rencana (30 dtk)", desc: "Satu-dua langkah berikutnya. Ini bukti karyamu hidup, bukan tugas yang selesai lalu ditinggal" },
+        ],
+        quote:
+          "Orang tidak mengingat daftar fitur. Orang mengingat masalah yang mereka kenal, dan momen masalah itu selesai di depan mata mereka.",
+        note: "Tulis skripnya, lalu latihan dua kali dengan timer sungguhan. Bukan di kepala, tapi diucapkan. Kamu akan kaget betapa berbedanya \"sudah kebayang\" dengan \"sudah pernah diucapkan\".",
+      },
+      {
+        id: "vc5-3b",
+        type: "concept",
+        title: "Dosa-Dosa Demo dan Cara Selamatnya",
+        subtitle: "Semua kesalahan ini pernah terjadi di depan penonton sungguhan. Kamu tinggal tidak mengulanginya",
+        cards: [
+          {
+            title: "Dosa klasik di panggung",
+            accent: "red",
+            items: [
+              "Kebanyakan cerita fitur, kurang cerita masalah. \"Aplikasi saya ada login, ada dashboard, ada...\" dan penonton mulai buka HP masing-masing",
+              "Demo fitur yang baru diubah semalam. Hukum alamnya begini: fitur yang disentuh H-1 akan rusak tepat saat semua orang menonton",
+              "Demo dengan aplikasi kosong tanpa data. Aplikasi tanpa isi itu seperti warung tanpa dagangan: terlihat mati",
+              "Membuka dengan minta maaf: \"maaf ini masih jelek...\" Selamat, kamu baru saja menyuruh penonton fokus mencari jeleknya",
+            ],
+          },
+          {
+            title: "Disiapkan sejak H-1",
+            accent: "green",
+            items: [
+              "Isi aplikasi dengan data dummy yang hidup: nama teman-temanmu, jadwal sungguhan. Demo langsung terasa nyata",
+              "Bekukan aplikasimu 24 jam sebelum tampil. Tidak ada perubahan sekecil apapun. Gatal ingin ubah? Catat untuk lusa",
+              "Siapkan rencana B: rekam video alur demomu dari HP. Kalau internet venue ngambek, kamu tinggal putar video sambil tetap bercerita",
+              "Kalau tetap error di panggung: senyum, bilang \"nah, ini serunya bikin software\", lalu lanjut pakai rencana B. Penonton justru respek",
+            ],
+          },
+        ],
+        quote:
+          "Deg-degan itu bukan musuh, itu tanda kamu peduli. Yang menghancurkan demo bukan deg-degan, tapi tidak latihan.",
+        note: "Satu lagi: datang lebih awal dan tes aplikasimu di internet venue, dari HP-mu sendiri. Lima menit pengecekan itu membedakan demo yang lancar dengan demo yang dibuka kalimat \"kok tadi di rumah bisa ya\".",
+      },
+      {
         id: "vc5-4",
         type: "concept",
         title: "Kuis Penutup",
@@ -780,6 +1054,170 @@ export const vibeCodingMateri: SesiMateri[] = [
           "Rilis kecil, dengar pengguna, rawat pelan-pelan. Keamanan dan amanah data tidak ditawar",
         ],
         note: "Misi terakhirmu: dalam 7 hari ke depan, rilis satu aplikasi ke minimal 5 pengguna nyata. Sesederhana apapun. Lalu ceritakan di grup: apa yang mereka bilang. Kami tunggu karyamu di Demo Day.",
+        isCompletion: true,
+      },
+    ],
+  },
+  {
+    sesiNumber: 6,
+    title: "Dari Karya Jadi Rezeki",
+    subtitle: "Sesi paling jujur di kelas ini: tiga jalur mengubah skill barumu jadi penghasilan, tanpa janji manis",
+    steps: [
+      {
+        id: "vc6-1",
+        type: "concept",
+        title: "Ngobrol Jujur Dulu",
+        subtitle: "Sebelum bicara duit, kita luruskan dulu satu hal",
+        bigIdea: {
+          text: "Rezeki tidak datang dari skill. Rezeki datang dari masalah orang lain yang selesai karena skillmu.",
+          caption: "Kalimat kunci sesi ini. Semua yang lain cuma penjabarannya",
+        },
+        content:
+          "Ini bukan sesi cara cepat kaya, dan saya tidak akan pura-pura vibe coding otomatis menghasilkan uang. Tidak ada skill yang otomatis menghasilkan uang. Yang menghasilkan uang dari dulu selalu sama: masalah orang yang selesai. Nah, yang berubah sekarang adalah ongkosnya. Dulu, menyelesaikan masalah orang lewat website atau aplikasi butuh modal jutaan dan tim. Sekarang modalmu kejelasan berpikir dan alat yang sebagian besar gratis, seperti yang kamu buktikan sendiri lima sesi terakhir. Selisih antara ongkos lama dan ongkos barumu itulah peluangmu.",
+        bullets: [
+          "Skillnya sama persis dengan yang sudah kamu punya. Yang berubah cuma arah moncongnya: dari masalah sendiri ke masalah orang lain",
+          "Mulai dari lingkaran terdekat: organisasimu, usaha temanmu, keluargamu di kampung. Mereka pasar pertamamu, bukan orang asing di internet",
+          "Dan jangan berhenti kuliah dulu ya. Semua jalur di sesi ini dimulai sebagai sampingan, dan sehat tetap begitu sampai terbukti",
+        ],
+      },
+      {
+        id: "vc6-2",
+        type: "concept",
+        title: "Tiga Jalur yang Nyata",
+        subtitle: "Bukan teori dari artikel. Dua jalur pertama sedang saya jalani sendiri",
+        content:
+          "Sebelum masuk daftar, biar adil kamu tahu posisi saya. Dreammecca, yang mungkin pernah kamu dengar, lahir dari jalur pertama: dibangun sebagai jasa untuk kebutuhan klien. Umrahme lahir dari jalur kedua: produk yang orang pakai dan berlangganan. Jadi yang kamu baca di bawah ini bukan hasil googling, ini jalan yang sedang ditapaki. Tiga jalurnya begini.",
+        cards: [
+          {
+            title: "Jalur 1: Jasa. Bikinin untuk orang lain",
+            accent: "green",
+            items: [
+              "Jalur tercepat menghasilkan. Duit masuk per proyek, hitungan minggu bukan hitungan tahun",
+              "Modalnya cuma portofolio, dan tebak: aplikasi yang kamu buat di kelas ini adalah portofolio pertamamu",
+              "Pasarnya di depan mata: organisasi butuh website acara, usaha teman butuh katalog, lembaga butuh company profile",
+            ],
+          },
+          {
+            title: "Jalur 2: Produk. Aplikasi yang orang bayar",
+            accent: "blue",
+            items: [
+              "Plafonnya paling tinggi: satu aplikasi dipakai banyak orang yang bayar tipis-tipis, misalnya langganan bulanan",
+              "Tapi paling butuh sabar. Bulan-bulan awal yang sepi itu normal, bukan tanda gagal",
+              "Kuncinya: bangun untuk komunitas yang masalahnya kamu pahami luar-dalam, bukan untuk \"semua orang\"",
+            ],
+          },
+          {
+            title: "Jalur 3: Alat internal. Naikin usahamu sendiri",
+            accent: "purple",
+            items: [
+              "Jalur yang paling sering dilupakan. Kalau kamu atau keluargamu punya usaha, aplikasimu jadi mesin efisiensi",
+              "Duitnya tidak terlihat sebagai \"bayaran\", tapi terlihat di omzet: jastip yang rekapnya otomatis bisa terima jauh lebih banyak pesanan dengan tenaga sama",
+              "Bonusnya: usaha yang rapi sistemnya jadi portofolio hidup untuk jalur 1 dan 2",
+            ],
+          },
+        ],
+        table: {
+          headers: ["Jalur", "Duit masuk", "Plafon", "Cocok kalau kamu..."],
+          rows: [
+            ["Jasa", "Cepat, per proyek", "Terbatas waktu dan tenagamu", "Butuh hasil dekat dan suka interaksi dengan orang"],
+            ["Produk", "Lambat di awal, lalu menggulung", "Paling tinggi, tidak terikat jam kerjamu", "Sabar, dan punya komunitas yang kamu pahami dalam"],
+            ["Alat internal", "Tidak langsung, lewat efisiensi usaha", "Setinggi usahanya tumbuh", "Kamu atau keluargamu sudah punya usaha berjalan"],
+          ],
+        },
+        quote:
+          "Untuk pemula, jalur tercepat hampir selalu jasa. Produk itu maraton. Jasa itu lari pagi: capeknya sama, tapi hasilnya kelihatan minggu ini.",
+      },
+      {
+        id: "vc6-3",
+        type: "concept",
+        title: "Masang Harga Pertama Tanpa Minder",
+        subtitle: "Momen paling canggung seumur hidup builder: ditanya \"berapaan?\" dan kepalamu kosong",
+        content:
+          "Prinsip pertama: kamu menjual HASIL, bukan jam kerja. Klien tidak peduli kamu mengerjakannya 3 jam dibantu AI atau 3 minggu begadang. Yang dia beli: masalahnya selesai, dan ada orang yang bertanggung jawab kalau nanti ada apa-apa. Prinsip kedua, dan ini penting: jangan gratis total. Yang gratis tidak dihargai, dan revisinya tidak akan ada habisnya. Kalau memang mau membantu tanpa bayaran, tukar dengan mata uang lain: testimoni tertulis dan izin memajang di portofolio, dengan lingkup kerja yang tetap ditulis jelas.",
+        table: {
+          headers: ["Jenis proyek", "Harga pembuka yang wajar", "Kenapa segitu"],
+          rows: [
+            ["Landing page acara / profil organisasi", "Rp 300–750 ribu", "Satu sampai tiga halaman, selesai dalam hitungan hari. Murah bagimu, sangat berharga bagi panitia yang kepepet"],
+            ["Website usaha: katalog + tombol WhatsApp", "Rp 750 ribu – 2 juta", "Nilainya jelas dan bisa dihitung: dagangan terlihat profesional, pesanan lebih gampang masuk"],
+            ["Aplikasi dengan database dan login (absensi, pre-order, booking)", "Rp 1,5–5 juta", "Ada data orang yang kamu urus. Tanggung jawab lebih besar, harga ikut lebih besar"],
+          ],
+        },
+        bullets: [
+          "DP 50% sebelum mulai kerja. Ini bukan tidak percaya, ini cara dua pihak sama-sama serius",
+          "Lingkup tertulis, di chat WhatsApp pun sah: fitur apa saja, berapa kali revisi, kapan selesai. Sesi praktik nanti kita bikin bareng",
+          "Naikkan harga tiap dua-tiga proyek. Kalau semua calon klien langsung bilang \"oke\" tanpa mikir, itu bukan kamu hebat nego. Itu harganya kemurahan",
+        ],
+        quote:
+          "Harga pertamamu akan terasa terlalu mahal bagimu, dan terlalu murah bagi yang paham. Kalau dua-duanya terjadi, tandanya pas.",
+        note: "Angka di tabel itu pembuka percakapan, bukan harga mati. Sesuaikan dengan kantong pasarmu. Yang tidak boleh disesuaikan: bekerja tanpa lingkup tertulis.",
+      },
+      {
+        id: "vc6-4",
+        type: "concept",
+        title: "Etika Main di Jalur Ini",
+        subtitle: "Biar rezekinya awet dan namamu tetap bersih. Ini bukan pemanis, ini strategi bertahan",
+        cards: [
+          {
+            title: "Pegang ini",
+            accent: "green",
+            items: [
+              "Jujur soal AI kalau ditanya. Tidak perlu diumumkan tiap saat, tapi jangan pernah bohong. Yang klien bayar bukan jerih ngetik kode, tapi hasil plus tanggung jawabmu mengawalnya",
+              "Garansi revisi yang jelas sejak awal: misalnya dua kali revisi termasuk harga, selebihnya biaya tambahan. Ditulis, bukan diingat-ingat",
+              "Data klien itu amanah, persis aturan 3 di sesi sebelumnya. Nomor pelanggan mereka bukan aset marketingmu",
+              "Sanggupi yang masuk kolom hijau sesi 1. Yang di luar itu, tolak dengan jujur: \"ini di luar kemampuan saya sekarang.\" Kalimat itu terdengar lemah, padahal membangun kepercayaan paling cepat",
+            ],
+          },
+          {
+            title: "Hindari ini",
+            accent: "red",
+            items: [
+              "Menjawab \"bisa, gampang kok\" untuk fitur yang belum kamu riset. Janji sebelum riset itu hutang, dan hutang jenis ini nagihnya di depan klien",
+              "Terima pembayaran penuh lalu menghilang saat error muncul. Satu cerita begini menyebar lebih cepat dari sepuluh testimoni bagus",
+              "Menjual ulang proyek klien A jadi template klien B tanpa izin. Pola boleh dipakai ulang, karya spesifik orang jangan",
+              "Mengaku \"tim developer profesional\" padahal solo. \"Saya builder solo dibantu AI, ini portofolio saya\" jauh lebih kuat, karena setiap katanya bisa dibuktikan",
+            ],
+          },
+        ],
+        quote:
+          "Klien bisa memaafkan aplikasi yang sempat error. Klien tidak akan memaafkan pembuat yang menghilang saat error.",
+      },
+      {
+        id: "vc6-5",
+        type: "practice",
+        title: "Praktik: Lempar Tawaran Pertamamu",
+        subtitle: "Portofoliomu sudah ada: aplikasi dari kelas ini. Tinggal satu hal yang belum ada: keberanian mengirim pesan",
+        content:
+          "Misi tujuh hari: satu tawaran nyata, ke satu calon klien nyata, dari lingkaran terdekatmu. Bukan sepuluh tawaran, satu saja tapi benar-benar dikirim. Pakai dua prompt ini untuk menyiapkan amunisinya.",
+        prompts: [
+          {
+            label: "Menyusun pesan penawaran pertama (untuk WhatsApp)",
+            prompt:
+              "Saya baru bisa membangun website dan aplikasi sederhana dengan bantuan AI. Portofolio saya: [ceritakan aplikasi yang kamu buat di kelas ini, sertakan linknya]. Saya mau menawarkan jasa ke [siapa: ketua organisasi X / teman yang punya usaha Y]. Masalah yang saya lihat sedang mereka alami: [ceritakan]. Buatkan 3 versi pesan WhatsApp penawaran yang sopan, singkat, dan tidak terasa seperti spam: versi untuk teman dekat, versi untuk kenalan, dan versi untuk orang yang belum mengenal saya. Fokuskan pesannya ke masalah mereka, bukan ke kehebatan saya.",
+          },
+          {
+            label: "Bikin kesepakatan sederhana biar dua pihak tenang",
+            prompt:
+              "Saya akan mengerjakan proyek [jenis proyek] untuk [nama klien] dengan harga [angka]. Buatkan rangkuman kesepakatan sederhana dalam bahasa santai tapi jelas, siap ditempel di chat WhatsApp, berisi: lingkup pekerjaan (fitur apa saja), yang TIDAK termasuk, jumlah revisi, perkiraan tanggal selesai, cara bayar (DP 50% di awal), dan apa yang terjadi kalau ada permintaan di luar lingkup. Maksimal 200 kata.",
+          },
+        ],
+        note: "Ditolak itu skenario normal, bukan bencana. Sepuluh tawaran yang jadi satu-dua itu angka sehat, bahkan untuk yang sudah lama main. Bedanya pemain lama dengan kamu cuma satu: mereka sudah selesai kaget ditolak.",
+      },
+      {
+        id: "vc6-6",
+        type: "concept",
+        title: "Penutup Sungguhan: Manfaat Dulu, Rezeki Ngikut",
+        subtitle: "Enam sesi selesai. Sekarang ceritamu yang mulai",
+        content:
+          "Kamu masuk kelas ini dengan kalimat \"saya tidak bisa ngoding.\" Kamu keluar dengan aplikasi yang jalan, cara menceritakannya di depan orang, dan peta jalan mengubahnya jadi penghasilan. Perhatikan urutannya, karena urutan ini bukan kebetulan: karya dulu, cerita kemudian, rezeki paling belakang. Orang yang membalik urutannya, mengejar duit sebelum punya karya yang menyelesaikan masalah, biasanya tidak mendapat keduanya.",
+        bullets: [
+          "Karya yang menyelesaikan masalah orang selalu punya jalan jadi rezeki: jasa, produk, atau alat internal",
+          "Jasa adalah pintu tercepatmu, dan aplikasi kelas ini adalah portofolio pertamamu",
+          "Harga hasil bukan harga jam, lingkup tertulis, DP 50%. Tiga kebiasaan kecil yang menyelamatkan banyak persahabatan",
+          "Jujur dan amanah itu bukan pelengkap materi. Itu strategi bertahan paling lama di jalur ini",
+        ],
+        quote:
+          "Skill bisa dipelajari siapa saja dalam hitungan minggu. Reputasi cuma bisa dibangun dengan cara lama: satu janji ditepati, lalu satu lagi, lalu satu lagi.",
+        note: "Misi penutup, tenggat 30 hari, pilih satu: dapatkan proyek jasa pertamamu berapapun nilainya, ATAU satu pengguna yang membayar aplikasimu, ATAU alat internal yang terbukti memangkas satu pekerjaan rutin. Lalu ceritakan di grup. Alumni yang jalan tidak pernah jalan sendirian.",
         isCompletion: true,
       },
     ],
