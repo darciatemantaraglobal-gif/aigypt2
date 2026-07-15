@@ -21,6 +21,7 @@ export interface KelasItem {
 
 import fundamentalCover from "@/assets/covers/cover-fundamental-ai.png";
 import maksimalkanCover from "@/assets/covers/cover-maksimalkan-ai.png";
+import vibeCodingCover from "@/assets/covers/cover-vibe-coding.png";
 
 export const kelasList: KelasItem[] = [
   {
@@ -61,6 +62,7 @@ export const kelasList: KelasItem[] = [
     status: "new",
     gradient:
       "linear-gradient(135deg, #060608 0%, #04211c 40%, #065f46 75%, #047857 100%)",
+    coverImage: vibeCodingCover,
     accentColor: "#34D399",
     iconPath:
       "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5",

@@ -1,0 +1,159 @@
+# PROMPT UNTUK REPLIT AGENT — KELAS BARU "VIBE CODING"
+
+Tambahkan satu kelas baru ke platform AIGYPT bernama **"Vibe Coding: Dari Masalah Jadi Aplikasi"** dengan id `vibe-coding`. Kelas ini berisi 5 sesi materi interaktif. File konten lengkapnya saya lampirkan sebagai `vibeCoding.ts` — **gunakan file itu apa adanya, jangan menulis ulang atau meringkas isinya.**
+
+Arsitektur konten multi-kelas sudah ada di project ini (registry `materiByKelas`, route dinamis `/kelas/:kelasId/materi/:sesi`). Ikuti pola yang sudah dipakai kelas `fundamental-ai`. Jangan membuat route baru, jangan membuat komponen renderer baru.
+
+---
+
+## LANGKAH 1 — Tambahkan file konten
+
+Buat file baru: `artifacts/aigypt/src/lib/vibeCoding.ts`
+
+Isinya persis file `vibeCoding.ts` yang saya lampirkan. File ini sudah mengikuti tipe `SesiMateri` dari `materiContent.ts` (memakai blok `bigIdea`, `timeline`, `matrix`, `flow`, `table`, `cards`, `prompts`, `quiz` yang sudah didukung renderer). Ekspor utamanya: `vibeCodingMateri: SesiMateri[]`.
+
+## LANGKAH 2 — Registrasi di materiByKelas
+
+Di `artifacts/aigypt/src/lib/materiContent.ts`, bagian paling bawah ada registry:
+
+```ts
+import { fundamentalAIMateri } from "./fundamentalAI";
+
+export const materiByKelas: Record<string, SesiMateri[]> = {
+  "maksimalkan-ai": materiContent,
+  "fundamental-ai": fundamentalAIMateri,
+};
+```
+
+Tambahkan:
+
+```ts
+import { vibeCodingMateri } from "./vibeCoding";
+```
+
+dan entri baru:
+
+```ts
+"vibe-coding": vibeCodingMateri,
+```
+
+## LANGKAH 3 — Tambahkan kelas di katalog (classesData.ts)
+
+Di `artifacts/aigypt/src/lib/classesData.ts`, tambahkan satu `KelasItem` baru ke `kelasList`, letakkan **setelah** `fundamental-ai` dan **sebelum** `maksimalkan-ai`:
+
+```ts
+{
+  id: "vibe-coding",
+  title: "Vibe Coding: Dari Masalah Jadi Aplikasi",
+  tagline: "Kamu arsiteknya, AI tukangnya.",
+  description:
+    "Ubah keluhan sehari-hari jadi website dan aplikasi yang benar-benar jalan, tanpa menulis satu baris kode pun. Kenali workflow lengkapnya, para AI agent yang membantumu, istilah-istilah penting (GitHub, Vercel, Supabase, deploy, dan lainnya), lalu jalani prosesnya: temukan masalah, susun blueprint, ngobrol dengan AI sampai aplikasinya jadi, dan rilis ke pengguna nyata. Dilengkapi prompt siap pakai dan kuis interaktif.",
+  sesiCount: 5,
+  duration: "60 menit",
+  level: "Pemula",
+  status: "new",
+  gradient:
+    "linear-gradient(135deg, #060608 0%, #04211c 40%, #065f46 75%, #047857 100%)",
+  accentColor: "#34D399",
+  iconPath:
+    "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5",
+  personas: ["Pemula", "Organisator", "Pebisnis", "Kreator"],
+  whatYouLearn: [
+    "Mindset vibe coding: kamu arsiteknya, AI tukangnya",
+    "Workflow lengkap dari ide sampai online: GitHub, Vercel, Supabase, dan kamus istilah builder",
+    "Menemukan masalah yang layak dibangun dari keseharianmu sendiri",
+    "Blueprint 5 pertanyaan sebelum menulis prompt pertama",
+    "Loop membangun: prompt, tes, feedback spesifik, ulang sampai jadi",
+    "Menangani error dan kondisi stuck tanpa panik",
+    "Rilis aplikasi ke pengguna nyata dengan 3 aturan keamanan dasar",
+  ],
+},
+```
+
+Catatan: tidak ada `coverImage` dulu — biarkan pakai `gradient`. Jangan menambahkan import gambar cover apapun.
+
+## LANGKAH 4 — Tambahkan ringkasan sesi di kelas-detail.tsx
+
+Di `artifacts/aigypt/src/pages/kelas-detail.tsx`, objek `sessionsByKelas` berisi ringkasan sesi per kelas. Tambahkan entri `"vibe-coding"` mengikuti format yang sama persis dengan `"fundamental-ai"`:
+
+```ts
+"vibe-coding": [
+  {
+    num: "01",
+    title: "Kamu Tidak Perlu Bisa Ngoding",
+    essence: "Kamu arsiteknya, AI tukangnya. Satu ide yang mengubah semuanya.",
+    mastery: [
+      "Memahami vibe coding: mendeskripsikan maumu, AI yang menulis kodenya",
+      "Mengenal peta alat: Replit Agent, Claude, Lovable, dan kapan memakai yang mana",
+      "Tahu jujur batasnya: mana yang sangat bisa, mana yang belum wilayahnya",
+    ],
+    tools: ["Replit Agent", "Claude", "ChatGPT"],
+    mission: "Tentukan satu masalah nyata di sekitarmu yang akan kamu bangun solusinya.",
+  },
+  {
+    num: "02",
+    title: "Kenalan Sama Dapurnya",
+    essence: "Workflow, para asisten AI, dan istilah yang akan kamu dengar terus.",
+    mastery: [
+      "Memahami anatomi aplikasi: frontend, backend, database, lewat analogi warung",
+      "Membedakan chatbot (konsultan) dan agent (tukang), dan kapan memakai siapa",
+      "Kenalan dengan GitHub, Vercel, Supabase, plus kamus istilah: deploy, repo, commit, API, rollback",
+    ],
+    tools: ["Replit Agent", "GitHub", "Vercel", "Supabase"],
+    mission: "Uji kenalan barumu lewat kuis interaktif di akhir sesi.",
+  },
+  {
+    num: "03",
+    title: "Dari Masalah Jadi Blueprint",
+    essence: "Aplikasi gagal jarang karena kodenya. Biasanya karena masalahnya kabur.",
+    mastery: [
+      "Menggali keluhan berulang jadi ide aplikasi yang layak dibangun",
+      "Menyusun blueprint 5 pertanyaan: siapa, masalah apa, 3 fitur, halaman, tampilan",
+      "Memotong fitur sampai jadi MVP: versi terkecil yang sudah berguna",
+    ],
+    tools: ["Claude", "ChatGPT"],
+    mission: "Tulis blueprint final aplikasimu dan uji ketajamannya lewat kuis interaktif.",
+  },
+  {
+    num: "04",
+    title: "Ngobrol Sampai Jadi",
+    essence: "Jantung vibe coding: putaran percakapan antara kamu, AI, dan layar.",
+    mastery: [
+      "Menyusun prompt pertama yang jadi fondasi kokoh, lengkap dengan pagar fitur",
+      "Menjalani loop suci: lihat, tes, catat, minta satu hal, ulang",
+      "Memberi feedback yang AI paham dan menangani error tanpa panik",
+    ],
+    tools: ["Replit Agent"],
+    mission: "Bangun versi pertama aplikasimu: satu fitur inti yang jalan dari awal sampai akhir.",
+  },
+  {
+    num: "05",
+    title: "Rilis, Rusak, Perbaiki",
+    essence: "Aplikasi yang tidak dirilis itu cuma hobi. Yang dirilis, itu karya.",
+    mastery: [
+      "Rilis dengan checklist, bukan perasaan: fitur inti jalan, aman, nyaman di HP",
+      "Tiga aturan keamanan yang tidak boleh ditawar: kunci, input pengguna, amanah data",
+      "Merawat aplikasi setelah rilis: dengar, pilah, bangun, kabari",
+    ],
+    tools: ["Replit Agent", "Semua tool"],
+    mission: "Rilis aplikasimu ke minimal 5 pengguna nyata dalam 7 hari. Sampai jumpa di Demo Day.",
+  },
+],
+```
+
+## LANGKAH 5 — Verifikasi (wajib, jangan dilewati)
+
+1. `npm run build` (atau typecheck) harus lolos tanpa error TypeScript.
+2. Buka `/kelas` — kartu "Vibe Coding: Dari Masalah Jadi Aplikasi" muncul dengan badge status `new`, gradient hijau emerald, dan aksen `#34D399`.
+3. Buka `/kelas/vibe-coding` — halaman detail menampilkan 5 sesi dari `sessionsByKelas`.
+4. Buka `/kelas/vibe-coding/materi/sesi-1` sampai `sesi-5` — semua sesi ter-render, termasuk blok `bigIdea`, `timeline`, `table`, `cards`, `flow`, `prompts`, dan `quiz` interaktif (klik jawaban → muncul umpan balik).
+5. Pastikan kuis di Sesi 2, Sesi 3, dan Sesi 5 bisa diklik dan menampilkan penjelasan `why`.
+6. Pastikan progress tracking jalan: selesaikan sesi-1 dengan login member, cek progress tersimpan dengan `kelasId: "vibe-coding"` (jangan bercampur dengan progress kelas lain).
+7. Cek tampilan mobile: kartu kelas, halaman detail, dan halaman materi nyaman di layar HP.
+
+## BATASAN
+
+- JANGAN menyentuh konten `fundamentalAI.ts` atau `materiContent.ts` selain menambah import + satu entri registry.
+- JANGAN mengubah desain sistem (warna dasar, font Space Grotesk/Inter, layout).
+- JANGAN menambahkan route baru — route dinamis yang ada sudah menangani kelas ini.
+- JANGAN menambahkan fitur di luar instruksi ini.
