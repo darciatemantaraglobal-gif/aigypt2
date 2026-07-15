@@ -50,6 +50,31 @@ export const kelasList: KelasItem[] = [
     ],
   },
   {
+    id: "vibe-coding",
+    title: "Vibe Coding: Dari Masalah Jadi Aplikasi",
+    tagline: "Kamu arsiteknya, AI tukangnya.",
+    description:
+      "Ubah keluhan sehari-hari jadi website dan aplikasi yang benar-benar jalan, tanpa menulis satu baris kode pun. Dari menemukan masalah yang layak dibangun, menyusun blueprint, ngobrol dengan AI sampai aplikasinya jadi, hingga rilis ke pengguna nyata. Dilengkapi prompt siap pakai dan kuis interaktif.",
+    sesiCount: 4,
+    duration: "45 menit",
+    level: "Pemula",
+    status: "new",
+    gradient:
+      "linear-gradient(135deg, #060608 0%, #04211c 40%, #065f46 75%, #047857 100%)",
+    accentColor: "#34D399",
+    iconPath:
+      "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5",
+    personas: ["Pemula", "Organisator", "Pebisnis", "Kreator"],
+    whatYouLearn: [
+      "Mindset vibe coding: kamu arsiteknya, AI tukangnya",
+      "Menemukan masalah yang layak dibangun dari keseharianmu sendiri",
+      "Blueprint 5 pertanyaan sebelum menulis prompt pertama",
+      "Loop membangun: prompt, tes, feedback spesifik, ulang sampai jadi",
+      "Menangani error dan kondisi stuck tanpa panik",
+      "Rilis aplikasi ke pengguna nyata dengan 3 aturan keamanan dasar",
+    ],
+  },
+  {
     id: "maksimalkan-ai",
     title: "Maksimalkan AI untuk Menghasilkan Solusimu",
     tagline: "Dari bertanya, hingga mencipta.",

@@ -68,6 +68,56 @@ const sessionsByKelas: Record<string, Array<{
       mission: "Ambil satu masalah nyata malam ini, susun prompt lima bahan, rasakan bedanya.",
     },
   ],
+  "vibe-coding": [
+    {
+      num: "01",
+      title: "Kamu Tidak Perlu Bisa Ngoding",
+      essence: "Kamu arsiteknya, AI tukangnya. Satu ide yang mengubah semuanya.",
+      mastery: [
+        "Memahami vibe coding: mendeskripsikan maumu, AI yang menulis kodenya",
+        "Mengenal peta alat: Replit Agent, Claude, Lovable, dan kapan memakai yang mana",
+        "Tahu jujur batasnya: mana yang sangat bisa, mana yang belum wilayahnya",
+      ],
+      tools: ["Replit Agent", "Claude", "ChatGPT"],
+      mission: "Tentukan satu masalah nyata di sekitarmu yang akan kamu bangun solusinya.",
+    },
+    {
+      num: "02",
+      title: "Dari Masalah Jadi Blueprint",
+      essence: "Aplikasi gagal jarang karena kodenya. Biasanya karena masalahnya kabur.",
+      mastery: [
+        "Menggali keluhan berulang jadi ide aplikasi yang layak dibangun",
+        "Menyusun blueprint 5 pertanyaan: siapa, masalah apa, 3 fitur, halaman, tampilan",
+        "Memotong fitur sampai jadi MVP: versi terkecil yang sudah berguna",
+      ],
+      tools: ["Claude", "ChatGPT"],
+      mission: "Tulis blueprint final aplikasimu dan uji ketajamannya lewat kuis interaktif.",
+    },
+    {
+      num: "03",
+      title: "Ngobrol Sampai Jadi",
+      essence: "Jantung vibe coding: putaran percakapan antara kamu, AI, dan layar.",
+      mastery: [
+        "Menyusun prompt pertama yang jadi fondasi kokoh, lengkap dengan pagar fitur",
+        "Menjalani loop suci: lihat, tes, catat, minta satu hal, ulang",
+        "Memberi feedback yang AI paham dan menangani error tanpa panik",
+      ],
+      tools: ["Replit Agent"],
+      mission: "Bangun versi pertama aplikasimu: satu fitur inti yang jalan dari awal sampai akhir.",
+    },
+    {
+      num: "04",
+      title: "Rilis, Rusak, Perbaiki",
+      essence: "Aplikasi yang tidak dirilis itu cuma hobi. Yang dirilis, itu karya.",
+      mastery: [
+        "Rilis dengan checklist, bukan perasaan: fitur inti jalan, aman, nyaman di HP",
+        "Tiga aturan keamanan yang tidak boleh ditawar: kunci, input pengguna, amanah data",
+        "Merawat aplikasi setelah rilis: dengar, pilah, bangun, kabari",
+      ],
+      tools: ["Replit Agent", "Semua tool"],
+      mission: "Rilis aplikasimu ke minimal 5 pengguna nyata dalam 7 hari. Sampai jumpa di Demo Day.",
+    },
+  ],
   "maksimalkan-ai": [
     {
       num: "01",

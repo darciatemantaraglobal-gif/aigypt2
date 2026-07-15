@@ -1685,8 +1685,10 @@ tapi tetap personal.`,
 
 // Multi-class content registry — add new class content here as it becomes available
 import { fundamentalAIMateri } from "./fundamentalAI";
+import { vibeCodingMateri } from "./vibeCoding";
 
 export const materiByKelas: Record<string, SesiMateri[]> = {
   "maksimalkan-ai": materiContent,
   "fundamental-ai": fundamentalAIMateri,
+  "vibe-coding": vibeCodingMateri,
 };
