@@ -68,3 +68,15 @@ MASTER_ACCESS_CODE = "52AAB272183B46BA45D48112C9B583B4318A7EC5"
 
 [nix]
 channel = "stable-25_05"
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
+
+[[ports]]
+localPort = 8081
+externalPort = 8081
+
+[[ports]]
+localPort = 22064
+externalPort = 80

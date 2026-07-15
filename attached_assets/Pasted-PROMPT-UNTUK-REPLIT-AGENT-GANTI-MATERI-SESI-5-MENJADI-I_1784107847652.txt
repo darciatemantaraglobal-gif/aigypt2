@@ -1,0 +1,307 @@
+PROMPT UNTUK REPLIT AGENT — GANTI MATERI SESI 5 MENJADI "IMPLEMENTASI AI UNTUK MENCIPTAKAN SOLUSI"
+
+Tugasmu SEMPIT dan MEKANIS. Jangan berkreasi, jangan menulis ulang konten, jangan menyentuh file lain.
+
+YANG HARUS DILAKUKAN:
+1. Buka file data materi utama: src/lib/materiContent.ts (kalau di workspace ini lokasinya artifacts/aigypt/src/lib/materiContent.ts, pakai path itu).
+2. Di dalam array materiContent, temukan objek sesi 5 — dimulai dari "{" yang berisi "sesiNumber: 5," sampai "}," penutupnya, tepat sebelum komentar pembatas SESI 6.
+3. HAPUS seluruh objek sesi 5 lama itu, lalu TEMPEL blok objek baru di bawah (bagian di antara garis =====) di posisi yang sama, apa adanya, tanpa mengubah satu kata pun dari isinya.
+4. Pastikan file tetap valid TypeScript sesuai interface SesiMateri dan MateriStep yang sudah ada (jangan ubah interface).
+5. JANGAN sentuh: sesi 1–4 dan 6, fundamentalAIMateri, materiByKelas, kurikulum.tsx, pages/materi/sesi-5.tsx (file legacy, biarkan), routing, maupun API progress.
+6. Verifikasi: tidak ada error TypeScript, dan halaman /kelas/maksimalkan-ai/materi/sesi-5 merender semua step baru dengan benar (judul sesi: "Implementasi AI untuk Menciptakan Solusi", step terakhir "Misi Menuju Demo Day" punya isCompletion: true sehingga tombol selesaikan sesi tetap berfungsi).
+
+===== BLOK OBJEK SESI 5 BARU (tempel apa adanya) =====
+
+
+// ═══════════════════════════════════════════════════════
+// SESI 5 — Implementasi AI untuk Menciptakan Solusi
+// (Praktik vibe coding terpandu di Replit)
+// Tempel blok ini menggantikan objek sesi 5 lama di
+// src/lib/materiContent.ts (dari "{ sesiNumber: 5," sampai
+// "}," tepat sebelum komentar SESI 6)
+// ═══════════════════════════════════════════════════════
+{
+  sesiNumber: 5,
+  title: "Implementasi AI untuk Menciptakan Solusi",
+  subtitle: "Praktik vibe coding terpandu: dari masalah nyata menjadi aplikasi tayang, langsung di Replit",
+  steps: [
+    {
+      id: "s5-1",
+      type: "concept",
+      title: "Dari Pengguna Menjadi Pencipta",
+      subtitle: "Sesi ini bukan untuk ditonton, tapi dikerjakan",
+      content:
+        "Selama ini kamu memakai aplikasi buatan orang lain: menyesuaikan diri dengan cara kerja mereka, menerima fitur seadanya, dan mengeluh dalam hati 'coba ada aplikasi yang begini'. Sesi ini membalik posisi itu. Setiap langkah di sesi ini menyuruhmu membuka sesuatu, mengklik sesuatu, dan mengetik sesuatu. Di akhir sesi kamu tidak pulang membawa catatan, kamu pulang membawa tautan aplikasi buatanmu sendiri.",
+      bigIdea: {
+        text: "Kamu tidak sedang belajar coding. Kamu sedang belajar mengubah masalah menjadi produk, dan AI yang mengerjakan bagian teknisnya.",
+        caption: "Jangkar Sesi 5",
+      },
+      bullets: [
+        "Menguasai alur lengkap: masalah → rancang → bangun → rilis",
+        "Membangun aplikasi web nyata dengan Replit Agent, hemat kredit gratismu",
+        "Mengenal situs-situs hidden gem yang membuat hasilmu tampak profesional",
+        "Pulang dengan tautan aplikasi yang bisa dibuka siapa pun, siap dibawa ke Demo Day",
+      ],
+    },
+    {
+      id: "s5-2",
+      type: "concept",
+      title: "Kerangka Besar Sang Pencipta",
+      subtitle: "Empat babak yang dilalui semua solusi, dari tugas kelas sampai startup",
+      content:
+        "AI hari ini bukan mesin penjawab, melainkan tenaga kerja: dia bisa merancang, membangun, mengetes, dan memperbaiki pekerjaannya sendiri. Yang dia butuhkan darimu hanya kejelasan. Dan kejelasan tidak butuh gelar IT, kejelasan lahir dari orang yang paling paham masalahnya: kamu.",
+      flow: [
+        { label: "Masalah", desc: "Solusi lahir dari masalah yang dirasakan, bukan ide yang keren" },
+        { label: "Rancang", desc: "Tentukan versi terkecil yang sudah berguna (MVP): maksimal 3 fitur inti" },
+        { label: "Bangun", desc: "Deskripsikan ke AI, AI membangun, kamu mengetes dan menyuruh perbaiki" },
+        { label: "Rilis", desc: "Solusi baru bernilai saat dipakai orang lain: tayangkan, bagikan, dengarkan" },
+      ],
+      quote:
+        "Dulu untuk punya rumah kamu harus jadi tukang batu. Sekarang kamu cukup jadi arsitek yang mendeskripsikan bangunan. Vibe coding: kamu arsiteknya, AI kontraktornya.",
+    },
+    {
+      id: "s5-3",
+      type: "practice",
+      title: "Babak 0: Tangkap Masalahmu",
+      subtitle: "Buka notes di HP/laptopmu SEKARANG, buat catatan berjudul 'Solusiku'",
+      content:
+        "Kerjakan sungguhan, jangan cuma dibaca. Jawab lima pertanyaan ini di notes-mu, masing-masing satu kalimat jujur. Lima kalimat ini adalah bahan bakar seluruh babak berikutnya, kita sebut problem statement:",
+      bullets: [
+        "1. Masalah apa yang berulang kali menggangguku atau lingkunganku?",
+        "2. Siapa saja yang mengalaminya selain aku? Sebut minimal 3 orang",
+        "3. Bagaimana ini diselesaikan sekarang? Manual? Excel? Grup WhatsApp?",
+        "4. Kalau ada aplikasi ajaib, apa SATU hal terpenting yang harus bisa dia lakukan?",
+        "5. Dari mana aku tahu solusinya berhasil?",
+      ],
+      note:
+        "Mentok? Pancingan dari dunia masisir: rekap kas kekeluargaan yang diprotes karena tidak transparan, jadwal piket sekretariat yang selalu diributkan, katalog jualan yang masih berupa album foto WhatsApp, daftar muraja'ah hafalan yang tercecer.",
+    },
+    {
+      id: "s5-4",
+      type: "practice",
+      title: "Babak 1: Rancang Dulu, Gratis, di Luar Replit",
+      subtitle: "Buka tab baru: claude.ai (atau aistudio.google.com untuk jalur full gratis), lalu login",
+      content:
+        "Kesalahan pemula nomor satu: menembak Replit dengan ide mentah, lalu menghabiskan kredit Agent untuk bolak-balik ganti arah. Prinsip hematnya: berpikir di AI chat yang gratis, membangun di Replit yang berkredit. Salin prompt di bawah, isi bagian kurungnya dari notes-mu, jawab pertanyaan AI dengan serius, lalu salin dua hasilnya ke notes: PRD lengkap dan prompt siap-tempel di bagian akhirnya.",
+      prompts: [
+        {
+          label: "Prompt Perancang: tembakkan ke Claude / Gemini",
+          prompt: `Aku ingin membuat aplikasi web sederhana, dan aku bukan programmer.
+Aku akan membangunnya menggunakan Replit Agent.
+
+Masalahku: [tempel 5 kalimat problem statement dari notes-mu]
+
+Bantu aku menyusun rancangan produk mini (PRD) berisi:
+1. Nama aplikasi dan deskripsi satu kalimat
+2. Target pengguna
+3. Maksimal 3 fitur inti untuk versi pertama, coret fitur yang bisa ditunda
+4. Halaman/tampilan yang dibutuhkan
+5. Data apa saja yang perlu disimpan
+
+Tanyakan dulu 3 hal terpenting yang perlu kamu ketahui dariku.
+Setelah kujawab, tuliskan PRD lengkap dengan bahasa sederhana,
+lalu di bagian akhir buatkan SATU prompt siap-tempel untuk Replit Agent
+yang merangkum seluruh PRD ini.`,
+        },
+      ],
+    },
+    {
+      id: "s5-5",
+      type: "concept",
+      title: "Babak 2: Kenali Markasmu, Replit",
+      subtitle: "Buka replit.com → Log in → Continue with Google",
+      content:
+        "Kamu akan mendarat di beranda dengan satu kotak besar: itulah pintu ke Replit Agent, AI yang menyiapkan proyek, menulis kode, memasang database, mengetes, dan memperbaiki errornya sendiri. Sebelum menembak, kenali empat senjata di layarmu:",
+      bullets: [
+        "Kotak Agent + pilihan tipe proyek: untuk sesi ini pilih web app",
+        "Plan mode (tombol Plan di kotak chat): Agent menyusun rencana dulu dan menunggu persetujuanmu sebelum menulis kode. Ini sabuk pengaman sekaligus penghemat kredit terbesar",
+        "Mode kerja Agent: pekerjaan besar sekali di awal, perubahan kecil pakai mode ringan (Lite)",
+        "Checkpoint: setiap tahap kerja Agent tersimpan dan bisa dikembalikan (rollback). Rusak bukan tamat, tinggal mundur",
+      ],
+      note:
+        "Fakta jatah gratis: akun Starter dapat kredit Agent harian terbatas dan bisa memublikasikan satu aplikasi. Kredit bisa habis di tengah build kalau boros. Maka disiplin sesi ini: rancang di luar, rencana disetujui dulu, satu perubahan per prompt. Jangan habiskan jatah harianmu untuk main-main sebelum kelas.",
+    },
+    {
+      id: "s5-6",
+      type: "practice",
+      title: "Babak 3: Tembak Prompt Pembangun",
+      subtitle: "Aktifkan Plan mode, tempel prompt-mu, lalu jadilah bos atas rencananya",
+      content:
+        "Prompt pertama menentukan 70% hasil. Prompt yang baik punya empat bahan: konteks, fitur, tampilan, batasan. Bandingkan prompt siap-tempel dari Babak 1 dengan templat di bawah, tambal yang kurang, lalu kirim dengan Plan mode aktif. Baca rencana yang Agent susun: ada langkah yang tidak kamu minta? Balas 'Coret langkah X, versi pertama tidak butuh itu.' Rencana ramping = build cepat = kredit awet. Setujui, tunggu 3-10 menit, lalu tes hasilnya di panel preview seperti orang jahil: klik semua tombol, isi form dengan input aneh, kecilkan jendela selebar HP. Catat semua keanehan.",
+      prompts: [
+        {
+          label: "Templat Prompt Pembangun (4 bahan)",
+          prompt: `Buat aplikasi web bernama [nama].
+
+KONTEKS: Aplikasi ini untuk [siapa] yang punya masalah [apa].
+
+FITUR VERSI PERTAMA (jangan tambah fitur lain dulu):
+1. [fitur inti 1]
+2. [fitur inti 2]
+3. [fitur inti 3]
+
+TAMPILAN: bersih dan modern, dominan warna [warna], nyaman dibuka
+di HP, seluruh teks berbahasa Indonesia.
+
+BATASAN:
+- Sesederhana mungkin: tanpa login dulu di versi pertama
+- Semua tombol harus benar-benar berfungsi, bukan hiasan
+- Keputusan kecil ambil sendiri; hal fundamental tanyakan dulu`,
+        },
+        {
+          label: "Contoh Terisi: Aplikasi Kas Kekeluargaan",
+          prompt: `Buat aplikasi web bernama "KasKita".
+
+KONTEKS: Aplikasi pencatat kas untuk kekeluargaan mahasiswa Indonesia
+di Kairo. Bendahara mencatat di buku dan sering diprotes anggota
+karena tidak transparan.
+
+FITUR VERSI PERTAMA:
+1. Form tambah transaksi: tanggal, keterangan, jenis
+   (pemasukan/pengeluaran), nominal
+2. Daftar semua transaksi (terbaru di atas) yang bisa dihapus
+3. Kartu ringkasan di atas: total pemasukan, total pengeluaran,
+   saldo akhir, nominal dalam format Rupiah
+
+TAMPILAN: bersih dan modern, dominan hijau tua dan putih, nyaman
+di HP, seluruh teks bahasa Indonesia.
+
+BATASAN:
+- Tanpa login di versi pertama
+- Semua tombol harus benar-benar berfungsi
+- Keputusan kecil ambil sendiri; hal fundamental tanyakan dulu`,
+        },
+      ],
+    },
+    {
+      id: "s5-7",
+      type: "practice",
+      title: "Babak 4: Iterasi ala Profesional",
+      subtitle: "Enam aturan main, lalu tiga latihan wajib",
+      content:
+        "Bedanya pemula yang menyerah dan pemula yang jadi ada di babak ini. Pegang enam aturan: (1) Satu perubahan per prompt, hemat dan jelas. (2) Error? Salin pesannya atau seret screenshot ke chat Agent, minta dijelaskan dulu baru diperbaiki. (3) Mau ubah bagian tertentu? Screenshot dan tunjuk 'yang ini'. (4) Sesekali minta Agent jadi guru: 'jelaskan dengan analogi sederhana apa yang barusan kamu ubah'. (5) Mentok 3 kali? Rollback ke checkpoint sehat, jangan ngotot, setiap percobaan gagal tetap makan kredit. (6) Versi pertama selesai saat 3 fitur inti jalan, fitur ke-4 adalah godaan. Sekarang kerjakan tiga iterasi ini satu per satu:",
+      prompts: [
+        {
+          label: "Iterasi 1: perbaiki keanehan terparah dari catatanmu",
+          prompt: `[Tulis keanehan paling mengganggu dari hasil tesmu]. Perbaiki hanya itu, jangan ubah bagian lain.`,
+        },
+        {
+          label: "Iterasi 2: rapikan tampilan HP",
+          prompt: `Buka di layar HP terasa sempit. Perbaiki tampilan agar nyaman di layar kecil, terutama bagian daftar/tabelnya. Jangan ubah fitur.`,
+        },
+        {
+          label: "Iterasi 3: satu sentuhan nilai tambah",
+          prompt: `Tambahkan tombol "Ekspor" yang mengunduh seluruh data sebagai file CSV agar bisa dibuka di Excel. Jangan ubah fitur lain.`,
+        },
+      ],
+    },
+    {
+      id: "s5-8",
+      type: "practice",
+      title: "Babak 5: Percantik dengan Hidden Gems",
+      subtitle: "Tur praktik situs pendamping, kerjakan minimal dua yang pertama",
+      content:
+        "Aplikasi yang jalan itu bagus. Aplikasi yang jalan dan enak dilihat itu yang di-screenshot orang. Semua situs ini gratis, dan setiap langkahnya berujung balik ke satu prompt di Replit:",
+      table: {
+        headers: ["Buka Situs", "Lakukan Ini", "Lalu Tembak ke Replit"],
+        rows: [
+          [
+            "coolors.co",
+            "Klik Start the generator, tekan spasi sampai ketemu palet favorit, kunci warna yang disuka, salin kode hex-nya",
+            "Ubah tema warna aplikasi: utama #..., aksen #..., latar #... Terapkan konsisten di semua halaman",
+          ],
+          [
+            "undraw.co",
+            "Cari ilustrasi (misal: finance), samakan warnanya dengan kode hex-mu, unduh SVG, seret file ke chat Agent",
+            "Pasang ilustrasi ini di bagian yang kosong (misal tampilan saat belum ada data), ukuran proporsional",
+          ],
+          [
+            "favicon.io",
+            "Pilih Emoji yang mewakili aplikasimu, Download, seret hasilnya ke chat Agent",
+            "Jadikan ini favicon aplikasi",
+          ],
+          [
+            "mobbin.com",
+            "Daftar gratis, telusuri aplikasi sejenis (misal kategori Finance), screenshot satu layar yang kamu suka, lampirkan",
+            "Rombak tampilan halaman utamaku dengan gaya visual seperti referensi ini, cukup gayanya bukan isinya",
+          ],
+        ],
+      },
+      note:
+        "Rak gems lainnya untuk dijelajah di rumah: excalidraw.com (sketsa tampilan), perplexity.ai (riset kompetitor), 21st.dev dan uiverse.io (komponen UI), fontjoy.com (pasangan font), haikei.app (latar SVG), namelix.com (nama+logo), ray.so (kode jadi gambar untuk slide), readme.so (dokumentasi), roadmap.sh (saat penasaranmu tumbuh). Urusan database dan login? Replit punya bawaan, cukup minta Agent, tapi simpan untuk versi 2 karena makan kredit besar.",
+    },
+    {
+      id: "s5-9",
+      type: "practice",
+      title: "Babak 6: Rilis, dari Preview Menjadi Tautan",
+      subtitle: "Aplikasi yang hanya hidup di preview belum jadi solusi",
+      content:
+        "Klik tombol Publish/Deploy di kanan atas workspace dan ikuti dialognya, pilihan bawaan Replit sudah cukup untuk aplikasi kelas ini. Salin tautan .replit.app yang muncul, lalu lakukan ritual pencipta:",
+      bullets: [
+        "Buka tautan itu di browser HP-mu sendiri, lewat internet sungguhan, bukan preview. Rasakan momennya: benda itu buatanmu",
+        "Kirim tautan ke grup kelas",
+        "Kirim ke 2-3 calon pengguna asli (bendahara, teman sekamar, pembelimu) dengan pesan: 'Aku baru bikin ini. Coba pakai sebentar, kabari apa yang bingung atau kurang'",
+        "Catat semua masukan mereka, itu bahan bakar versi 1.1",
+      ],
+      note:
+        "Catatan jujur plan gratis: jatahnya satu aplikasi terpublikasi dan tautannya tidak abadi. Untuk Demo Day itu cukup. Kalau aplikasimu mulai dipakai orang sungguhan, saat itulah layak upgrade atau pindah ke jalur mandiri di langkah berikutnya.",
+    },
+    {
+      id: "s5-10",
+      type: "practice",
+      title: "Bonus: Naik Kelas ke Studio Mandiri (PowerShell)",
+      subtitle: "Untuk yang gatal jadi profesional: bangun di laptop sendiri, tanpa batas kredit platform",
+      content:
+        "Replit adalah markas terbaik untuk memulai. Tapi para profesional membangun di laptop sendiri dengan agen AI di terminal: file milikmu penuh, tanpa batas kredit. Buka PowerShell (tekan tombol Windows, ketik powershell, Enter) lalu tembakkan blok-blok ini berurutan. Setelah agen menyala, semua prompt di sesi ini berlaku persis sama.",
+      prompts: [
+        {
+          label: "Tembak ke PowerShell 1: pasang perkakas (tunggu tiap baris selesai)",
+          prompt: `winget install --id Git.Git -e --source winget
+winget install --id OpenJS.NodeJS.LTS -e --source winget
+winget install --id Microsoft.VisualStudioCode -e --source winget`,
+        },
+        {
+          label: "Tembak ke PowerShell 2: TUTUP lalu BUKA lagi PowerShell, verifikasi (semua harus keluar versi)",
+          prompt: `git --version
+node -v
+npm -v`,
+        },
+        {
+          label: "Tembak ke PowerShell 3: pasang agen AI (pilih salah satu)",
+          prompt: `# Claude Code (butuh langganan Claude Pro/Max):
+irm https://claude.ai/install.ps1 | iex
+
+# Atau Gemini CLI (gratis, login akun Google):
+npm install -g @google/gemini-cli`,
+        },
+        {
+          label: "Tembak ke PowerShell 4: buat markas dan nyalakan agen",
+          prompt: `mkdir C:\\Projects\\proyekku
+cd C:\\Projects\\proyekku
+claude`,
+        },
+      ],
+      note:
+        "P3K: error 'not recognized' berarti tutup-buka PowerShell dulu. Error 'running scripts is disabled' berarti jalankan Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser lalu jawab Y. Claude Code terasa aneh? Jalankan claude doctor.",
+    },
+    {
+      id: "s5-11",
+      type: "concept",
+      title: "Misi Menuju Demo Day",
+      subtitle: "Deadline: 7 hari dari sekarang",
+      content:
+        "Misi utama: matangkan solusimu berdasarkan masukan pengguna asli, lalu kirim TAUTAN aplikasinya (bukan screenshot) ke grup kelas. Karya inilah yang kamu presentasikan di Sesi 6. Checklist kelulusan misi:",
+      bullets: [
+        "Problem statement 5 kalimat + PRD mini tersimpan rapi",
+        "Tiga fitur inti berfungsi saat dites orang lain",
+        "Minimal satu sentuhan Hidden Gem terpasang (warna, ilustrasi, atau favicon)",
+        "Aplikasi terpublikasi dan tautannya terbuka dari HP siapa pun",
+        "Masukan dari minimal 2 pengguna asli tercatat, dan satu iterasi lanjutannya sudah dirilis (versi 1.1)",
+        "Misi bonus: minta Agent buatkan halaman 'Tentang' berisi cerita masalah menuju solusi, itu draft naskah presentasimu",
+      ],
+      isCompletion: true,
+    },
+  ],
+},
+
+===== AKHIR BLOK =====
