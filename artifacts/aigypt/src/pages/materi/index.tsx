@@ -109,6 +109,50 @@ function ConceptSlide({ step }: { step: MateriStep }) {
           <p className="text-[#E2E8F0] text-sm leading-relaxed">{step.content}</p>
         )}
 
+        {/* Daftar tautan eksternal, dengan penanda rekomendasi */}
+        {step.links && step.links.length > 0 && (
+          <div className="space-y-3">
+            {step.links.map((link, i) => (
+              <a
+                key={i}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`relative block rounded-xl border p-4 transition-all duration-150 ${
+                  link.recommended
+                    ? "border-[#7C3AED]/50 bg-[#7C3AED]/10 hover:border-[#7C3AED]/70 hover:shadow-[0_0_16px_rgba(124,58,237,0.2)]"
+                    : "border-[#1E1E2E] bg-[#12121A] hover:border-[#7C3AED]/40"
+                }`}
+              >
+                <svg
+                  className="absolute top-4 right-4 w-3.5 h-3.5 text-[#71717A]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6v6M20 4L10 14"
+                  />
+                </svg>
+                <div className="flex items-center gap-2 pr-6">
+                  <p className="text-sm font-semibold text-white">{link.label}</p>
+                  {link.recommended && (
+                    <span className="flex-shrink-0 text-[10px] font-mono uppercase tracking-wide text-[#A855F7] bg-[#7C3AED]/15 border border-[#7C3AED]/40 rounded-full px-2 py-0.5">
+                      Rekomendasi
+                    </span>
+                  )}
+                </div>
+                {link.desc && (
+                  <p className="text-xs text-[#94A3B8] leading-relaxed mt-1.5">{link.desc}</p>
+                )}
+              </a>
+            ))}
+          </div>
+        )}
+
         {/* Ide besar — jangkar visual sesi */}
         {step.bigIdea && (
           <div className="relative rounded-2xl border border-[#7C3AED]/40 bg-gradient-to-br from-[#7C3AED]/20 via-[#12121A] to-[#0A0A0F] px-6 py-7 overflow-hidden">

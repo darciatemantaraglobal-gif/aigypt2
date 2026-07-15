@@ -50,6 +50,14 @@ export interface FlowStep {
   desc: string;
 }
 
+/** Daftar tautan eksternal yang bisa diklik, dengan penanda rekomendasi. */
+export interface LinkItem {
+  label: string;
+  url: string;
+  desc?: string;
+  recommended?: boolean;
+}
+
 /** Kuis interaktif: peserta klik, langsung dapat umpan balik. */
 export interface QuizItem {
   question: string;
@@ -73,6 +81,7 @@ export interface MateriStep {
   timeline?: TimelineItem[];
   matrix?: MatrixData;
   flow?: FlowStep[];
+  links?: LinkItem[];
   quiz?: QuizItem[];
   note?: string;
   isCompletion?: boolean;

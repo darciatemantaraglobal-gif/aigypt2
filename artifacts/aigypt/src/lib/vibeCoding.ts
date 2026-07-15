@@ -245,6 +245,105 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Di kelas ini kamu belum wajib memakai ketiganya, Replit sudah menyediakan semuanya dalam satu atap. Tapi sekarang, saat AI atau tutorial menyebut nama-nama ini, kamu tahu persis mereka bicara apa.",
       },
       {
+        id: "vc2-5a",
+        type: "concept",
+        title: "Pilihan Tempat Menayangkan (Deploy)",
+        subtitle: "Etalase online-mu mau dititip di mana? Ini pilihan-pilihannya, klik saja untuk lihat",
+        content:
+          "Semua layanan ini intinya sama: mengambil aplikasimu dan menayangkannya ke internet. Bedanya di kemudahan, harga, dan seberapa cocok dengan alat lain yang kamu pakai. Kabar baik: semuanya punya paket gratis yang lebih dari cukup untuk proyek pertamamu.",
+        links: [
+          {
+            label: "Vercel",
+            url: "https://vercel.com",
+            desc: "Sekali sambungkan ke GitHub, setiap perubahan otomatis tayang. Gratis untuk proyek pribadi, bisa pasang domain sendiri. Pilihan utama komunitas builder saat ini.",
+            recommended: true,
+          },
+          {
+            label: "Netlify",
+            url: "https://www.netlify.com",
+            desc: "Saudara dekat Vercel, sama-sama enak dipakai. Kalau satu bermasalah, ini pelarian yang nyaman.",
+          },
+          {
+            label: "Replit Deployments",
+            url: "https://replit.com",
+            desc: "Paling gampang karena satu atap dengan tempatmu membangun: satu klik langsung tayang. Cocok saat masih belajar, tapi untuk aplikasi yang menyala terus, berbayar.",
+          },
+          {
+            label: "Cloudflare Pages",
+            url: "https://pages.cloudflare.com",
+            desc: "Cepat sekali diakses dari mana pun dan jatah gratisnya royal. Sedikit lebih teknis untuk pemula.",
+          },
+          {
+            label: "GitHub Pages",
+            url: "https://pages.github.com",
+            desc: "Gratis total untuk website sederhana tanpa dapur (tanpa backend). Cukup untuk landing page atau profil organisasi.",
+          },
+        ],
+        note: "Rekomendasi kelas ini: mulai dari Replit Deployments selama belajar. Begitu proyekmu mulai serius dan dipakai orang, pindah ke Vercel.",
+      },
+      {
+        id: "vc2-5b",
+        type: "concept",
+        title: "Pilihan Gudang Data (Database)",
+        subtitle: "Data anggota, absensi, pesanan: mau disimpan di gudang yang mana?",
+        links: [
+          {
+            label: "Supabase",
+            url: "https://supabase.com",
+            desc: "Gudang data + sistem login + penyimpanan file dalam satu paket, dengan dashboard yang enak dilihat. Datamu tampil seperti spreadsheet. Gratis untuk memulai.",
+            recommended: true,
+          },
+          {
+            label: "Firebase",
+            url: "https://firebase.google.com",
+            desc: "Punya Google, kuat untuk aplikasi yang butuh update data langsung (realtime) seperti chat. Banyak tutorial, tapi struktur datanya beda gaya dengan yang lain.",
+          },
+          {
+            label: "Neon",
+            url: "https://neon.tech",
+            desc: "Database Postgres murni yang ringan dan modern. Cocok kalau kamu cuma butuh gudangnya saja tanpa fitur login bawaan.",
+          },
+          {
+            label: "MongoDB Atlas",
+            url: "https://www.mongodb.com/atlas",
+            desc: "Gaya penyimpanan yang lebih bebas bentuk (NoSQL). Populer, tapi untuk data rapi seperti absensi dan anggota, gaya tabel biasanya lebih mudah dipahami.",
+          },
+        ],
+        note: "Rekomendasi kelas ini: Supabase. Satu akun langsung dapat gudang, login, dan penyimpanan file. Hemat banyak langkah untuk pemula.",
+      },
+      {
+        id: "vc2-5c",
+        type: "concept",
+        title: "Pilihan Dapur (Backend)",
+        subtitle: "Di mana logika aplikasimu bekerja? Tenang, AI yang membangunnya. Kamu cukup tahu pilihannya",
+        links: [
+          {
+            label: "Vercel Functions",
+            url: "https://vercel.com/docs/functions",
+            desc: "Dapur kecil-kecil yang hanya menyala saat dibutuhkan, menempel langsung di hosting Vercel-mu. Satu atap dengan etalase: paling sedikit yang harus diurus.",
+            recommended: true,
+          },
+          {
+            label: "Supabase Edge Functions",
+            url: "https://supabase.com/docs/guides/functions",
+            desc: "Dapur yang menempel di gudang datamu. Cocok untuk logika yang berurusan langsung dengan data, seperti verifikasi pembayaran.",
+          },
+          {
+            label: "Express.js",
+            url: "https://expressjs.com",
+            desc: "Dapur klasik yang dipakai jutaan aplikasi. Inilah yang biasanya dibangun Replit Agent secara diam-diam untukmu. Tutorialnya paling melimpah.",
+          },
+          {
+            label: "Railway",
+            url: "https://railway.app",
+            desc: "Untuk dapur yang harus menyala terus-menerus: bot WhatsApp, pengingat otomatis, pengambil data berkala.",
+          },
+        ],
+        content:
+          "Kalau tiga pilihan ini digabung, lahirlah paket yang dipakai banyak builder sungguhan, termasuk platform yang sedang kamu buka sekarang ini: GitHub untuk arsip kode, Vercel untuk etalase dan dapur, Supabase untuk gudang data.",
+        note: "Jalur yang disarankan: selama kelas, cukup Replit (semua sudah satu atap). Proyek serius pertamamu: GitHub + Vercel + Supabase. Ketiganya gratis untuk memulai, dan AI bisa memandu perpindahannya langkah demi langkah.",
+      },
+      {
         id: "vc2-6",
         type: "concept",
         title: "Kamus Kantong",

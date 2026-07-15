@@ -1,0 +1,165 @@
+# PROMPT UNTUK REPLIT AGENT — BLOK LINK + PILIHAN TOOLS DI SESI 2 VIBE CODING
+
+Kelas `vibe-coding` sudah live dengan 5 sesi. Tugasmu dua hal:
+
+**A.** Menambahkan blok konten baru bertipe `links` ke sistem materi: daftar tautan eksternal yang bisa diklik, dengan penanda "Rekomendasi". Ini blok opsional, mengikuti pola blok visual yang sudah ada (`bigIdea`, `timeline`, `matrix`, `flow`) sehingga TIDAK mengubah konten atau step lama manapun.
+
+**B.** Menyisipkan 3 step baru ke Sesi 2 kelas vibe-coding ("Kenalan Sama Dapurnya") yang memakai blok `links` itu: pilihan tempat deploy, pilihan database, pilihan backend, lengkap dengan rekomendasi.
+
+---
+
+## LANGKAH 1 — Tambah tipe `LinkItem` di `artifacts/aigypt/src/lib/materiContent.ts`
+
+Di bagian blok visual (dekat `BigIdea`, `TimelineItem`, dst), tambahkan:
+
+```ts
+/** Daftar tautan eksternal yang bisa diklik, dengan penanda rekomendasi. */
+export interface LinkItem {
+  label: string;
+  url: string;
+  desc?: string;
+  recommended?: boolean;
+}
+```
+
+Lalu di `interface MateriStep`, tambahkan satu field opsional (letakkan setelah `flow?`):
+
+```ts
+links?: LinkItem[];
+```
+
+## LANGKAH 2 — Tambah renderer blok `links` di `artifacts/aigypt/src/pages/materi/index.tsx`
+
+Di komponen yang merender `MateriStep` (tempat blok `flow`, `matrix`, `cards`, `table` dirender), tambahkan render untuk `step.links` dengan perilaku:
+
+- Render sebagai daftar kartu vertikal (satu kolom, full width, nyaman di HP).
+- Setiap kartu adalah `<a href={item.url} target="_blank" rel="noopener noreferrer">` — SELURUH kartu bisa diklik, bukan cuma teksnya.
+- Isi kartu: `label` sebagai judul tebal, `desc` sebagai teks kecil di bawahnya (muted), dan ikon panah keluar (external link, inline SVG kecil) di kanan atas kartu sebagai penanda link keluar.
+- Jika `recommended: true`: tampilkan badge kecil bertuliskan "Rekomendasi" dengan aksen ungu (#A855F7) di samping label, dan beri border kartu warna aksen ungu tipis supaya menonjol dari kartu lain.
+- Styling mengikuti design system yang ada: latar kartu gelap (senada kartu-kartu lain di halaman materi), sudut membulat, hover state halus (border/glow menguat), transisi lembut. Jangan memperkenalkan warna atau font baru.
+- Posisi render: setelah `content`, berdampingan wajar dengan blok lain (kalau step punya `content` + `links` + `note`, urutannya: content → links → note).
+- Blok ini opsional: step lama tanpa `links` tidak boleh berubah tampilannya sama sekali.
+
+## LANGKAH 3 — Sisipkan 3 step baru di `artifacts/aigypt/src/lib/vibeCoding.ts`
+
+Di Sesi 2 ("Kenalan Sama Dapurnya"), sisipkan 3 step berikut **setelah step `vc2-5` ("Tiga Nama Besar yang Akan Sering Kamu Dengar")** dan **sebelum step `vc2-6` ("Kamus Kantong")**. Tempel apa adanya, jangan diubah satu kata pun:
+
+```ts
+      {
+        id: "vc2-5a",
+        type: "concept",
+        title: "Pilihan Tempat Menayangkan (Deploy)",
+        subtitle: "Etalase online-mu mau dititip di mana? Ini pilihan-pilihannya, klik saja untuk lihat",
+        content:
+          "Semua layanan ini intinya sama: mengambil aplikasimu dan menayangkannya ke internet. Bedanya di kemudahan, harga, dan seberapa cocok dengan alat lain yang kamu pakai. Kabar baik: semuanya punya paket gratis yang lebih dari cukup untuk proyek pertamamu.",
+        links: [
+          {
+            label: "Vercel",
+            url: "https://vercel.com",
+            desc: "Sekali sambungkan ke GitHub, setiap perubahan otomatis tayang. Gratis untuk proyek pribadi, bisa pasang domain sendiri. Pilihan utama komunitas builder saat ini.",
+            recommended: true,
+          },
+          {
+            label: "Netlify",
+            url: "https://www.netlify.com",
+            desc: "Saudara dekat Vercel, sama-sama enak dipakai. Kalau satu bermasalah, ini pelarian yang nyaman.",
+          },
+          {
+            label: "Replit Deployments",
+            url: "https://replit.com",
+            desc: "Paling gampang karena satu atap dengan tempatmu membangun: satu klik langsung tayang. Cocok saat masih belajar, tapi untuk aplikasi yang menyala terus, berbayar.",
+          },
+          {
+            label: "Cloudflare Pages",
+            url: "https://pages.cloudflare.com",
+            desc: "Cepat sekali diakses dari mana pun dan jatah gratisnya royal. Sedikit lebih teknis untuk pemula.",
+          },
+          {
+            label: "GitHub Pages",
+            url: "https://pages.github.com",
+            desc: "Gratis total untuk website sederhana tanpa dapur (tanpa backend). Cukup untuk landing page atau profil organisasi.",
+          },
+        ],
+        note: "Rekomendasi kelas ini: mulai dari Replit Deployments selama belajar. Begitu proyekmu mulai serius dan dipakai orang, pindah ke Vercel.",
+      },
+      {
+        id: "vc2-5b",
+        type: "concept",
+        title: "Pilihan Gudang Data (Database)",
+        subtitle: "Data anggota, absensi, pesanan: mau disimpan di gudang yang mana?",
+        links: [
+          {
+            label: "Supabase",
+            url: "https://supabase.com",
+            desc: "Gudang data + sistem login + penyimpanan file dalam satu paket, dengan dashboard yang enak dilihat. Datamu tampil seperti spreadsheet. Gratis untuk memulai.",
+            recommended: true,
+          },
+          {
+            label: "Firebase",
+            url: "https://firebase.google.com",
+            desc: "Punya Google, kuat untuk aplikasi yang butuh update data langsung (realtime) seperti chat. Banyak tutorial, tapi struktur datanya beda gaya dengan yang lain.",
+          },
+          {
+            label: "Neon",
+            url: "https://neon.tech",
+            desc: "Database Postgres murni yang ringan dan modern. Cocok kalau kamu cuma butuh gudangnya saja tanpa fitur login bawaan.",
+          },
+          {
+            label: "MongoDB Atlas",
+            url: "https://www.mongodb.com/atlas",
+            desc: "Gaya penyimpanan yang lebih bebas bentuk (NoSQL). Populer, tapi untuk data rapi seperti absensi dan anggota, gaya tabel biasanya lebih mudah dipahami.",
+          },
+        ],
+        note: "Rekomendasi kelas ini: Supabase. Satu akun langsung dapat gudang, login, dan penyimpanan file. Hemat banyak langkah untuk pemula.",
+      },
+      {
+        id: "vc2-5c",
+        type: "concept",
+        title: "Pilihan Dapur (Backend)",
+        subtitle: "Di mana logika aplikasimu bekerja? Tenang, AI yang membangunnya. Kamu cukup tahu pilihannya",
+        links: [
+          {
+            label: "Vercel Functions",
+            url: "https://vercel.com/docs/functions",
+            desc: "Dapur kecil-kecil yang hanya menyala saat dibutuhkan, menempel langsung di hosting Vercel-mu. Satu atap dengan etalase: paling sedikit yang harus diurus.",
+            recommended: true,
+          },
+          {
+            label: "Supabase Edge Functions",
+            url: "https://supabase.com/docs/guides/functions",
+            desc: "Dapur yang menempel di gudang datamu. Cocok untuk logika yang berurusan langsung dengan data, seperti verifikasi pembayaran.",
+          },
+          {
+            label: "Express.js",
+            url: "https://expressjs.com",
+            desc: "Dapur klasik yang dipakai jutaan aplikasi. Inilah yang biasanya dibangun Replit Agent secara diam-diam untukmu. Tutorialnya paling melimpah.",
+          },
+          {
+            label: "Railway",
+            url: "https://railway.app",
+            desc: "Untuk dapur yang harus menyala terus-menerus: bot WhatsApp, pengingat otomatis, pengambil data berkala.",
+          },
+        ],
+        content:
+          "Kalau tiga pilihan ini digabung, lahirlah paket yang dipakai banyak builder sungguhan, termasuk platform yang sedang kamu buka sekarang ini: GitHub untuk arsip kode, Vercel untuk etalase dan dapur, Supabase untuk gudang data.",
+        note: "Jalur yang disarankan: selama kelas, cukup Replit (semua sudah satu atap). Proyek serius pertamamu: GitHub + Vercel + Supabase. Ketiganya gratis untuk memulai, dan AI bisa memandu perpindahannya langkah demi langkah.",
+      },
+
+```
+
+## LANGKAH 4 — Verifikasi (wajib)
+
+1. Build/typecheck lolos tanpa error.
+2. Buka `/kelas/vibe-coding/materi/sesi-2` — tiga step baru muncul di antara "Tiga Nama Besar" dan "Kamus Kantong".
+3. Setiap kartu link bisa diklik dan membuka tab baru ke situs yang benar (cek minimal Vercel, Supabase, dan Railway).
+4. Kartu dengan `recommended: true` (Vercel, Supabase, Vercel Functions) menampilkan badge "Rekomendasi" ungu dan border aksen.
+5. Cek tampilan HP: kartu link tidak terpotong, teks desc terbaca nyaman, area klik cukup besar untuk jari.
+6. Buka sesi lain (misal `/kelas/fundamental-ai/materi/sesi-1` dan `/kelas/vibe-coding/materi/sesi-4`) — TIDAK ada perubahan tampilan apapun di step lama.
+7. Kuis di akhir Sesi 2 masih berfungsi normal.
+
+## BATASAN
+
+- JANGAN mengubah isi step lama manapun, di kelas manapun.
+- JANGAN mengubah `sessionsByKelas` atau `classesData.ts` — jumlah sesi dan durasi tidak berubah.
+- JANGAN menambah dependency baru untuk ikon; pakai inline SVG.
+- JANGAN mengubah desain sistem (warna dasar, font, layout).
