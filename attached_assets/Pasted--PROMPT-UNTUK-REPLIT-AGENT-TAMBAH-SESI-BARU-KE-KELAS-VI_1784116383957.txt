@@ -1,0 +1,290 @@
+# PROMPT UNTUK REPLIT AGENT — TAMBAH SESI BARU KE KELAS VIBE CODING (YANG SUDAH ADA)
+
+Kelas `vibe-coding` sudah live di platform dengan 4 sesi. Tugasmu: **menyisipkan satu sesi baru sebagai Sesi 2** berjudul "Kenalan Sama Dapurnya" (workflow, AI agent, istilah, GitHub/Vercel/Supabase), sehingga kelas menjadi **5 sesi**. Sesi lama nomor 2, 3, 4 bergeser menjadi 3, 4, 5.
+
+JANGAN menulis ulang atau meringkas konten sesi lama. JANGAN menyentuh kelas lain (`fundamental-ai`, `maksimalkan-ai`). Kerjakan persis langkah-langkah berikut.
+
+---
+
+## LANGKAH 1 — Renumber sesi lama di `artifacts/aigypt/src/lib/vibeCoding.ts`
+
+Lakukan penggantian **dengan urutan persis ini** (urutannya penting supaya tidak bentrok):
+
+1. Semua id step `vc4-` → `vc5-`
+2. Semua id step `vc3-` → `vc4-`
+3. Semua id step `vc2-` → `vc3-`
+4. `sesiNumber: 4` → `sesiNumber: 5`
+5. `sesiNumber: 3` → `sesiNumber: 4`
+6. `sesiNumber: 2` → `sesiNumber: 3`
+
+Lalu perbaiki referensi silang di dalam teks konten:
+
+- `"Balik ke loop sesi 3"` → `"Balik ke loop sesi 4"` (di flow sesi Rilis)
+- `"Ini persis Loop Suci sesi 3"` → `"Ini persis Loop Suci sesi 4"` (di penjelasan kuis penutup)
+- `"Empat sesi selesai"` → `"Lima sesi selesai"` (di step Bekal Pulang)
+- `"seberapa dalam empat sesi ini nempel"` → `"seberapa dalam lima sesi ini nempel"` (di subtitle Kuis Penutup)
+
+Update juga komentar header file: `4 sesi, ~45 menit` → `5 sesi, ~60 menit`.
+
+## LANGKAH 2 — Sisipkan Sesi 2 baru
+
+Di `vibeCoding.ts`, sisipkan blok berikut **setelah penutup objek Sesi 1** dan **sebelum blok Sesi 3 (Dari Masalah Jadi Blueprint)**. Tempel apa adanya, jangan diubah satu kata pun:
+
+```ts
+  // ═══════════════════════════════════════════════════════════════
+  // SESI 2 — Kenalan Sama Dapurnya
+  // ═══════════════════════════════════════════════════════════════
+  {
+    sesiNumber: 2,
+    title: "Kenalan Sama Dapurnya",
+    subtitle: "Workflow, para asisten AI, dan istilah-istilah yang akan kamu dengar terus. Kenalan sekali, nyaman selamanya",
+    steps: [
+      {
+        id: "vc2-1",
+        type: "concept",
+        title: "Kenapa Sesi Ini Ada",
+        subtitle: "Biar kamu tidak merasa asing di dunia yang akan kamu masuki",
+        content:
+          "Bayangkan masuk dapur restoran untuk pertama kali. Orang-orang teriak istilah asing, alat-alat tidak kamu kenal, dan semua bergerak cepat. Kamu tidak perlu bisa masak untuk nyaman di sana. Kamu cuma perlu tahu: itu kompor, itu kulkas, itu gudang, dan si A tugasnya apa. Sesi ini melakukan hal yang sama untuk dunia membangun aplikasi. Setelah ini, saat AI bilang \"sudah saya deploy, datanya tersimpan di database\", kamu manggut-manggut karena paham, bukan karena sungkan.",
+        quote:
+          "Kamu tidak perlu hafal semua istilah hari ini. Kamu cuma perlu pernah dengar, supaya saat dia muncul lagi, dia terasa seperti kenalan lama.",
+      },
+      {
+        id: "vc2-2",
+        type: "concept",
+        title: "Anatomi Aplikasi: Warung Analogi",
+        subtitle: "Setiap aplikasi di dunia, dari WhatsApp sampai Gojek, terdiri dari tiga bagian ini",
+        cards: [
+          {
+            title: "Frontend: Etalase",
+            accent: "purple",
+            items: [
+              "Semua yang pengguna lihat dan sentuh: tombol, warna, form, halaman",
+              "Kalau warung: etalase, meja, daftar menu yang dipajang",
+              "Saat kamu bilang \"tombolnya kegedean\", kamu sedang ngomongin frontend",
+            ],
+          },
+          {
+            title: "Backend: Dapur",
+            accent: "blue",
+            items: [
+              "Logika yang bekerja di balik layar: memproses pesanan, mengecek login, menghitung",
+              "Kalau warung: dapur tempat pesanan dimasak. Pembeli tidak melihatnya, tapi di sinilah kerja sebenarnya",
+              "Saat form dikirim lalu \"diproses\", yang memproses itu backend",
+            ],
+          },
+          {
+            title: "Database: Gudang",
+            accent: "green",
+            items: [
+              "Tempat semua data disimpan rapi: daftar anggota, absensi, pesanan",
+              "Kalau warung: gudang stok dan buku catatan penjualan",
+              "Aplikasi mati lalu dinyalakan lagi, datanya masih ada? Itu jasa database",
+            ],
+          },
+        ],
+        note: "Tiga-tiganya dibangun AI untukmu. Kamu cuma perlu tahu bagian mana yang sedang dibicarakan, supaya feedback-mu tepat sasaran.",
+      },
+      {
+        id: "vc2-3",
+        type: "concept",
+        title: "Para Asisten AI-mu",
+        subtitle: "Chatbot dan agent itu beda. Ini bedanya, dan siapa mengerjakan apa",
+        content:
+          "Chatbot itu konsultan: kamu tanya, dia jawab, kamu yang eksekusi. Agent itu tukang: kamu kasih perintah, dia yang eksekusi sendiri, dari menulis kode, membuat file, memasang database, sampai memperbaiki errornya sendiri. Vibe coding hidup di dunia agent. Tapi konsultan tetap penting: sebelum menyuruh tukang, kamu diskusi dulu sama konsultan.",
+        table: {
+          headers: ["Asisten", "Perannya di workflow-mu", "Kapan kamu memakainya"],
+          rows: [
+            ["Claude / ChatGPT (chatbot)", "Konsultan: diskusi ide, menajamkan blueprint, menerjemahkan istilah dan error", "Sebelum membangun, dan setiap kali bingung"],
+            ["Replit Agent", "Tukang utama: membangun aplikasi utuh dari promptmu, langsung bisa dibuka online", "Saat membangun. Ini rumah utama kelas kita"],
+            ["Cursor / Claude Code", "Tukang spesialis yang bekerja langsung di kode di komputermu", "Nanti, kalau kamu sudah mulai berani menyentuh kode"],
+            ["v0 / Lovable / Bolt", "Tukang dekorasi: cepat membuat tampilan yang cantik", "Kalau proyekmu lebih berat ke tampilan daripada logika"],
+          ],
+        },
+        note: "Pola sehatnya: ngobrol dengan konsultan sampai blueprint tajam, baru serahkan ke tukang. Jangan dibalik.",
+      },
+      {
+        id: "vc2-4",
+        type: "concept",
+        title: "Workflow Besar: Dari Ide Sampai Dipakai Orang",
+        subtitle: "Ini peta perjalanan lengkapnya. Kelas ini akan menyusurinya satu per satu",
+        flow: [
+          { label: "Ide", desc: "Keluhan berulang jadi masalah yang jelas. Diskusi dengan chatbot sampai tajam" },
+          { label: "Blueprint", desc: "Lima pertanyaan dijawab: siapa, masalah apa, tiga fitur, halaman, tampilan" },
+          { label: "Bangun", desc: "Prompt ke agent, lalu loop: lihat, tes, minta perbaikan, ulang" },
+          { label: "Simpan", desc: "Kode tersimpan rapi dengan riwayat versi, biasanya di GitHub. Bisa mundur kalau rusak" },
+          { label: "Online", desc: "Deploy: aplikasimu naik ke internet, dapat alamat yang bisa dibuka siapa saja" },
+          { label: "Rawat", desc: "Dengar pengguna, perbaiki, tambah fitur pelan-pelan. Balik ke langkah Bangun" },
+        ],
+        content:
+          "Kabar baiknya: di Replit, langkah Simpan dan Online itu hampir otomatis. Tapi kamu tetap perlu paham konsepnya, karena begitu proyekmu makin serius, kamu akan bertemu nama-nama di langkah berikut ini.",
+      },
+      {
+        id: "vc2-5",
+        type: "concept",
+        title: "Tiga Nama Besar yang Akan Sering Kamu Dengar",
+        subtitle: "GitHub, Vercel, Supabase. Kenalan dulu biar tidak kaget",
+        cards: [
+          {
+            title: "GitHub: Lemari Arsip Kode",
+            accent: "purple",
+            items: [
+              "Tempat kode disimpan online, lengkap dengan riwayat setiap perubahan",
+              "Satu proyek di GitHub disebut repository, atau repo",
+              "Manfaat terbesarnya: kalau versi baru rusak, kamu bisa kembali ke versi kemarin yang masih jalan",
+              "Juga tempat kolaborasi: teman bisa ikut mengerjakan proyek yang sama",
+            ],
+          },
+          {
+            title: "Vercel: Etalase Online",
+            accent: "blue",
+            items: [
+              "Layanan hosting: mengambil kodemu dan menayangkannya ke internet",
+              "Terhubung ke GitHub: setiap kamu simpan perubahan, website otomatis ter-update",
+              "Gratis untuk proyek kecil, dan bisa dipasangi domain sendiri seperti namamu.com",
+              "Banyak builder pindah ke sini saat proyeknya lulus dari tahap coba-coba",
+            ],
+          },
+          {
+            title: "Supabase: Gudang Data Siap Pakai",
+            accent: "green",
+            items: [
+              "Database online plus fitur login pengguna, tanpa kamu membangunnya dari nol",
+              "Datamu tersimpan di tabel, mirip spreadsheet, tapi bisa diakses aplikasimu",
+              "Punya aturan keamanan bawaan untuk mengatur siapa boleh membaca dan mengubah data",
+              "Pasangan favorit Vercel: Vercel pegang etalase, Supabase pegang gudang",
+            ],
+          },
+        ],
+        note: "Di kelas ini kamu belum wajib memakai ketiganya, Replit sudah menyediakan semuanya dalam satu atap. Tapi sekarang, saat AI atau tutorial menyebut nama-nama ini, kamu tahu persis mereka bicara apa.",
+      },
+      {
+        id: "vc2-6",
+        type: "concept",
+        title: "Kamus Kantong",
+        subtitle: "Istilah yang pasti muncul. Tidak perlu dihafal, cukup pernah kenal. Nanti balik lagi ke sini kalau lupa",
+        table: {
+          headers: ["Istilah", "Artinya, versi manusia"],
+          rows: [
+            ["Deploy", "Menayangkan aplikasimu ke internet supaya bisa dibuka orang lain"],
+            ["Repo (repository)", "Folder proyekmu di GitHub, lengkap dengan seluruh riwayat perubahannya"],
+            ["Commit", "Satu titik simpan perubahan. Seperti save point di game: bisa balik ke sini kalau ada apa-apa"],
+            ["Bug", "Kesalahan yang bikin aplikasi berperilaku tidak semestinya"],
+            ["API", "Pintu resmi tempat dua aplikasi saling bicara. Aplikasimu tanya ke server lewat pintu ini"],
+            ["API key / Secret", "Kunci rahasia untuk memakai layanan tertentu. Jangan pernah terlihat di sisi pengguna"],
+            ["Environment variable", "Tempat aman menyimpan kunci-kunci rahasia itu, di luar kode"],
+            ["Localhost / Preview", "Versi aplikasi yang cuma kamu yang bisa lihat, untuk dites sebelum tayang"],
+            ["Production", "Versi yang tayang sungguhan dan dipakai pengguna nyata. Hati-hati mengubah yang ini"],
+            ["Domain", "Alamat aplikasimu di internet, seperti aigypt.id"],
+            ["Rollback", "Mundur ke versi sebelumnya yang masih jalan. Sahabatmu di saat genting"],
+            ["Autentikasi (auth)", "Sistem login: memastikan yang masuk memang orang yang berhak"],
+          ],
+        },
+        quote:
+          "Bedanya pemula yang cepat berkembang dan yang mudah menyerah sering cuma satu: yang pertama tidak takut sama istilah. Dia tanya AI: \"jelaskan istilah ini seperti ke anak SMP\", lalu lanjut jalan.",
+      },
+      {
+        id: "vc2-7",
+        type: "concept",
+        title: "Cek Kenalan Baru",
+        subtitle: "Tiga soal santai. Kalau bisa jawab, kamu resmi tidak asing lagi di dapur ini",
+        quiz: [
+          {
+            question: "Aplikasimu jalan, lalu AI bilang: \"perubahan sudah saya deploy\". Artinya?",
+            options: [
+              "Kodenya dihapus dan ditulis ulang",
+              "Perubahan sudah tayang, versi yang dibuka pengguna sekarang sudah versi terbaru",
+              "Aplikasinya dimatikan sementara",
+              "Datanya dipindah ke database lain",
+            ],
+            answerIndex: 1,
+            why: "Deploy = menayangkan ke internet. Kalau sudah di-deploy, apa yang dibuka pengguna adalah versi terbaru itu.",
+          },
+          {
+            question: "Data absensi anggota kajianmu tersimpan dan tidak hilang walau aplikasi ditutup. Bagian mana yang berjasa?",
+            options: [
+              "Frontend, karena tampilannya bagus",
+              "Domain, karena alamatnya mudah diingat",
+              "Database, gudang tempat data disimpan permanen",
+              "Commit, karena kodenya tersimpan",
+            ],
+            answerIndex: 2,
+            why: "Frontend etalase, backend dapur, database gudang. Data yang awet tersimpan itu urusan gudang. Commit menyimpan KODE, bukan data pengguna.",
+          },
+          {
+            question: "Kamu mau diskusi menajamkan ide dulu sebelum membangun. Ke siapa larinya?",
+            options: [
+              "Langsung ke Replit Agent, biar cepat jadi",
+              "Ke chatbot seperti Claude atau ChatGPT dulu sebagai konsultan, baru ke agent sebagai tukang",
+              "Ke Vercel, karena dia yang menayangkan",
+              "Ke GitHub, karena semua kode ada di sana",
+            ],
+            answerIndex: 1,
+            why: "Pola sehatnya: konsultan dulu, tukang kemudian. Blueprint yang tajam dari diskusi menghemat berputar-putar saat membangun.",
+          },
+        ],
+        isCompletion: true,
+      },
+    ],
+  },
+```
+
+## LANGKAH 3 — Update katalog di `artifacts/aigypt/src/lib/classesData.ts`
+
+Pada entri `id: "vibe-coding"`:
+
+- `sesiCount: 4` → `sesiCount: 5`
+- `duration: "45 menit"` → `duration: "60 menit"`
+- Di `description`, tambahkan penyebutan workflow dan istilah. Ganti description menjadi:
+
+> "Ubah keluhan sehari-hari jadi website dan aplikasi yang benar-benar jalan, tanpa menulis satu baris kode pun. Kenali workflow lengkapnya, para AI agent yang membantumu, istilah-istilah penting (GitHub, Vercel, Supabase, deploy, dan lainnya), lalu jalani prosesnya: temukan masalah, susun blueprint, ngobrol dengan AI sampai aplikasinya jadi, dan rilis ke pengguna nyata. Dilengkapi prompt siap pakai dan kuis interaktif."
+
+- Di `whatYouLearn`, sisipkan item baru di posisi kedua (setelah item mindset):
+
+> "Workflow lengkap dari ide sampai online: GitHub, Vercel, Supabase, dan kamus istilah builder"
+
+## LANGKAH 4 — Update `sessionsByKelas` di `artifacts/aigypt/src/pages/kelas-detail.tsx`
+
+Pada entri `"vibe-coding"`:
+
+1. Ubah `num` sesi lama: `"02"` → `"03"`, `"03"` → `"04"`, `"04"` → `"05"` (judul dan isinya tetap).
+2. Sisipkan objek baru di posisi kedua (setelah sesi 01):
+
+```ts
+{
+  num: "02",
+  title: "Kenalan Sama Dapurnya",
+  essence: "Workflow, para asisten AI, dan istilah yang akan kamu dengar terus.",
+  mastery: [
+    "Memahami anatomi aplikasi: frontend, backend, database, lewat analogi warung",
+    "Membedakan chatbot (konsultan) dan agent (tukang), dan kapan memakai siapa",
+    "Kenalan dengan GitHub, Vercel, Supabase, plus kamus istilah: deploy, repo, commit, API, rollback",
+  ],
+  tools: ["Replit Agent", "GitHub", "Vercel", "Supabase"],
+  mission: "Uji kenalan barumu lewat kuis interaktif di akhir sesi.",
+},
+```
+
+## LANGKAH 5 — Migrasi progress member (cek dulu, jangan asal)
+
+Karena nomor sesi bergeser, progress member yang sudah tersimpan untuk `kelasId: "vibe-coding"` bisa menunjuk ke sesi yang salah (misal: dulu selesai "sesi 2 Blueprint", sekarang sesi 2 adalah materi baru).
+
+1. Cek dulu apakah sudah ada data progress dengan `kelasId: "vibe-coding"` di database.
+2. Kalau BELUM ada (kelas baru rilis, belum ada yang mengerjakan): tidak perlu migrasi, lanjut saja.
+3. Kalau SUDAH ada: buat migrasi yang menggeser `sesiNumber` progress kelas vibe-coding: 4→5, lalu 3→4, lalu 2→3 (urutan menurun supaya tidak tabrakan). `sesiNumber: 1` tetap. Laporkan berapa baris yang terpengaruh sebelum dan sesudah.
+
+## LANGKAH 6 — Verifikasi (wajib)
+
+1. Build/typecheck lolos tanpa error.
+2. `/kelas` — kartu Vibe Coding menampilkan 5 sesi, durasi 60 menit.
+3. `/kelas/vibe-coding` — halaman detail menampilkan 5 sesi berurutan 01–05, sesi 02 adalah "Kenalan Sama Dapurnya".
+4. `/kelas/vibe-coding/materi/sesi-2` — sesi baru ter-render lengkap: cards anatomi aplikasi, tabel asisten AI, flow workflow, cards GitHub/Vercel/Supabase, tabel Kamus Kantong 12 istilah, dan kuis 3 soal yang bisa diklik dengan umpan balik.
+5. `/kelas/vibe-coding/materi/sesi-3` sampai `sesi-5` — konten lama (Blueprint, Ngobrol Sampai Jadi, Rilis) masih utuh di nomor barunya.
+6. Progress tracking: selesaikan sesi 1 lalu sesi 2 dengan akun member, pastikan progress tersimpan benar dan sesi 3 terbuka.
+7. Cek tampilan mobile untuk sesi 2 baru, terutama tabel Kamus Kantong (12 baris) tidak terpotong di layar HP.
+
+## BATASAN
+
+- JANGAN mengubah isi/kalimat sesi lama selain 4 perbaikan referensi silang di Langkah 1.
+- JANGAN menyentuh `fundamentalAI.ts`, `materiContent.ts`, atau kelas lain di `classesData.ts` dan `sessionsByKelas`.
+- JANGAN mengubah desain sistem atau menambah route.

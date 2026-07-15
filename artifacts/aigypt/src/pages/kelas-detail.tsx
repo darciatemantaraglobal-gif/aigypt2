@@ -83,6 +83,18 @@ const sessionsByKelas: Record<string, Array<{
     },
     {
       num: "02",
+      title: "Kenalan Sama Dapurnya",
+      essence: "Workflow, para asisten AI, dan istilah yang akan kamu dengar terus.",
+      mastery: [
+        "Memahami anatomi aplikasi: frontend, backend, database, lewat analogi warung",
+        "Membedakan chatbot (konsultan) dan agent (tukang), dan kapan memakai siapa",
+        "Kenalan dengan GitHub, Vercel, Supabase, plus kamus istilah: deploy, repo, commit, API, rollback",
+      ],
+      tools: ["Replit Agent", "GitHub", "Vercel", "Supabase"],
+      mission: "Uji kenalan barumu lewat kuis interaktif di akhir sesi.",
+    },
+    {
+      num: "03",
       title: "Dari Masalah Jadi Blueprint",
       essence: "Aplikasi gagal jarang karena kodenya. Biasanya karena masalahnya kabur.",
       mastery: [
@@ -94,7 +106,7 @@ const sessionsByKelas: Record<string, Array<{
       mission: "Tulis blueprint final aplikasimu dan uji ketajamannya lewat kuis interaktif.",
     },
     {
-      num: "03",
+      num: "04",
       title: "Ngobrol Sampai Jadi",
       essence: "Jantung vibe coding: putaran percakapan antara kamu, AI, dan layar.",
       mastery: [
@@ -106,7 +118,7 @@ const sessionsByKelas: Record<string, Array<{
       mission: "Bangun versi pertama aplikasimu: satu fitur inti yang jalan dari awal sampai akhir.",
     },
     {
-      num: "04",
+      num: "05",
       title: "Rilis, Rusak, Perbaiki",
       essence: "Aplikasi yang tidak dirilis itu cuma hobi. Yang dirilis, itu karya.",
       mastery: [

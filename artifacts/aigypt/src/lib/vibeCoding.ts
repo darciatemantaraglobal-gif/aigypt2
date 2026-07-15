@@ -1,7 +1,7 @@
 import type { SesiMateri } from "./materiContent";
 
 // ═══════════════════════════════════════════════════════════════════
-// VIBE CODING — 4 sesi, ~45 menit
+// VIBE CODING — 5 sesi, ~60 menit
 //
 // Satu ide jadi tulang punggung: Kamu arsiteknya, AI tukangnya.
 // Kamu tidak perlu tahu cara memasang bata. Tapi kamu harus tahu
@@ -118,15 +118,212 @@ export const vibeCodingMateri: SesiMateri[] = [
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // SESI 2 — Dari Masalah Jadi Blueprint
+  // SESI 2 — Kenalan Sama Dapurnya
   // ═══════════════════════════════════════════════════════════════
   {
     sesiNumber: 2,
+    title: "Kenalan Sama Dapurnya",
+    subtitle: "Workflow, para asisten AI, dan istilah-istilah yang akan kamu dengar terus. Kenalan sekali, nyaman selamanya",
+    steps: [
+      {
+        id: "vc2-1",
+        type: "concept",
+        title: "Kenapa Sesi Ini Ada",
+        subtitle: "Biar kamu tidak merasa asing di dunia yang akan kamu masuki",
+        content:
+          "Bayangkan masuk dapur restoran untuk pertama kali. Orang-orang teriak istilah asing, alat-alat tidak kamu kenal, dan semua bergerak cepat. Kamu tidak perlu bisa masak untuk nyaman di sana. Kamu cuma perlu tahu: itu kompor, itu kulkas, itu gudang, dan si A tugasnya apa. Sesi ini melakukan hal yang sama untuk dunia membangun aplikasi. Setelah ini, saat AI bilang \"sudah saya deploy, datanya tersimpan di database\", kamu manggut-manggut karena paham, bukan karena sungkan.",
+        quote:
+          "Kamu tidak perlu hafal semua istilah hari ini. Kamu cuma perlu pernah dengar, supaya saat dia muncul lagi, dia terasa seperti kenalan lama.",
+      },
+      {
+        id: "vc2-2",
+        type: "concept",
+        title: "Anatomi Aplikasi: Warung Analogi",
+        subtitle: "Setiap aplikasi di dunia, dari WhatsApp sampai Gojek, terdiri dari tiga bagian ini",
+        cards: [
+          {
+            title: "Frontend: Etalase",
+            accent: "purple",
+            items: [
+              "Semua yang pengguna lihat dan sentuh: tombol, warna, form, halaman",
+              "Kalau warung: etalase, meja, daftar menu yang dipajang",
+              "Saat kamu bilang \"tombolnya kegedean\", kamu sedang ngomongin frontend",
+            ],
+          },
+          {
+            title: "Backend: Dapur",
+            accent: "blue",
+            items: [
+              "Logika yang bekerja di balik layar: memproses pesanan, mengecek login, menghitung",
+              "Kalau warung: dapur tempat pesanan dimasak. Pembeli tidak melihatnya, tapi di sinilah kerja sebenarnya",
+              "Saat form dikirim lalu \"diproses\", yang memproses itu backend",
+            ],
+          },
+          {
+            title: "Database: Gudang",
+            accent: "green",
+            items: [
+              "Tempat semua data disimpan rapi: daftar anggota, absensi, pesanan",
+              "Kalau warung: gudang stok dan buku catatan penjualan",
+              "Aplikasi mati lalu dinyalakan lagi, datanya masih ada? Itu jasa database",
+            ],
+          },
+        ],
+        note: "Tiga-tiganya dibangun AI untukmu. Kamu cuma perlu tahu bagian mana yang sedang dibicarakan, supaya feedback-mu tepat sasaran.",
+      },
+      {
+        id: "vc2-3",
+        type: "concept",
+        title: "Para Asisten AI-mu",
+        subtitle: "Chatbot dan agent itu beda. Ini bedanya, dan siapa mengerjakan apa",
+        content:
+          "Chatbot itu konsultan: kamu tanya, dia jawab, kamu yang eksekusi. Agent itu tukang: kamu kasih perintah, dia yang eksekusi sendiri, dari menulis kode, membuat file, memasang database, sampai memperbaiki errornya sendiri. Vibe coding hidup di dunia agent. Tapi konsultan tetap penting: sebelum menyuruh tukang, kamu diskusi dulu sama konsultan.",
+        table: {
+          headers: ["Asisten", "Perannya di workflow-mu", "Kapan kamu memakainya"],
+          rows: [
+            ["Claude / ChatGPT (chatbot)", "Konsultan: diskusi ide, menajamkan blueprint, menerjemahkan istilah dan error", "Sebelum membangun, dan setiap kali bingung"],
+            ["Replit Agent", "Tukang utama: membangun aplikasi utuh dari promptmu, langsung bisa dibuka online", "Saat membangun. Ini rumah utama kelas kita"],
+            ["Cursor / Claude Code", "Tukang spesialis yang bekerja langsung di kode di komputermu", "Nanti, kalau kamu sudah mulai berani menyentuh kode"],
+            ["v0 / Lovable / Bolt", "Tukang dekorasi: cepat membuat tampilan yang cantik", "Kalau proyekmu lebih berat ke tampilan daripada logika"],
+          ],
+        },
+        note: "Pola sehatnya: ngobrol dengan konsultan sampai blueprint tajam, baru serahkan ke tukang. Jangan dibalik.",
+      },
+      {
+        id: "vc2-4",
+        type: "concept",
+        title: "Workflow Besar: Dari Ide Sampai Dipakai Orang",
+        subtitle: "Ini peta perjalanan lengkapnya. Kelas ini akan menyusurinya satu per satu",
+        flow: [
+          { label: "Ide", desc: "Keluhan berulang jadi masalah yang jelas. Diskusi dengan chatbot sampai tajam" },
+          { label: "Blueprint", desc: "Lima pertanyaan dijawab: siapa, masalah apa, tiga fitur, halaman, tampilan" },
+          { label: "Bangun", desc: "Prompt ke agent, lalu loop: lihat, tes, minta perbaikan, ulang" },
+          { label: "Simpan", desc: "Kode tersimpan rapi dengan riwayat versi, biasanya di GitHub. Bisa mundur kalau rusak" },
+          { label: "Online", desc: "Deploy: aplikasimu naik ke internet, dapat alamat yang bisa dibuka siapa saja" },
+          { label: "Rawat", desc: "Dengar pengguna, perbaiki, tambah fitur pelan-pelan. Balik ke langkah Bangun" },
+        ],
+        content:
+          "Kabar baiknya: di Replit, langkah Simpan dan Online itu hampir otomatis. Tapi kamu tetap perlu paham konsepnya, karena begitu proyekmu makin serius, kamu akan bertemu nama-nama di langkah berikut ini.",
+      },
+      {
+        id: "vc2-5",
+        type: "concept",
+        title: "Tiga Nama Besar yang Akan Sering Kamu Dengar",
+        subtitle: "GitHub, Vercel, Supabase. Kenalan dulu biar tidak kaget",
+        cards: [
+          {
+            title: "GitHub: Lemari Arsip Kode",
+            accent: "purple",
+            items: [
+              "Tempat kode disimpan online, lengkap dengan riwayat setiap perubahan",
+              "Satu proyek di GitHub disebut repository, atau repo",
+              "Manfaat terbesarnya: kalau versi baru rusak, kamu bisa kembali ke versi kemarin yang masih jalan",
+              "Juga tempat kolaborasi: teman bisa ikut mengerjakan proyek yang sama",
+            ],
+          },
+          {
+            title: "Vercel: Etalase Online",
+            accent: "blue",
+            items: [
+              "Layanan hosting: mengambil kodemu dan menayangkannya ke internet",
+              "Terhubung ke GitHub: setiap kamu simpan perubahan, website otomatis ter-update",
+              "Gratis untuk proyek kecil, dan bisa dipasangi domain sendiri seperti namamu.com",
+              "Banyak builder pindah ke sini saat proyeknya lulus dari tahap coba-coba",
+            ],
+          },
+          {
+            title: "Supabase: Gudang Data Siap Pakai",
+            accent: "green",
+            items: [
+              "Database online plus fitur login pengguna, tanpa kamu membangunnya dari nol",
+              "Datamu tersimpan di tabel, mirip spreadsheet, tapi bisa diakses aplikasimu",
+              "Punya aturan keamanan bawaan untuk mengatur siapa boleh membaca dan mengubah data",
+              "Pasangan favorit Vercel: Vercel pegang etalase, Supabase pegang gudang",
+            ],
+          },
+        ],
+        note: "Di kelas ini kamu belum wajib memakai ketiganya, Replit sudah menyediakan semuanya dalam satu atap. Tapi sekarang, saat AI atau tutorial menyebut nama-nama ini, kamu tahu persis mereka bicara apa.",
+      },
+      {
+        id: "vc2-6",
+        type: "concept",
+        title: "Kamus Kantong",
+        subtitle: "Istilah yang pasti muncul. Tidak perlu dihafal, cukup pernah kenal. Nanti balik lagi ke sini kalau lupa",
+        table: {
+          headers: ["Istilah", "Artinya, versi manusia"],
+          rows: [
+            ["Deploy", "Menayangkan aplikasimu ke internet supaya bisa dibuka orang lain"],
+            ["Repo (repository)", "Folder proyekmu di GitHub, lengkap dengan seluruh riwayat perubahannya"],
+            ["Commit", "Satu titik simpan perubahan. Seperti save point di game: bisa balik ke sini kalau ada apa-apa"],
+            ["Bug", "Kesalahan yang bikin aplikasi berperilaku tidak semestinya"],
+            ["API", "Pintu resmi tempat dua aplikasi saling bicara. Aplikasimu tanya ke server lewat pintu ini"],
+            ["API key / Secret", "Kunci rahasia untuk memakai layanan tertentu. Jangan pernah terlihat di sisi pengguna"],
+            ["Environment variable", "Tempat aman menyimpan kunci-kunci rahasia itu, di luar kode"],
+            ["Localhost / Preview", "Versi aplikasi yang cuma kamu yang bisa lihat, untuk dites sebelum tayang"],
+            ["Production", "Versi yang tayang sungguhan dan dipakai pengguna nyata. Hati-hati mengubah yang ini"],
+            ["Domain", "Alamat aplikasimu di internet, seperti aigypt.id"],
+            ["Rollback", "Mundur ke versi sebelumnya yang masih jalan. Sahabatmu di saat genting"],
+            ["Autentikasi (auth)", "Sistem login: memastikan yang masuk memang orang yang berhak"],
+          ],
+        },
+        quote:
+          "Bedanya pemula yang cepat berkembang dan yang mudah menyerah sering cuma satu: yang pertama tidak takut sama istilah. Dia tanya AI: \"jelaskan istilah ini seperti ke anak SMP\", lalu lanjut jalan.",
+      },
+      {
+        id: "vc2-7",
+        type: "concept",
+        title: "Cek Kenalan Baru",
+        subtitle: "Tiga soal santai. Kalau bisa jawab, kamu resmi tidak asing lagi di dapur ini",
+        quiz: [
+          {
+            question: "Aplikasimu jalan, lalu AI bilang: \"perubahan sudah saya deploy\". Artinya?",
+            options: [
+              "Kodenya dihapus dan ditulis ulang",
+              "Perubahan sudah tayang, versi yang dibuka pengguna sekarang sudah versi terbaru",
+              "Aplikasinya dimatikan sementara",
+              "Datanya dipindah ke database lain",
+            ],
+            answerIndex: 1,
+            why: "Deploy = menayangkan ke internet. Kalau sudah di-deploy, apa yang dibuka pengguna adalah versi terbaru itu.",
+          },
+          {
+            question: "Data absensi anggota kajianmu tersimpan dan tidak hilang walau aplikasi ditutup. Bagian mana yang berjasa?",
+            options: [
+              "Frontend, karena tampilannya bagus",
+              "Domain, karena alamatnya mudah diingat",
+              "Database, gudang tempat data disimpan permanen",
+              "Commit, karena kodenya tersimpan",
+            ],
+            answerIndex: 2,
+            why: "Frontend etalase, backend dapur, database gudang. Data yang awet tersimpan itu urusan gudang. Commit menyimpan KODE, bukan data pengguna.",
+          },
+          {
+            question: "Kamu mau diskusi menajamkan ide dulu sebelum membangun. Ke siapa larinya?",
+            options: [
+              "Langsung ke Replit Agent, biar cepat jadi",
+              "Ke chatbot seperti Claude atau ChatGPT dulu sebagai konsultan, baru ke agent sebagai tukang",
+              "Ke Vercel, karena dia yang menayangkan",
+              "Ke GitHub, karena semua kode ada di sana",
+            ],
+            answerIndex: 1,
+            why: "Pola sehatnya: konsultan dulu, tukang kemudian. Blueprint yang tajam dari diskusi menghemat berputar-putar saat membangun.",
+          },
+        ],
+        isCompletion: true,
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // SESI 3 — Dari Masalah Jadi Blueprint
+  // ═══════════════════════════════════════════════════════════════
+  {
+    sesiNumber: 3,
     title: "Dari Masalah Jadi Blueprint",
     subtitle: "Aplikasi gagal jarang karena kodenya jelek. Biasanya karena masalahnya tidak jelas",
     steps: [
       {
-        id: "vc2-1",
+        id: "vc3-1",
         type: "concept",
         title: "Masalah Dulu, Teknologi Belakangan",
         subtitle: "Ini urutan yang paling sering dibalik orang",
@@ -141,7 +338,7 @@ export const vibeCodingMateri: SesiMateri[] = [
         ],
       },
       {
-        id: "vc2-2",
+        id: "vc3-2",
         type: "concept",
         title: "Blueprint Lima Pertanyaan",
         subtitle: "Sebelum ngomong ke AI, jawab dulu lima hal ini. Sepuluh menit yang menghemat berjam-jam",
@@ -155,7 +352,7 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Jawaban lima pertanyaan ini nanti hampir mentah-mentah jadi prompt pertamamu ke AI. Jadi tulis yang serius.",
       },
       {
-        id: "vc2-3",
+        id: "vc3-3",
         type: "concept",
         title: "Seni Memotong Fitur",
         subtitle: "MVP: versi paling kecil yang sudah berguna",
@@ -173,7 +370,7 @@ export const vibeCodingMateri: SesiMateri[] = [
           "Versi satu yang jelek tapi dipakai orang, jauh lebih berharga dari versi sempurna yang tidak pernah selesai.",
       },
       {
-        id: "vc2-4",
+        id: "vc3-4",
         type: "practice",
         title: "Praktik: Tulis Blueprintmu",
         subtitle: "Sekarang giliranmu. Pakai AI sebagai partner diskusi, bukan sebagai tukang dulu",
@@ -194,7 +391,7 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Simpan blueprint finalmu. Sesi depan, dia berubah jadi aplikasi.",
       },
       {
-        id: "vc2-5",
+        id: "vc3-5",
         type: "concept",
         title: "Cek Pemahaman",
         subtitle: "Dua soal cepat sebelum lanjut",
@@ -228,15 +425,15 @@ export const vibeCodingMateri: SesiMateri[] = [
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // SESI 3 — Ngobrol Sampai Jadi
+  // SESI 4 — Ngobrol Sampai Jadi
   // ═══════════════════════════════════════════════════════════════
   {
-    sesiNumber: 3,
+    sesiNumber: 4,
     title: "Ngobrol Sampai Jadi",
     subtitle: "Inilah jantung vibe coding: percakapan berputar antara kamu, AI, dan hasil di layar",
     steps: [
       {
-        id: "vc3-1",
+        id: "vc4-1",
         type: "concept",
         title: "Prompt Pertama Menentukan Segalanya",
         subtitle: "Ini fondasi rumahmu. Jangan asal",
@@ -252,7 +449,7 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Baris terakhir itu penting. AI itu tukang yang semangat, kadang terlalu semangat. Tanpa pagar, dia akan menambahkan fitur yang tidak kamu minta.",
       },
       {
-        id: "vc3-2",
+        id: "vc4-2",
         type: "concept",
         title: "Loop Suci Vibe Coding",
         subtitle: "Setelah prompt pertama, sisanya adalah putaran ini, berulang-ulang",
@@ -272,7 +469,7 @@ export const vibeCodingMateri: SesiMateri[] = [
         ],
       },
       {
-        id: "vc3-3",
+        id: "vc4-3",
         type: "concept",
         title: "Bahasa Feedback yang AI Paham",
         subtitle: "Bedanya keluhan dan instruksi",
@@ -288,7 +485,7 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Polanya selalu: DI MANA lokasinya, APA yang terjadi, BAGAIMANA seharusnya. Tiga bahan itu saja.",
       },
       {
-        id: "vc3-4",
+        id: "vc4-4",
         type: "concept",
         title: "Saat Semuanya Rusak",
         subtitle: "Pasti terjadi. Ini bukan kegagalan, ini bagian dari prosesnya",
@@ -320,7 +517,7 @@ export const vibeCodingMateri: SesiMateri[] = [
           "Kadang jalan tercepat adalah mundur dua langkah ke versi yang jalan, bukan maju terus di jalan yang buntu.",
       },
       {
-        id: "vc3-5",
+        id: "vc4-5",
         type: "practice",
         title: "Praktik: Bangun Versi Pertamamu",
         subtitle: "Ini momen yang ditunggu. Blueprint di tangan kiri, Replit di tangan kanan",
@@ -345,15 +542,15 @@ export const vibeCodingMateri: SesiMateri[] = [
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // SESI 4 — Rilis, Rusak, Perbaiki
+  // SESI 5 — Rilis, Rusak, Perbaiki
   // ═══════════════════════════════════════════════════════════════
   {
-    sesiNumber: 4,
+    sesiNumber: 5,
     title: "Rilis, Rusak, Perbaiki",
     subtitle: "Aplikasi yang tidak dirilis itu cuma hobi. Yang dirilis, sekecil apapun, itu karya",
     steps: [
       {
-        id: "vc4-1",
+        id: "vc5-1",
         type: "concept",
         title: "Rilis Itu Keputusan, Bukan Kesiapan",
         subtitle: "Kalau menunggu siap, kamu tidak akan pernah rilis",
@@ -368,7 +565,7 @@ export const vibeCodingMateri: SesiMateri[] = [
           "Lima orang yang benar-benar memakai aplikasimu mengajarkan lebih banyak daripada lima puluh jam menebak-nebak sendirian.",
       },
       {
-        id: "vc4-2",
+        id: "vc5-2",
         type: "concept",
         title: "Tiga Aturan Keamanan yang Tidak Boleh Ditawar",
         subtitle: "Bagian paling tidak seru dari kelas ini, dan paling menyelamatkan",
@@ -404,14 +601,14 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Kamu tidak perlu jadi ahli keamanan. Kamu cuma perlu rutin menanyakan tiga hal ini ke AI setiap sebelum rilis dan setiap selesai menambah fitur besar.",
       },
       {
-        id: "vc4-3",
+        id: "vc5-3",
         type: "concept",
         title: "Hidup Setelah Rilis",
         subtitle: "Aplikasi itu makhluk hidup. Dia butuh dirawat, dan itu justru serunya",
         flow: [
           { label: "Dengar", desc: "Kumpulkan keluhan dan permintaan pengguna. Catat semua, jangan langsung kerjakan semua" },
           { label: "Pilah", desc: "Mana yang diminta banyak orang dan sejalan dengan masalah inti? Itu prioritas. Sisanya antre" },
-          { label: "Bangun", desc: "Balik ke loop sesi 3: satu perubahan, tes, ulang" },
+          { label: "Bangun", desc: "Balik ke loop sesi 4: satu perubahan, tes, ulang" },
           { label: "Kabari", desc: "Beri tahu penggunamu ada yang baru. Mereka senang didengar, kamu dapat penguji gratis" },
         ],
         content:
@@ -419,10 +616,10 @@ export const vibeCodingMateri: SesiMateri[] = [
         note: "Vibe coding bukan tujuan akhir. Dia pintu masuk. Sebagian dari kamu akan berhenti di 'bisa bikin alat untuk masalah sendiri', dan itu sudah luar biasa. Sebagian lagi akan ketagihan dan jadi builder sungguhan. Dua-duanya menang.",
       },
       {
-        id: "vc4-4",
+        id: "vc5-4",
         type: "concept",
         title: "Kuis Penutup",
-        subtitle: "Bukan ujian. Ini cermin: seberapa dalam empat sesi ini nempel",
+        subtitle: "Bukan ujian. Ini cermin: seberapa dalam lima sesi ini nempel",
         quiz: [
           {
             question: "Inti vibe coding dalam satu kalimat, versi kelas ini?",
@@ -444,7 +641,7 @@ export const vibeCodingMateri: SesiMateri[] = [
               "Seharusnya menulis promptnya dengan huruf kapital biar tegas",
             ],
             answerIndex: 2,
-            why: "Ini persis Loop Suci sesi 3. Perubahan kecil yang teruji lebih cepat sampai tujuan daripada lompatan besar yang rapuh.",
+            why: "Ini persis Loop Suci sesi 4. Perubahan kecil yang teruji lebih cepat sampai tujuan daripada lompatan besar yang rapuh.",
           },
           {
             question: "Aplikasi absensimu sudah jalan dan mau dirilis. Mana yang WAJIB dicek sebelum disebar?",
@@ -471,10 +668,10 @@ export const vibeCodingMateri: SesiMateri[] = [
         ],
       },
       {
-        id: "vc4-5",
+        id: "vc5-5",
         type: "concept",
         title: "Bekal Pulang",
-        subtitle: "Empat sesi selesai. Ini yang kamu bawa",
+        subtitle: "Lima sesi selesai. Ini yang kamu bawa",
         content:
           "Kamu masuk kelas ini sebagai pengguna AI. Kamu keluar sebagai orang yang bisa mengubah keluhan jadi aplikasi. Itu perubahan identitas, bukan sekadar tambahan skill. Dan seperti semua identitas baru, dia menguat lewat satu hal: dipakai.",
         bullets: [
